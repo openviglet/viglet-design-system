@@ -1,0 +1,109 @@
+{
+  "name": "@openviglet/viglet-design-system",
+  "version": "2026.2.0",
+  "type": "module",
+  "description": "Viglet Design System - Shared components, hooks, utilities and design tokens for Viglet products",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openviglet/viglet-design-system.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.es.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.cjs.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./styles": "./dist/viglet-design-system.css",
+    "./i18n": {
+      "import": "./dist/i18n.es.js",
+      "require": "./dist/i18n.cjs.js",
+      "types": "./dist/i18n.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.0.0"
+  },
+  "dependencies": {
+    "@iconify/react": "^6.0.2",
+    "@radix-ui/react-accordion": "^1.2.12",
+    "@radix-ui/react-avatar": "^1.1.11",
+    "@radix-ui/react-checkbox": "^1.3.3",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@radix-ui/react-hover-card": "^1.1.15",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-navigation-menu": "^1.2.14",
+    "@radix-ui/react-popover": "^1.1.14",
+    "@radix-ui/react-select": "^2.2.6",
+    "@radix-ui/react-separator": "^1.1.8",
+    "@radix-ui/react-slider": "^1.3.6",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@radix-ui/react-switch": "^1.2.6",
+    "@radix-ui/react-tabs": "^1.1.13",
+    "@radix-ui/react-toggle": "^1.1.10",
+    "@radix-ui/react-toggle-group": "^1.1.11",
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "@tabler/icons-react": "^3.40.0",
+    "@tanstack/react-table": "^8.21.3",
+    "axios": "^1.13.6",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "i18next": "^26.0.3",
+    "i18next-browser-languagedetector": "^8.2.1",
+    "lucide-react": "^1.0.1",
+    "next-themes": "^0.4.6",
+    "radix-ui": "^1.4.3",
+    "react-hook-form": "^7.71.2",
+    "react-i18next": "^17.0.2",
+    "react-resizable-panels": "^4.7.3",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.5.0",
+    "vaul": "^1.1.2",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/vite": "^4.2.1",
+    "@types/node": "^25.5.0",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "eslint": "^9.39.0",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.4.0",
+    "tailwindcss": "^4.1.11",
+    "tw-animate-css": "^1.4.0",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.58.0",
+    "vite": "^8.0.2",
+    "vite-plugin-dts": "^4.5.4"
+  },
+  "engines": {
+    "node": "^24.0.0",
+    "npm": "^11.0.0"
+  }
+}
