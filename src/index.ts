@@ -17,5 +17,8 @@ export * from "./lib";
 // Models
 export * from "./models";
 
+// i18n
+export { registerVigTranslations, vigDesignSystemTranslations, initVigI18n } from "./i18n";
+
 // Styles (import separately via "@openviglet/viglet-design-system/styles")
 // import "@openviglet/viglet-design-system/styles";
