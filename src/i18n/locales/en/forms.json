@@ -57,6 +57,11 @@
       "condition": "Condition",
       "close": "Close",
       "nameRequired": "Name is required."
+    },
+    "formActions": {
+      "cancel": "Cancel",
+      "saveChanges": "Save Changes",
+      "delete": "Delete"
     }
   }
 }

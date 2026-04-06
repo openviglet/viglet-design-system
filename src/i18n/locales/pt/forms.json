@@ -57,6 +57,11 @@
       "condition": "Condição",
       "close": "Fechar",
       "nameRequired": "Nome é obrigatório."
+    },
+    "formActions": {
+      "cancel": "Cancelar",
+      "saveChanges": "Salvar Alterações",
+      "delete": "Excluir"
     }
   }
 }
