@@ -37,6 +37,9 @@ export default defineConfig({
         "react-dom",
         "react/jsx-runtime",
         "react-router-dom",
+        "i18next",
+        "i18next-browser-languagedetector",
+        "react-i18next",
       ],
       output: {
         globals: {
