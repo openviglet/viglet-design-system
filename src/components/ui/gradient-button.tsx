@@ -98,11 +98,13 @@ function GradientButton({
     variant,
     size,
     asChild = false,
+    loading = false,
     to,
     ...props
 }: React.ComponentProps<"button"> &
     VariantProps<typeof gradientButtonVariants> & {
         asChild?: boolean
+        loading?: boolean
         to?: To
     }) {
     const classes = cn(gradientButtonVariants({ variant, size, className }))
@@ -131,8 +133,21 @@ function GradientButton({
         <Comp
             data-slot="gradient-button"
             className={classes}
+            disabled={loading || props.disabled}
             {...props}
-        />
+        >
+            {loading ? (
+                <>
+                    <svg className="size-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    {props.children}
+                </>
+            ) : (
+                props.children
+            )}
+        </Comp>
     )
 }
 
