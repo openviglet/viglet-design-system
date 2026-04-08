@@ -20,5 +20,5 @@ export * from "./models";
 // i18n
 export { registerVigTranslations, vigDesignSystemTranslations, initVigI18n } from "./i18n";
 
-// Styles (import separately via "@openviglet/viglet-design-system/styles")
-// import "@openviglet/viglet-design-system/styles";
+// Styles (import separately via "@viglet/viglet-design-system/styles")
+// import "@viglet/viglet-design-system/styles";

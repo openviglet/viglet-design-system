@@ -5,7 +5,7 @@ Shared component library, design tokens, hooks, utilities, and i18n for Viglet p
 ## Installation
 
 ```bash
-npm install @openviglet/viglet-design-system
+npm install @viglet/viglet-design-system
 ```
 
 ## Setup
@@ -15,19 +15,19 @@ npm install @openviglet/viglet-design-system
 In your app's entry CSS (e.g., `index.css`):
 
 ```css
-@import "@openviglet/viglet-design-system/styles";
+@import "@viglet/viglet-design-system/styles";
 ```
 
 Or in your entry TypeScript/JavaScript:
 
 ```ts
-import "@openviglet/viglet-design-system/styles";
+import "@viglet/viglet-design-system/styles";
 ```
 
 ### 2. Initialize i18n
 
 ```ts
-import { initVigI18n } from "@openviglet/viglet-design-system/i18n";
+import { initVigI18n } from "@viglet/viglet-design-system/i18n";
 
 // With app-specific translations merged in
 initVigI18n({
@@ -39,7 +39,7 @@ initVigI18n({
 Or register into an existing i18n instance:
 
 ```ts
-import { registerVigTranslations } from "@openviglet/viglet-design-system/i18n";
+import { registerVigTranslations } from "@viglet/viglet-design-system/i18n";
 import i18n from "i18next";
 
 registerVigTranslations(i18n);
@@ -53,7 +53,7 @@ import {
   BreadcrumbProvider,
   UserProvider,
   Toaster,
-} from "@openviglet/viglet-design-system";
+} from "@viglet/viglet-design-system";
 
 function App() {
   return (
@@ -72,7 +72,7 @@ function App() {
 ### 4. Setup Axios CSRF protection
 
 ```ts
-import { setupAxiosInterceptors } from "@openviglet/viglet-design-system";
+import { setupAxiosInterceptors } from "@viglet/viglet-design-system";
 
 setupAxiosInterceptors({
   baseURL: "/api",
@@ -100,7 +100,7 @@ import {
   TabsList,
   TabsTrigger,
   TabsContent,
-} from "@openviglet/viglet-design-system";
+} from "@viglet/viglet-design-system";
 ```
 
 ### App Components
@@ -117,7 +117,7 @@ import {
   AppFooter,
   LanguageSelect,
   ModeToggle,
-} from "@openviglet/viglet-design-system";
+} from "@viglet/viglet-design-system";
 ```
 
 ### Hooks
@@ -131,7 +131,7 @@ import {
   useTheme,
   useBreadcrumb,
   useCurrentUser,
-} from "@openviglet/viglet-design-system";
+} from "@viglet/viglet-design-system";
 ```
 
 ### Utilities
@@ -143,7 +143,7 @@ import {
   getHashedColor,
   getFlagEmoji,
   exportToXlsx,
-} from "@openviglet/viglet-design-system";
+} from "@viglet/viglet-design-system";
 ```
 
 ### Models
@@ -153,7 +153,7 @@ import type {
   VigUser,
   VigLocale,
   VigGridItem,
-} from "@openviglet/viglet-design-system";
+} from "@viglet/viglet-design-system";
 ```
 
 ## What's Included
