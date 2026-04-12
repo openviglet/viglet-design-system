@@ -25,7 +25,7 @@
     "./i18n": {
       "import": "./dist/i18n.es.js",
       "require": "./dist/i18n.cjs.js",
-      "types": "./dist/i18n.d.ts"
+      "types": "./dist/i18n/index.d.ts"
     }
   },
   "files": [
