@@ -1,6 +1,12 @@
 name: Publish to npm
 
 on:
+  push:
+    branches:
+      - '2026.2'
+    paths-ignore:
+      - '*.md'
+      - '.github/dependabot.yml'
   workflow_dispatch:
 
 permissions:
@@ -23,25 +29,33 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           scope: '@viglet'
 
-      - name: Configure git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Bump patch version
-        run: npm version patch --no-git-tag-version
-
-      - name: Commit version bump
-        run: |
-          git add package.json package-lock.json
-          git commit -m "chore: bump version to $(node -p "require('./package.json').version")"
-          git push
-
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
       - name: Build
         run: npm run build
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump to next available version
+        run: |
+          npm version patch --no-git-tag-version
+          VERSION=$(node -p "require('./package.json').version")
+          while npm view "${{ github.event.repository.name }}" versions --json 2>/dev/null | grep -q "\"$VERSION\""; do
+            echo "Version $VERSION already exists on npm, bumping again..."
+            npm version patch --no-git-tag-version
+            VERSION=$(node -p "require('./package.json').version")
+          done
+          echo "Will publish version: $VERSION"
+
+      - name: Commit and push version bump
+        run: |
+          git add package.json package-lock.json
+          git commit -m "chore: bump version to $(node -p "require('./package.json').version")"
+          git push
 
       - name: Publish
         run: npm publish --access public
