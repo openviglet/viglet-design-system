@@ -40,6 +40,8 @@ export default defineConfig({
         "i18next",
         "i18next-browser-languagedetector",
         "react-i18next",
+        "sonner",
+        "next-themes",
       ],
       output: {
         globals: {
