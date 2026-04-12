@@ -27,6 +27,8 @@ export { Separator } from "./separator";
 export { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "./sheet";
 export { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupAction, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarInput, SidebarInset, SidebarMenu, SidebarMenuAction, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, SidebarMenuSkeleton, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider, SidebarRail, SidebarSeparator, SidebarTrigger, useSidebar } from "./sidebar";
 export { Skeleton } from "./skeleton";
+export { StickySaveBar } from "./sticky-save-bar";
+export type { StickySaveBarProps, StickySaveBarVariant } from "./sticky-save-bar";
 export { Slider } from "./slider";
 export { toast, Toaster } from "./sonner";
 export { Stepper } from "./stepper";
