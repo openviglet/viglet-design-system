@@ -16,13 +16,14 @@ type StickySaveBarVariant = keyof typeof variantClasses
 interface StickySaveBarProps {
   title: string
   badges?: ReactNode
+  actions?: ReactNode
   onCancel?: () => void
   loading?: boolean
   disabled?: boolean
   variant?: StickySaveBarVariant
 }
 
-function StickySaveBar({ title, badges, onCancel, loading, disabled, variant = "gray" }: Readonly<StickySaveBarProps>) {
+function StickySaveBar({ title, badges, actions, onCancel, loading, disabled, variant = "gray" }: Readonly<StickySaveBarProps>) {
   const { t } = useTranslation()
 
   return (
@@ -36,15 +37,19 @@ function StickySaveBar({ title, badges, onCancel, loading, disabled, variant = "
         )}
       </div>
       <div className="flex gap-2 shrink-0">
-        <GradientButton type="submit" size="sm" loading={loading} disabled={disabled}>
-          <IconDeviceFloppy className="size-4" />
-          {t("forms.formActions.saveChanges")}
-        </GradientButton>
-        {onCancel && (
-          <GradientButton type="button" variant="outline" size="sm" onClick={onCancel}>
-            <IconX className="size-4" />
-            {t("forms.formActions.cancel")}
-          </GradientButton>
+        {actions ?? (
+          <>
+            <GradientButton type="submit" size="sm" loading={loading} disabled={disabled}>
+              <IconDeviceFloppy className="size-4" />
+              {t("forms.formActions.saveChanges")}
+            </GradientButton>
+            {onCancel && (
+              <GradientButton type="button" variant="outline" size="sm" onClick={onCancel}>
+                <IconX className="size-4" />
+                {t("forms.formActions.cancel")}
+              </GradientButton>
+            )}
+          </>
         )}
       </div>
     </div>
