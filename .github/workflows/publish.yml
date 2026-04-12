@@ -1,12 +1,6 @@
 name: Publish to npm
 
 on:
-  push:
-    branches:
-      - '2026.2'
-    paths-ignore:
-      - '*.md'
-      - '.github/dependabot.yml'
   workflow_dispatch:
 
 permissions:
