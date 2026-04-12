@@ -10,6 +10,11 @@ updates:
     commit-message:
       prefix: "chore"
       include: "scope"
+    ignore:
+      - dependency-name: "eslint"
+        versions: [">=10.0.0"]
+      - dependency-name: "@eslint/js"
+        versions: [">=10.0.0"]
     groups:
       production:
         dependency-type: "production"
