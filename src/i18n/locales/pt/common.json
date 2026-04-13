@@ -11,5 +11,15 @@
     "errorLoading": "Erro ao carregar dados",
     "openNavigation": "Abrir navegação",
     "connectionError": "Erro de conexão ou tempo esgotado ao buscar {{resource}}."
+  },
+  "backendStatus": {
+    "offline": "Servidor indisponível. Tentando reconectar...",
+    "checking": "Reconectando ao servidor...",
+    "retry": "Tentar agora"
+  },
+  "errorBoundary": {
+    "title": "Algo deu errado",
+    "description": "Ocorreu um erro inesperado. Tente recarregar a página.",
+    "reload": "Recarregar página"
   }
 }

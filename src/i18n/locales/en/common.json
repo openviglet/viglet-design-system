@@ -11,5 +11,15 @@
     "errorLoading": "Error while loading data",
     "openNavigation": "Open navigation",
     "connectionError": "Connection error or timeout while fetching {{resource}}."
+  },
+  "backendStatus": {
+    "offline": "Server unavailable. Retrying automatically...",
+    "checking": "Reconnecting to the server...",
+    "retry": "Retry now"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. Try reloading the page.",
+    "reload": "Reload page"
   }
 }

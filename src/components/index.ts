@@ -5,7 +5,15 @@ export * from "./ui";
 export { AppFooter } from "./app-footer";
 export { BadgeColorful } from "./badge-colorful";
 export { BadgeLocale, getLocaleCountryCode } from "./badge-locale";
+export {
+  BackendStatusBanner,
+  BackendStatusProvider,
+  reportBackendOffline,
+  reportBackendOnline,
+  useBackendStatus,
+} from "./backend-status";
 export { BlankSlate } from "./blank-slate";
+export { ErrorBoundary } from "./error-boundary";
 export { DialogDelete, type VigBlockedByItem } from "./dialog.delete";
 export { GridList } from "./grid.list";
 export { InternalSidebar } from "./internal.sidebar";
