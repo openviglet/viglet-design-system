@@ -109,11 +109,14 @@ Action.displayName = "StickyPageHeaderAction";
 
 interface ActionsProps {
   children: React.ReactNode;
-  /** Label shown next to the dropdown trigger. Defaults to "Actions". */
+  /**
+   * Optional label rendered next to the dropdown trigger's three-dots icon.
+   * When omitted, the trigger is icon-only (three vertical dots).
+   */
   menuLabel?: string;
 }
 
-const Actions: React.FC<ActionsProps> = ({ children, menuLabel = "Actions" }) => {
+const Actions: React.FC<ActionsProps> = ({ children, menuLabel }) => {
   const navigate = useNavigate();
 
   // Split children: Action markers go into a dropdown; everything else renders inline.
@@ -136,10 +139,16 @@ const Actions: React.FC<ActionsProps> = ({ children, menuLabel = "Actions" }) =>
       {menuItems.length > 0 && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <GradientButton variant="outline" size="sm" className="gap-1.5">
-              <IconDotsVertical className="size-4" />
-              <span className="hidden sm:inline">{menuLabel}</span>
-            </GradientButton>
+            {menuLabel ? (
+              <GradientButton variant="outline" size="sm" className="gap-1.5">
+                <IconDotsVertical className="size-4" />
+                <span className="hidden sm:inline">{menuLabel}</span>
+              </GradientButton>
+            ) : (
+              <GradientButton variant="ghost" size="icon-sm" aria-label="Actions" title="Actions">
+                <IconDotsVertical className="size-5!" />
+              </GradientButton>
+            )}
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             {menuItems.map((action) => {

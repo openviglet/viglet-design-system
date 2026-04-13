@@ -21,7 +21,12 @@ interface Props {
   onDelete: () => void;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  trigger?: React.ReactNode;
+  /**
+   * Element that opens the dialog. Defaults to a trash icon button.
+   * Pass `null` to skip the trigger entirely (useful when opening the dialog
+   * externally via `setOpen(true)`, e.g. from a dropdown menu item).
+   */
+  trigger?: React.ReactNode | null;
   blockedBy?: VigBlockedByItem[];
   title?: string;
   description?: string;
@@ -55,9 +60,11 @@ export const DialogDelete: React.FC<Props> = ({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        {trigger ?? defaultTrigger}
-      </DialogTrigger>
+      {trigger !== null && (
+        <DialogTrigger asChild>
+          {trigger ?? defaultTrigger}
+        </DialogTrigger>
+      )}
       <DialogContent className="sm:max-w-md">
         {isBlocked ? (
           <>
