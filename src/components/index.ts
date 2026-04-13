@@ -18,6 +18,7 @@ export { NavUser } from "./nav-user";
 export { PageContent } from "./page-content";
 export { PageHeader } from "./page-header";
 export { Page } from "./page";
+export { StickyPageHeader } from "./sticky.page.header";
 export { SubPage } from "./sub.page";
 export { SubPageHeader } from "./sub.page.header";
 export { ThemeProvider, useTheme } from "./theme-provider";
