@@ -1,5 +1,6 @@
 import { IconDotsVertical, IconPlus } from "@tabler/icons-react";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { NavLink, useNavigate } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { GradientButton } from "./ui/gradient-button";
@@ -118,6 +119,7 @@ interface ActionsProps {
 
 const Actions: React.FC<ActionsProps> = ({ children, menuLabel }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Split children: Action markers go into a dropdown; everything else renders inline.
   const menuItems: ActionProps[] = [];
@@ -134,8 +136,11 @@ const Actions: React.FC<ActionsProps> = ({ children, menuLabel }) => {
     }
   });
 
+  const triggerTitle = menuLabel ?? t("common.actions");
+
   return (
     <div className="flex items-center gap-2 shrink-0">
+      {inlineChildren}
       {menuItems.length > 0 && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -145,7 +150,7 @@ const Actions: React.FC<ActionsProps> = ({ children, menuLabel }) => {
                 <span className="hidden sm:inline">{menuLabel}</span>
               </GradientButton>
             ) : (
-              <GradientButton variant="ghost" size="icon-sm" aria-label="Actions" title="Actions">
+              <GradientButton variant="ghost" size="icon-sm" aria-label={triggerTitle} title={triggerTitle}>
                 <IconDotsVertical className="size-5!" />
               </GradientButton>
             )}
@@ -170,7 +175,6 @@ const Actions: React.FC<ActionsProps> = ({ children, menuLabel }) => {
           </DropdownMenuContent>
         </DropdownMenu>
       )}
-      {inlineChildren}
     </div>
   );
 };
