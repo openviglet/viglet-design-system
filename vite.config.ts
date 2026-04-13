@@ -43,6 +43,7 @@ export default defineConfig({
         "i18next",
         "i18next-browser-languagedetector",
         "react-i18next",
+        "react-hook-form",
         "sonner",
         "next-themes",
       ],
