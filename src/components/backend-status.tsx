@@ -1,6 +1,6 @@
 import { IconAlertTriangle, IconLoader2, IconRefresh } from "@tabler/icons-react";
 import axios from "axios";
-import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { GradientButton } from "./ui/gradient-button";
 
@@ -24,7 +24,7 @@ type Listener = (status: Status) => void;
 
 class BackendStatusBus {
   private status: Status = "online";
-  private listeners = new Set<Listener>();
+  private readonly listeners = new Set<Listener>();
 
   get current(): Status {
     return this.status;
@@ -38,7 +38,9 @@ class BackendStatusBus {
 
   subscribe(l: Listener): () => void {
     this.listeners.add(l);
-    return () => this.listeners.delete(l);
+    return () => {
+      this.listeners.delete(l);
+    };
   }
 }
 
@@ -88,26 +90,21 @@ export function BackendStatusProvider({
   pollInterval = 5000,
   showBanner = true,
   children,
-}: BackendStatusProviderProps) {
+}: Readonly<BackendStatusProviderProps>) {
   const [status, setStatus] = useState<Status>(bus.current);
-  const cancelledRef = useRef(false);
 
   // Subscribe to the module bus
   useEffect(() => {
-    const unsub = bus.subscribe(setStatus);
-    return () => {
-      cancelledRef.current = true;
-      unsub();
-    };
+    return bus.subscribe(setStatus);
   }, []);
 
   const ping = useCallback(async () => {
     bus.set("checking");
     try {
       await axios.get(healthEndpoint, { timeout: 4000 });
-      if (!cancelledRef.current) bus.set("online");
+      bus.set("online");
     } catch {
-      if (!cancelledRef.current) bus.set("offline");
+      bus.set("offline");
     }
   }, [healthEndpoint]);
 
