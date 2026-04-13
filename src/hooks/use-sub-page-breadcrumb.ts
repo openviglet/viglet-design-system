@@ -1,4 +1,4 @@
-import { type BreadcrumbItem, useBreadcrumb } from "@/contexts/breadcrumb.context";
+import { type BreadcrumbItem, useBreadcrumbOptional } from "@/contexts/breadcrumb.context";
 import { useEffect, useRef } from "react";
 
 /**
@@ -14,16 +14,20 @@ import { useEffect, useRef } from "react";
  * Items are tracked by object reference, so updating the input replaces them
  * in-place (preserving breadcrumb order even when async data arrives late).
  *
+ * No-ops gracefully when no BreadcrumbProvider is mounted above — this lets
+ * Module Federation remotes use the hook without assuming the host provides one.
+ *
  * @since 2026.1.14
  */
 export function useSubPageBreadcrumb(
     items: string | BreadcrumbItem | BreadcrumbItem[] | undefined,
 ) {
-    const { setItems } = useBreadcrumb();
+    const ctx = useBreadcrumbOptional();
+    const setItems = ctx?.setItems;
     const ownItemsRef = useRef<BreadcrumbItem[]>([]);
 
     useEffect(() => {
-        if (items === undefined) return;
+        if (items === undefined || !setItems) return;
 
         const normalized: BreadcrumbItem[] =
             typeof items === "string"
@@ -67,7 +71,7 @@ export function useSubPageBreadcrumb(
     useEffect(() => {
         return () => {
             const own = ownItemsRef.current;
-            if (own.length > 0) {
+            if (own.length > 0 && setItems) {
                 setItems((breadcrumb) => {
                     const idx = breadcrumb.indexOf(own[0]);
                     if (idx >= 0) {

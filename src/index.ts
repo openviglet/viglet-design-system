@@ -8,7 +8,7 @@ export * from "./components";
 export * from "./hooks";
 
 // Contexts
-export { BreadcrumbProvider, useBreadcrumb, UserProvider, useCurrentUser } from "./contexts";
+export { BreadcrumbProvider, useBreadcrumb, useBreadcrumbOptional, UserProvider, useCurrentUser } from "./contexts";
 export type { BreadcrumbItem as VigBreadcrumbItem } from "./contexts";
 
 // Utilities

@@ -59,3 +59,14 @@ export const useBreadcrumb = () => {
     }
     return context;
 };
+
+/**
+ * Same as useBreadcrumb but returns undefined instead of throwing when no
+ * Provider is mounted above in the tree.
+ *
+ * Useful for components that live inside a Module Federation remote where the
+ * host may or may not provide a BreadcrumbProvider.
+ */
+export const useBreadcrumbOptional = () => {
+    return useContext(BreadcrumbContext);
+};

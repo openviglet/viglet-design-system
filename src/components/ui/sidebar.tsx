@@ -53,6 +53,15 @@ function useSidebar() {
   return context
 }
 
+/**
+ * Same as useSidebar but returns null instead of throwing when no provider is
+ * mounted above. Useful for Module Federation remotes that render components
+ * like SidebarTrigger inside a host that may or may not provide a sidebar.
+ */
+function useSidebarOptional() {
+  return React.useContext(SidebarContext)
+}
+
 function SidebarProvider({
   defaultOpen = true,
   open: openProp,
@@ -265,7 +274,12 @@ function SidebarTrigger({
   onClick,
   ...props
 }: React.ComponentProps<typeof GradientButton>) {
-  const { toggleSidebar, isMobile } = useSidebar()
+  const ctx = useSidebarOptional()
+  // If there is no SidebarProvider above (e.g. when rendered inside a Module
+  // Federation remote that doesn't own the sidebar), render nothing instead of
+  // crashing.
+  if (!ctx) return null
+  const { toggleSidebar, isMobile } = ctx
 
   return (
     <GradientButton
@@ -729,5 +743,6 @@ export {
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
-  useSidebar
+  useSidebar,
+  useSidebarOptional
 }
