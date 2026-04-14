@@ -15,7 +15,7 @@ export {
 export { BlankSlate } from "./blank-slate";
 export { ErrorBoundary } from "./error-boundary";
 export { DialogDelete, type VigBlockedByItem } from "./dialog.delete";
-export { GridList } from "./grid.list";
+export { GridList, type ItemActionProps as VigGridItemActionProps } from "./grid.list";
 export { InternalSidebar } from "./internal.sidebar";
 export { LanguageSelect } from "./language-select";
 export { LoadProvider } from "./loading-provider";

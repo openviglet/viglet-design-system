@@ -54,6 +54,17 @@ interface ActionProps {
 const GridListAction: React.FC<ActionProps> = () => null;
 GridListAction.displayName = "GridListAction";
 
+export interface ItemActionProps {
+    icon?: ReactNode;
+    label: string;
+    onClick: (item: VigGridItem) => void;
+    position?: "left" | "right";
+}
+
+// Marker component — rendered as action buttons on each grid item
+const GridListItemAction: React.FC<ItemActionProps> = () => null;
+GridListItemAction.displayName = "GridListItemAction";
+
 const GRADIENT_PAIRS = [
     "from-blue-500 to-indigo-500",
     "from-emerald-500 to-teal-500",
@@ -94,6 +105,7 @@ const GridListComponent: React.FC<Props> = ({ gridItemList, children }) => {
 
     // Extract action definitions from marker children
     const actions: { key: string; render: () => ReactNode }[] = [];
+    const itemActions: { key: string; icon?: ReactNode; label: string; onClick: (item: VigGridItem) => void; position: "left" | "right" }[] = [];
     React.Children.forEach(children, (child) => {
         if (!React.isValidElement(child)) return;
         if ((child.type as any)?.displayName === "GridListNewButton") {
@@ -113,8 +125,21 @@ const GridListComponent: React.FC<Props> = ({ gridItemList, children }) => {
                 key: `action-${actions.length}`,
                 render: () => <>{actionChildren}</>,
             });
+        } else if ((child.type as any)?.displayName === "GridListItemAction") {
+            const props = child.props as ItemActionProps;
+            itemActions.push({
+                key: `item-action-${itemActions.length}`,
+                icon: props.icon,
+                label: props.label,
+                onClick: props.onClick,
+                position: props.position ?? "right",
+            });
         }
     });
+
+    const hasItemActions = itemActions.length > 0;
+    const leftItemActions = itemActions.filter(a => a.position === "left");
+    const rightItemActions = itemActions.filter(a => a.position === "right");
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 12,
@@ -185,31 +210,72 @@ const GridListComponent: React.FC<Props> = ({ gridItemList, children }) => {
                         const gradient = getGradient(name);
                         const initials = getInitials(name);
 
-                        return (
-                            <NavLink key={row.id} to={url} className="group">
-                                <Card className="relative overflow-hidden p-0 h-full transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/10 hover:-translate-y-0.5 border-border/60 hover:border-blue-500/30 dark:hover:border-blue-400/30">
-                                    <div className={`h-1.5 bg-linear-to-r ${gradient} opacity-70 group-hover:opacity-100 transition-opacity`} />
-                                    <div className="p-4 flex items-start gap-3">
-                                        <div className={`shrink-0 w-10 h-10 rounded-lg bg-linear-to-br ${gradient} flex items-center justify-center text-white text-sm font-semibold shadow-sm`}>
-                                            {icon ? <Icon icon={icon} className="size-5" /> : initials}
+                        const card = (
+                            <Card className="relative overflow-hidden p-0 h-full transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/10 hover:-translate-y-0.5 border-border/60 hover:border-blue-500/30 dark:hover:border-blue-400/30">
+                                <div className={`h-1.5 bg-linear-to-r ${gradient} opacity-70 group-hover:opacity-100 transition-opacity`} />
+                                <div className="p-4 flex items-start gap-3">
+                                    {hasItemActions && leftItemActions.length > 0 && (
+                                        <div className="flex items-center gap-1 shrink-0 mt-0.5">
+                                            {leftItemActions.map((action) => (
+                                                <button
+                                                    key={action.key}
+                                                    type="button"
+                                                    title={action.label}
+                                                    onClick={() => action.onClick(row.original)}
+                                                    className="inline-flex items-center justify-center rounded-md p-1.5 text-muted-foreground hover:text-blue-600 hover:bg-blue-500/10 dark:hover:text-blue-400 dark:hover:bg-blue-400/10 transition-colors cursor-pointer"
+                                                >
+                                                    {action.icon}
+                                                </button>
+                                            ))}
                                         </div>
-                                        <div className="flex-1 min-w-0">
-                                            <h3 className="font-medium text-sm truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                                                {name}
-                                            </h3>
-                                            {description ? (
-                                                <p className="text-xs text-muted-foreground mt-1 line-clamp-2 leading-relaxed">
-                                                    {description}
-                                                </p>
-                                            ) : (
-                                                <p className="text-xs text-muted-foreground/50 mt-1 italic">
-                                                    {t("forms.common.noDescription")}
-                                                </p>
-                                            )}
-                                        </div>
-                                        <IconChevronRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-blue-500 transition-all group-hover:translate-x-0.5 mt-0.5 shrink-0" />
+                                    )}
+                                    <div className={`shrink-0 w-10 h-10 rounded-lg bg-linear-to-br ${gradient} flex items-center justify-center text-white text-sm font-semibold shadow-sm`}>
+                                        {icon ? <Icon icon={icon} className="size-5" /> : initials}
                                     </div>
-                                </Card>
+                                    <div className="flex-1 min-w-0">
+                                        <h3 className="font-medium text-sm truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                                            {name}
+                                        </h3>
+                                        {description ? (
+                                            <p className="text-xs text-muted-foreground mt-1 line-clamp-2 leading-relaxed">
+                                                {description}
+                                            </p>
+                                        ) : (
+                                            <p className="text-xs text-muted-foreground/50 mt-1 italic">
+                                                {t("forms.common.noDescription")}
+                                            </p>
+                                        )}
+                                    </div>
+                                    {hasItemActions ? (
+                                        rightItemActions.length > 0 && (
+                                            <div className="flex items-center gap-1 shrink-0 mt-0.5">
+                                                {rightItemActions.map((action) => (
+                                                    <button
+                                                        key={action.key}
+                                                        type="button"
+                                                        title={action.label}
+                                                        onClick={() => action.onClick(row.original)}
+                                                        className="inline-flex items-center justify-center rounded-md p-1.5 text-muted-foreground hover:text-blue-600 hover:bg-blue-500/10 dark:hover:text-blue-400 dark:hover:bg-blue-400/10 transition-colors cursor-pointer"
+                                                    >
+                                                        {action.icon}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )
+                                    ) : (
+                                        <IconChevronRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-blue-500 transition-all group-hover:translate-x-0.5 mt-0.5 shrink-0" />
+                                    )}
+                                </div>
+                            </Card>
+                        );
+
+                        return hasItemActions ? (
+                            <div key={row.id} className="group">
+                                {card}
+                            </div>
+                        ) : (
+                            <NavLink key={row.id} to={url} className="group">
+                                {card}
                             </NavLink>
                         );
                     })}
@@ -275,4 +341,5 @@ const GridListComponent: React.FC<Props> = ({ gridItemList, children }) => {
 export const GridList = Object.assign(GridListComponent, {
     NewButton: GridListNewButton,
     Action: GridListAction,
+    ItemAction: GridListItemAction,
 });
