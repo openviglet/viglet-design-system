@@ -1,6 +1,6 @@
 {
   "name": "@viglet/viglet-design-system",
-  "version": "2026.2.32",
+  "version": "2026.2.33",
   "type": "module",
   "description": "Viglet Design System - Shared components, hooks, utilities and design tokens for Viglet products",
   "license": "Apache-2.0",
