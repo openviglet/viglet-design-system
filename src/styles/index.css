@@ -178,10 +178,11 @@
   color: transparent;
 }
 
-/* Brand primary button */
+/* Brand primary button — pill shape, matches viglet.org institutional */
 .vg-btn-brand {
   background: var(--vg-gradient);
   color: white;
+  border-radius: 9999px;
   box-shadow: 0 4px 14px rgba(194, 65, 12, 0.25);
   transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
 }
@@ -189,6 +190,18 @@
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(194, 65, 12, 0.35);
   opacity: 0.95;
+}
+
+/* Outline variant (for secondary CTAs — also pill) */
+.vg-btn-outline {
+  border-radius: 9999px;
+  border: 1px solid var(--border, #e5e5e5);
+  background: transparent;
+  color: inherit;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.vg-btn-outline:hover {
+  background: var(--accent, rgba(0, 0, 0, 0.03));
 }
 
 /* Brand badge (pill) */
