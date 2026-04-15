@@ -40,3 +40,9 @@ export { StickyPageHeader } from "./sticky.page.header";
 export { SubPage } from "./sub.page";
 export { SubPageHeader } from "./sub.page.header";
 export { ThemeProvider, useTheme } from "./theme-provider";
+export {
+  VigletAppSwitcher,
+  type VigletAppSwitcherProps,
+  type VigletAppSwitcherUrls,
+  type VigletProduct,
+} from "./viglet-app-switcher";

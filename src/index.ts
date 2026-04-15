@@ -4,6 +4,16 @@ import "./styles/index.css";
 // Components
 export * from "./components";
 
+// Product logos (PNG assets bundled with the design system)
+export {
+  vigletLogoUrl,
+  turingLogoUrl,
+  shioLogoUrl,
+  dumontLogoUrl,
+  productLogos,
+  type ProductId,
+} from "./assets/products";
+
 // Hooks
 export * from "./hooks";
 
