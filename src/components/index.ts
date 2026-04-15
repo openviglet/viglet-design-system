@@ -3,6 +3,11 @@ export * from "./ui";
 
 // App-level components
 export { AppFooter } from "./app-footer";
+export {
+  AppSwitcher,
+  type AppSwitcherItem,
+  type AppSwitcherProps,
+} from "./app-switcher";
 export { BadgeColorful } from "./badge-colorful";
 export { BadgeLocale, getLocaleCountryCode } from "./badge-locale";
 export {
@@ -18,6 +23,11 @@ export { DialogDelete, type VigBlockedByItem } from "./dialog.delete";
 export { GridList, type ItemActionProps as VigGridItemActionProps } from "./grid.list";
 export { InternalSidebar } from "./internal.sidebar";
 export { LanguageSelect } from "./language-select";
+export {
+  LanguageSwitcher,
+  type LanguageOption,
+  type LanguageSwitcherProps,
+} from "./language-switcher";
 export { LoadProvider } from "./loading-provider";
 export { ModeToggle, ModeToggleSidebar } from "./mode-toggle";
 export { NavMain } from "./nav-main";
