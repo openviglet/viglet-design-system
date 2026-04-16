@@ -39,3 +39,5 @@ export { Textarea } from "./textarea";
 export { Toggle, toggleVariants } from "./toggle";
 export { ToggleGroup, ToggleGroupItem } from "./toggle-group";
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
+export { UserAvatar, getUserInitials } from "./user-avatar";
+export type { UserAvatarProps } from "./user-avatar";
