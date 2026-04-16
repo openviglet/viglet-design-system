@@ -41,3 +41,5 @@ export { ToggleGroup, ToggleGroupItem } from "./toggle-group";
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 export { UserAvatar, getUserInitials } from "./user-avatar";
 export type { UserAvatarProps } from "./user-avatar";
+export { UserMenu } from "./user-menu";
+export type { UserMenuProps, UserMenuUser } from "./user-menu";
