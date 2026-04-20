@@ -1,8 +1,19 @@
+import { copyFileSync } from "node:fs"
 import { resolve } from "path"
 import react from "@vitejs/plugin-react"
 import tailwindcss from "@tailwindcss/vite"
-import { defineConfig } from "vite"
+import { defineConfig, type Plugin } from "vite"
 import dts from "vite-plugin-dts"
+
+const copyStandaloneCss = (): Plugin => ({
+  name: "copy-standalone-css",
+  writeBundle() {
+    copyFileSync(
+      resolve(__dirname, "src/components/ui/floating-formulas-bg.css"),
+      resolve(__dirname, "dist/floating-formulas-bg.css"),
+    )
+  },
+})
 
 export default defineConfig({
   plugins: [
@@ -14,6 +25,7 @@ export default defineConfig({
       outDir: "dist",
       entryRoot: "src",
     }),
+    copyStandaloneCss(),
   ],
   resolve: {
     alias: {

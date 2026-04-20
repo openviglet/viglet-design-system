@@ -1,123 +1,16 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "sonner/dist/styles.css";
+@import "./preset.css";
 @plugin "@tailwindcss/typography";
 
-@custom-variant dark (&:is(.dark *));
-
 @theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-
   /* Accordion animations */
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
   /* Stepper flow animation */
   --animate-stepper-flow: stepper-flow 3s ease-in-out infinite;
-
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
-}
-
-:root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
-
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
 }
 
 @layer base {
@@ -127,47 +20,6 @@
   body {
     @apply bg-background text-foreground;
   }
-}
-
-/* =============================================================
-   VIGLET BRAND TOKENS (opt-in)
-   Use these for public/marketing/institutional surfaces.
-   Core components (console) keep the grayscale primary above.
-   ============================================================= */
-
-:root {
-  --vg-brand: #C2410C;
-  --vg-brand-dark: #9A3412;
-  --vg-brand-light: #EA580C;
-  --vg-brand-lighter: #F97316;
-  --vg-brand-bg: #FFF7ED;
-  --vg-brand-mid: #FFEDD5;
-  --vg-brand-border: #FED7AA;
-  --vg-brand-on: #FFDEAD;
-  --vg-gradient: linear-gradient(135deg, #C2410C 0%, #F97316 100%);
-
-  /* Dark institutional footer */
-  --vg-footer-bg: #1a202c;
-  --vg-footer-fg: #ffffff;
-  --vg-footer-muted: #94a3b8;
-  --vg-footer-dim: #64748b;
-  --vg-footer-border: rgba(255, 255, 255, 0.08);
-
-  /* Product-specific accent colors (match viglet.org) */
-  --vg-product-turing: #4169E1;
-  --vg-product-shio: #FF6347;
-  --vg-product-dumont: #006400;
-}
-
-.dark {
-  --vg-brand: #F97316;
-  --vg-brand-dark: #C2410C;
-  --vg-brand-light: #FB923C;
-  --vg-brand-lighter: #FDBA74;
-  --vg-brand-bg: rgba(249, 115, 22, 0.1);
-  --vg-brand-mid: rgba(249, 115, 22, 0.15);
-  --vg-brand-border: rgba(249, 115, 22, 0.3);
-  --vg-gradient: linear-gradient(135deg, #F97316 0%, #FDBA74 100%);
 }
 
 /* Gradient text utility (used in hero headlines) */
@@ -195,13 +47,13 @@
 /* Outline variant (for secondary CTAs — also pill) */
 .vg-btn-outline {
   border-radius: 9999px;
-  border: 1px solid var(--border, #e5e5e5);
+  border: 1px solid var(--vg-border, #e5e5e5);
   background: transparent;
   color: inherit;
   transition: background 0.15s ease, border-color 0.15s ease;
 }
 .vg-btn-outline:hover {
-  background: var(--accent, rgba(0, 0, 0, 0.03));
+  background: var(--vg-accent, rgba(0, 0, 0, 0.03));
 }
 
 /* Brand badge (pill) */
@@ -323,7 +175,8 @@
   transition: all 0.25s ease-in-out;
 }
 
-.dark [data-slot="sidebar-menu-button"][data-active="true"] {
+.dark [data-slot="sidebar-menu-button"][data-active="true"],
+[data-theme="dark"] [data-slot="sidebar-menu-button"][data-active="true"] {
   background: linear-gradient(
     to left,
     color-mix(in srgb, var(--color-blue-500), transparent 85%),
@@ -337,6 +190,7 @@
   stroke-width: 2.5px;
 }
 
-.dark [data-slot="sidebar-menu-button"][data-active="true"] svg {
+.dark [data-slot="sidebar-menu-button"][data-active="true"] svg,
+[data-theme="dark"] [data-slot="sidebar-menu-button"][data-active="true"] svg {
   color: var(--color-blue-400) !important;
 }

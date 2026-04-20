@@ -22,6 +22,8 @@
       "types": "./dist/src/index.d.ts"
     },
     "./styles": "./dist/viglet-design-system.css",
+    "./preset": "./dist/preset.css",
+    "./preset.css": "./dist/preset.css",
     "./i18n": {
       "import": "./dist/i18n.es.js",
       "require": "./dist/i18n.cjs.js",
@@ -31,7 +33,8 @@
       "import": "./dist/floating-formulas-bg.es.js",
       "require": "./dist/floating-formulas-bg.cjs.js",
       "types": "./dist/src/components/ui/floating-formulas-bg.d.ts"
-    }
+    },
+    "./floating-formulas-bg.css": "./dist/floating-formulas-bg.css"
   },
   "files": [
     "dist"
@@ -41,7 +44,7 @@
   ],
   "scripts": {
     "dev": "vite build --watch",
-    "build": "tsc -b && node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && vite build",
+    "build": "tsc -b && node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && vite build && node -e \"require('fs').cpSync('src/styles/preset.css','dist/preset.css')\"",
     "lint": "eslint .",
     "prepublishOnly": "npm run build"
   },

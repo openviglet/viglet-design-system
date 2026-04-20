@@ -1,0 +1,162 @@
+/* =============================================================
+   Viglet Design System — Tailwind v4 preset
+   ---------------------------------------------------------------
+   Tokens-only companion to `./styles`. Import this AFTER
+   `@import "tailwindcss"` in apps that want the Viglet theme
+   (brand palette + shadcn tokens + dark variant) but manage their
+   own base/preflight/components independently.
+
+   Usage (consumer index.css):
+     @import "tailwindcss";
+     @import "tw-animate-css";
+     @import "@viglet/viglet-design-system/preset";
+     @custom-variant dark (...);  // optional override
+
+   All shadcn-style tokens are namespaced to `--vg-*` to avoid
+   silent collisions with consumer-defined `--background`,
+   `--border`, etc.
+   ============================================================= */
+
+@custom-variant dark (&:is(.dark *, [data-theme="dark"] *));
+
+@theme inline {
+  --radius-sm: calc(var(--vg-radius) - 4px);
+  --radius-md: calc(var(--vg-radius) - 2px);
+  --radius-lg: var(--vg-radius);
+  --radius-xl: calc(var(--vg-radius) + 4px);
+
+  --color-background: var(--vg-background);
+  --color-foreground: var(--vg-foreground);
+  --color-card: var(--vg-card);
+  --color-card-foreground: var(--vg-card-foreground);
+  --color-popover: var(--vg-popover);
+  --color-popover-foreground: var(--vg-popover-foreground);
+  --color-primary: var(--vg-primary);
+  --color-primary-foreground: var(--vg-primary-foreground);
+  --color-secondary: var(--vg-secondary);
+  --color-secondary-foreground: var(--vg-secondary-foreground);
+  --color-muted: var(--vg-muted);
+  --color-muted-foreground: var(--vg-muted-foreground);
+  --color-accent: var(--vg-accent);
+  --color-accent-foreground: var(--vg-accent-foreground);
+  --color-destructive: var(--vg-destructive);
+  --color-border: var(--vg-border);
+  --color-input: var(--vg-input);
+  --color-ring: var(--vg-ring);
+  --color-chart-1: var(--vg-chart-1);
+  --color-chart-2: var(--vg-chart-2);
+  --color-chart-3: var(--vg-chart-3);
+  --color-chart-4: var(--vg-chart-4);
+  --color-chart-5: var(--vg-chart-5);
+  --color-sidebar: var(--vg-sidebar);
+  --color-sidebar-foreground: var(--vg-sidebar-foreground);
+  --color-sidebar-primary: var(--vg-sidebar-primary);
+  --color-sidebar-primary-foreground: var(--vg-sidebar-primary-foreground);
+  --color-sidebar-accent: var(--vg-sidebar-accent);
+  --color-sidebar-accent-foreground: var(--vg-sidebar-accent-foreground);
+  --color-sidebar-border: var(--vg-sidebar-border);
+  --color-sidebar-ring: var(--vg-sidebar-ring);
+}
+
+:root {
+  --vg-radius: 0.625rem;
+  --vg-background: oklch(1 0 0);
+  --vg-foreground: oklch(0.145 0 0);
+  --vg-card: oklch(1 0 0);
+  --vg-card-foreground: oklch(0.145 0 0);
+  --vg-popover: oklch(1 0 0);
+  --vg-popover-foreground: oklch(0.145 0 0);
+  --vg-primary: oklch(0.205 0 0);
+  --vg-primary-foreground: oklch(0.985 0 0);
+  --vg-secondary: oklch(0.97 0 0);
+  --vg-secondary-foreground: oklch(0.205 0 0);
+  --vg-muted: oklch(0.97 0 0);
+  --vg-muted-foreground: oklch(0.556 0 0);
+  --vg-accent: oklch(0.97 0 0);
+  --vg-accent-foreground: oklch(0.205 0 0);
+  --vg-destructive: oklch(0.577 0.245 27.325);
+  --vg-border: oklch(0.922 0 0);
+  --vg-input: oklch(0.922 0 0);
+  --vg-ring: oklch(0.708 0 0);
+  --vg-chart-1: oklch(0.646 0.222 41.116);
+  --vg-chart-2: oklch(0.6 0.118 184.704);
+  --vg-chart-3: oklch(0.398 0.07 227.392);
+  --vg-chart-4: oklch(0.828 0.189 84.429);
+  --vg-chart-5: oklch(0.769 0.188 70.08);
+  --vg-sidebar: oklch(0.985 0 0);
+  --vg-sidebar-foreground: oklch(0.145 0 0);
+  --vg-sidebar-primary: oklch(0.205 0 0);
+  --vg-sidebar-primary-foreground: oklch(0.985 0 0);
+  --vg-sidebar-accent: oklch(0.97 0 0);
+  --vg-sidebar-accent-foreground: oklch(0.205 0 0);
+  --vg-sidebar-border: oklch(0.922 0 0);
+  --vg-sidebar-ring: oklch(0.708 0 0);
+
+  /* Brand palette */
+  --vg-brand: #c2410c;
+  --vg-brand-dark: #9a3412;
+  --vg-brand-light: #ea580c;
+  --vg-brand-lighter: #f97316;
+  --vg-brand-bg: #fff7ed;
+  --vg-brand-mid: #ffedd5;
+  --vg-brand-border: #fed7aa;
+  --vg-brand-on: #ffdead;
+  --vg-gradient: linear-gradient(135deg, #c2410c 0%, #f97316 100%);
+
+  /* Dark institutional footer */
+  --vg-footer-bg: #1a202c;
+  --vg-footer-fg: #ffffff;
+  --vg-footer-muted: #94a3b8;
+  --vg-footer-dim: #64748b;
+  --vg-footer-border: rgba(255, 255, 255, 0.08);
+
+  /* Product accent colors (match viglet.org) */
+  --vg-product-turing: #4169e1;
+  --vg-product-shio: #ff6347;
+  --vg-product-dumont: #006400;
+}
+
+.dark,
+[data-theme="dark"] {
+  --vg-background: oklch(0.145 0 0);
+  --vg-foreground: oklch(0.985 0 0);
+  --vg-card: oklch(0.205 0 0);
+  --vg-card-foreground: oklch(0.985 0 0);
+  --vg-popover: oklch(0.205 0 0);
+  --vg-popover-foreground: oklch(0.985 0 0);
+  --vg-primary: oklch(0.922 0 0);
+  --vg-primary-foreground: oklch(0.205 0 0);
+  --vg-secondary: oklch(0.269 0 0);
+  --vg-secondary-foreground: oklch(0.985 0 0);
+  --vg-muted: oklch(0.269 0 0);
+  --vg-muted-foreground: oklch(0.708 0 0);
+  --vg-accent: oklch(0.269 0 0);
+  --vg-accent-foreground: oklch(0.985 0 0);
+  --vg-destructive: oklch(0.704 0.191 22.216);
+  --vg-border: oklch(1 0 0 / 10%);
+  --vg-input: oklch(1 0 0 / 15%);
+  --vg-ring: oklch(0.556 0 0);
+  --vg-chart-1: oklch(0.488 0.243 264.376);
+  --vg-chart-2: oklch(0.696 0.17 162.48);
+  --vg-chart-3: oklch(0.769 0.188 70.08);
+  --vg-chart-4: oklch(0.627 0.265 303.9);
+  --vg-chart-5: oklch(0.645 0.246 16.439);
+  --vg-sidebar: oklch(0.205 0 0);
+  --vg-sidebar-foreground: oklch(0.985 0 0);
+  --vg-sidebar-primary: oklch(0.488 0.243 264.376);
+  --vg-sidebar-primary-foreground: oklch(0.985 0 0);
+  --vg-sidebar-accent: oklch(0.269 0 0);
+  --vg-sidebar-accent-foreground: oklch(0.985 0 0);
+  --vg-sidebar-border: oklch(1 0 0 / 10%);
+  --vg-sidebar-ring: oklch(0.556 0 0);
+
+  /* Brand (dark) */
+  --vg-brand: #f97316;
+  --vg-brand-dark: #c2410c;
+  --vg-brand-light: #fb923c;
+  --vg-brand-lighter: #fdba74;
+  --vg-brand-bg: rgba(249, 115, 22, 0.1);
+  --vg-brand-mid: rgba(249, 115, 22, 0.15);
+  --vg-brand-border: rgba(249, 115, 22, 0.3);
+  --vg-gradient: linear-gradient(135deg, #f97316 0%, #fdba74 100%);
+}
