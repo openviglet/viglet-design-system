@@ -180,9 +180,7 @@ function StartupFirstDescription({ children, className, ...rest }: Readonly<HTML
 function StartupFirstCard({ children, className, ...rest }: Readonly<HTMLAttributes<HTMLDivElement>>) {
   return (
     <div className={`vig-sf__fade-in-d2 w-full ${className ?? ""}`} {...rest}>
-      <GlassCard className="rounded-2xl p-6">
-        {children}
-      </GlassCard>
+      <GlassCard>{children}</GlassCard>
     </div>
   );
 }

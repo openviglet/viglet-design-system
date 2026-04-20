@@ -176,9 +176,7 @@ function LoginFeaturePill({ icon, children, className, ...rest }: Readonly<Login
 function LoginCard({ children, className, ...rest }: Readonly<HTMLAttributes<HTMLDivElement>>) {
   return (
     <div className={`vig-login__fade-in-d3 w-full ${className ?? ""}`} {...rest}>
-      <GlassCard className="rounded-2xl">
-        {children}
-      </GlassCard>
+      <GlassCard>{children}</GlassCard>
     </div>
   );
 }

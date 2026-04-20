@@ -1,14 +1,18 @@
 import type { HTMLAttributes, CSSProperties } from "react";
+import { cn } from "../../lib/utils";
 import "./glass-card.css";
 
 /**
- * GlassCard — glassmorphism container used by login and onboarding hero cards
- * across Viglet products.
+ * GlassCard — glassmorphism container used by login, onboarding and hero
+ * cards across Viglet products.
  *
- * Delegates the outer shape (border radius, padding, spacing) to the caller so
- * it composes cleanly with any form/layout. Tint is driven by the same
- * `--ff-color-rgb` custom property used by {@link FloatingFormulasBg} so the
- * card shadow matches the surrounding background palette.
+ * Ships with sensible defaults for every visible surface concern (rounded
+ * corners, responsive padding) so consumers compose it without restating the
+ * same utility classes. Tint is driven by the `--ff-color-rgb` custom
+ * property set by {@link FloatingFormulasBg} so the card shadow matches the
+ * surrounding palette. Pass any Tailwind override via `className` — the merge
+ * is done with `tailwind-merge` so the last declaration of a conflicting
+ * utility (e.g. `p-4` overriding the default `p-6 sm:p-8`) wins.
  */
 export interface GlassCardProps extends HTMLAttributes<HTMLDivElement> {
   /** Accent color for the shadow tint (CSS `color` or `rgb(...)` value). */
@@ -16,6 +20,8 @@ export interface GlassCardProps extends HTMLAttributes<HTMLDivElement> {
   /** Accent color in dark mode. */
   colorDark?: string;
 }
+
+const DEFAULT_SURFACE = "rounded-2xl p-6 sm:p-8";
 
 export function GlassCard({
   children,
@@ -32,7 +38,7 @@ export function GlassCard({
 
   return (
     <div
-      className={`vig-glass-card ${className ?? ""}`}
+      className={cn("vig-glass-card", DEFAULT_SURFACE, className)}
       style={{ ...(style ?? {}), ...themeStyle } as CSSProperties}
       {...rest}
     >
