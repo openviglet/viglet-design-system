@@ -1,0 +1,65 @@
+/* ══════════════════════════════════════════════════════
+   STARTUP-FIRST — first-access / initial-setup screen
+   Shares palette tokens with <Login>: colors cascade from the
+   root <StartupFirst> via --ff-color(-dark)?(-rgb)?.
+   ══════════════════════════════════════════════════════ */
+
+/* ── Title gradient matches Login title ────────────── */
+.vig-sf__title-gradient {
+  background-image: linear-gradient(
+    90deg,
+    rgb(var(--ff-color-rgb, 37, 99, 235)),
+    rgb(var(--ff-color-rgb, 79, 70, 229))
+  );
+}
+.dark .vig-sf__title-gradient {
+  background-image: linear-gradient(
+    90deg,
+    rgb(var(--ff-color-dark-rgb, 96, 165, 250)),
+    rgb(var(--ff-color-dark-rgb, 129, 140, 248))
+  );
+}
+
+/* ── Step indicator dots ───────────────────────────── */
+.vig-sf__step {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: rgba(148, 163, 184, 0.35);
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+.vig-sf__step--active {
+  background: rgb(var(--ff-color-rgb, 37, 99, 235));
+  transform: scale(1.25);
+}
+.dark .vig-sf__step--active {
+  background: rgb(var(--ff-color-dark-rgb, 96, 165, 250));
+}
+
+/* ── Hint callout ──────────────────────────────────── */
+.vig-sf__hint {
+  background: rgba(var(--ff-color-rgb, 37, 99, 235), 0.06);
+  border: 1px solid rgba(var(--ff-color-rgb, 37, 99, 235), 0.15);
+}
+.dark .vig-sf__hint {
+  background: rgba(var(--ff-color-dark-rgb, 96, 165, 250), 0.1);
+  border-color: rgba(var(--ff-color-dark-rgb, 96, 165, 250), 0.2);
+}
+
+/* ── Fade-in timeline (matches Login stagger) ──────── */
+.vig-sf__fade-in,
+.vig-sf__fade-in-d1,
+.vig-sf__fade-in-d2,
+.vig-sf__fade-in-d3 {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: vig-sf-fade-up 0.7s ease-out forwards;
+}
+.vig-sf__fade-in-d1 { animation-delay: 0.15s; }
+.vig-sf__fade-in-d2 { animation-delay: 0.30s; }
+.vig-sf__fade-in-d3 { animation-delay: 0.45s; }
+
+@keyframes vig-sf-fade-up {
+  to { opacity: 1; transform: translateY(0); }
+}

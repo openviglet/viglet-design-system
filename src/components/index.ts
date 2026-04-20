@@ -1,6 +1,10 @@
 // UI primitives
 export * from "./ui";
 
+// Hero / onboarding compounds
+export * from "./login";
+export * from "./startup-first";
+
 // App-level components
 export { AppFooter } from "./app-footer";
 export {
