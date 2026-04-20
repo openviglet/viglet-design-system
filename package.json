@@ -1,6 +1,6 @@
 {
   "name": "@viglet/viglet-design-system",
-  "version": "2026.2.45",
+  "version": "2026.2.46",
   "type": "module",
   "description": "Viglet Design System - Shared components, hooks, utilities and design tokens for Viglet products",
   "license": "Apache-2.0",
@@ -64,6 +64,7 @@
     }
   },
   "dependencies": {
+    "@fontsource-variable/inter": "^5.2.8",
     "@fontsource-variable/plus-jakarta-sans": "^5.2.8",
     "@iconify/react": "^6.0.2",
     "@radix-ui/react-accordion": "^1.2.12",
