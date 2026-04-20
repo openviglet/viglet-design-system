@@ -175,7 +175,7 @@ export function FloatingFormulasBg({
     [itemCount, extraTokens],
   );
 
-  const themeStyle: CSSProperties & Record<string, string> = {};
+  const themeStyle: Record<string, string> = {};
   if (color) themeStyle["--ff-color"] = color;
   if (colorDark) themeStyle["--ff-color-dark"] = colorDark;
   else if (color) themeStyle["--ff-color-dark"] = color;
@@ -187,7 +187,7 @@ export function FloatingFormulasBg({
   return (
     <div
       className={`absolute inset-0 pointer-events-none overflow-hidden ${className ?? ""}`}
-      style={themeStyle}
+      style={themeStyle as CSSProperties}
       aria-hidden="true"
     >
       {withLightning && (

@@ -30,7 +30,7 @@ export function PulseRing({
   style,
   ...rest
 }: Readonly<PulseRingProps>) {
-  const themeStyle: CSSProperties & Record<string, string> = { ...(style ?? {}) };
+  const themeStyle: Record<string, string> = {};
   if (color) themeStyle["--pulse-ring-color"] = color;
   if (colorDark) themeStyle["--pulse-ring-color-dark"] = colorDark;
   else if (color) themeStyle["--pulse-ring-color-dark"] = color;
@@ -38,7 +38,7 @@ export function PulseRing({
   return (
     <div
       className={`vig-pulse-ring ${paused ? "" : "vig-pulse-ring--active"} ${className ?? ""}`}
-      style={themeStyle}
+      style={{ ...(style ?? {}), ...themeStyle } as CSSProperties}
       {...rest}
     >
       {children}

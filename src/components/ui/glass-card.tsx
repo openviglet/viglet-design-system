@@ -25,7 +25,7 @@ export function GlassCard({
   style,
   ...rest
 }: Readonly<GlassCardProps>) {
-  const themeStyle: CSSProperties & Record<string, string> = { ...(style ?? {}) };
+  const themeStyle: Record<string, string> = {};
   if (color) themeStyle["--glass-card-color"] = color;
   if (colorDark) themeStyle["--glass-card-color-dark"] = colorDark;
   else if (color) themeStyle["--glass-card-color-dark"] = color;
@@ -33,7 +33,7 @@ export function GlassCard({
   return (
     <div
       className={`vig-glass-card ${className ?? ""}`}
-      style={themeStyle}
+      style={{ ...(style ?? {}), ...themeStyle } as CSSProperties}
       {...rest}
     >
       {children}

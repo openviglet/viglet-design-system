@@ -66,7 +66,7 @@ export interface StartupFirstRootProps extends HTMLAttributes<HTMLDivElement> {
 function StartupFirstRoot({
   color, colorDark, children, className, style, ...rest
 }: Readonly<StartupFirstRootProps>) {
-  const themeStyle: CSSProperties & Record<string, string> = { ...(style ?? {}) };
+  const themeStyle: Record<string, string> = {};
   if (color) themeStyle["--ff-color"] = color;
   if (colorDark) themeStyle["--ff-color-dark"] = colorDark;
   else if (color) themeStyle["--ff-color-dark"] = color;
@@ -79,7 +79,7 @@ function StartupFirstRoot({
     <StartupFirstThemeContext.Provider value={{ color, colorDark }}>
       <div
         className={`vig-sf relative min-h-svh flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-950 ${className ?? ""}`}
-        style={themeStyle}
+        style={{ ...(style ?? {}), ...themeStyle } as CSSProperties}
         {...rest}
       >
         {children}
