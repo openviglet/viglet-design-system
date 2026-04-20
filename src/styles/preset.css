@@ -114,6 +114,44 @@
   --vg-product-turing: #4169e1;
   --vg-product-shio: #ff6347;
   --vg-product-dumont: #006400;
+
+  /* ── Back-compat aliases ──────────────────────────────────────────────
+     Older consumers (and pre-2026.2.42 DS versions) defined these names
+     directly. Aliasing keeps `var(--background)`, `var(--border)`, etc.
+     resolving correctly. New code should prefer `--vg-*` to avoid
+     collisions with consumer-defined tokens. */
+  --background: var(--vg-background);
+  --foreground: var(--vg-foreground);
+  --card: var(--vg-card);
+  --card-foreground: var(--vg-card-foreground);
+  --popover: var(--vg-popover);
+  --popover-foreground: var(--vg-popover-foreground);
+  --primary: var(--vg-primary);
+  --primary-foreground: var(--vg-primary-foreground);
+  --secondary: var(--vg-secondary);
+  --secondary-foreground: var(--vg-secondary-foreground);
+  --muted: var(--vg-muted);
+  --muted-foreground: var(--vg-muted-foreground);
+  --accent: var(--vg-accent);
+  --accent-foreground: var(--vg-accent-foreground);
+  --destructive: var(--vg-destructive);
+  --border: var(--vg-border);
+  --input: var(--vg-input);
+  --ring: var(--vg-ring);
+  --radius: var(--vg-radius);
+  --chart-1: var(--vg-chart-1);
+  --chart-2: var(--vg-chart-2);
+  --chart-3: var(--vg-chart-3);
+  --chart-4: var(--vg-chart-4);
+  --chart-5: var(--vg-chart-5);
+  --sidebar: var(--vg-sidebar);
+  --sidebar-foreground: var(--vg-sidebar-foreground);
+  --sidebar-primary: var(--vg-sidebar-primary);
+  --sidebar-primary-foreground: var(--vg-sidebar-primary-foreground);
+  --sidebar-accent: var(--vg-sidebar-accent);
+  --sidebar-accent-foreground: var(--vg-sidebar-accent-foreground);
+  --sidebar-border: var(--vg-sidebar-border);
+  --sidebar-ring: var(--vg-sidebar-ring);
 }
 
 .dark,
