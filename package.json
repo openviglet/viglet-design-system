@@ -26,6 +26,11 @@
       "import": "./dist/i18n.es.js",
       "require": "./dist/i18n.cjs.js",
       "types": "./dist/src/i18n/index.d.ts"
+    },
+    "./floating-formulas-bg": {
+      "import": "./dist/floating-formulas-bg.es.js",
+      "require": "./dist/floating-formulas-bg.cjs.js",
+      "types": "./dist/src/components/ui/floating-formulas-bg.d.ts"
     }
   },
   "files": [
