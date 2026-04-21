@@ -17,6 +17,10 @@
    `--border`, etc.
    ============================================================= */
 
+/* Fonts referenced by `--font-sans` / `--font-brand` below. */
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/plus-jakarta-sans";
+
 @custom-variant dark (&:is(.dark *, [data-theme="dark"] *));
 
 @theme {
