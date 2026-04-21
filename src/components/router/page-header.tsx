@@ -6,8 +6,8 @@ import { IconChevronLeft } from "@tabler/icons-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, useNavigate } from "react-router-dom";
-import { ModeToggle } from "./mode-toggle";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "./ui/breadcrumb";
+import { ModeToggle } from "../mode-toggle";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "../ui/breadcrumb";
 
 interface PageHeaderProps {
   icon?: React.ElementType;

@@ -1,7 +1,6 @@
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import * as React from "react"
-import { NavLink, type To } from "react-router-dom"
 
 import { cn } from "@/lib/utils"
 
@@ -99,34 +98,13 @@ function GradientButton({
     size,
     asChild = false,
     loading = false,
-    to,
     ...props
 }: React.ComponentProps<"button"> &
     VariantProps<typeof gradientButtonVariants> & {
         asChild?: boolean
         loading?: boolean
-        to?: To
     }) {
     const classes = cn(gradientButtonVariants({ variant, size, className }))
-
-    if (to) {
-        return (
-            <NavLink
-                to={to}
-                data-slot="gradient-button"
-                className={classes}
-                onClick={e => {
-                    if (globalThis.location.pathname === (typeof to === "string" ? to : (to as any).pathname)) {
-                        globalThis.location.reload()
-                    }
-                    if (props.onClick) props.onClick(e as React.MouseEvent<any, MouseEvent>)
-                }}
-            >
-                {props.children}
-            </NavLink>
-        )
-    }
-
     const Comp = asChild ? Slot : "button"
 
     return (

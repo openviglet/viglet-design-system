@@ -1,7 +1,7 @@
 import React, { type Dispatch, type SetStateAction } from "react";
 import { Outlet } from "react-router-dom";
 import { InternalSidebar } from "./internal.sidebar";
-import { SidebarInset, SidebarProvider } from "./ui/sidebar";
+import { SidebarInset, SidebarProvider } from "../ui/sidebar";
 
 interface NavMainItem {
   title: string;

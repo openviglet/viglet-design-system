@@ -29,6 +29,11 @@
       "require": "./dist/i18n.cjs.js",
       "types": "./dist/src/i18n/index.d.ts"
     },
+    "./router": {
+      "import": "./dist/router.es.js",
+      "require": "./dist/router.cjs.js",
+      "types": "./dist/src/router.d.ts"
+    },
     "./floating-formulas-bg": {
       "import": "./dist/floating-formulas-bg.es.js",
       "require": "./dist/floating-formulas-bg.cjs.js",

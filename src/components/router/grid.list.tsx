@@ -27,8 +27,8 @@ import {
 import type { VigGridItem } from "@/models/grid-item";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { GradientButton } from "./ui/gradient-button";
-import { Input } from "./ui/input";
+import { GradientButton } from "../ui/gradient-button";
+import { Input } from "../ui/input";
 import { IconChevronRight, IconDotsVertical, IconPlus, IconSearch } from "@tabler/icons-react";
 import { NavLink, useNavigate } from "react-router-dom";
 

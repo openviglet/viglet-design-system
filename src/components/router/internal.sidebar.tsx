@@ -3,7 +3,7 @@ import React, { type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, useLocation } from "react-router-dom";
 import { DialogDelete } from "./dialog.delete";
-import { GradientButton } from "./ui/gradient-button";
+import { GradientButton } from "../ui/gradient-button";
 import {
   Sidebar,
   SidebarContent,
@@ -16,7 +16,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "./ui/sidebar";
+} from "../ui/sidebar";
 
 interface NavMainItem {
   title: string;

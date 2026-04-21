@@ -2,10 +2,10 @@ import { IconDotsVertical, IconPlus } from "@tabler/icons-react";
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { DialogDelete } from "./dialog.delete";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { GradientButton } from "./ui/gradient-button";
-import { Separator } from "./ui/separator";
-import { SidebarTrigger, useSidebar } from "./ui/sidebar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { GradientButton } from "../ui/gradient-button";
+import { Separator } from "../ui/separator";
+import { SidebarTrigger, useSidebar } from "../ui/sidebar";
 
 /* ── Composite sub-components (markers) ── */
 

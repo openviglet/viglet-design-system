@@ -41,6 +41,7 @@ export default defineConfig({
       entry: {
         index: resolve(__dirname, "src/index.ts"),
         i18n: resolve(__dirname, "src/i18n/index.ts"),
+        router: resolve(__dirname, "src/router.ts"),
         "floating-formulas-bg": resolve(
           __dirname,
           "src/components/ui/floating-formulas-bg.tsx",

@@ -2,10 +2,10 @@ import { IconDotsVertical, IconPlus } from "@tabler/icons-react";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, useNavigate } from "react-router-dom";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { GradientButton } from "./ui/gradient-button";
-import { Separator } from "./ui/separator";
-import { SidebarTrigger, useSidebar } from "./ui/sidebar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
+import { GradientButton } from "../ui/gradient-button";
+import { Separator } from "../ui/separator";
+import { SidebarTrigger, useSidebar } from "../ui/sidebar";
 
 /**
  * Composite sticky header for sub-pages.

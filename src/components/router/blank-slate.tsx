@@ -1,5 +1,5 @@
 import React from "react";
-import { GradientButton } from "./ui/gradient-button";
+import { GradientButtonLink } from "./gradient-button-link";
 
 interface Props {
     icon: React.ElementType
@@ -32,9 +32,9 @@ export const BlankSlate: React.FC<Props> = ({ icon: Icon, title, description, ur
 
                     {/* CTA */}
                     {urlNew && (
-                        <GradientButton size="lg" to={urlNew}>
+                        <GradientButtonLink size="lg" to={urlNew}>
                             {buttonText}
-                        </GradientButton>
+                        </GradientButtonLink>
                     )}
                 </div>
             </div>

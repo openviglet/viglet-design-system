@@ -2,11 +2,11 @@ import { IconAlertTriangle, IconTrash } from "@tabler/icons-react";
 import React, { type Dispatch, type SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { BadgeColorful } from "./badge-colorful";
-import { getLocaleCountryCode } from "./badge-locale";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
-import { GradientButton } from "./ui/gradient-button";
-import { Input } from "./ui/input";
+import { BadgeColorful } from "../badge-colorful";
+import { getLocaleCountryCode } from "../badge-locale";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { GradientButton } from "../ui/gradient-button";
+import { Input } from "../ui/input";
 
 export interface VigBlockedByItem {
   id: string;
