@@ -39,7 +39,12 @@
       "require": "./dist/floating-formulas-bg.cjs.js",
       "types": "./dist/src/components/ui/floating-formulas-bg.d.ts"
     },
-    "./floating-formulas-bg.css": "./dist/floating-formulas-bg.css"
+    "./floating-formulas-bg.css": "./dist/floating-formulas-bg.css",
+    "./vite": {
+      "import": "./dist/vite.es.js",
+      "require": "./dist/vite.cjs.js",
+      "types": "./dist/src/vite/index.d.ts"
+    }
   },
   "files": [
     "dist"

@@ -42,6 +42,7 @@ export default defineConfig({
         index: resolve(__dirname, "src/index.ts"),
         i18n: resolve(__dirname, "src/i18n/index.ts"),
         router: resolve(__dirname, "src/router.ts"),
+        vite: resolve(__dirname, "src/vite/index.ts"),
         "floating-formulas-bg": resolve(
           __dirname,
           "src/components/ui/floating-formulas-bg.tsx",
@@ -63,6 +64,10 @@ export default defineConfig({
         "react-hook-form",
         "sonner",
         "next-themes",
+        // The `./vite` plugin entry imports types/runtime from Vite itself.
+        // Mark it external so the bundle doesn't try to pull Vite into the
+        // shipped lib.
+        "vite",
       ],
       output: {
         globals: {
