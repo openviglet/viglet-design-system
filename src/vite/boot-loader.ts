@@ -145,7 +145,10 @@ interface Ctx {
   testFlag: string;
 }
 
-function renderStyle({ pfx, color, colorDark, rgb, rgbDark }: Ctx): string {
+function renderStyle({ pfx, color, colorDark, rgb }: Ctx): string {
+  // `rgbDark` is computed in the Ctx but currently unused — the template
+  // keeps the same alpha-stacked RGB for both color schemes. Left in Ctx so
+  // future dark-mode-specific tints can wire in without threading a new arg.
   return `
     html, body { margin: 0; padding: 0; height: 100%; }
     body {
