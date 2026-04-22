@@ -53,6 +53,15 @@
 .dark .ff-orb--2 { background: radial-gradient(circle, rgba(var(--ff-color-dark-rgb, 129, 140, 248), 0.25), transparent 70%); }
 .dark .ff-orb--3 { background: radial-gradient(circle, rgba(var(--ff-color-dark-rgb, 165, 180, 252), 0.18), transparent 70%); }
 
+/* Mobile GPUs choke on blur(100px); shrink radius + orb size to stop flicker. */
+@media (max-width: 767px) {
+  .ff-orb { filter: blur(40px); }
+  .ff-orb--1 { width: 260px; height: 260px; }
+  .ff-orb--2 { width: 220px; height: 220px; }
+  .ff-orb--3 { width: 200px; height: 200px; }
+  .ff-grid { background-size: 24px 24px; }
+}
+
 @keyframes ff-orb-float-1 {
   0%, 100% { transform: translate(0, 0) scale(1); }
   50%      { transform: translate(-30px, 20px) scale(1.05); }

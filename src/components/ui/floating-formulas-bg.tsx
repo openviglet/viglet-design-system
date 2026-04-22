@@ -1,5 +1,30 @@
-import { useMemo, type CSSProperties } from "react";
+import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import "./floating-formulas-bg.css";
+
+/**
+ * Returns a 0..1 density factor based on viewport width so the backdrop can
+ * thin itself out on smaller screens. Mobile GPUs flicker when asked to
+ * composite many animated + blurred layers at once; scaling the element
+ * count keeps the vibe without the jank.
+ */
+function useDensityFactor(): number {
+  const [factor, setFactor] = useState(1);
+  useEffect(() => {
+    const compute = () => {
+      const w = window.innerWidth;
+      if (w < 480) return 0.25;
+      if (w < 640) return 0.35;
+      if (w < 768) return 0.5;
+      if (w < 1024) return 0.7;
+      return 1;
+    };
+    const update = () => setFactor(compute());
+    update();
+    window.addEventListener("resize", update, { passive: true });
+    return () => window.removeEventListener("resize", update);
+  }, []);
+  return factor;
+}
 
 /**
  * FloatingFormulasBg — rich animated background shared by every Viglet product
@@ -111,6 +136,12 @@ function hexToRgbTriplet(hex?: string): string | null {
   return null;
 }
 
+function pickOrbCount(density: number): number {
+  if (density < 0.4) return 1;
+  if (density < 0.8) return 2;
+  return 3;
+}
+
 function buildFloatingItems(texts: string[], count: number) {
   const rand = seededRandom(Date.now() % 100000);
   const picked = [...texts].sort(() => rand() - 0.5).slice(0, count);
@@ -167,12 +198,21 @@ export function FloatingFormulasBg({
   withGrid = true,
   className,
 }: Readonly<FloatingFormulasBgProps>) {
+  const density = useDensityFactor();
+
+  const scaledItemCount = Math.max(4, Math.round(itemCount * density));
+  const scaledBonds = useMemo(
+    () => BONDS.slice(0, Math.max(2, Math.round(BONDS.length * density))),
+    [density],
+  );
+  const orbCount = pickOrbCount(density);
+
   const items = useMemo(
     () => buildFloatingItems(
       [...FORMULAS, ...(extraTokens ? tokenizeNames(extraTokens) : [])],
-      itemCount,
+      scaledItemCount,
     ),
-    [itemCount, extraTokens],
+    [scaledItemCount, extraTokens],
   );
 
   const themeStyle: Record<string, string> = {};
@@ -211,15 +251,15 @@ export function FloatingFormulasBg({
 
       {withOrbs && (
         <>
-          <div className="ff-orb ff-orb--1" />
-          <div className="ff-orb ff-orb--2" />
-          <div className="ff-orb ff-orb--3" />
+          {orbCount >= 1 && <div className="ff-orb ff-orb--1" />}
+          {orbCount >= 2 && <div className="ff-orb ff-orb--2" />}
+          {orbCount >= 3 && <div className="ff-orb ff-orb--3" />}
         </>
       )}
 
       {withGrid && <div className="ff-grid" />}
 
-      {withBonds && BONDS.map((b) => (
+      {withBonds && scaledBonds.map((b) => (
         <svg
           key={`bond-${b.top}-${b.left}`}
           className={`ff-bond ${b.drift}`}

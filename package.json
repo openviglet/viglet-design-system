@@ -17,33 +17,33 @@
   "types": "./dist/src/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/src/index.d.ts",
       "import": "./dist/index.es.js",
-      "require": "./dist/index.cjs.js",
-      "types": "./dist/src/index.d.ts"
+      "require": "./dist/index.cjs.js"
     },
     "./styles": "./dist/viglet-design-system.css",
     "./preset": "./dist/preset.css",
     "./preset.css": "./dist/preset.css",
     "./i18n": {
+      "types": "./dist/src/i18n/index.d.ts",
       "import": "./dist/i18n.es.js",
-      "require": "./dist/i18n.cjs.js",
-      "types": "./dist/src/i18n/index.d.ts"
+      "require": "./dist/i18n.cjs.js"
     },
     "./router": {
+      "types": "./dist/src/router.d.ts",
       "import": "./dist/router.es.js",
-      "require": "./dist/router.cjs.js",
-      "types": "./dist/src/router.d.ts"
+      "require": "./dist/router.cjs.js"
     },
     "./floating-formulas-bg": {
+      "types": "./dist/src/components/ui/floating-formulas-bg.d.ts",
       "import": "./dist/floating-formulas-bg.es.js",
-      "require": "./dist/floating-formulas-bg.cjs.js",
-      "types": "./dist/src/components/ui/floating-formulas-bg.d.ts"
+      "require": "./dist/floating-formulas-bg.cjs.js"
     },
     "./floating-formulas-bg.css": "./dist/floating-formulas-bg.css",
     "./vite": {
+      "types": "./dist/src/vite/index.d.ts",
       "import": "./dist/vite.es.js",
-      "require": "./dist/vite.cjs.js",
-      "types": "./dist/src/vite/index.d.ts"
+      "require": "./dist/vite.cjs.js"
     }
   },
   "files": [
@@ -56,6 +56,8 @@
     "dev": "vite build --watch",
     "build": "tsc -b && node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && vite build && node -e \"require('fs').cpSync('src/styles/preset.css','dist/preset.css')\"",
     "lint": "eslint .",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
     "prepublishOnly": "npm run build"
   },
   "peerDependencies": {
@@ -111,6 +113,10 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",
+    "@storybook/addon-a11y": "^10.3.5",
+    "@storybook/addon-docs": "^10.3.5",
+    "@storybook/addon-themes": "^10.3.5",
+    "@storybook/react-vite": "^10.3.5",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.2",
     "@types/node": "^25.5.0",
@@ -122,6 +128,7 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
     "react-router-dom": "^7.0.0",
+    "storybook": "^10.3.5",
     "tailwindcss": "^4.1.11",
     "tw-animate-css": "^1.4.0",
     "typescript": "~6.0.2",
