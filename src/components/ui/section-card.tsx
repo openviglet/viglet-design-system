@@ -124,7 +124,7 @@ function Header({ icon: Icon, title, description, className }: Readonly<HeaderPr
         <Icon className={`size-4 ${colors.color}`} />
       </div>
       <div className="min-w-0 text-left">
-        <h3 className="text-sm font-semibold">{title}</h3>
+        <h3 className="text-sm font-semibold text-foreground">{title}</h3>
         {description && (
           <p className="text-xs text-muted-foreground">{description}</p>
         )}
@@ -165,7 +165,7 @@ function StaticHeader({ icon: Icon, title, description, className }: Readonly<St
         <Icon className={`size-4 ${colors.color}`} />
       </div>
       <div className="min-w-0">
-        <h3 className="text-sm font-semibold">{title}</h3>
+        <h3 className="text-sm font-semibold text-foreground">{title}</h3>
         {description && (
           <p className="text-xs text-muted-foreground">{description}</p>
         )}

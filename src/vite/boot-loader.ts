@@ -157,7 +157,7 @@ function renderStyle({ pfx, color, colorDark, rgb }: Ctx): string {
         radial-gradient(900px 500px at 80% 90%, rgba(${rgb}, 0.18), transparent 60%),
         #0a0a0f;
       color: #e5e7eb;
-      font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-family: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
     body.${pfx}-light-boot {
       background:

@@ -29,7 +29,7 @@ function StickySaveBar({ title, badges, actions, onCancel, loading, disabled, va
   return (
     <div className={`sticky top-0 z-10 border rounded-lg px-4 py-3 flex items-center justify-between gap-4 ${variantClasses[variant]}`}>
       <div className="flex items-center gap-3 min-w-0">
-        <h3 className="text-lg font-semibold truncate">{title}</h3>
+        <h3 className="text-lg font-semibold text-foreground truncate">{title}</h3>
         {badges && (
           <div className="flex items-center gap-1.5 shrink-0">
             {badges}
