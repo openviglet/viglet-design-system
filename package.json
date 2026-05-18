@@ -14,10 +14,10 @@
   },
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
-  "types": "./dist/src/index.d.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/src/index.d.ts",
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",
       "require": "./dist/index.cjs.js"
     },
@@ -25,23 +25,23 @@
     "./preset": "./dist/preset.css",
     "./preset.css": "./dist/preset.css",
     "./i18n": {
-      "types": "./dist/src/i18n/index.d.ts",
+      "types": "./dist/i18n/index.d.ts",
       "import": "./dist/i18n.es.js",
       "require": "./dist/i18n.cjs.js"
     },
     "./router": {
-      "types": "./dist/src/router.d.ts",
+      "types": "./dist/router.d.ts",
       "import": "./dist/router.es.js",
       "require": "./dist/router.cjs.js"
     },
     "./floating-formulas-bg": {
-      "types": "./dist/src/components/ui/floating-formulas-bg.d.ts",
+      "types": "./dist/components/ui/floating-formulas-bg.d.ts",
       "import": "./dist/floating-formulas-bg.es.js",
       "require": "./dist/floating-formulas-bg.cjs.js"
     },
     "./floating-formulas-bg.css": "./dist/floating-formulas-bg.css",
     "./vite": {
-      "types": "./dist/src/vite/index.d.ts",
+      "types": "./dist/vite/index.d.ts",
       "import": "./dist/vite.es.js",
       "require": "./dist/vite.cjs.js"
     }
