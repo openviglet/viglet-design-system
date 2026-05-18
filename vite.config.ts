@@ -21,8 +21,7 @@ export default defineConfig({
     tailwindcss(),
     dts({
       tsconfigPath: "./tsconfig.app.json",
-      rollupTypes: false,
-      outDir: "dist",
+      outDirs: "dist",
       entryRoot: "src",
     }),
     copyStandaloneCss(),
