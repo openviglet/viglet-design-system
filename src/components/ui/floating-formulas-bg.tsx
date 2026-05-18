@@ -181,6 +181,13 @@ export interface FloatingFormulasBgProps {
   withExplosion?: boolean;
   /** Render the subtle dot grid. Defaults to true. */
   withGrid?: boolean;
+  /**
+   * Freeze every CSS animation in the backdrop (formula/bond drift, orb float,
+   * lightning flashes, nuke pulse). Useful when the host UI exposes a separate
+   * "animations off" toggle but still wants the static formulas visible.
+   * Defaults to false.
+   */
+  motionPaused?: boolean;
   /** Additional CSS classes applied to the root container. */
   className?: string;
 }
@@ -196,6 +203,7 @@ export function FloatingFormulasBg({
   withLightning = false,
   withExplosion = false,
   withGrid = true,
+  motionPaused = false,
   className,
 }: Readonly<FloatingFormulasBgProps>) {
   const density = useDensityFactor();
@@ -226,7 +234,7 @@ export function FloatingFormulasBg({
 
   return (
     <div
-      className={`absolute inset-0 pointer-events-none overflow-hidden ${className ?? ""}`}
+      className={`absolute inset-0 pointer-events-none overflow-hidden ${motionPaused ? "ff-paused" : ""} ${className ?? ""}`}
       style={themeStyle as CSSProperties}
       aria-hidden="true"
     >

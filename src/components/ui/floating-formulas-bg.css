@@ -88,6 +88,17 @@
 .ff-drift-d { animation: ff-drift-d ease-in-out infinite; }
 .ff-drift-e { animation: ff-drift-e ease-in-out infinite; }
 
+/* Host opt-in to freeze every animated child (drift, orbs, lightning, nuke).
+   The static layers (grid, formula glyphs, bond paths) stay visible. */
+.ff-paused .ff-term,
+.ff-paused .ff-bond,
+.ff-paused .ff-orb,
+.ff-paused .ff-lightning,
+.ff-paused .ff-lightning--nuke,
+.ff-paused .ff-lightning--flood {
+  animation-play-state: paused !important;
+}
+
 @keyframes ff-drift-a {
   0%   { transform: translate(0, 0) scale(1) rotate(0deg); }
   20%  { transform: translate(80px, -60px) scale(1.15) rotate(5deg); }
