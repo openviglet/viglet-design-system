@@ -151,12 +151,19 @@ function renderStyle({ pfx, color, colorDark, rgb }: Ctx): string {
   // future dark-mode-specific tints can wire in without threading a new arg.
   return `
     html, body { margin: 0; padding: 0; height: 100%; }
+    /* Boot-loader paints body only for the pre-React loading screen. It must
+       NOT own "body { color }": that rule is unlayered, so it beats the app's
+       layered base "body { text-foreground }" AND it is set once at load and
+       never re-synced on a runtime theme toggle, leaving heading text (which
+       inherits its colour from body) stuck on the previous theme until a
+       reload. Background is fine (not inherited; masked by the app shell), so
+       keep it for flash-prevention; scope the loader's own text colour to the
+       loader element instead. */
     body {
       background:
         radial-gradient(1200px 600px at 20% 10%, rgba(${rgb}, 0.18), transparent 60%),
         radial-gradient(900px 500px at 80% 90%, rgba(${rgb}, 0.18), transparent 60%),
         #0a0a0f;
-      color: #e5e7eb;
       font-family: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
     body.${pfx}-light-boot {
@@ -164,14 +171,15 @@ function renderStyle({ pfx, color, colorDark, rgb }: Ctx): string {
         radial-gradient(1200px 600px at 20% 10%, rgba(${rgb}, 0.10), transparent 60%),
         radial-gradient(900px 500px at 80% 90%, rgba(${rgb}, 0.10), transparent 60%),
         #fafafa;
-      color: #0f172a;
     }
     #${pfx}-boot-loader {
       position: fixed; inset: 0;
       display: flex; align-items: center; justify-content: center; flex-direction: column;
       z-index: 9999;
+      color: #e5e7eb;
       animation: ${pfx}-boot-fade-in 0.4s ease-out;
     }
+    body.${pfx}-light-boot #${pfx}-boot-loader { color: #0f172a; }
     .${pfx}-boot-stage {
       position: relative; width: 160px; height: 160px;
       display: flex; align-items: center; justify-content: center;
