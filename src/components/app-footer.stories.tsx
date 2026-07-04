@@ -9,7 +9,7 @@ const meta = {
   tags: ["autodocs"],
   args: {
     productName: "Viglet Cloud",
-    version: "2026.2.50",
+    version: "2026.3.1",
   },
 } satisfies Meta<typeof AppFooter>;
 
