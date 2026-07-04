@@ -5,7 +5,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { GradientButton } from "../ui/gradient-button";
 import { Separator } from "../ui/separator";
-import { SidebarTrigger, useSidebar } from "../ui/sidebar";
+import { SidebarTrigger, useSidebarOptional } from "../ui/sidebar";
 
 /**
  * Composite sticky header for sub-pages.
@@ -57,7 +57,11 @@ interface TitleProps {
 }
 
 const Title: React.FC<TitleProps> = ({ icon: Icon, feature, description, urlBase }) => {
-  const { isMobile, toggleSidebar } = useSidebar();
+  // Optional so this header can render inside a Module Federation remote whose
+  // host does not own a sidebar; degrade to the desktop layout when absent.
+  const sidebar = useSidebarOptional();
+  const isMobile = sidebar?.isMobile ?? false;
+  const toggleSidebar = sidebar?.toggleSidebar ?? (() => {});
 
   const iconElement = (
     <div

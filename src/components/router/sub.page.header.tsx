@@ -5,7 +5,7 @@ import { DialogDelete } from "./dialog.delete";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { GradientButton } from "../ui/gradient-button";
 import { Separator } from "../ui/separator";
-import { SidebarTrigger, useSidebar } from "../ui/sidebar";
+import { SidebarTrigger, useSidebarOptional } from "../ui/sidebar";
 
 /* ── Composite sub-components (markers) ── */
 
@@ -35,7 +35,12 @@ interface Props {
 }
 
 const SubPageHeaderComponent: React.FC<Props> = ({ icon: Icon, feature, name, description, urlBase, onDelete, open, setOpen, children }) => {
-  const { isMobile, toggleSidebar } = useSidebar();
+  // Optional so this header can render inside a Module Federation remote whose
+  // host does not own a sidebar (e.g. Turing's Bento shell). Without a provider
+  // the strict useSidebar() would throw; here we degrade to a desktop layout.
+  const sidebar = useSidebarOptional();
+  const isMobile = sidebar?.isMobile ?? false;
+  const toggleSidebar = sidebar?.toggleSidebar ?? (() => {});
   const navigate = useNavigate();
 
   // Extract actions from marker children
