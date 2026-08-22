@@ -3,11 +3,10 @@
 ## Block A — The gate the design system never had
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — Both consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
-- 📋 **VDS30** (deps: —) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — The package was on 7 and lint could not run at all; one of the two had to move, and the choice should be revisited rather than forgotten. → §VDS30
+- 📋 **VDS30** (deps: typescript-eslint supporting TS 7) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — It throws on import against ts.versionMajorMinor >= 7, and no side-by-side recipe makes a peer resolve a second TypeScript. → §VDS30
 
 ## Block B — Bento becomes a design-system layer
 
-- 📋 **VDS7** (deps: —) **no rule says which bento components are the shared layer and which are one product's own tiles** — Activation, quota and no-LLM tiles are Turing's business model, and moving those as chrome would export it. → §VDS7
 - 📋 **VDS8** (deps: —) **there is no /bento subpath: one entry, and no place for a second component layer** — Console chrome and bento chrome are two eras, and a single barrel puts both in every consumer's bundle. → §VDS8
 - 📋 **VDS9** (deps: —) **a bento tone is a hardcoded Tailwind class string, so a product cannot re-key the tile palette** — Turing is blue and Shio is orange, and a shared component that names its own colours makes one of the two look wrong. → §VDS9
 - 📋 **VDS10** (deps: VDS8) **bento.styles.css lives inside one product, so the frosted surface and the hover-lift are not installable** — The animation is what makes a page read as bento, and no other product can reach those 216 lines. → §VDS10
@@ -37,12 +36,6 @@
 - **A consumer that re-declares an exported component fails its own build** The export
   list ships as a build artefact, and the lint names the import that replaces the local
   copy rather than only reporting that a duplicate exists.
-
-## Done when — VDS7
-
-- **A written boundary says which components are the layer** Each of the 23 bento
-  components is classified as shared or product, the four commercial tiles are named as
-  product, and the first-run tour is decided either way.
 
 ## Done when — VDS8
 

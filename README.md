@@ -269,6 +269,17 @@ Base translations (EN/PT) for common UI strings: buttons, form labels, dialog te
 - Sonner for toast notifications
 - Lucide + Tabler icons
 
+## The bento layer
+
+Turing grew a second era of chrome — the frosted tile, the airy hero, the
+mosaic — inside one product while this package sat next to it exporting console
+chrome. It is being moved here.
+
+[docs/BENTO-BOUNDARY.md](docs/BENTO-BOUNDARY.md) says which of its exports become
+part of this package and which stay in the product, and why. Read it before
+moving anything: four of them are one product's commercial offer rendered as
+cards, and shipping those as chrome would put that offer in every console.
+
 ## Contributing
 
 The package manager is pnpm, matching the Shio and Turing workspaces.

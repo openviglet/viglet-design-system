@@ -27,18 +27,6 @@ issue 10940 and move back when it supports 7.1.
 
 ## Block B — Bento becomes a design-system layer
 
-### §VDS7 Draw the line between the layer and the product
-
-Turing's components/bento holds 23 components. Most are chrome: the hero, the form
-section, the tiles, the mosaic, the save-bar morph, the rail, the palette. Some are not.
-bento-activation-card, bento-quota-banner, bento-viglet-activation-dialog and
-bento-no-llm-state are the shape of Turing's commercial offer, and moving them here
-would put one product's business model into every product's chrome. bento-first-run-tour
-sits on the line: the mechanism is generic, the content is not, so it moves only if it
-moves data-driven. Decide the boundary once and write it down before any file is moved,
-because the alternative is deciding it 23 times under time pressure and shipping a
-package that the second product has to import around.
-
 ### §VDS8 A subpath, so the second era is opt-in
 
 The package has one entry. Adding 23 components and 216 lines of CSS to it would put the
