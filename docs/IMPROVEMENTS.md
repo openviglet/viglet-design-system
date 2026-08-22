@@ -40,18 +40,6 @@ Move the suites for the components that moved, leave the ones covering product-s
 tiles behind, and adapt their mocks - the user context and the i18n passthrough both
 have package-level equivalents.
 
-### §VDS36 The pulse glow is the last hardcoded colour
-
-`@keyframes bento-pulse-glow` renders its box-shadow from `rgba(99, 102, 241, …)` --
-Tailwind's indigo-500, written as a literal. It came over verbatim with the stylesheet
-because the block's non-goal is explicit that a move must not also redesign, and it is
-recorded here rather than fixed there. The check VDS9 added catches Tailwind *class*
-names in the bento sources and cannot see a colour written as rgba inside a keyframe, so
-nothing else names this. It should become `--vg-bento-pulse` beside the tone tokens,
-resolved through color-mix the way the frosted surfaces already resolve `--card` and
-`--border`. Small, and worth doing before the components that use `.bento-pulse` arrive,
-so it is re-keyed once rather than in each of their stories.
-
 ### §VDS37 The bento subpath's router dependency is unstated
 
 Six of the leaves render a react-router-dom `Link`, so importing

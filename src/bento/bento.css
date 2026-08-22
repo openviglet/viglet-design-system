@@ -112,9 +112,15 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* The glow reads a property, so a product re-keys it like everything else here.
+   `--bento-pulse` on any subtree overrides the token for that region. */
 @keyframes bento-pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.0); }
-  50%      { box-shadow: 0 0 0 12px rgba(99, 102, 241, 0.15); }
+  0%, 100% {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--bento-pulse, var(--vg-bento-pulse)) 0%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 12px color-mix(in oklab, var(--bento-pulse, var(--vg-bento-pulse)) 15%, transparent);
+  }
 }
 
 .bento-tile {
@@ -432,3 +438,5 @@
 .bento-accent-icon {
   color: var(--primary);
 }
+
+

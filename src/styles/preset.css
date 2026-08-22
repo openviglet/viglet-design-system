@@ -147,6 +147,9 @@
   --vg-bento-danger-text: oklch(51.4% 0.222 16.935);
   --vg-bento-danger-text-dark: oklch(71.2% 0.194 13.428);
   --vg-bento-danger-text-dark-hover: oklch(81% 0.117 11.638);
+  /* The pulse glow behind a live indicator. It shipped as a raw indigo inside a
+     keyframe, where the check that reads Tailwind class names could not see it. */
+  --vg-bento-pulse: oklch(58.5% 0.233 277.117);
 
   /* Brand palette */
   --vg-brand: #c2410c;

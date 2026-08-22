@@ -10,6 +10,18 @@ import {
 } from "./bento-tones"
 
 const bentoDir = resolve(import.meta.dirname)
+
+/** Every shipped source in the layer — not the tests, not the stories. */
+function sources(dir: string, found: string[] = []): string[] {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name)
+    if (entry.isDirectory()) sources(full, found)
+    else if (/\.(ts|tsx|css)$/.test(entry.name) && !/\.(test|stories)\./.test(entry.name)) {
+      found.push(full)
+    }
+  }
+  return found
+}
 const presetPath = resolve(bentoDir, "..", "styles", "preset.css")
 const stylesheetPath = join(bentoDir, "bento.css")
 
@@ -73,17 +85,6 @@ describe("no shared bento source names a Tailwind colour", () => {
     `\\b(?:from|via|to|bg|text|border|ring|shadow|fill|stroke|outline|decoration|accent|caret|divide)-(?:${PALETTE})-\\d{2,3}\\b`,
   )
 
-  function sources(dir: string, found: string[] = []): string[] {
-    for (const entry of readdirSync(dir, { withFileTypes: true })) {
-      const full = join(dir, entry.name)
-      if (entry.isDirectory()) sources(full, found)
-      else if (/\.(ts|tsx|css)$/.test(entry.name) && !/\.test\./.test(entry.name)) {
-        found.push(full)
-      }
-    }
-    return found
-  }
-
   const files = sources(bentoDir)
 
   it("has sources to check", () => {
@@ -102,4 +103,52 @@ describe("no shared bento source names a Tailwind colour", () => {
       ).toBeUndefined()
     },
   )
+})
+
+// The class check above cannot see a colour written as a literal, which is how
+// the pulse glow kept a raw indigo inside a keyframe long after every tone had
+// become a token.
+//
+// Only *hued* literals are refused. A neutral black at low alpha is depth, not
+// brand — no product re-keys a drop shadow, and demanding a token for one would
+// be the rule outliving its reason.
+describe("no hued colour literal survives in the bento sources", () => {
+  // Built fresh per test rather than shared. A `/g` regex carries `lastIndex`,
+  // and one reused across cases stops matching after the first — which read here
+  // as a guard passing on twenty-eight files while it had actually seen one.
+  const hexPattern = () => /#([0-9a-fA-F]{3,8})/g
+  const rgbPattern = () => /rgba?[(][ ]*([0-9]+)[ ,]+([0-9]+)[ ,]+([0-9]+)/g
+
+  function hexChannels(hex: string): [number, number, number] | null {
+    const h = hex.length === 3 ? [...hex].map((c) => c + c).join("") : hex
+    if (h.length < 6) return null
+    return [
+      Number.parseInt(h.slice(0, 2), 16),
+      Number.parseInt(h.slice(2, 4), 16),
+      Number.parseInt(h.slice(4, 6), 16),
+    ]
+  }
+
+  const hued = (r: number, g: number, b: number) => !(r === g && g === b)
+
+  const files = sources(bentoDir)
+
+  it.each(files.map((f) => relative(bentoDir, f).split(String.fromCharCode(92)).join("/")))("%s", (name) => {
+    const source = readFileSync(join(bentoDir, name), "utf8")
+    const found: string[] = []
+
+    for (const match of source.matchAll(hexPattern())) {
+      const channels = hexChannels(match[1])
+      if (channels && hued(...channels)) found.push(match[0])
+    }
+    for (const match of source.matchAll(rgbPattern())) {
+      if (hued(Number(match[1]), Number(match[2]), Number(match[3]))) found.push(match[0])
+    }
+
+    expect(
+      found,
+      `${name} carries the colour literal(s) ${found.join(", ")}. A colour with a ` +
+        "hue is one a product re-keys: add a --vg-bento-* token and read it here.",
+    ).toEqual([])
+  })
 })
