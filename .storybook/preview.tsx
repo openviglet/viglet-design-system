@@ -7,6 +7,10 @@ import { initReactI18next } from "react-i18next";
 
 import { vigDesignSystemTranslations } from "../src/i18n";
 import "../src/styles/index.css";
+// The bento layer ships its own stylesheet on a separate subpath, so a consumer
+// only carries it when it renders one. The catalogue renders both eras, so it
+// takes both.
+import "../src/bento/bento.css";
 
 if (!i18n.isInitialized) {
   const resources: Record<string, { translation: Record<string, unknown> }> = {};

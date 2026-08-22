@@ -160,7 +160,12 @@ describe("no product's routes live in the bento layer", () => {
     for (const entry of readdirSync(dir, { withFileTypes: true })) {
       const full = join(dir, entry.name)
       if (entry.isDirectory()) sources(full, found)
-      else if (/\.tsx?$/.test(entry.name) && !/\.test\./.test(entry.name)) found.push(full)
+      // Stories are excluded deliberately: a story supplies routes as example
+      // data, which is what a consumer does. The rule is about what the
+      // components themselves carry.
+      else if (/\.tsx?$/.test(entry.name) && !/\.(test|stories)\./.test(entry.name)) {
+        found.push(full)
+      }
     }
     return found
   }

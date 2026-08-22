@@ -40,18 +40,6 @@ Move the suites for the components that moved, leave the ones covering product-s
 tiles behind, and adapt their mocks - the user context and the i18n passthrough both
 have package-level equivalents.
 
-### §VDS19 A story for the newest layer
-
-Every other component in this package carries a stories file; not one bento component
-does, because the layer grew inside an application rather than inside a library. That
-gap is why the catalogue from VDS4 will not answer the question a Shio author is about
-to ask, which is not whether a hero exists but what a hero looks like with an eyebrow, a
-tonal chip, a subtitle and two trailing actions. Write a story per moved component: the
-tone variants side by side, the list mosaic with and without items, the empty and error
-states, and a scroll-morph story long enough to actually scroll. These are also what
-VDS6's accessibility sweep runs over, so they are gate input rather than documentation
-alone.
-
 ### §VDS20 The rules move with the code
 
 CONVENTIONS.md is the reason the bento layer stayed internally consistent across 118

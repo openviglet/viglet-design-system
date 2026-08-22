@@ -2,6 +2,12 @@ import type { ComponentType, ReactNode } from "react";
 import { bentoChipClass, type BentoTone } from "./bento-tones";
 
 export interface BentoFormSectionProps {
+  /**
+   * Heading level for the section title. Defaults to `h2`: a form section sits
+   * directly under the hero's `h1`, and skipping to `h3` leaves a screen reader
+   * with a broken outline. Override when a section nests inside another.
+   */
+  as?: "h2" | "h3" | "h4";
   icon: ComponentType<{ size?: number }>;
   tone: BentoTone;
   title: string;
@@ -28,6 +34,7 @@ export function BentoFormSection({
   description,
   children,
   trailing,
+  as: Heading = "h2",
 }: Readonly<BentoFormSectionProps>) {
   return (
     <section className="bento-tile bento-glass relative flex flex-col gap-5 overflow-hidden rounded-3xl p-5 md:p-6">
@@ -37,7 +44,7 @@ export function BentoFormSection({
             <Icon size={20} />
           </span>
           <div className="flex flex-col gap-0.5">
-            <h3 className="text-base font-semibold tracking-tight md:text-lg">{title}</h3>
+            <Heading className="text-base font-semibold tracking-tight md:text-lg">{title}</Heading>
             {description && (
               <p className="text-sm text-muted-foreground">{description}</p>
             )}

@@ -49,10 +49,13 @@ function BentoSaveBar({
   return (
     <div className="bento-glass flex items-center justify-between gap-4 rounded-2xl px-4 py-3 shadow-md backdrop-blur-xl">
       <div className="flex min-w-0 items-center gap-3">
+        {/* Not a heading: this repeats the hero's title once the hero scrolls
+            away, and a second entry in the document outline would invent a
+            section that does not exist. */}
         {title && (
-          <h3 className="truncate text-base font-semibold tracking-tight md:text-lg">
+          <p className="truncate text-base font-semibold tracking-tight md:text-lg">
             {title}
-          </h3>
+          </p>
         )}
         <BentoStatusMarker titleMissing={titleMissing} dirty={dirty} />
         {badges && <div className="flex shrink-0 items-center gap-1.5">{badges}</div>}
