@@ -246,3 +246,19 @@ describe("BentoActionsMenu", () => {
     expect(item.closest(".bento-item-danger")).toBeInTheDocument()
   })
 })
+
+// Ported from the product's suite.
+describe("BentoEmptyState, ported cases", () => {
+  it("carries the frosted bento surface, so an empty list still reads as bento", () => {
+    const { container } = draw(<BentoEmptyState title="Nothing here" />)
+
+    expect(container.querySelector(".bento-glass")).toBeInTheDocument()
+    expect(container.querySelector(".bento-tile")).toBeInTheDocument()
+  })
+
+  it("aligns left when asked, for an empty state that sits inside a mosaic", () => {
+    const { container } = draw(<BentoEmptyState title="Nothing here" align="start" />)
+
+    expect(container.querySelector(".items-start")).toBeInTheDocument()
+  })
+})

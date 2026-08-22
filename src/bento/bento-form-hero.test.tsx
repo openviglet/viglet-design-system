@@ -132,3 +132,33 @@ describe("BentoFormHero", () => {
     expect(screen.getByText("Settings")).toBeInTheDocument()
   })
 })
+
+// Ported from the product's suite. Both are properties a hand-wired version
+// lost: an explicit disable that the dirty flag would otherwise override, and a
+// destructive action that must not fade away with the Save/Cancel pair.
+describe("BentoFormHero, ported cases", () => {
+  it("honours saveDisabled even when the form is dirty", () => {
+    draw(<BentoFormHero title="Settings" onCancel={vi.fn()} dirty saveDisabled />)
+
+    for (const button of screen.getAllByRole("button", { name: /save/i })) {
+      expect(button).toBeDisabled()
+    }
+  })
+
+  it("keeps caller trailing outside the fade-out group, so a delete stays put", () => {
+    const { container } = draw(
+      <BentoFormHero
+        title="Settings"
+        onCancel={vi.fn()}
+        trailing={<button type="button">Delete</button>}
+      />,
+    )
+
+    const fadeOut = container.querySelector(".bento-fade-out")
+    const destructive = screen.getByRole("button", { name: "Delete" })
+
+    // Inside the fade-out group it would vanish as the reader scrolls, which is
+    // how a page loses its delete button halfway down.
+    expect(fadeOut?.contains(destructive)).toBe(false)
+  })
+})

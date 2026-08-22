@@ -29,5 +29,6 @@
 - ✅ **VDS15** **the list mosaic — BentoListPage with its New tile, empty state and drag-reorder — is not installable** — The mosaic, New tile, empty state, error path, emphasis and drag reorder are one call, with layout persistence handed in as props.
 - ✅ **VDS16** **the bento shell chrome (nav rail, user menu, back-to-top) is product-local, so a second product has no shell** — The rail, user menu and back-to-top install with no provider, take their routes as props, and bento-rail-gutter reserves the rail's width.
 - ✅ **VDS17** **the command palette reads a nav config hardcoding one product's surfaces, so it cannot be shared as it stands** — The palette and shortcuts dialog take the same array the rail is given, and no product route survives anywhere in the layer.
+- ✅ **VDS18 (package half)** **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — Every moved component has a suite here, carrying the product's assertions plus the seam ones, and none asserts a re-export.
 
 ## Block C — One look across products

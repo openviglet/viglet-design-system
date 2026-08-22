@@ -196,3 +196,72 @@ describe("BentoHeroIconPicker", () => {
     expect(set.container.querySelector(".bento-clear")).toBeInTheDocument()
   })
 })
+
+// Ported from the suite that guarded this component inside the product. These
+// are the modes a detail page actually runs in — new, autosave-only, read-only —
+// and each was learned from a screen that got one of them wrong.
+describe("BentoEntityShell modes", () => {
+  const dirtyChild = (args: BentoEntityShellRenderArgs) => (
+    <button type="button" onClick={() => args.onStateChange({ isDirty: true, isSubmitting: false })}>
+      make-dirty
+    </button>
+  )
+
+  it("stages an empty identity in new mode and still offers Save", () => {
+    shell(({ staged }) => <div data-testid="child">{staged.title || "EMPTY"}</div>, {
+      entity: {} as Entity,
+      isNew: true,
+    })
+
+    expect(screen.getByTestId("child")).toHaveTextContent("EMPTY")
+    expect(screen.getAllByRole("button", { name: /save/i }).length).toBeGreaterThan(0)
+  })
+
+  it("offers Save on an existing entity but disables it until the form is dirty", async () => {
+    const user = userEvent.setup()
+    shell(dirtyChild, { hasStatus: true })
+
+    const before = screen.getAllByRole("button", { name: /save/i })
+    expect(before.length).toBeGreaterThan(0)
+    for (const button of before) expect(button).toBeDisabled()
+
+    await user.click(screen.getByText("make-dirty"))
+
+    for (const button of screen.getAllByRole("button", { name: /save/i })) {
+      expect(button).toBeEnabled()
+    }
+  })
+
+  it("hides the inert Save on an autosave-only entity, and keeps Cancel", async () => {
+    const user = userEvent.setup()
+    shell(dirtyChild, { autosaveOnly: true })
+
+    expect(screen.queryByRole("button", { name: /save/i })).not.toBeInTheDocument()
+    expect(screen.getAllByRole("button", { name: /cancel/i }).length).toBeGreaterThan(0)
+
+    // Reporting dirty must not resurrect it — there is nothing to submit.
+    await user.click(screen.getByText("make-dirty"))
+    expect(screen.queryByRole("button", { name: /save/i })).not.toBeInTheDocument()
+  })
+
+  it("keeps Save in new mode even when autosave-only, because it is what creates the entity", () => {
+    shell(() => <div />, { entity: {} as Entity, isNew: true, autosaveOnly: true })
+
+    expect(screen.getAllByRole("button", { name: /save/i }).length).toBeGreaterThan(0)
+  })
+
+  it("never reveals Save in read-only mode, and renders the badge and notice", async () => {
+    const user = userEvent.setup()
+    shell(dirtyChild, {
+      readOnly: true,
+      badge: <span>GLOBAL-BADGE</span>,
+      notice: <div>READ-ONLY-NOTICE</div>,
+    })
+
+    expect(screen.getByText("GLOBAL-BADGE")).toBeInTheDocument()
+    expect(screen.getByText("READ-ONLY-NOTICE")).toBeInTheDocument()
+
+    await user.click(screen.getByText("make-dirty"))
+    expect(screen.queryByRole("button", { name: /save/i })).not.toBeInTheDocument()
+  })
+})

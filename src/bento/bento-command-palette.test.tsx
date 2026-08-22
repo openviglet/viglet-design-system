@@ -178,3 +178,40 @@ describe("no product's routes live in the bento layer", () => {
     },
   )
 })
+
+// Ported from the product's suite: the paths a keyboard-first launcher is
+// actually driven through.
+describe("BentoCommandPalette, ported cases", () => {
+  it("says so when nothing matches, rather than showing an empty box", async () => {
+    const user = userEvent.setup()
+    draw(<BentoCommandPalette open onOpenChange={vi.fn()} items={items} />)
+
+    await user.type(screen.getByRole("combobox"), "zzzzz")
+
+    expect(screen.getByRole("listbox")).toHaveTextContent(/./)
+    expect(screen.queryByText("Language models")).not.toBeInTheDocument()
+  })
+
+  it("takes the first result on Enter and closes", async () => {
+    const user = userEvent.setup()
+    const onOpenChange = vi.fn()
+    draw(<BentoCommandPalette open onOpenChange={onOpenChange} items={items} />)
+
+    await user.type(screen.getByRole("combobox"), "index")
+    await user.keyboard("{Enter}")
+
+    expect(onOpenChange).toHaveBeenCalledWith(false)
+  })
+
+  it("moves the selected row with the arrow keys", async () => {
+    const user = userEvent.setup()
+    draw(<BentoCommandPalette open onOpenChange={vi.fn()} items={items} />)
+
+    expect(screen.getAllByRole("option")[0]).toHaveAttribute("aria-selected", "true")
+
+    await user.click(screen.getByRole("combobox"))
+    await user.keyboard("{ArrowDown}")
+
+    expect(screen.getAllByRole("option")[1]).toHaveAttribute("aria-selected", "true")
+  })
+})

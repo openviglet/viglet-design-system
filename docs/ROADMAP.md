@@ -7,7 +7,7 @@
 
 ## Block B — Bento becomes a design-system layer
 
-- 📋 **VDS18** (deps: VDS1 ✅, VDS11 ✅) **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — Tests left behind turn one product's regression into two products' regressions. → §VDS18
+- ⏳ **VDS18** (deps: VDS1 ✅, VDS11 ✅) **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — Turing still holds its own copies of the eight moved suites; deleting them is part of its cutover, which needs a release first. → §VDS18
 - 📋 **VDS19** (deps: VDS4 ✅, VDS11 ✅) **no bento component has a story, though every other component here has one** — The catalogue is how an author finds a component instead of rewriting it, and the newest layer is invisible in it. → §VDS19
 - 📋 **VDS20** (deps: VDS11 ✅) **the bento authoring contract is a CONVENTIONS.md inside one product, addressed to that product** — Two consoles diverge the moment the rules live where only one of them reads them. → §VDS20
 - 📋 **VDS21** (deps: VDS16 ✅) **bento chrome strings live in one product's locale bundle, so a shared rail and palette render raw keys elsewhere** — This package already ships EN and PT base translations, and chrome it owns should carry its own. → §VDS21

@@ -25,6 +25,12 @@ if (!window.matchMedia) {
   }))
 }
 
+// jsdom implements no scrolling at all, and any component that keeps an active
+// row in view calls this on every move — the command palette does.
+if (!Element.prototype.scrollIntoView) {
+  Element.prototype.scrollIntoView = vi.fn()
+}
+
 if (!globalThis.ResizeObserver) {
   globalThis.ResizeObserver = class {
     observe() {}
