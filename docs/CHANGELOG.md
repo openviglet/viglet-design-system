@@ -39,3 +39,5 @@
 - ✅ **VDS38** **the command palette matches an entry's title only, so searching a word from its description finds nothing** — The palette matches descriptions as well as titles, ranks title matches first, and the test that pinned the old behaviour is replaced.
 
 ## Block C — One look across products
+
+- ✅ **VDS23** **the product hue is hardcoded per product: Shio orange in a page header, Turing blue in a glass tint** — A product re-keys its colour by setting four custom properties at the root; the tint, the ring, the fill and the focus ring all derive, and no shared component names a hue.

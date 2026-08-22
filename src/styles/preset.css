@@ -151,6 +151,43 @@
      keyframe, where the check that reads Tailwind class names could not see it. */
   --vg-bento-pulse: oklch(58.5% 0.233 277.117);
 
+  /* The brand accent — the tinted icon chip, the ring around it, the accented
+     label, the solid primary fill. It shipped as a literal blue/indigo pair
+     spelled out in every page header, sidebar and empty state, which is why the
+     two products could not differ where they should and had to fork a header to
+     differ at all.
+
+     A product sets --vg-accent-from / -to / -text / -text-dark once, at the
+     root, and every shared component follows. The values here are the blue the
+     console shipped with, so re-keying is a choice rather than something that
+     happened on the way here. */
+  --vg-accent-from: oklch(62.3% 0.214 259.815);
+  --vg-accent-to: oklch(58.5% 0.233 277.117);
+  --vg-accent-text: oklch(54.6% 0.245 262.881);
+  --vg-accent-text-dark: oklch(70.7% 0.165 254.624);
+
+  /* Derived, and already resolved for the current theme — the .dark block below
+     re-points -fg, so a component writes text-[var(--vg-accent-fg)] once and
+     needs no dark: twin. The three surfaces are the tint, the strong tint and
+     the line, in the proportions the chip already uses. */
+  --vg-accent-fg: var(--vg-accent-text);
+  --vg-accent-surface: color-mix(in oklab, var(--vg-accent-from) 10%, transparent);
+  --vg-accent-surface-strong: color-mix(in oklab, var(--vg-accent-from) 20%, transparent);
+  --vg-accent-line: color-mix(in oklab, var(--vg-accent-from) 35%, transparent);
+
+  /* The accent as an interactive surface — the primary button, the checked
+     switch. On light the fill sits a step darker than the stops so white text
+     clears contrast; on dark the stops themselves are the fill and the hover
+     darkens instead. That asymmetry is why these are stated per theme rather
+     than mixed at the call site. */
+  --vg-accent-fill-from: color-mix(in oklab, var(--vg-accent-from) 88%, black);
+  --vg-accent-fill-to: color-mix(in oklab, var(--vg-accent-to) 88%, black);
+  --vg-accent-fill-from-hover: color-mix(in oklab, var(--vg-accent-from) 76%, black);
+  --vg-accent-fill-to-hover: color-mix(in oklab, var(--vg-accent-to) 76%, black);
+  --vg-accent-ring: color-mix(in oklab, var(--vg-accent-from) 50%, transparent);
+  --vg-accent-shadow: color-mix(in oklab, var(--vg-accent-from) 25%, transparent);
+  --vg-accent-shadow-hover: color-mix(in oklab, var(--vg-accent-from) 30%, transparent);
+
   /* Brand palette */
   --vg-brand: #c2410c;
   --vg-brand-dark: #9a3412;
@@ -229,6 +266,17 @@
   --vg-muted-foreground: oklch(0.708 0 0);
   --vg-accent: oklch(0.269 0 0);
   --vg-accent-foreground: oklch(0.985 0 0);
+  /* The brand accent's dark twin. The tint surfaces are color-mix over the same
+     stop and read correctly on either ground, so only the foreground and the
+     interactive fill re-point here. */
+  --vg-accent-fg: var(--vg-accent-text-dark);
+  --vg-accent-fill-from: var(--vg-accent-from);
+  --vg-accent-fill-to: var(--vg-accent-to);
+  --vg-accent-fill-from-hover: color-mix(in oklab, var(--vg-accent-from) 88%, black);
+  --vg-accent-fill-to-hover: color-mix(in oklab, var(--vg-accent-to) 88%, black);
+  --vg-accent-ring: color-mix(in oklab, var(--vg-accent-text-dark) 50%, transparent);
+  --vg-accent-shadow: color-mix(in oklab, var(--vg-accent-from) 20%, transparent);
+  --vg-accent-shadow-hover: color-mix(in oklab, var(--vg-accent-from) 25%, transparent);
   --vg-destructive: oklch(0.704 0.191 22.216);
   --vg-border: oklch(1 0 0 / 10%);
   --vg-input: oklch(1 0 0 / 15%);

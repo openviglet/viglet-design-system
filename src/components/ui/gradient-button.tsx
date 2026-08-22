@@ -9,17 +9,18 @@ const gradientButtonVariants = cva(
     {
         variants: {
             variant: {
+                // The primary action is the brand accent, so it reads tokens
+                // rather than a hue: a product re-keys --vg-accent-from/-to at
+                // the root and this button follows. The tokens are already
+                // resolved per theme, which is why no dark: twin remains — the
+                // three sibling variants below keep their fixed semantic hues,
+                // because "destructive" does not change colour with the brand.
                 default: [
-                    "bg-gradient-to-r from-blue-600 to-indigo-600 text-white",
-                    "shadow-md shadow-blue-500/25",
-                    "hover:from-blue-700 hover:to-indigo-700",
-                    "hover:shadow-lg hover:shadow-blue-500/30",
-                    "focus-visible:ring-blue-500/50",
-                    "dark:from-blue-500 dark:to-indigo-500",
-                    "dark:shadow-blue-500/20",
-                    "dark:hover:from-blue-600 dark:hover:to-indigo-600",
-                    "dark:hover:shadow-blue-500/25",
-                    "dark:focus-visible:ring-blue-400/50",
+                    "bg-gradient-to-r from-[var(--vg-accent-fill-from)] to-[var(--vg-accent-fill-to)] text-white",
+                    "shadow-md shadow-[var(--vg-accent-shadow)]",
+                    "hover:from-[var(--vg-accent-fill-from-hover)] hover:to-[var(--vg-accent-fill-to-hover)]",
+                    "hover:shadow-lg hover:shadow-[var(--vg-accent-shadow-hover)]",
+                    "focus-visible:ring-[var(--vg-accent-ring)]",
                 ].join(" "),
                 secondary: [
                     "bg-gradient-to-r from-slate-600 to-slate-700 text-white",
@@ -57,23 +58,18 @@ const gradientButtonVariants = cva(
                     "dark:hover:shadow-emerald-500/25",
                     "dark:focus-visible:ring-emerald-400/50",
                 ].join(" "),
+                // The same primary action at two lighter weights — accent, not
+                // a hue, for the same reason `default` is.
                 outline: [
-                    "border-2 border-blue-600 text-blue-600 bg-transparent",
-                    "hover:bg-blue-600 hover:text-white",
-                    "shadow-sm hover:shadow-md hover:shadow-blue-500/25",
-                    "focus-visible:ring-blue-500/50",
-                    "dark:border-blue-400 dark:text-blue-400",
-                    "dark:hover:bg-blue-500 dark:hover:text-white",
-                    "dark:hover:shadow-blue-500/20",
-                    "dark:focus-visible:ring-blue-400/50",
+                    "border-2 border-[var(--vg-accent-fg)] text-[var(--vg-accent-fg)] bg-transparent",
+                    "hover:bg-[var(--vg-accent-fill-from)] hover:text-white",
+                    "shadow-sm hover:shadow-md hover:shadow-[var(--vg-accent-shadow)]",
+                    "focus-visible:ring-[var(--vg-accent-ring)]",
                 ].join(" "),
                 ghost: [
-                    "bg-transparent text-blue-600",
-                    "hover:bg-blue-500/10 hover:text-blue-700",
-                    "focus-visible:ring-blue-500/50",
-                    "dark:text-blue-400",
-                    "dark:hover:bg-blue-400/10 dark:hover:text-blue-300",
-                    "dark:focus-visible:ring-blue-400/50",
+                    "bg-transparent text-[var(--vg-accent-fg)]",
+                    "hover:bg-[var(--vg-accent-surface)]",
+                    "focus-visible:ring-[var(--vg-accent-ring)]",
                 ].join(" "),
             },
             size: {

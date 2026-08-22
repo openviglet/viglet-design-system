@@ -54,13 +54,13 @@ const SubPageHeaderComponent: React.FC<Props> = ({ icon: Icon, feature, name, de
 
   const iconElement = Icon && (
     <div
-      className={`flex h-9 w-9 items-center justify-center rounded-lg bg-linear-to-br from-blue-500/10 to-indigo-500/10 dark:from-blue-500/20 dark:to-indigo-500/20 ring-1 ring-blue-500/10 dark:ring-blue-400/10 ${isMobile ? "cursor-pointer active:scale-95 transition-transform" : ""}`}
+      className={`flex h-9 w-9 items-center justify-center rounded-lg vg-accent-chip ring-1 ${isMobile ? "cursor-pointer active:scale-95 transition-transform" : ""}`}
       onClick={isMobile ? toggleSidebar : undefined}
       onKeyDown={isMobile ? (e) => { if (e.key === "Enter" || e.key === " ") toggleSidebar() } : undefined}
       tabIndex={isMobile ? 0 : undefined}
       title={isMobile ? "Open navigation" : undefined}
     >
-      <Icon className="size-5! text-blue-600 dark:text-blue-400" />
+      <Icon className="size-5! vg-accent-text" />
     </div>
   );
 

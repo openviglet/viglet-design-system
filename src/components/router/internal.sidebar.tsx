@@ -109,8 +109,8 @@ export const InternalSidebar: React.FC<InternalSidebarProps> = ({
           <SidebarMenuItem className="flex items-center">
             <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:p-1.5!">
               <NavLink to={urlBase ?? "#"} className="flex items-center gap-2.5">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-blue-500/10 to-indigo-500/10 dark:from-blue-500/20 dark:to-indigo-500/20 ring-1 ring-blue-500/10 dark:ring-blue-400/10">
-                  <Icon className="size-5! text-blue-600 dark:text-blue-400" />
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg vg-accent-chip ring-1">
+                  <Icon className="size-5! vg-accent-text" />
                 </div>
                 {!isCollapsed && (
                   <span className="text-sm font-semibold whitespace-nowrap truncate">

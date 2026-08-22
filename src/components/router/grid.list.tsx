@@ -71,7 +71,7 @@ const GridListItemAction: React.FC<ItemActionProps> = () => null;
 GridListItemAction.displayName = "GridListItemAction";
 
 const GRADIENT_PAIRS = [
-    "from-blue-500 to-indigo-500",
+    "vg-accent-solid",
     "from-emerald-500 to-teal-500",
     "from-violet-500 to-purple-500",
     "from-amber-500 to-orange-500",
@@ -230,7 +230,7 @@ const GridListComponent: React.FC<Props> = ({ gridItemList, children }) => {
                         const initials = getInitials(name);
 
                         const card = (
-                            <Card className="relative overflow-hidden p-0 h-full transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/10 hover:-translate-y-0.5 border-border/60 hover:border-blue-500/30 dark:hover:border-blue-400/30">
+                            <Card className="relative overflow-hidden p-0 h-full transition-all duration-200 hover:shadow-lg hover:shadow-[var(--vg-accent-surface)] hover:-translate-y-0.5 border-border/60 hover:border-[var(--vg-accent-line)]">
                                 <div className={`h-1.5 bg-linear-to-r ${gradient} opacity-70 group-hover:opacity-100 transition-opacity`} />
                                 <div className="p-4 flex items-start gap-3">
                                     {hasItemActions && leftItemActions.length > 0 && (
@@ -241,7 +241,7 @@ const GridListComponent: React.FC<Props> = ({ gridItemList, children }) => {
                                                     type="button"
                                                     title={action.label}
                                                     onClick={() => action.onClick(row.original)}
-                                                    className="inline-flex items-center justify-center rounded-md p-1.5 text-muted-foreground hover:text-blue-600 hover:bg-blue-500/10 dark:hover:text-blue-400 dark:hover:bg-blue-400/10 transition-colors cursor-pointer"
+                                                    className="inline-flex items-center justify-center rounded-md p-1.5 text-muted-foreground hover:text-[var(--vg-accent-fg)] hover:bg-[var(--vg-accent-surface)] transition-colors cursor-pointer"
                                                 >
                                                     {action.icon}
                                                 </button>
@@ -252,7 +252,7 @@ const GridListComponent: React.FC<Props> = ({ gridItemList, children }) => {
                                         {icon ? <Icon icon={icon} className="size-5" /> : initials}
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <h3 className="font-medium text-sm truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                                        <h3 className="font-medium text-sm truncate group-hover:text-[var(--vg-accent-fg)] transition-colors">
                                             {name}
                                         </h3>
                                         {description ? (
@@ -274,7 +274,7 @@ const GridListComponent: React.FC<Props> = ({ gridItemList, children }) => {
                                                         type="button"
                                                         title={action.label}
                                                         onClick={() => action.onClick(row.original)}
-                                                        className="inline-flex items-center justify-center rounded-md p-1.5 text-muted-foreground hover:text-blue-600 hover:bg-blue-500/10 dark:hover:text-blue-400 dark:hover:bg-blue-400/10 transition-colors cursor-pointer"
+                                                        className="inline-flex items-center justify-center rounded-md p-1.5 text-muted-foreground hover:text-[var(--vg-accent-fg)] hover:bg-[var(--vg-accent-surface)] transition-colors cursor-pointer"
                                                     >
                                                         {action.icon}
                                                     </button>
@@ -282,7 +282,7 @@ const GridListComponent: React.FC<Props> = ({ gridItemList, children }) => {
                                             </div>
                                         )
                                     ) : (
-                                        <IconChevronRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-blue-500 transition-all group-hover:translate-x-0.5 mt-0.5 shrink-0" />
+                                        <IconChevronRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-[var(--vg-accent-fg)] transition-all group-hover:translate-x-0.5 mt-0.5 shrink-0" />
                                     )}
                                 </div>
                             </Card>

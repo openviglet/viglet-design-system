@@ -252,6 +252,27 @@ AppFooter, BadgeColorful, BadgeLocale, BlankSlate, DialogDelete, GridList, Inter
 
 OKLCH-based color system with light/dark mode, CSS variables for theming, consistent radius scale, chart palette, sidebar theme, animations.
 
+**The brand accent is one token, set once.** The tinted icon chip in a page header, the ring around it, an accented label and the solid primary fill all derive from two gradient stops, so a product picks its colour at the root rather than in every component:
+
+```css
+:root {
+  --vg-accent-from: oklch(70.5% 0.213 47.604);  /* Shio orange */
+  --vg-accent-to:   oklch(64.6% 0.222 41.116);
+  --vg-accent-text: oklch(55.3% 0.195 38.402);  /* readable on light */
+}
+.dark {
+  --vg-accent-text-dark: oklch(75% 0.183 55.934);
+}
+```
+
+The tint, the strong tint and the hairline (`--vg-accent-surface`, `--vg-accent-surface-strong`, `--vg-accent-line`) are `color-mix` over `--vg-accent-from`, so they follow automatically; only the readable foreground is stated, because contrast is not a mix away. Use `--vg-accent-fg` in a component — it is already resolved for the current theme, so no `dark:` twin is needed.
+
+Three utility classes cover the common shapes: `vg-accent-chip` (the tinted gradient chip — pair it with Tailwind's `ring-1`), `vg-accent-text` (an accented label or icon), and `vg-accent-solid` (a solid gradient fill).
+
+`GradientButton` and `GradientSwitch` follow the accent in their primary variants (`default`, `outline`, `ghost`), so a re-key reaches the buttons too; their `secondary`, `destructive` and `success` variants keep fixed semantic hues, because "destructive" does not change colour with the brand.
+
+This is separate from a component's **colour palette**. `SectionCard` (`blue | violet | emerald | amber | rose | cyan`) and `StickySaveBar` (`gray | blue | orange | green`) are keyed by hue — the caller picked that colour deliberately — so re-keying the accent leaves them alone, the same way it leaves the [bento tones](#the-bento-layer) alone.
+
 ### i18n
 
 Base translations (EN/PT) for common UI strings: buttons, form labels, dialog text, navigation, theme.

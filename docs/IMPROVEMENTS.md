@@ -42,18 +42,6 @@ have package-level equivalents.
 
 ## Block C — One look across products
 
-### §VDS23 Brand accent as a token, not as a class
-
-One look across products is not one colour across products. Shio's page header renders
-an orange-to-amber gradient chip inside an orange ring; Turing's glass card tints its
-shadow from a blue custom property and its bento tones lean indigo. Both are correct,
-and both are spelled in the wrong place - as utility classes inside components, some of
-which are now shared. The result is that adopting a shared component today either
-imports the other product's hue or forces an override at every call site. Define a
-single brand accent as tokens in the preset, with the tint, the ring and the gradient
-stops derived from it, and let each product set it once at the root. A shared component
-is then neutral by construction, and the two products differ only where they should.
-
 ### §VDS24 Say which era a component belongs to
 
 After Block B this package exports two complete page vocabularies. PageHeader, SubPage,

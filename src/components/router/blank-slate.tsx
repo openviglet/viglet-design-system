@@ -16,8 +16,8 @@ export const BlankSlate: React.FC<Props> = ({ icon: Icon, title, description, ur
                 <div className="relative flex flex-col items-center text-center px-8 py-12 space-y-6">
                     {/* Icon with animated ring */}
                     <div className="relative">
-                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-500/20 blur-xl animate-pulse" />
-                        <div className="relative inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/25 ring-4 ring-blue-500/10">
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[var(--vg-accent-surface-strong)] to-[var(--vg-accent-surface-strong)] blur-xl animate-pulse" />
+                        <div className="relative inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br vg-accent-solid shadow-lg shadow-[var(--vg-accent-line)] ring-4 ring-[var(--vg-accent-surface)]">
                             <Icon className="text-white" size={30} />
                         </div>
                     </div>

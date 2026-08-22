@@ -214,3 +214,48 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* ---------------------------------------------------------------------------
+ * The accent chip.
+ *
+ * A faint tint of the product's accent, ringed, with its icon in the accent
+ * itself. It is the most repeated visual in the console era — every page
+ * header, every sub-header, the sidebar, the blank slate — and it was spelled
+ * as a blue-to-indigo gradient in each of them. Now there is one spelling, and
+ * a product re-keys it by redefining four custom properties at the root.
+ *
+ * Pair `vg-accent-chip` with Tailwind's `ring-1`: the ring's width stays a
+ * layout decision and only its colour comes from here.
+ * ------------------------------------------------------------------------- */
+.vg-accent-chip {
+  background-image: linear-gradient(
+    to bottom right,
+    color-mix(in oklab, var(--vg-accent-from) 10%, transparent),
+    color-mix(in oklab, var(--vg-accent-to) 10%, transparent)
+  );
+  --tw-ring-color: color-mix(in oklab, var(--vg-accent-from) 10%, transparent);
+}
+
+.dark .vg-accent-chip,
+[data-theme="dark"] .vg-accent-chip {
+  background-image: linear-gradient(
+    to bottom right,
+    color-mix(in oklab, var(--vg-accent-from) 20%, transparent),
+    color-mix(in oklab, var(--vg-accent-to) 20%, transparent)
+  );
+  --tw-ring-color: color-mix(in oklab, var(--vg-accent-text-dark) 10%, transparent);
+}
+
+/* The accent as a foreground colour — an icon inside the chip, a link, a value. */
+.vg-accent-text {
+  color: var(--vg-accent-fg);
+}
+
+/* The accent as a solid fill: a primary gradient button, an active marker. */
+.vg-accent-solid {
+  background-image: linear-gradient(
+    to bottom right,
+    var(--vg-accent-from),
+    var(--vg-accent-to)
+  );
+}

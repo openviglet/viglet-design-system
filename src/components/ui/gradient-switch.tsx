@@ -9,13 +9,14 @@ const gradientSwitchVariants = cva(
     {
         variants: {
             variant: {
+                // Checked is the brand accent, so it reads tokens; the three
+                // variants below stay fixed, because a "destructive" toggle
+                // does not change colour when the product does.
                 default: [
-                    "data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-blue-600 data-[state=checked]:to-indigo-600",
+                    "data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-[var(--vg-accent-fill-from)] data-[state=checked]:to-[var(--vg-accent-fill-to)]",
                     "data-[state=unchecked]:bg-input",
-                    "focus-visible:ring-blue-500/50",
-                    "dark:data-[state=checked]:from-blue-500 dark:data-[state=checked]:to-indigo-500",
+                    "focus-visible:ring-[var(--vg-accent-ring)]",
                     "dark:data-[state=unchecked]:bg-input/80",
-                    "dark:focus-visible:ring-blue-400/50",
                 ].join(" "),
                 secondary: [
                     "data-[state=checked]:bg-gradient-to-r data-[state=checked]:from-slate-600 data-[state=checked]:to-slate-700",

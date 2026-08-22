@@ -179,8 +179,8 @@ export function IconPickerDialog({
         </div>
 
         {groups.length > 0 && (
-          <div className="rounded-lg border border-blue-500/20 bg-blue-500/5 p-3">
-            <div className="mb-2 flex items-center gap-1.5 text-xs font-medium text-blue-600 dark:text-blue-400">
+          <div className="rounded-lg border border-[var(--vg-accent-line)] bg-[var(--vg-accent-surface)] p-3">
+            <div className="mb-2 flex items-center gap-1.5 text-xs font-medium vg-accent-text">
               <IconSparkles className="size-3.5" />
               {t("forms.iconPicker.aiSuggestions", { defaultValue: "Suggestions" })}
             </div>
@@ -191,9 +191,9 @@ export function IconPickerDialog({
                   type="button"
                   onClick={() => setActiveKeyword(activeKeyword === g.keyword ? null : g.keyword)}
                   className={`cursor-pointer rounded-full px-3 py-1 text-xs font-medium transition-all ${
-                    activeKeyword === g.keyword
-                      ? "bg-blue-600 text-white dark:bg-blue-500"
-                      : "bg-blue-500/10 text-blue-700 hover:bg-blue-500/20 dark:text-blue-300"
+ activeKeyword === g.keyword
+                      ? "vg-accent-solid text-white"
+                      : "bg-[var(--vg-accent-surface)] text-[var(--vg-accent-fg)] hover:bg-[var(--vg-accent-surface-strong)]"
                   }`}
                 >
                   {g.keyword}
@@ -207,10 +207,10 @@ export function IconPickerDialog({
                   key={iconName}
                   type="button"
                   onClick={() => handleSelect(iconName)}
-                  className={`flex cursor-pointer flex-col items-center gap-1 rounded-lg p-2 transition-all hover:bg-blue-500/10 ${
-                    value === iconName
-                      ? "border border-blue-500/50 bg-blue-500/15 text-blue-600 dark:text-blue-400"
-                      : "border border-blue-500/20 hover:border-blue-500/40"
+                  className={`flex cursor-pointer flex-col items-center gap-1 rounded-lg p-2 transition-all hover:bg-[var(--vg-accent-surface)] ${
+ value === iconName
+ ? "border border-[var(--vg-accent-line)] bg-[var(--vg-accent-surface-strong)] vg-accent-text"
+                      : "border border-[var(--vg-accent-line)]"
                   }`}
                   title={iconName}
                 >
@@ -260,8 +260,8 @@ export function IconPickerDialog({
                   type="button"
                   onClick={() => handleSelect(iconName)}
                   className={`flex cursor-pointer flex-col items-center justify-center gap-1 rounded-lg p-2 transition-all hover:bg-muted ${
-                    value === iconName
-                      ? "border border-blue-500/50 bg-blue-500/10 text-blue-600 dark:text-blue-400"
+ value === iconName
+ ? "border border-[var(--vg-accent-line)] bg-[var(--vg-accent-surface)] vg-accent-text"
                       : "border border-transparent hover:border-border"
                   }`}
                   title={iconName}

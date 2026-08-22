@@ -37,8 +37,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ icon: PageIcon, title, u
         {/* Desktop breadcrumb */}
         <div className="hidden md:flex items-center gap-1">
           {PageIcon && (
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-blue-500/10 to-indigo-500/10 dark:from-blue-500/20 dark:to-indigo-500/20 ring-1 ring-blue-500/10 dark:ring-blue-400/10 mr-1">
-              <PageIcon className="size-4.5! text-blue-600 dark:text-blue-400" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg vg-accent-chip ring-1 mr-1">
+              <PageIcon className="size-4.5! vg-accent-text" />
             </div>
           )}
           {urlBase ? (
@@ -78,8 +78,8 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ icon: PageIcon, title, u
             </button>
           )}
           {PageIcon && (
-            <div className="flex shrink-0 h-7 w-7 items-center justify-center rounded-lg bg-linear-to-br from-blue-500/10 to-indigo-500/10 dark:from-blue-500/20 dark:to-indigo-500/20 ring-1 ring-blue-500/10 dark:ring-blue-400/10">
-              <PageIcon className="size-3.5! text-blue-600 dark:text-blue-400" />
+            <div className="flex shrink-0 h-7 w-7 items-center justify-center rounded-lg vg-accent-chip ring-1">
+              <PageIcon className="size-3.5! vg-accent-text" />
             </div>
           )}
           <span className="text-sm font-semibold truncate">

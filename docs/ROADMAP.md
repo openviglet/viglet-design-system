@@ -7,11 +7,10 @@
 
 ## Block B — Bento becomes a design-system layer
 
-- ⏳ **VDS18** (deps: VDS1 ✅, VDS11 ✅) **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — Turing still holds its own copies of the eight moved suites; deleting them is part of its cutover, which needs a release first. → §VDS18
+- ⏳ **VDS18** (deps: VDS1 ✅, VDS11 ✅, a 2026.3.3 release to npm) **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — The product cannot import from here until a release, so its copies stay until that cutover. → §VDS18
 
 ## Block C — One look across products
 
-- 📋 **VDS23** (deps: —) **the product hue is hardcoded per product: Shio orange in a page header, Turing blue in a glass tint** — One look across products does not mean one colour, and today the difference is spelled in class names, not tokens. → §VDS23
 - 📋 **VDS24** (deps: VDS16 ✅) **the package exports both eras of chrome and says nowhere which one a new page should use** — PageHeader, SubPage, GridList and InternalSidebar are the console, and a new page will pick one at random. → §VDS24
 - 📋 **VDS25** (deps: VDS2 ✅, VDS11 ✅) **nothing proves two products composing the same shared components actually render the same** — One look is the whole goal, and it is judged today by opening two browsers side by side. → §VDS25
 - 📋 **VDS26** (deps: VDS8 ✅) **no size budget: a consumer importing nothing from the bento subpath cannot be shown it paid nothing** — The subpath was chosen over one barrel for exactly this, and the choice is so far unmeasured. → §VDS26
@@ -28,12 +27,6 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
-
-## Done when — VDS23
-
-- **A product sets its colour once, at the root** Brand accent is a token from which the
-  tint, the ring and the gradient stops derive, and a grep finds no product hue
-  hardcoded inside a shared component.
 
 ## Done when — VDS24
 
