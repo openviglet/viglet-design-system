@@ -4,9 +4,8 @@
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — Both consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS30** (deps: typescript-eslint supporting TS 7) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — It throws on import against ts.versionMajorMinor >= 7, and no side-by-side recipe makes a peer resolve a second TypeScript. → §VDS30
-- ⏳ **VDS40** (deps: —) **the root entry is 96% four inlined PNG logos, one of them 1.27MB, shipped to every consumer** — The three logos the switcher draws are still inlined at 1024-2375px for a 16px slot, and shrinking them needs image tooling this repo lacks. → §VDS40
 - 📋 **VDS41** (deps: —) **the shipped stylesheet is 77% base64 fonts: 741KB of its 964KB is 22 inlined font files** — A consumer downloads them render-blocking, cannot cache them apart from the CSS, and cannot substitute its own. → §VDS41
-- 📋 **VDS42** (deps: VDS40 ⏳, VDS41) **the size gate records a baseline but never runs on a local build, so a regression is found on the pull request** — Their fixes move the baseline by megabytes and say which measurement is worth taking on every build. → §VDS42
+- 📋 **VDS42** (deps: VDS40 ✅, VDS41) **the size gate records a baseline but never runs on a local build, so a regression is found on the pull request** — Their fixes move the baseline by megabytes and say which measurement is worth taking on every build. → §VDS42
 
 ## Block B — Bento becomes a design-system layer
 
@@ -23,12 +22,6 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
-
-## Done when — VDS40
-
-- **The root entry carries no product artwork** A consumer importing from the root entry
-  downloads no PNG, the size baseline drops by megabytes, and the app switcher still
-  renders its logos.
 
 ## Done when — VDS41
 

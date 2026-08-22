@@ -15,7 +15,7 @@
 - ✅ **VDS29** **react-table is held at v8 because a grouped Dependabot bump to v9 broke grid.list and reached the default branch unbuilt** — A consumer pinned to react-table v8 bundles the v9 package cleanly: pnpm gives each side its own copy, under the hoisting all three products use.
 - 🗑 **VDS34** **thirty deps are externalised at build but declared as dependencies, so their major version is an unstated contract** — abandoned: Measured wrong: pnpm gives the package its own copy under both the default and the shamefully-hoist layout, so the major is not a shared contract.
 - ✅ **VDS35** **use:local copies dist over an installed package without reconciling its deps, so a changed range keeps the old one** — use:local compares the ranges it is about to copy against what the target resolves, names the packages that do not satisfy them, and refuses.
-- ✅ **VDS40 (the map off the root barrel)** **the root entry is 96% four inlined PNG logos, one of them 1.27MB, shipped to every consumer** — The logos moved to a ./assets subpath, so the root entry is 56% lighter and no consumer carries the 1.24MB one that nothing renders.
+- ✅ **VDS40** **the root entry is 96% four inlined PNG logos, one of them 1.27MB, shipped to every consumer** — The logos are 256px, nine times what the switcher renders, and a test holds the ceiling; root-only fell from 2.25MB to 891KB gzipped in all.
 
 ## Block B — Bento becomes a design-system layer
 

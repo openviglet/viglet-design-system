@@ -25,22 +25,6 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
-### §VDS40 The logos are the package
-
-`dist/index.es.js` is 1.98 MB, and 1.90 MB of that is four base64 PNGs - product logos
-under `src/assets/products/`, one of them 1.27 MB raw. They are inlined because the
-library build's inline limit takes them, so every consumer that imports anything from
-the root entry downloads and parses them, whether or not it ever renders the app
-switcher. Shio imports only the root entry; it pays in full for logos it does not show.
-
-The size gate now records the number but deliberately does not fail on it: a baseline
-records what is, and this is a defect the baseline is currently blessing. Emit them as
-files the consumer's bundler can hash and cache, or move the switcher behind its own
-subpath the way `./bento` and `./floating-formulas-bg` already are - the second also
-answers whether a shared library should carry one company's product art at all.
-
-Re-record the baseline in the same commit, and the number becomes the evidence.
-
 ### §VDS41 The fonts are the stylesheet
 
 `dist/viglet-design-system.css` is 964 KB, and 741 KB of it is 22 `url(data:...)` font

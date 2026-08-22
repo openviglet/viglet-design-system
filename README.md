@@ -262,7 +262,9 @@ Moving the map here left the root entry 56% lighter, and `check:size` now
 refuses any single inlined asset over 256 KB.
 
 `VigletAppSwitcher` still imports the three logos it draws, so it needs no
-change.
+change — and those three are now 256px rather than 1024–2375px, which is nine
+times the 28 pixels the switcher renders them at. A test holds that ceiling,
+because an asset this package can reach is an asset it ships.
 
 ### Models
 
