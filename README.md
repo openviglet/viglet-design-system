@@ -335,6 +335,14 @@ The stylesheet is a separate import from the components, so a consumer taking
 only the layout maths does not pull CSS it never renders. It reads the preset's
 tokens, so import the preset too.
 
+"Carries none of it" is measured rather than claimed. CI bundles two fixtures
+through this package's own `exports` map and fails if a `.bento-` rule or a
+bento class name reaches a consumer that imported only the root entry —
+`pnpm run check:size` runs the same check locally, and `size-budget.json`
+records what each entry costs. The preset's `--vg-bento-tone-*` tokens are
+deliberately not part of that: they ship with every other token and are about a
+kilobyte of custom properties, not the layer.
+
 **`./bento` requires `react-router-dom`.** The package declares that peer
 optional because the root entry does not need it — only `./router` and `./bento`
 do, and npm cannot mark a peer required for one entry point and optional for

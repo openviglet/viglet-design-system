@@ -57,6 +57,14 @@ jobs:
       - name: Build
         run: pnpm run build
 
+      # `./bento` is a subpath rather than part of the root barrel on the
+      # argument that a console-only consumer should not pay for the layer.
+      # This is where that argument stops being an argument: it bundles two
+      # fixtures through the package's own exports map and asserts a root-only
+      # consumer carries no bento rule and no bento class.
+      - name: Size budget
+        run: pnpm run check:size
+
       - name: Build the component catalogue
         run: pnpm run build-storybook
 

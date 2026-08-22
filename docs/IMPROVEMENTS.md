@@ -42,18 +42,6 @@ have package-level equivalents.
 
 ## Block C — One look across products
 
-### §VDS26 Measure what the subpath was chosen for
-
-A subpath export was preferred over a single barrel on the argument that a consumer
-still on console chrome should not pay for the bento layer. That argument is currently
-unmeasured, and an unmeasured argument about cost is the same defect as a premise
-carried in a comment: it fails quietly, in somebody else's build. Add a size check to CI
-that builds a fixture importing only from the root entry and asserts that no bento
-module and no bento CSS reaches the output, plus a recorded baseline for the bento
-subpath itself so a component moved here without care surfaces as a number rather than
-as a feeling. Land it with the subpath rather than after it, so the first regression is
-caught by the gate and not by a product.
-
 ### §VDS31 Dumont is the third consumer
 
 The roadmap names Shio and Turing throughout, and the README's own first line names
