@@ -64,20 +64,3 @@ two token sets rather than three, VDS21's chrome strings are checked in two loca
 bundles, and the duplicate lint is planned into two CIs. Decide whether Dumont is a
 consumer this plan holds itself to, and if so widen those lines rather than adding a
 parallel set.
-
-### §VDS39 Re-key at the root, and let the story show it
-
-The brand accent's derived tokens - the tint, the strong tint, the hairline, the
-interactive fill - are `color-mix` over `--vg-accent-from` declared on `:root`, so they
-are substituted there. A utility class that mixes inline re-keys anywhere; a pre-derived
-token does not. Setting the four on a nested wrapper therefore re-keys the chip and the
-solid fill and leaves the tint and the hairline at the root's value.
-
-The README states the contract correctly - set them at the root - but the `Re-keyed`
-story sets them on a `<div>` and presents the result as a re-key. Two of its five
-specimens do not move, and the one place a consumer goes to learn the mechanism teaches
-a form that half-works. The render-parity digest hit the same wall and had to move its
-tokens to the document element before it could assert anything.
-
-Make the story re-key the way a product does, and say in the preset - where somebody
-reads the token, not only in the README - why the root is not merely a convention.

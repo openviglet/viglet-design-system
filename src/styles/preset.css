@@ -169,7 +169,14 @@
   /* Derived, and already resolved for the current theme — the .dark block below
      re-points -fg, so a component writes text-[var(--vg-accent-fg)] once and
      needs no dark: twin. The three surfaces are the tint, the strong tint and
-     the line, in the proportions the chip already uses. */
+     the line, in the proportions the chip already uses.
+
+     Set the four source tokens on :root, not on a wrapper. A custom property
+     substitutes its var() references where it is *declared*, so everything
+     below is mixed against the --vg-accent-from declared here. Re-keying a
+     subtree changes what a utility class mixes inline — the chip, the solid
+     fill — and leaves these at the root's value, which looks like a partial
+     re-key and reads as a bug in the component. */
   --vg-accent-fg: var(--vg-accent-text);
   --vg-accent-surface: color-mix(in oklab, var(--vg-accent-from) 10%, transparent);
   --vg-accent-surface-strong: color-mix(in oklab, var(--vg-accent-from) 20%, transparent);

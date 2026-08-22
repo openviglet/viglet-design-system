@@ -270,6 +270,52 @@ describe("two token sets render the same layer", () => {
     ).toBeGreaterThan(3)
   })
 
+  /**
+   * VDS39 — the constraint the story got wrong, pinned so it stops being a
+   * surprise. A custom property substitutes its `var()` references where it is
+   * declared, so the tokens derived on `:root` are mixed against the accent
+   * declared there. Re-keying a subtree therefore moves what a utility class
+   * mixes inline and leaves the pre-derived tokens alone.
+   *
+   * If this ever fails, the indirection has been removed (a `*` redefinition,
+   * or the derivations moved into the utility rules) and re-keying a subtree
+   * now works. That is a better system: delete this test, and the story can go
+   * back to showing two panels side by side.
+   */
+  it("re-keys only from the root — a wrapper moves the inline mixes and nothing else", () => {
+    const host = document.createElement("div")
+    for (const [name, value] of Object.entries(TOKEN_SETS.warm)) host.style.setProperty(name, value)
+    document.body.appendChild(host)
+
+    const inside = document.createElement("div")
+    inside.className = "vg-accent-chip"
+    host.appendChild(inside)
+
+    const outside = document.createElement("div")
+    outside.className = "vg-accent-chip"
+    document.body.appendChild(outside)
+
+    const rootSurface = getComputedStyle(document.documentElement)
+      .getPropertyValue("--vg-accent-surface")
+      .trim()
+
+    // The chip mixes --vg-accent-from in its own rule, on the element, so it
+    // does follow the wrapper — which is exactly why the partial re-key looks
+    // like it worked.
+    expect(
+      getComputedStyle(inside).backgroundImage,
+      "the chip did not follow the wrapper",
+    ).not.toBe(getComputedStyle(outside).backgroundImage)
+    outside.remove()
+    // The pre-derived token did not: it is still whatever :root computed.
+    expect(
+      getComputedStyle(host).getPropertyValue("--vg-accent-surface").trim(),
+      "a wrapper re-key now reaches the derived tokens — see this test's note",
+    ).toBe(rootSurface)
+
+    host.remove()
+  })
+
   it("leaves the tones alone — they are not the accent", () => {
     // A bento tone is chosen by the caller, so it must survive a re-key.
     expect(coolTones.length, "no toned chip rendered, so this asserts nothing").toBeGreaterThan(0)

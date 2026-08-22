@@ -277,16 +277,16 @@ OKLCH-based color system with light/dark mode, CSS variables for theming, consis
 
 ```css
 :root {
-  --vg-accent-from: oklch(70.5% 0.213 47.604);  /* Shio orange */
+  --vg-accent-from: oklch(70.5% 0.213 47.604);
   --vg-accent-to:   oklch(64.6% 0.222 41.116);
   --vg-accent-text: oklch(55.3% 0.195 38.402);  /* readable on light */
-}
-.dark {
-  --vg-accent-text-dark: oklch(75% 0.183 55.934);
+  --vg-accent-text-dark: oklch(75% 0.183 55.934);  /* readable on dark */
 }
 ```
 
 The tint, the strong tint and the hairline (`--vg-accent-surface`, `--vg-accent-surface-strong`, `--vg-accent-line`) are `color-mix` over `--vg-accent-from`, so they follow automatically; only the readable foreground is stated, because contrast is not a mix away. Use `--vg-accent-fg` in a component — it is already resolved for the current theme, so no `dark:` twin is needed.
+
+**Declare them on `:root`, not on a wrapper.** A custom property substitutes its `var()` references where it is *declared*, so the derived tokens above are mixed against the `--vg-accent-from` declared in the preset's `:root`. Re-keying a subtree moves what a utility class mixes on the element — the chip, the solid fill — and leaves the tint, the hairline and the button fill at the root's value. The result looks like a component that half-ignores the theme.
 
 Three utility classes cover the common shapes: `vg-accent-chip` (the tinted gradient chip — pair it with Tailwind's `ring-1`), `vg-accent-text` (an accented label or icon), and `vg-accent-solid` (a solid gradient fill).
 

@@ -132,6 +132,12 @@ describe("the brand accent is a token", () => {
     expect(missing, "Tailwind generated no rule for these — the class is inert").toEqual([])
   })
 
+  // VDS39 — that the catalogue re-keys from the root rather than from a wrapper
+  // is asserted in `accent-story.parity.test.tsx`, by rendering both stories and
+  // comparing what the browser resolved. A source-text check was tried here
+  // first and dropped: deleting the hook call defeated it while leaving the
+  // string it looked for in the file, so it read as coverage and was not.
+
   it("keeps every exempt file a palette — keyed by colour, not by role", () => {
     for (const [rel, hues] of Object.entries(VARIANT_PALETTES)) {
       const text = readFileSync(join(srcDir, rel), "utf8")

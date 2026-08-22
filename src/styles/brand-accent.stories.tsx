@@ -1,5 +1,6 @@
 import { IconBolt, IconFolder, IconSparkles } from "@tabler/icons-react"
 import type { Meta, StoryObj } from "@storybook/react-vite"
+import { useLayoutEffect } from "react"
 
 /**
  * The brand accent, and what re-keying it actually changes.
@@ -63,37 +64,65 @@ function AccentSpecimen({ label }: Readonly<{ label: string }>) {
   )
 }
 
-/** The blue the console shipped with — what a product gets without re-keying. */
-export const Default: Story = {
-  render: () => (
-    <div className="max-w-md">
-      <AccentSpecimen label="default" />
-    </div>
-  ),
+/** The four values a product declares. Nothing else is set — the rest derives. */
+const WARM = {
+  "--vg-accent-from": "oklch(70.5% 0.213 47.604)",
+  "--vg-accent-to": "oklch(64.6% 0.222 41.116)",
+  "--vg-accent-text": "oklch(50.5% 0.185 38.402)",
+  "--vg-accent-text-dark": "oklch(75% 0.183 55.934)",
 }
 
 /**
- * Same markup, four declarations apart. This is the proof the criterion asks
- * for: nothing below reaches for a hue, so the two panels differ only where a
- * product should.
+ * Applies a token set the way a product does — on the document element — and
+ * puts it back on the way out so the neighbouring story is unaffected.
+ *
+ * The root is not a stylistic preference here. The derived tokens are
+ * `color-mix` over `--vg-accent-from` **declared on `:root`**, and a custom
+ * property substitutes its `var()` references where it is declared, not where
+ * it is read. Set the four on a wrapper `<div>` and the chip and the solid fill
+ * re-key — they mix inline, in a utility class, on the element — while the
+ * tint, the hairline and the button fill quietly keep the root's blue. An
+ * earlier draft of this very story did that, and showed two specimens that
+ * never moved.
+ */
+function useAccent(tokens: Record<string, string> | null) {
+  useLayoutEffect(() => {
+    if (!tokens) return
+    const root = document.documentElement
+    const previous = Object.keys(tokens).map((name) => [name, root.style.getPropertyValue(name)] as const)
+    for (const [name, value] of Object.entries(tokens)) root.style.setProperty(name, value)
+    return () => {
+      for (const [name, value] of previous) {
+        if (value) root.style.setProperty(name, value)
+        else root.style.removeProperty(name)
+      }
+    }
+  }, [tokens])
+}
+
+function Panel({ tokens, label }: Readonly<{ tokens: Record<string, string> | null; label: string }>) {
+  useAccent(tokens)
+  return (
+    <div className="max-w-md">
+      <AccentSpecimen label={label} />
+    </div>
+  )
+}
+
+/** The blue the console shipped with — what a product gets without re-keying. */
+export const Default: Story = {
+  render: () => <Panel tokens={null} label="default — blue" />,
+}
+
+/**
+ * The same markup, four declarations apart. Compare it with `Default`: every
+ * specimen moves, because nothing in the markup reaches for a hue.
+ *
+ * Deliberately not side by side. Two panels in one view would need the tokens
+ * on a wrapper, which is the form that does not work — and a catalogue that
+ * demonstrates a broken mechanism is worse than one that shows the real one.
  */
 export const Rekeyed: Story = {
-  name: "Re-keyed per product",
-  render: () => (
-    <div className="grid max-w-3xl gap-5 sm:grid-cols-2">
-      <AccentSpecimen label="default — blue" />
-      <div
-        style={
-          {
-            "--vg-accent-from": "oklch(70.5% 0.213 47.604)",
-            "--vg-accent-to": "oklch(64.6% 0.222 41.116)",
-            "--vg-accent-text": "oklch(50.5% 0.185 38.402)",
-            "--vg-accent-fg": "oklch(50.5% 0.185 38.402)",
-          } as React.CSSProperties
-        }
-      >
-        <AccentSpecimen label="re-keyed — orange" />
-      </div>
-    </div>
-  ),
+  name: "Re-keyed at the root",
+  render: () => <Panel tokens={WARM} label="re-keyed — orange" />,
 }
