@@ -1,4 +1,23 @@
-/.claude
+# === AI / Tooling ===
+# `.claude/skills/` is shared project convention and IS committed. Everything else
+# under .claude/ is local machine state: settings.local.json, locks, scheduled-task
+# bookkeeping. Note the `*` — git does not descend into an ignored directory, so
+# `/.claude/` without it would make the negations below unreachable.
+/.claude/*
+!/.claude/skills/
+# settings.json IS committed: it declares the roadkeep marketplace and enables the
+# plugin, so a clone gets the hook, the tools and the skill without any local setup.
+!/.claude/settings.json
+# hooks/ IS committed: the plugin never installs on Claude Code on the web (no
+# `/plugin`), so the committed roadkeep-launch.py is how a cloud session gets the
+# guard the plugin would give a local machine.
+!/.claude/hooks/
+
+# Python bytecode. `.claude/hooks/` holds the roadkeep guard hook, so running it
+# leaves `__pycache__/` beside the source. Bytecode restates a file already tracked
+# next to it, cannot be reviewed, and is per-interpreter.
+__pycache__/
+*.pyc
 
 # Dependencies
 node_modules/
