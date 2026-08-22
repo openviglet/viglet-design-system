@@ -426,3 +426,9 @@
     padding-left: 4rem;
   }
 }
+
+/* An icon that leads a dialog title, in the product's accent rather than the
+   layer's own. */
+.bento-accent-icon {
+  color: var(--primary);
+}

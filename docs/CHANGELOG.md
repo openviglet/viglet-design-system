@@ -28,5 +28,6 @@
 - ✅ **VDS14** **BentoFormHero, the drop-in that gives an own-hero form the save-bar morph, is not installable** — BentoFormHero renders the hero controls and the sticky bar from one call, and the imperative actions replace the default pair in both.
 - ✅ **VDS15** **the list mosaic — BentoListPage with its New tile, empty state and drag-reorder — is not installable** — The mosaic, New tile, empty state, error path, emphasis and drag reorder are one call, with layout persistence handed in as props.
 - ✅ **VDS16** **the bento shell chrome (nav rail, user menu, back-to-top) is product-local, so a second product has no shell** — The rail, user menu and back-to-top install with no provider, take their routes as props, and bento-rail-gutter reserves the rail's width.
+- ✅ **VDS17** **the command palette reads a nav config hardcoding one product's surfaces, so it cannot be shared as it stands** — The palette and shortcuts dialog take the same array the rail is given, and no product route survives anywhere in the layer.
 
 ## Block C — One look across products

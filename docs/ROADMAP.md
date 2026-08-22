@@ -7,7 +7,6 @@
 
 ## Block B — Bento becomes a design-system layer
 
-- 📋 **VDS17** (deps: VDS16 ✅) **the command palette reads a nav config hardcoding one product's surfaces, so it cannot be shared as it stands** — The palette is generic and its data is not; moving both together would put Turing routes in Shio. → §VDS17
 - 📋 **VDS18** (deps: VDS1 ✅, VDS11 ✅) **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — Tests left behind turn one product's regression into two products' regressions. → §VDS18
 - 📋 **VDS19** (deps: VDS4 ✅, VDS11 ✅) **no bento component has a story, though every other component here has one** — The catalogue is how an author finds a component instead of rewriting it, and the newest layer is invisible in it. → §VDS19
 - 📋 **VDS20** (deps: VDS11 ✅) **the bento authoring contract is a CONVENTIONS.md inside one product, addressed to that product** — Two consoles diverge the moment the rules live where only one of them reads them. → §VDS20
@@ -15,6 +14,7 @@
 - 📋 **VDS22** (deps: VDS11 ✅) **the adapter that renders one form as console cards or as bento sections is a product-local override** — It is what lets a heavy shared form migrate without duplicating its field logic, and both products need it. → §VDS22
 - 📋 **VDS36** (deps: —) **the pulse glow hardcodes an indigo rgba, so a shared animation carries a colour the product cannot re-key** — VDS9 made every tone a token and this one kept its literal, which is the same failure in the place a token check does not look. → §VDS36
 - 📋 **VDS37** (deps: —) **the bento subpath needs react-router-dom, which the manifest calls an optional peer, so a missing one fails at runtime** — The root entry keeps router components behind /router for exactly this, and the bento layer mixes the two conventions. → §VDS37
+- 📋 **VDS38** (deps: —) **the command palette matches an entry's title only, so searching a word from its description finds nothing** — A launcher that misses the words a reader remembers sends them back to the nav they opened it to avoid. → §VDS38
 
 ## Block C — One look across products
 
@@ -29,12 +29,6 @@
 - **A consumer that re-declares an exported component fails its own build** The export
   list ships as a build artefact, and the lint names the import that replaces the local
   copy rather than only reporting that a duplicate exists.
-
-## Done when — VDS17
-
-- **The palette works against a product-supplied array** The package exports the
-  palette, the shortcuts dialog and the entry schema; no route or surface of either
-  product is in it, and the rail reads the same array.
 
 ## Done when — VDS18
 
@@ -102,6 +96,12 @@
   README and the subpath's doc comment agree on whether react-router-dom is required for
   the bento entry, and a fixture without it either installs with a warning or imports
   cleanly.
+
+## Done when — VDS38
+
+- **A word from the description finds its entry** Typing a description word returns that
+  entry, the title still ranks first when both match, and the test that pins title-only
+  matching is replaced rather than deleted.
 
 ## Non-goals
 

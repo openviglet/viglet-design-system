@@ -27,18 +27,6 @@ issue 10940 and move back when it supports 7.1.
 
 ## Block B — Bento becomes a design-system layer
 
-### §VDS17 A generic palette over product-supplied data
-
-bento-nav.config.ts is 15 KB and it is two things at once: the command palette's
-behaviour, which is generic, and the list of one product's roughly 29 surfaces, which is
-not. Moving the file whole would put Turing's routes into Shio's palette; leaving it
-whole means Shio writes a second palette that drifts from the first. Split it. The
-package exports the palette, the shortcuts dialog and a typed schema for a nav entry -
-label, icon, route, group, keywords, required privilege - and each product supplies its
-own array. The rail from VDS16 reads the same array, so a surface is declared once and
-appears in both the rail and the palette, which is the property that made the palette
-worth having in the first place.
-
 ### §VDS18 The suites follow their components
 
 Twelve RTL suites sit in the bento tests directory, covering the entity shell, the list
@@ -125,6 +113,18 @@ bento layer now mixes both conventions in one entry. Either say so -- the README
 the subpath's own doc comment -- or split the routed leaves the way the console era
 already splits its own, and decide which before the shell and the palette arrive with
 more of them.
+
+### §VDS38 Let the palette match what a reader actually types
+
+`BentoCommandPalette` filters on `t(item.titleKey)` and nothing else. Every entry also
+carries a `descriptionKey` -- rendered right under the title in the same list -- and
+typing a word from it returns an empty palette. "Crawlers and schedules" is on screen
+beside "Indexing", and searching "crawler" finds neither. It came over unchanged because
+a move must not also redesign, and the current behaviour is pinned by a test so widening
+it is a deliberate change rather than a silent one. Match the description too, and
+consider the section label: a reader who remembers "that thing under Generative AI" is
+describing a real way people navigate. Worth doing before VDS19 gives the palette a
+story, so the story shows the behaviour that stays.
 
 ## Block C — One look across products
 
