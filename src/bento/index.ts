@@ -31,6 +31,7 @@ export {
 export { BentoEntityTile, type BentoEntityTileProps } from "./bento-entity-tile";
 export { BentoHeroIconPicker, type BentoHeroIconPickerProps } from "./bento-hero-icon-picker";
 export { BentoInlineEdit, type BentoInlineEditProps } from "./bento-inline-edit";
+export { BentoFormHero, type BentoFormHeroProps } from "./bento-form-hero";
 export { BentoFormSection, type BentoFormSectionProps } from "./bento-form-section";
 export { BentoBackLink, BentoHero, type BentoHeroProps } from "./bento-hero";
 export { BentoSaveBar, type BentoSaveBarProps } from "./bento-save-bar";

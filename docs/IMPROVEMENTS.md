@@ -27,18 +27,6 @@ issue 10940 and move back when it supports 7.1.
 
 ## Block B — Bento becomes a design-system layer
 
-### §VDS14 The other half of the morph, for pages that own their hero
-
-Not every form page can use the entity shell. A multi-section editor, a settings surface
-or a suite page renders its own hero and still needs Save and Cancel to fade out of it
-and fade into a fixed bar. BentoFormHero is the single drop-in for that: it wraps the
-hero, injects the fading action pair into the trailing slot, and renders the scroll-bar
-twin itself, so the two halves cannot drift apart - which is the failure it was built to
-end, after a run of hand-wired two-piece forms that did. Move it with the actions escape
-hatch intact for pages that save imperatively rather than by form submit. Shio needs it
-immediately: three of its pages use a console sticky save bar today and none of them are
-entity-shell shaped.
-
 ### §VDS15 The mosaic
 
 BentoListPage is the largest file in the layer and it collapses a whole screen into one

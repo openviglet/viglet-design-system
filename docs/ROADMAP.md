@@ -7,7 +7,6 @@
 
 ## Block B — Bento becomes a design-system layer
 
-- 📋 **VDS14** (deps: VDS12 ✅) **BentoFormHero, the drop-in that gives an own-hero form the save-bar morph, is not installable** — Without it every form page outside the entity shell hand-wires two halves that then drift apart. → §VDS14
 - 📋 **VDS15** (deps: VDS11 ✅) **the list mosaic — BentoListPage with its New tile, empty state and drag-reorder — is not installable** — Every product has list screens, and a hand-rolled grid is the fastest way for two consoles to stop matching. → §VDS15
 - 📋 **VDS16** (deps: VDS11 ✅) **the bento shell chrome (nav rail, user menu, back-to-top) is product-local, so a second product has no shell** — A page can look bento inside a console that does not, which the conventions call the first mistake. → §VDS16
 - 📋 **VDS17** (deps: VDS16) **the command palette reads a nav config hardcoding one product's surfaces, so it cannot be shared as it stands** — The palette is generic and its data is not; moving both together would put Turing routes in Shio. → §VDS17
@@ -32,12 +31,6 @@
 - **A consumer that re-declares an exported component fails its own build** The export
   list ships as a build artefact, and the lint names the import that replaces the local
   copy rather than only reporting that a duplicate exists.
-
-## Done when — VDS14
-
-- **An own-hero form gets the morph from one component** BentoFormHero renders both
-  halves itself, the imperative actions escape hatch is intact, and no page composes a
-  fade-out bar and a scroll bar separately.
 
 ## Done when — VDS15
 
