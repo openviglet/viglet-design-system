@@ -52,6 +52,10 @@ export default defineConfig({
         // The second era of chrome, deliberately not in the root barrel.
         bento: resolve(__dirname, "src/bento/index.ts"),
         i18n: resolve(__dirname, "src/i18n/index.ts"),
+        // The product logos. Their own entry because library mode inlines
+        // every asset, so a root re-export shipped 1.90 MB of base64 PNG to
+        // every consumer — see VDS40.
+        assets: resolve(__dirname, "src/assets/products/index.ts"),
         router: resolve(__dirname, "src/router.ts"),
         vite: resolve(__dirname, "src/vite/index.ts"),
         "floating-formulas-bg": resolve(

@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs"
 import { resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 
-import { TOLERANCE, bentoEvidence, drift } from "./check-size.mjs"
+import { MAX_INLINE_ASSET, TOLERANCE, bentoEvidence, drift, oversizedAssets } from "./check-size.mjs"
 
 // VDS26 — the two bundles themselves take about a minute, so they run as a CI
 // step (`pnpm run check:size`) rather than here. What is asserted here is the
@@ -41,6 +41,37 @@ describe("the bento detector", () => {
 
   it("says nothing about an empty bundle", () => {
     expect(bentoEvidence([])).toEqual([])
+  })
+})
+
+describe("the inlined-asset cap", () => {
+  const blob = (bytes: number) => "base64," + "A".repeat(bytes)
+
+  it("names the entry and the size of anything over the cap", () => {
+    const found = oversizedAssets([chunk("entry.js", `const a="${blob(MAX_INLINE_ASSET + 1)}"`)])
+    expect(found).toHaveLength(1)
+    expect(found[0]).toContain("entry.js")
+    expect(found[0]).toContain("inlined asset #1")
+  })
+
+  it("leaves an asset at the cap alone", () => {
+    expect(oversizedAssets([chunk("entry.js", `const a="${blob(MAX_INLINE_ASSET)}"`)])).toEqual([])
+  })
+
+  it("counts blobs per chunk, so a second offender is still named", () => {
+    const two = `const a="${blob(MAX_INLINE_ASSET + 1)}",b="${blob(MAX_INLINE_ASSET + 2)}"`
+    expect(oversizedAssets([chunk("entry.js", two)])).toHaveLength(2)
+  })
+
+  it("ignores a CSS asset — a stylesheet's fonts are VDS41, not this cap", () => {
+    expect(oversizedAssets([asset("entry.css", blob(MAX_INLINE_ASSET + 1))])).toEqual([])
+  })
+
+  it("sits above the logos the app switcher renders and below another 2096px one", () => {
+    // The three rendered logos are 33-66 KB raw, so under 90 KB base64. The one
+    // that reached the root barrel through `productLogos` was 1.24 MB.
+    expect(MAX_INLINE_ASSET).toBeGreaterThan(90 * 1024)
+    expect(MAX_INLINE_ASSET).toBeLessThan(1_200_000)
   })
 })
 

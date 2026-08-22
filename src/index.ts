@@ -4,15 +4,14 @@ import "./styles/index.css";
 // Components
 export * from "./components";
 
-// Product logos (PNG assets bundled with the design system)
-export {
-  vigletLogoUrl,
-  turingLogoUrl,
-  shioLogoUrl,
-  dumontLogoUrl,
-  productLogos,
-  type ProductId,
-} from "./assets/products";
+// The product logos live on the `./assets` subpath, not here. Vite's library
+// mode inlines every asset regardless of assetsInlineLimit, so a re-export from
+// this barrel put 1.90 MB of base64 PNG into the root entry — 1.24 MB of it
+// `viglet.png`, which nothing in this package renders and no consumer imports.
+// Reachability was the whole cost: `productLogos` names all four, so keeping
+// the map here inlined all four.
+//
+//   import { productLogos } from "@viglet/viglet-design-system/assets";
 
 // Hooks
 export * from "./hooks";

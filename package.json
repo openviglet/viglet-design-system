@@ -27,6 +27,11 @@
       "require": "./dist/bento.cjs.js"
     },
     "./bento.css": "./dist/bento.css",
+    "./assets": {
+      "types": "./dist/assets/products/index.d.ts",
+      "import": "./dist/assets.es.js",
+      "require": "./dist/assets.cjs.js"
+    },
     "./exports.json": "./dist/exports.json",
     "./styles": "./dist/viglet-design-system.css",
     "./preset": "./dist/preset.css",

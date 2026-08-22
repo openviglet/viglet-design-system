@@ -105,6 +105,36 @@ export function bentoEvidence(chunks) {
   return found
 }
 
+/**
+ * The largest an inlined asset may be in a consumer's bundle.
+ *
+ * VDS40 — Vite's library mode inlines every asset regardless of
+ * `assetsInlineLimit`, so an asset reachable from an entry is base64 in that
+ * entry, uncacheable and uncompressible. A 2096x2096 product logo reached the
+ * root barrel through `productLogos` and put 1.24 MB there, for a picture
+ * nothing in this package renders. The cap is well above the three logos the
+ * app switcher does render and well below another of those.
+ */
+export const MAX_INLINE_ASSET = 256 * 1024
+
+/** Inlined assets over the cap, as `blob-<n>: <bytes>` for the failure message. */
+export function oversizedAssets(chunks) {
+  const found = []
+  for (const chunk of chunks) {
+    if (chunk.type === "asset") continue
+    let n = 0
+    // The payload, not the `base64,` prefix — the number in the message should
+    // be the asset's size, so it can be compared with the file on disk.
+    for (const [, payload] of chunk.code.matchAll(/base64,([A-Za-z0-9+/=]{200,})/g)) {
+      n += 1
+      if (payload.length > MAX_INLINE_ASSET) {
+        found.push(`${chunk.fileName}: inlined asset #${n} is ${payload.length} bytes`)
+      }
+    }
+  }
+  return found
+}
+
 /** Compares one measurement with its baseline, returning null when it is fine. */
 export function drift(name, measured, recorded, tolerance = TOLERANCE) {
   if (recorded === undefined) return `${name}: no baseline recorded — run with --update`
@@ -185,6 +215,10 @@ async function main() {
       failures.push(
         `${name}: the bento layer reached a consumer that never imported it\n    ${bento.join("\n    ")}`,
       )
+    }
+
+    for (const oversized of oversizedAssets(chunks)) {
+      failures.push(`${name}: ${oversized} — inline it smaller, or move it off this entry`)
     }
 
     if (!update) {

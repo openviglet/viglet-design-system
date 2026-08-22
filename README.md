@@ -247,6 +247,23 @@ import {
 } from "@viglet/viglet-design-system";
 ```
 
+### Product logos
+
+```tsx
+import { productLogos, type ProductId } from "@viglet/viglet-design-system/assets";
+```
+
+Their own subpath, not the root barrel. Vite's library mode inlines every asset
+regardless of `assetsInlineLimit`, so anything the root barrel could reach was
+base64 inside the root entry — `productLogos` names all four logos, and one of
+them is 1.24 MB, which put 1.90 MB of PNG in front of every consumer. Nothing
+renders that one: `VigletAppSwitcher` draws the Viglet Cloud entry with an icon.
+Moving the map here left the root entry 56% lighter, and `check:size` now
+refuses any single inlined asset over 256 KB.
+
+`VigletAppSwitcher` still imports the three logos it draws, so it needs no
+change.
+
 ### Models
 
 ```tsx
