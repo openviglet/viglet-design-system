@@ -206,7 +206,7 @@ const StickyPageHeaderRoot: React.FC<RootProps> = ({ children }) => (
  * The console sticky header: a header that condenses as the page scrolls.
  *
  * @deprecated Console-era chrome. Still exported and still supported - the
- * cutover in Shio and Turing is not finished, and removal is its own
+ * cutover has not started in any of the three consoles, and removal is its own
  * decision, not a side effect of this notice. New pages should use the
  * bento layer.
  *

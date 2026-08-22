@@ -15,6 +15,8 @@ function ControlledSwitcher(args: React.ComponentProps<typeof AppSwitcher>) {
   );
 }
 
+// Fixture data: real product names because the switcher is what a user sees.
+// viglet-ds-consumer-pair -- sample entries, not a claim about the consumer set
 const sampleApps: AppSwitcherItem[] = [
   {
     id: "cloud",

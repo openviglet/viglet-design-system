@@ -361,7 +361,7 @@ const GridListComponent: React.FC<Props> = ({ gridItemList, children }) => {
  * The console list page: a searchable table/grid of entities with per-row actions.
  *
  * @deprecated Console-era chrome. Still exported and still supported - the
- * cutover in Shio and Turing is not finished, and removal is its own
+ * cutover has not started in any of the three consoles, and removal is its own
  * decision, not a side effect of this notice. New pages should use the
  * bento layer.
  *

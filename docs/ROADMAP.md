@@ -11,8 +11,6 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS31** (deps: —) **Dumont consumes this package and appears nowhere in the plan, so one-look claims are checked against two of three** — The local-dev command found a third 2026.3 consumer on disk, and a design system that plans for two of its three consoles will diverge on the third. → §VDS31
-
 ## Done when — VDS5
 
 - **A consumer that re-declares an exported component fails its own build** The export
@@ -36,12 +34,12 @@
 - **Do not redesign a bento component while moving it** A move whose diff also changes
   behaviour cannot be reviewed against the 118 pages that already depend on it;
   improvements land as their own lines afterwards.
-- **Do not remove the console-era exports before both products cut over** PageHeader,
-  SubPage, GridList and InternalSidebar still render live screens in both consoles;
-  VDS24 deprecates them, and removal is a separate decision with its own line.
 - **No product data in the package** Routes, entity names and nav surfaces belong to the
   product; the package exports the palette and the schema, never the array, or a Shio
   console ends up offering Turing routes.
 - **Do not make bento the only chrome this package knows** Shio migrates behind a
   parallel route and will render both chromes for the length of that migration, so a
   shared form must be able to say which one it is in.
+- **Do not remove the console-era exports before every console cuts over** PageHeader,
+  SubPage, GridList and InternalSidebar still render live screens in all three; VDS24
+  deprecates them, and removal is a separate decision with its own line.

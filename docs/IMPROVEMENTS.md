@@ -41,14 +41,3 @@ tiles behind, and adapt their mocks - the user context and the i18n passthrough 
 have package-level equivalents.
 
 ## Block C — One look across products
-
-### §VDS31 Dumont is the third consumer
-
-The roadmap names Shio and Turing throughout, and the README's own first line names
-three products. Discovering the consumers by reading their manifests found dumont-react
-on the 2026.3 line alongside the other two. Nothing here is wrong for Dumont
-specifically — it is that no line accounts for it, so VDS25's render contract compares
-two token sets rather than three, VDS21's chrome strings are checked in two locale
-bundles, and the duplicate lint is planned into two CIs. Decide whether Dumont is a
-consumer this plan holds itself to, and if so widen those lines rather than adding a
-parallel set.

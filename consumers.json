@@ -1,0 +1,45 @@
+{
+  "why": [
+    "The consumers this package holds itself to, declared rather than remembered.",
+    "The roadmap named Shio and Turing throughout while dumont-react sat on the",
+    "same 2026.3 line consuming the same entries, so one-look claims were being",
+    "checked against two of three. This file is the one place that set lives:",
+    "prose that names a subset as though it were the whole is a test failure,",
+    "not a style note.",
+    "",
+    "`entries` is what each product imports today, read from its source. It is a",
+    "snapshot and will drift; what does not drift is the membership, which is",
+    "what the guards read."
+  ],
+  "consumers": [
+    {
+      "id": "shio",
+      "name": "Shio",
+      "package": "shio-react",
+      "entries": [
+        "."
+      ],
+      "chrome": "console"
+    },
+    {
+      "id": "turing",
+      "name": "Turing",
+      "package": "turing-app",
+      "entries": [
+        ".",
+        "./router"
+      ],
+      "chrome": "console"
+    },
+    {
+      "id": "dumont",
+      "name": "Dumont",
+      "package": "dumont-react",
+      "entries": [
+        ".",
+        "./router"
+      ],
+      "chrome": "console"
+    }
+  ]
+}

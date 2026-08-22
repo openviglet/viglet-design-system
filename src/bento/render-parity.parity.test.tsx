@@ -26,21 +26,28 @@ import {
  * two browsers, which is expensive, never ran on a pull request, and could not
  * say what changed.
  *
- * So: render one fixed composition twice, once under each token set, and digest
- * what the browser resolved. The claim being tested is precise —
+ * So: render one fixed composition once per token set, and digest what the
+ * browser resolved. The claim being tested is precise —
  *
- *   * every **structural** property is byte-identical between the two, and
+ *   * every **structural** property is byte-identical across all of them, and
  *   * every **colour** difference traces to a brand token.
  *
  * A shared component that hardcodes a hue fails the first half (it does not
  * move) or the second (it moves somewhere the tokens do not explain).
  *
  * The token sets are deliberately not named for products. The package holds the
- * schema; which four values Shio or Turing set is theirs. What is asserted here
- * is the property, and the property holds for any pair.
+ * schema; which four values a product sets are its own. What is asserted here
+ * is the property, and the property holds for any set.
  */
 
-/** Two accents far enough apart that a hardcoded hue cannot hide between them. */
+/**
+ * One accent per declared consumer, far enough apart that a hardcoded hue
+ * cannot hide between any two of them. They are not named for products: the
+ * package holds the schema, and the property under test holds for any set.
+ * `consumers.test.ts` asserts there are at least as many of these as there
+ * are consumers, so a fourth console arrives here rather than being noticed
+ * later, which is the whole of VDS31.
+ */
 const TOKEN_SETS = {
   cool: {
     "--vg-accent-from": "oklch(62.3% 0.214 259.815)",
@@ -53,6 +60,12 @@ const TOKEN_SETS = {
     "--vg-accent-to": "oklch(64.6% 0.222 41.116)",
     "--vg-accent-text": "oklch(50.5% 0.185 38.402)",
     "--vg-accent-text-dark": "oklch(75% 0.183 55.934)",
+  },
+  green: {
+    "--vg-accent-from": "oklch(69.6% 0.17 162.48)",
+    "--vg-accent-to": "oklch(60% 0.118 184.704)",
+    "--vg-accent-text": "oklch(50.8% 0.118 165.612)",
+    "--vg-accent-text-dark": "oklch(76.5% 0.177 163.223)",
   },
 } as const
 
@@ -108,7 +121,7 @@ function Composition() {
     <div style={{ width: 1200 }}>
       <BentoHero
         title="Parity"
-        subtitle="One composition, two token sets."
+        subtitle="One composition, every token set."
         backTo="/back"
         backLabel="Back"
       />
@@ -217,57 +230,67 @@ function renderUnder(tokens: Record<string, string>, tree: ReactElement): HTMLEl
 
 function clearTokens() {
   const root = document.documentElement
-  for (const name of Object.keys(TOKEN_SETS.cool)) root.style.removeProperty(name)
+  for (const set of Object.values(TOKEN_SETS)) {
+    for (const name of Object.keys(set)) root.style.removeProperty(name)
+  }
 }
 
-describe("two token sets render the same layer", () => {
+describe("every token set renders the same layer", () => {
   // Digested one at a time, because the tokens live on the shared root: two
   // trees mounted at once would both read whichever set was applied last.
-  const cool = renderUnder(TOKEN_SETS.cool, <Composition />)
-  const coolStructure = digest(cool, STRUCTURAL)
-  const coolColour = digest(cool, CHROMATIC)
-  const coolText = cool.textContent ?? ""
-  const coolTones = toneChips(cool)
-  cool.remove()
-  clearTokens()
+  const digests = Object.entries(TOKEN_SETS).map(([name, tokens]) => {
+    const host = renderUnder(tokens, <Composition />)
+    const measured = {
+      name,
+      structure: digest(host, STRUCTURAL),
+      colour: digest(host, CHROMATIC),
+      text: host.textContent ?? "",
+      tones: toneChips(host),
+    }
+    host.remove()
+    clearTokens()
+    return measured
+  })
 
-  const warm = renderUnder(TOKEN_SETS.warm, <Composition />)
-  const warmStructure = digest(warm, STRUCTURAL)
-  const warmColour = digest(warm, CHROMATIC)
-  const warmTones = toneChips(warm)
-  warm.remove()
-  clearTokens()
+  const [first, ...rest] = digests
 
   it("digests something substantial — the composition actually mounted", () => {
-    expect(coolStructure.length).toBeGreaterThan(40)
-    expect(coolText).toContain("Parity")
-    expect(coolText).toContain("Settings")
-    expect(coolText).toContain("Alpha")
+    expect(digests.length, "fewer token sets than consumers").toBeGreaterThanOrEqual(3)
+    expect(first.structure.length).toBeGreaterThan(40)
+    expect(first.text).toContain("Parity")
+    expect(first.text).toContain("Settings")
+    expect(first.text).toContain("Alpha")
   })
 
   it("moves nothing: every structural property is identical", () => {
-    expect(coolStructure.length, "the two renders produced different element counts").toBe(
-      warmStructure.length,
-    )
-    const moved = coolStructure
-      .map((line, i) => [line, warmStructure[i]] as const)
-      .filter(([x, y]) => x !== y)
-    expect(
-      moved.map(([x, y]) => `\n  cool: ${x}\n  warm: ${y}`),
-      "a token re-key changed the layout, which is what it must never do",
-    ).toEqual([])
+    for (const other of rest) {
+      expect(
+        first.structure.length,
+        `${first.name} and ${other.name} produced different element counts`,
+      ).toBe(other.structure.length)
+
+      const moved = first.structure
+        .map((line, i) => [line, other.structure[i]] as const)
+        .filter(([x, y]) => x !== y)
+      expect(
+        moved.map(([x, y]) => `\n  ${first.name}: ${x}\n  ${other.name}: ${y}`),
+        "a token re-key changed the layout, which is what it must never do",
+      ).toEqual([])
+    }
   })
 
   it("differs in colour, and only in colour", () => {
-    const differing = coolColour.filter((line, i) => line !== warmColour[i])
+    for (const other of rest) {
+      const differing = first.colour.filter((line, i) => line !== other.colour[i])
 
-    // Non-vacuous in the direction that matters: if re-keying changed no colour
-    // at all, the tokens are not reaching the components and the assertion
-    // above would pass for the wrong reason.
-    expect(
-      differing.length,
-      "the accent tokens reached nothing — the components are not reading them",
-    ).toBeGreaterThan(3)
+      // Non-vacuous in the direction that matters: if re-keying changed no
+      // colour at all, the tokens are not reaching the components and the
+      // assertion above would pass for the wrong reason.
+      expect(
+        differing.length,
+        `${other.name}: the accent tokens reached nothing — the components are not reading them`,
+      ).toBeGreaterThan(3)
+    }
   })
 
   /**
@@ -318,7 +341,9 @@ describe("two token sets render the same layer", () => {
 
   it("leaves the tones alone — they are not the accent", () => {
     // A bento tone is chosen by the caller, so it must survive a re-key.
-    expect(coolTones.length, "no toned chip rendered, so this asserts nothing").toBeGreaterThan(0)
-    expect(coolTones).toEqual(warmTones)
+    expect(first.tones.length, "no toned chip rendered, so this asserts nothing").toBeGreaterThan(0)
+    for (const other of rest) {
+      expect(other.tones, `${other.name} repainted a tone the caller chose`).toEqual(first.tones)
+    }
   })
 })

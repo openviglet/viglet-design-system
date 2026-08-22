@@ -9,7 +9,8 @@ import type { BentoTone } from "./bento-tones";
  * what they render is one product's map of itself: its routes, its entity
  * names, its sections. So the schema lives here and the array lives in the
  * product — a package holding the array would offer Turing's routes inside a
- * Shio console.
+ * Shio console. viglet-ds-consumer-pair -- two products contrasted, not the
+ * consumer set enumerated.
  *
  * This is the *render* contract, deliberately narrower than what a product
  * keeps. Visibility is a product concern: privileges, licences and which

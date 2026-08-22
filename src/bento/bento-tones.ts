@@ -10,6 +10,7 @@
  * into the components, so the palette belonged to this package rather than to
  * the product rendering it — and Turing is blue where Shio is orange. A product
  * re-keys a tone by redefining two custom properties, and forks nothing.
+ * viglet-ds-consumer-pair -- two products contrasted, not the consumer set.
  */
 
 export type BentoTone =

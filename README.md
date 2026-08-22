@@ -2,6 +2,12 @@
 
 Shared component library, design tokens, hooks, utilities, and i18n for Viglet products (Turing, Dumont, Shio).
 
+Those three are the consumers this package holds itself to, declared in
+[`consumers.json`](consumers.json) rather than remembered: the render-parity
+digest carries one token set per consumer, and a guard refuses prose that names
+two of them as though it were all of them. A fourth console is one entry there,
+and the checks widen with it.
+
 **[Browse the component catalogue](https://openviglet.github.io/viglet-design-system/)** — every
 component, its variants and its props, rebuilt on each commit to `2026.3`. Look
 there before writing a component: the catalogue is the answer to "does this
@@ -16,8 +22,8 @@ pnpm add @viglet/viglet-design-system
 ## Trying a change in a product before publishing
 
 A change here is a change to shared chrome, so the question is always what it
-does to Shio and Turing — and the answer should not require a publish. From this
-checkout:
+does to Shio, Turing and Dumont — and the answer should not require a
+publish. From this checkout:
 
 ```bash
 pnpm use:local           # build, then push dist into every 2026.3 product on disk
@@ -196,9 +202,9 @@ import {
 
 #### Two eras, and which one a new page should use
 
-This package exports two complete page vocabularies. The **console era** is what Shio and Turing shipped on; the **[bento layer](#the-bento-layer)** is the current one. Every console-era export is marked `@deprecated` in its own types, so an editor strikes it through and offers the swap.
+This package exports two complete page vocabularies. The **console era** is what all three products ship on today; the **[bento layer](#the-bento-layer)** is the current one. Every console-era export is marked `@deprecated` in its own types, so an editor strikes it through and offers the swap.
 
-Nothing is being removed. Both products are still cutting over, and a removal will get its own roadmap line rather than arriving as a side effect of this notice — so existing pages keep working and need no rush.
+Nothing is being removed. No product has started cutting over, and a removal will get its own roadmap line rather than arriving as a side effect of this notice — so existing pages keep working and need no rush.
 
 | Console era | Use instead | |
 |---|---|---|
@@ -361,7 +367,7 @@ put that offer in every console.
 
 ## Contributing
 
-The package manager is pnpm, matching the Shio and Turing workspaces.
+The package manager is pnpm, matching the Shio, Turing and Dumont workspaces.
 
 ```bash
 pnpm install
