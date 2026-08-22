@@ -13,6 +13,7 @@
 
 - 📋 **VDS26** (deps: VDS8 ✅) **no size budget: a consumer importing nothing from the bento subpath cannot be shown it paid nothing** — The subpath was chosen over one barrel for exactly this, and the choice is so far unmeasured. → §VDS26
 - 📋 **VDS31** (deps: —) **Dumont consumes this package and appears nowhere in the plan, so one-look claims are checked against two of three** — The local-dev command found a third 2026.3 consumer on disk, and a design system that plans for two of its three consoles will diverge on the third. → §VDS31
+- 📋 **VDS39** (deps: —) **the accent story re-keys on a wrapper div, so its tint and hairline chips silently keep the default colour** — It is the one place a consumer learns how to re-key, and it demonstrates a form that does not work. → §VDS39
 
 ## Done when — VDS5
 
@@ -31,6 +32,12 @@
 - **A root-only consumer contains no bento module and no bento CSS** A fixture importing
   only the root entry is asserted clean in CI, and the bento subpath carries a recorded
   size baseline of its own.
+
+## Done when — VDS39
+
+- **A re-key in the catalogue moves every specimen** The story sets the tokens where a
+  product does, so all five specimens change together and the mechanism is learned
+  correctly.
 
 ## Non-goals
 
