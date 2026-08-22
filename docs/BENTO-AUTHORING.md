@@ -1,0 +1,142 @@
+# Authoring a bento page
+
+The rules that keep every bento screen looking like the same product. They held
+across a hundred-odd pages in one console because one team read one file; this
+is that file, addressed to anyone importing
+`@viglet/viglet-design-system/bento`.
+
+The first mistake is a page that looks bento inside a console that does not.
+Adopt the shell before the pages.
+
+## 1. Structure — thin config, not bespoke pages
+
+There are three page shapes. Almost every screen is one of them plus data.
+
+**A detail screen** is `BentoEntityShell` wrapping a form. The shell owns the
+identity hero, the save-bar morph and the delete flow; the form is a render prop
+receiving `{ staged, onStateChange }` and groups its fields in
+`BentoFormSection`s. Wire the query hooks in the page and put no shell mechanics
+there.
+
+**A list screen** is one `BentoListPage` call with a `renderTile`. Use
+`BentoEntityTile` for the common icon-chip + status-pill + title + meta shape;
+hand-roll a tile only when the entity genuinely needs a different layout.
+
+**A form screen with its own hero** is `BentoFormHero` as the first child inside
+the `<form>` it submits. It renders both halves of the morph itself.
+
+Two rules that outrank convenience:
+
+- **Identity lives in the hero, never in the form.** Title, description, icon
+  and enabled state are the shell's; a form field for any of them is a second
+  place to edit the same thing.
+- **The save bar is always the morph.** Controls start in the hero and a fixed
+  bar fades in as the hero scrolls away, so nothing is duplicated on screen and
+  the bar appears exactly when the title leaves. Never a hand-rolled
+  `<div className="sticky …">`, and never a permanently visible bar.
+  - `BentoEntityShell` gives you this for free.
+  - Every own-hero form uses `BentoFormHero`. Do not compose a fade-out control
+    group and a `BentoScrollSaveBar` yourself: they are two halves that drift.
+  - A page that saves **imperatively** passes its own buttons through
+    `BentoFormHero`'s `actions`, which replaces the default pair in *both*
+    copies and keeps the morph.
+  - Keep the **destructive** action in the hero's `trailing` only. A controlled
+    dialog rendered twice opens two modals at once, and an action inside the
+    fade-out group vanishes as the reader scrolls.
+
+## 2. What the package will not hold
+
+The layer is chrome; the map of your product is yours. Four things arrive as
+props, and the package has no default for any of them:
+
+| You supply | To |
+|---|---|
+| The nav array, already filtered by privilege or licence | `BentoNavRail`, `BentoCommandPalette` |
+| Routes for account, sign-out and any tenancy surfaces | `BentoUserMenu` |
+| A resolved layout and callbacks to persist it | `BentoListPage` |
+| A keyword suggester, if you want one | `IconPickerDialog` |
+
+`BentoNavItem` is the render contract, deliberately narrower than what you will
+keep: carry `privilege`, licence flags and anything else on your own type, and
+pass the filtered result.
+
+An entry appears when its route does. That is how you say a reader may see
+something — the package cannot read your feature model, and should not try.
+
+## 3. Colour — a tone is a token
+
+No component in the layer names a colour. A tone is
+`--vg-bento-tone-<name>-from` / `-to` in the preset, and the chip reads them, so
+you re-key the palette by redefining variables rather than forking a component.
+The status intents (`on`, `warn`, `error`, `danger`) work the same way.
+
+Accents — a focus border, the rail's active marker, a hover ring — take your
+`--primary`. A shared component marking "you are here" in a colour of its own is
+the clearest way to make one product look wrong.
+
+If you need a one-off tint, set `--bento-tone-from` / `--bento-tone-to` on a
+subtree instead of touching the tokens.
+
+## 4. i18n
+
+- Reuse the keys you already have. Do not mint a parallel namespace for a
+  surface that already has one: the same entity rendered in two chromes is the
+  same entity.
+- Always pass a default in the **object** form: `t("key", { defaultValue: "…" })`.
+  The string form is ambiguous and test mocks generally do not honour it.
+- Add every new key to every locale you ship.
+
+## 5. Accessibility
+
+This is a gate, not advice — the catalogue's stories run under axe on every
+push, and a violation fails the build.
+
+- **Icon-only controls** get an `aria-label`. Decorative glyphs get
+  `aria-hidden` and convey their meaning through an adjacent `sr-only` span:
+  screen readers do not reliably announce `aria-label` on a bare `<svg>`, and
+  Testing Library's `getByLabelText` will not match it either.
+- **Keyboard**: inline edit is reachable and committable by keyboard, the
+  palette is arrow-key and Enter navigable, and active rows carry
+  `aria-current="page"` (rail) or `aria-selected` (palette).
+- **ARIA values are string literals** — `aria-expanded="true"`,
+  `aria-selected={active ? "true" : "false"}`. A bare attribute or a
+  `{boolean}` expression is a lint failure.
+- **Headings increase by one.** The hero is `h1`, so a section under it is `h2`
+  — which is what `BentoFormSection` renders by default. A repeated label, like
+  the sticky bar's title, is not a heading at all.
+- **Contrast holds at 4.5:1**, including text on a tinted surface. Tinted pills
+  need the darker text token in light mode.
+- **Reduced motion**: every animation in `bento.css` is turned off under
+  `@media (prefers-reduced-motion: reduce)`, and a test asserts that every
+  animating selector is named in that guard. A new keyframe that is not is a
+  failing build, not a review comment.
+
+## 6. Responsive
+
+- The grid is `grid-cols-2 md:grid-cols-4 lg:grid-cols-6` with `col-span-2`
+  tiles and `row-span-2` for a featured one. **Keep spans in multiples of two**
+  so tiles reflow cleanly at every breakpoint — this is what keeps two consoles'
+  grids aligned.
+- The nav rail is desktop-only. Reserve its gutter with `bento-rail-gutter` on
+  whatever wraps the routed page. On mobile, navigation is the header's command
+  trigger and the global shortcut; do not add a second always-visible nav that
+  eats mobile width.
+- There is **no sidebar provider**, and no context between the shell's pieces.
+  The console era needs one because its sidebar collapses, remembers and pushes
+  content; the rail is fixed, one width, and hidden below `md`.
+
+## 7. Tests
+
+- Every shared component here carries vitest and Testing Library coverage, so a
+  regression surfaces once rather than in each console.
+- Router-dependent components render inside a `MemoryRouter`.
+- Assert on the readable `defaultValue` strings rather than on i18n keys, so a
+  test reads like the screen does.
+- jsdom implements neither `matchMedia`, `ResizeObserver` nor `scrollIntoView`.
+  This package's own setup polyfills all three; a consumer testing these
+  components will need the same.
+
+## What this does not cover
+
+Which components are the shared layer and which stay in a product is
+[docs/BENTO-BOUNDARY.md](BENTO-BOUNDARY.md).

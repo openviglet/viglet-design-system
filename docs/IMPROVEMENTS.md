@@ -40,19 +40,6 @@ Move the suites for the components that moved, leave the ones covering product-s
 tiles behind, and adapt their mocks - the user context and the i18n passthrough both
 have package-level equivalents.
 
-### §VDS20 The rules move with the code
-
-CONVENTIONS.md is the reason the bento layer stayed internally consistent across 118
-pages. It fixes the three page shapes, forbids a hand-rolled sticky wrapper, puts
-identity fields in the hero and never in the form, requires the back-link arrow, sets
-the grid spans, and states the i18n and accessibility baselines. It is addressed to one
-product and it lives in that product's tree. A second console will not read it, and
-rules nobody reads are how two consoles drift apart while both teams believe they are
-following the same design. Rewrite it as this package's authoring contract -
-product-neutral, sitting next to the components it governs - and leave a pointer behind
-in Turing rather than a copy, because two copies of a contract is the same failure one
-level up.
-
 ### §VDS21 Chrome that speaks its own strings
 
 The package already ships English and Portuguese base translations for buttons, form

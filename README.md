@@ -275,10 +275,33 @@ Turing grew a second era of chrome — the frosted tile, the airy hero, the
 mosaic — inside one product while this package sat next to it exporting console
 chrome. It is being moved here.
 
-[docs/BENTO-BOUNDARY.md](docs/BENTO-BOUNDARY.md) says which of its exports become
-part of this package and which stay in the product, and why. Read it before
-moving anything: four of them are one product's commercial offer rendered as
-cards, and shipping those as chrome would put that offer in every console.
+It is a separate entry point, so a console still on the first era carries none
+of it:
+
+```ts
+import "@viglet/viglet-design-system/bento.css";
+import {
+  BentoEntityShell,
+  BentoListPage,
+  BentoFormHero,
+  BentoNavRail,
+  BentoCommandPalette,
+} from "@viglet/viglet-design-system/bento";
+```
+
+The stylesheet is a separate import from the components, so a consumer taking
+only the layout maths does not pull CSS it never renders. It reads the preset's
+tokens, so import the preset too.
+
+[docs/BENTO-AUTHORING.md](docs/BENTO-AUTHORING.md) is the contract for writing a
+bento page: the three page shapes, what the package will not hold for you, and
+the colour, i18n, accessibility and layout rules that keep two consoles looking
+like the same product. Read it before the first screen, not after the fifth.
+
+[docs/BENTO-BOUNDARY.md](docs/BENTO-BOUNDARY.md) says which exports become part
+of this package and which stay in the product, and why. Four of them are one
+product's commercial offer rendered as cards, and shipping those as chrome would
+put that offer in every console.
 
 ## Contributing
 

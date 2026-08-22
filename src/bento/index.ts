@@ -20,6 +20,7 @@
  * pushes content around; the rail does none of that -- it is fixed, it is one
  * width, and it is hidden below md. A provider would be state nothing reads.
  *
+ * docs/BENTO-AUTHORING.md is the contract for writing a page with these, and
  * docs/BENTO-BOUNDARY.md says which of the product's bento exports belong here
  * and which stay in the product.
  */

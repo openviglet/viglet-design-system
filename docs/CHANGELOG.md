@@ -31,5 +31,6 @@
 - ✅ **VDS17** **the command palette reads a nav config hardcoding one product's surfaces, so it cannot be shared as it stands** — The palette and shortcuts dialog take the same array the rail is given, and no product route survives anywhere in the layer.
 - ✅ **VDS18 (package half)** **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — Every moved component has a suite here, carrying the product's assertions plus the seam ones, and none asserts a re-export.
 - ✅ **VDS19** **no bento component has a story, though every other component here has one** — All 23 bento components have a story with their tone variants, the mosaic shows populated and empty, and one scrolls the morph.
+- ✅ **VDS20** **the bento authoring contract is a CONVENTIONS.md inside one product, addressed to that product** — docs/BENTO-AUTHORING.md carries the three page shapes, the save-bar and identity rules, the spans and the i18n and a11y baselines, naming no product.
 
 ## Block C — One look across products
