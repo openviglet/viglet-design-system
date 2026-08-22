@@ -16,6 +16,19 @@ interface PageHeaderProps {
   children?: React.ReactNode;
 }
 
+/**
+ * The console page header: a tinted icon chip, a title and a row of actions.
+ *
+ * @deprecated Console-era chrome. Still exported and still supported - the
+ * cutover in Shio and Turing is not finished, and removal is its own
+ * decision, not a side effect of this notice. New pages should use the
+ * bento layer.
+ *
+ * @see BentoHero - the bento equivalent.
+ *
+ * `BentoHero` takes the same title/subtitle/icon and adds a tone, so
+ * the chip follows the product accent rather than the component.
+ */
 export const PageHeader: React.FC<PageHeaderProps> = ({ icon: PageIcon, title, urlBase, children }) => {
   const { items } = useBreadcrumb();
   const navigate = useNavigate();

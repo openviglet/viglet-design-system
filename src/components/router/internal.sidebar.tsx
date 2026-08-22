@@ -83,6 +83,19 @@ const renderNavItems = (
     </SidebarMenuItem>
   ));
 
+/**
+ * The console entity sidebar: a header, indexing counts and a nav tree.
+ *
+ * @deprecated Console-era chrome. Still exported and still supported - the
+ * cutover in Shio and Turing is not finished, and removal is its own
+ * decision, not a side effect of this notice. New pages should use the
+ * bento layer.
+ *
+ * @see BentoNavRail - the bento equivalent.
+ *
+ * The rail takes its nav array as a prop rather than importing the
+ * product's routes, which is what lets one rail serve three products.
+ */
 export const InternalSidebar: React.FC<InternalSidebarProps> = ({
   icon: Icon,
   feature,

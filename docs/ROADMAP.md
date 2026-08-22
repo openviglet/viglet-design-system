@@ -11,7 +11,6 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS24** (deps: VDS16 ✅) **the package exports both eras of chrome and says nowhere which one a new page should use** — PageHeader, SubPage, GridList and InternalSidebar are the console, and a new page will pick one at random. → §VDS24
 - 📋 **VDS25** (deps: VDS2 ✅, VDS11 ✅) **nothing proves two products composing the same shared components actually render the same** — One look is the whole goal, and it is judged today by opening two browsers side by side. → §VDS25
 - 📋 **VDS26** (deps: VDS8 ✅) **no size budget: a consumer importing nothing from the bento subpath cannot be shown it paid nothing** — The subpath was chosen over one barrel for exactly this, and the choice is so far unmeasured. → §VDS26
 - 📋 **VDS31** (deps: —) **Dumont consumes this package and appears nowhere in the plan, so one-look claims are checked against two of three** — The local-dev command found a third 2026.3 consumer on disk, and a design system that plans for two of its three consoles will diverge on the third. → §VDS31
@@ -27,12 +26,6 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
-
-## Done when — VDS24
-
-- **Every console-era export says it is the console era** The deprecation is in the doc
-  comments and the README, the swap table is published, and nothing is removed while a
-  product still renders it.
 
 ## Done when — VDS25
 

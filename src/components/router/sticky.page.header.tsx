@@ -202,6 +202,20 @@ const StickyPageHeaderRoot: React.FC<RootProps> = ({ children }) => (
   </header>
 );
 
+/**
+ * The console sticky header: a header that condenses as the page scrolls.
+ *
+ * @deprecated Console-era chrome. Still exported and still supported - the
+ * cutover in Shio and Turing is not finished, and removal is its own
+ * decision, not a side effect of this notice. New pages should use the
+ * bento layer.
+ *
+ * @see useBentoScrollFade - the bento equivalent.
+ *
+ * The bento layer separates the scroll state from the chrome, so the
+ * same fade drives a header, a save bar (`BentoScrollSaveBar`) or
+ * anything else.
+ */
 export const StickyPageHeader = Object.assign(StickyPageHeaderRoot, {
   Title,
   Actions,

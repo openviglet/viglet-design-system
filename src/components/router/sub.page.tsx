@@ -28,6 +28,19 @@ interface Props {
   onExport?: () => void;
 }
 
+/**
+ * The console entity page: sidebar, header and outlet in one.
+ *
+ * @deprecated Console-era chrome. Still exported and still supported - the
+ * cutover in Shio and Turing is not finished, and removal is its own
+ * decision, not a side effect of this notice. New pages should use the
+ * bento layer.
+ *
+ * @see BentoEntityShell - the bento equivalent.
+ *
+ * The shell renders through a render prop, so a product supplies the
+ * body without the shell knowing what an entity is.
+ */
 export const SubPage: React.FC<Props> = (props) => {
   return (
     <div className="w-full px-1 md:px-6 lg:px-8 py-1 md:py-4 min-h-[calc(100svh-10.5rem)]">

@@ -42,18 +42,6 @@ have package-level equivalents.
 
 ## Block C — One look across products
 
-### §VDS24 Say which era a component belongs to
-
-After Block B this package exports two complete page vocabularies. PageHeader, SubPage,
-SubPageHeader, GridList, InternalSidebar, NavMain and StickyPageHeader are the console
-era; the bento subpath is the current one. Nothing in the package says so. A new page -
-in a third product, or in a corner of an existing one - will pick whichever it finds
-first, and the drift this whole effort exists to close reopens quietly and without
-anyone deciding to reopen it. Mark the console set deprecated in its own doc comments
-and in the README, publish the swap table the migration already carries as prose, and
-keep every one of them exported and working until both products have finished cutting
-over. Removal is a later decision and deserves its own line.
-
 ### §VDS25 Prove the two products render the same
 
 The goal of this work is a claim about appearance, and appearance is the one property

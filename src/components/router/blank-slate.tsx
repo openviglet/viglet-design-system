@@ -9,6 +9,16 @@ interface Props {
     urlNew?: string;
 }
 
+/**
+ * The console empty state.
+ *
+ * @deprecated Console-era chrome. Still exported and still supported - the
+ * cutover in Shio and Turing is not finished, and removal is its own
+ * decision, not a side effect of this notice. New pages should use the
+ * bento layer.
+ *
+ * @see BentoEmptyState - the bento equivalent.
+ */
 export const BlankSlate: React.FC<Props> = ({ icon: Icon, title, description, urlNew, buttonText }) => {
     return (
         <div className="flex items-center justify-center px-6 py-16">

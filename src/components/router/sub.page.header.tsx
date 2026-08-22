@@ -132,6 +132,19 @@ const SubPageHeaderComponent: React.FC<Props> = ({ icon: Icon, feature, name, de
   )
 }
 
+/**
+ * The console sub-page header: the same chip and title, plus an actions menu and a back target.
+ *
+ * @deprecated Console-era chrome. Still exported and still supported - the
+ * cutover in Shio and Turing is not finished, and removal is its own
+ * decision, not a side effect of this notice. New pages should use the
+ * bento layer.
+ *
+ * @see BentoHero - the bento equivalent.
+ *
+ * Pair it with `BentoBackLink` for the back target; the actions menu
+ * is `BentoActionsMenu`.
+ */
 export const SubPageHeader = Object.assign(SubPageHeaderComponent, {
   Action: SubPageHeaderAction,
 });

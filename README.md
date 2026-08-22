@@ -194,6 +194,27 @@ import {
 } from "@viglet/viglet-design-system";
 ```
 
+#### Two eras, and which one a new page should use
+
+This package exports two complete page vocabularies. The **console era** is what Shio and Turing shipped on; the **[bento layer](#the-bento-layer)** is the current one. Every console-era export is marked `@deprecated` in its own types, so an editor strikes it through and offers the swap.
+
+Nothing is being removed. Both products are still cutting over, and a removal will get its own roadmap line rather than arriving as a side effect of this notice — so existing pages keep working and need no rush.
+
+| Console era | Use instead | |
+|---|---|---|
+| `PageHeader` | `BentoHero` | Same title/subtitle/icon, plus a tone — the chip follows the product accent. |
+| `SubPageHeader` | `BentoHero` | With `BentoBackLink` for the back target and `BentoActionsMenu` for the menu. |
+| `StickyPageHeader` | `useBentoScrollFade` | The scroll state is separated from the chrome, so it also drives `BentoScrollSaveBar`. |
+| `GridList` | `BentoListPage` | `BentoTileGrid` is the mosaic alone, for a page with its own chrome. |
+| `BlankSlate` | `BentoEmptyState` | |
+| `InternalSidebar` | `BentoNavRail` | The rail takes its nav array as a prop instead of importing routes. |
+| `NavMain` | `BentoNavRail` | |
+| `NavUser` | `BentoUserMenu` | Routes and feature flags arrive as props. |
+| `SubPage` | `BentoEntityShell` | Renders through a render prop, so the shell never learns what an entity is. |
+| `Page`, `PageContent` | — | No single replacement, deliberately: the shell is where a product is itself. Compose `BentoNavRail`, `BentoUserMenu` and `BentoCommandPalette`. |
+
+`DialogDelete`, `LoadProvider` and `GradientButtonLink` are **not** console-era — the bento layer uses them itself, and they are not deprecated.
+
 ### Hooks
 
 ```tsx

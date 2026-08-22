@@ -357,6 +357,19 @@ const GridListComponent: React.FC<Props> = ({ gridItemList, children }) => {
     );
 };
 
+/**
+ * The console list page: a searchable table/grid of entities with per-row actions.
+ *
+ * @deprecated Console-era chrome. Still exported and still supported - the
+ * cutover in Shio and Turing is not finished, and removal is its own
+ * decision, not a side effect of this notice. New pages should use the
+ * bento layer.
+ *
+ * @see BentoListPage - the bento equivalent.
+ *
+ * `BentoTileGrid` is the mosaic on its own, if the page already has
+ * its own chrome.
+ */
 export const GridList = Object.assign(GridListComponent, {
     NewButton: GridListNewButton,
     Action: GridListAction,

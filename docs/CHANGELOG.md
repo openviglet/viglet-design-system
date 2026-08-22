@@ -41,3 +41,4 @@
 ## Block C — One look across products
 
 - ✅ **VDS23** **the product hue is hardcoded per product: Shio orange in a page header, Turing blue in a glass tint** — A product re-keys its colour by setting four custom properties at the root; the tint, the ring, the fill and the focus ring all derive, and no shared component names a hue.
+- ✅ **VDS24** **the package exports both eras of chrome and says nowhere which one a new page should use** — Every console-era export carries @deprecated in its published types naming the bento swap, so an editor strikes it through; all stay exported and working.
