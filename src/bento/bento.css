@@ -1,0 +1,20 @@
+/*
+ * Bento UI — the motion language the layer is built on.
+ *
+ * `--bento-spring` is the curve every tile uses for press, hover and route
+ * transitions, so the whole surface shares one physical sensation rather than
+ * three. Every rule this stylesheet gains keys off these three properties, which
+ * is why they arrive with the subpath rather than with the first component.
+ *
+ * Imported from `@viglet/viglet-design-system/bento.css`. It is listed in the
+ * package's `sideEffects`, so a bundler keeps it while still tree-shaking the
+ * JavaScript beside it.
+ */
+
+@layer base {
+  :root {
+    --bento-spring: cubic-bezier(0.32, 0.72, 0, 1);
+    --bento-soft: cubic-bezier(0.22, 1, 0.36, 1);
+    --bento-radius: 1.5rem;
+  }
+}

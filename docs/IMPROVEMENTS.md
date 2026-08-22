@@ -27,18 +27,6 @@ issue 10940 and move back when it supports 7.1.
 
 ## Block B — Bento becomes a design-system layer
 
-### §VDS8 A subpath, so the second era is opt-in
-
-The package has one entry. Adding 23 components and 216 lines of CSS to it would put the
-bento layer into the bundle of every consumer, including ones still on console chrome,
-and would mix two eras of page shell in a single barrel with nothing at the import site
-to tell them apart. Add ./bento and ./bento.css to the exports map, each with its own
-build entry, its own type declarations, and sideEffects set so the CSS is preserved
-while the JavaScript stays shakeable. The import then states which era a page belongs
-to, which is something a reviewer and a lint can both see, and it is the shape VDS26
-measures: a console-only consumer should be able to prove it paid nothing for a layer it
-never imported.
-
 ### §VDS9 A tone is a token, not a class string
 
 bento-tones.ts maps a tone name to hardcoded Tailwind colour classes, and the tonal icon

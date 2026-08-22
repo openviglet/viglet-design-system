@@ -5,13 +5,20 @@ import tailwindcss from "@tailwindcss/vite"
 import { defineConfig, type Plugin } from "vite"
 import dts from "vite-plugin-dts"
 
+// Stylesheets a consumer imports by their own subpath, rather than through the
+// bundle. They are copied verbatim so the entry point in the exports map is the
+// file itself, and `sideEffects` keeps them.
+const STANDALONE_CSS: Array<[from: string, to: string]> = [
+  ["src/components/ui/floating-formulas-bg.css", "dist/floating-formulas-bg.css"],
+  ["src/bento/bento.css", "dist/bento.css"],
+]
+
 const copyStandaloneCss = (): Plugin => ({
   name: "copy-standalone-css",
   writeBundle() {
-    copyFileSync(
-      resolve(__dirname, "src/components/ui/floating-formulas-bg.css"),
-      resolve(__dirname, "dist/floating-formulas-bg.css"),
-    )
+    for (const [from, to] of STANDALONE_CSS) {
+      copyFileSync(resolve(__dirname, from), resolve(__dirname, to))
+    }
   },
 })
 
@@ -42,6 +49,8 @@ export default defineConfig({
     lib: {
       entry: {
         index: resolve(__dirname, "src/index.ts"),
+        // The second era of chrome, deliberately not in the root barrel.
+        bento: resolve(__dirname, "src/bento/index.ts"),
         i18n: resolve(__dirname, "src/i18n/index.ts"),
         router: resolve(__dirname, "src/router.ts"),
         vite: resolve(__dirname, "src/vite/index.ts"),

@@ -7,9 +7,8 @@
 
 ## Block B — Bento becomes a design-system layer
 
-- 📋 **VDS8** (deps: —) **there is no /bento subpath: one entry, and no place for a second component layer** — Console chrome and bento chrome are two eras, and a single barrel puts both in every consumer's bundle. → §VDS8
 - 📋 **VDS9** (deps: —) **a bento tone is a hardcoded Tailwind class string, so a product cannot re-key the tile palette** — Turing is blue and Shio is orange, and a shared component that names its own colours makes one of the two look wrong. → §VDS9
-- 📋 **VDS10** (deps: VDS8) **bento.styles.css lives inside one product, so the frosted surface and the hover-lift are not installable** — The animation is what makes a page read as bento, and no other product can reach those 216 lines. → §VDS10
+- 📋 **VDS10** (deps: VDS8 ✅) **bento.styles.css lives inside one product, so the frosted surface and the hover-lift are not installable** — The animation is what makes a page read as bento, and no other product can reach those 216 lines. → §VDS10
 - 📋 **VDS11** (deps: VDS9, VDS10) **BentoHero, BentoFormSection, BentoTile, BentoEntityTile and their siblings exist only inside turing-app** — These are what a page composes, so nothing above them can move until they are importable. → §VDS11
 - 📋 **VDS12** (deps: VDS11) **the hero-to-sticky save-bar morph is a rAF loop and a CSS variable wired inside one product** — It is the most distinctive bento behaviour and the one a second console is most likely to hand-roll wrongly. → §VDS12
 - 📋 **VDS13** (deps: VDS12) **BentoEntityShell owns inline title editing, the icon picker, the status pill and the delete flow, all product-local** — It is the gold standard a detail page copies, and without it a second product invents a fourth layout. → §VDS13
@@ -28,7 +27,7 @@
 - 📋 **VDS23** (deps: —) **the product hue is hardcoded per product: Shio orange in a page header, Turing blue in a glass tint** — One look across products does not mean one colour, and today the difference is spelled in class names, not tokens. → §VDS23
 - 📋 **VDS24** (deps: VDS16) **the package exports both eras of chrome and says nowhere which one a new page should use** — PageHeader, SubPage, GridList and InternalSidebar are the console, and a new page will pick one at random. → §VDS24
 - 📋 **VDS25** (deps: VDS2 ✅, VDS11) **nothing proves two products composing the same shared components actually render the same** — One look is the whole goal, and it is judged today by opening two browsers side by side. → §VDS25
-- 📋 **VDS26** (deps: VDS8) **no size budget: a consumer importing nothing from the bento subpath cannot be shown it paid nothing** — The subpath was chosen over one barrel for exactly this, and the choice is so far unmeasured. → §VDS26
+- 📋 **VDS26** (deps: VDS8 ✅) **no size budget: a consumer importing nothing from the bento subpath cannot be shown it paid nothing** — The subpath was chosen over one barrel for exactly this, and the choice is so far unmeasured. → §VDS26
 - 📋 **VDS31** (deps: —) **Dumont consumes this package and appears nowhere in the plan, so one-look claims are checked against two of three** — The local-dev command found a third 2026.3 consumer on disk, and a design system that plans for two of its three consoles will diverge on the third. → §VDS31
 
 ## Done when — VDS5
@@ -36,12 +35,6 @@
 - **A consumer that re-declares an exported component fails its own build** The export
   list ships as a build artefact, and the lint names the import that replaces the local
   copy rather than only reporting that a duplicate exists.
-
-## Done when — VDS8
-
-- **The subpath resolves with its own types and stylesheet** The bento entry and its CSS
-  both import cleanly in a consumer, sideEffects keeps the stylesheet, and the root
-  entry is unchanged.
 
 ## Done when — VDS9
 

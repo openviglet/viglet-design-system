@@ -19,5 +19,6 @@
 ## Block B — Bento becomes a design-system layer
 
 - ✅ **VDS7** **no rule says which bento components are the shared layer and which are one product's own tiles** — docs/BENTO-BOUNDARY.md classifies all 47 barrel exports as shared or product, names the four commercial ones, and rules the tour product.
+- ✅ **VDS8** **there is no /bento subpath: one entry, and no place for a second component layer** — ./bento and ./bento.css resolve in an installed consumer with their own types, and the root entry still exports the same 250 names.
 
 ## Block C — One look across products

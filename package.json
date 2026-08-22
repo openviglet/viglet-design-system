@@ -21,6 +21,12 @@
       "import": "./dist/index.es.js",
       "require": "./dist/index.cjs.js"
     },
+    "./bento": {
+      "types": "./dist/bento/index.d.ts",
+      "import": "./dist/bento.es.js",
+      "require": "./dist/bento.cjs.js"
+    },
+    "./bento.css": "./dist/bento.css",
     "./exports.json": "./dist/exports.json",
     "./styles": "./dist/viglet-design-system.css",
     "./preset": "./dist/preset.css",
