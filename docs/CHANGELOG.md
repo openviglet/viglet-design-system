@@ -21,5 +21,6 @@
 - ✅ **VDS7** **no rule says which bento components are the shared layer and which are one product's own tiles** — docs/BENTO-BOUNDARY.md classifies all 47 barrel exports as shared or product, names the four commercial ones, and rules the tour product.
 - ✅ **VDS8** **there is no /bento subpath: one entry, and no place for a second component layer** — ./bento and ./bento.css resolve in an installed consumer with their own types, and the root entry still exports the same 250 names.
 - ✅ **VDS9** **a bento tone is a hardcoded Tailwind class string, so a product cannot re-key the tile palette** — A tone is two OKLCH custom properties in the preset that .bento-chip reads, so re-keying one redefines variables and forks nothing.
+- ✅ **VDS10** **bento.styles.css lives inside one product, so the frosted surface and the hover-lift are not installable** — bento.css ships every class and keyframe the product's copy defines, and one guard turns off each of the eight things it animates.
 
 ## Block C — One look across products

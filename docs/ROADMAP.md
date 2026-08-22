@@ -7,8 +7,7 @@
 
 ## Block B — Bento becomes a design-system layer
 
-- 📋 **VDS10** (deps: VDS8 ✅) **bento.styles.css lives inside one product, so the frosted surface and the hover-lift are not installable** — The animation is what makes a page read as bento, and no other product can reach those 216 lines. → §VDS10
-- 📋 **VDS11** (deps: VDS9 ✅, VDS10) **BentoHero, BentoFormSection, BentoTile, BentoEntityTile and their siblings exist only inside turing-app** — These are what a page composes, so nothing above them can move until they are importable. → §VDS11
+- 📋 **VDS11** (deps: VDS9 ✅, VDS10 ✅) **BentoHero, BentoFormSection, BentoTile, BentoEntityTile and their siblings exist only inside turing-app** — These are what a page composes, so nothing above them can move until they are importable. → §VDS11
 - 📋 **VDS12** (deps: VDS11) **the hero-to-sticky save-bar morph is a rAF loop and a CSS variable wired inside one product** — It is the most distinctive bento behaviour and the one a second console is most likely to hand-roll wrongly. → §VDS12
 - 📋 **VDS13** (deps: VDS12) **BentoEntityShell owns inline title editing, the icon picker, the status pill and the delete flow, all product-local** — It is the gold standard a detail page copies, and without it a second product invents a fourth layout. → §VDS13
 - 📋 **VDS14** (deps: VDS12) **BentoFormHero, the drop-in that gives an own-hero form the save-bar morph, is not installable** — Without it every form page outside the entity shell hand-wires two halves that then drift apart. → §VDS14
@@ -20,6 +19,7 @@
 - 📋 **VDS20** (deps: VDS11) **the bento authoring contract is a CONVENTIONS.md inside one product, addressed to that product** — Two consoles diverge the moment the rules live where only one of them reads them. → §VDS20
 - 📋 **VDS21** (deps: VDS16) **bento chrome strings live in one product's locale bundle, so a shared rail and palette render raw keys elsewhere** — This package already ships EN and PT base translations, and chrome it owns should carry its own. → §VDS21
 - 📋 **VDS22** (deps: VDS11) **the adapter that renders one form as console cards or as bento sections is a product-local override** — It is what lets a heavy shared form migrate without duplicating its field logic, and both products need it. → §VDS22
+- 📋 **VDS36** (deps: —) **the pulse glow hardcodes an indigo rgba, so a shared animation carries a colour the product cannot re-key** — VDS9 made every tone a token and this one kept its literal, which is the same failure in the place a token check does not look. → §VDS36
 
 ## Block C — One look across products
 
@@ -34,12 +34,6 @@
 - **A consumer that re-declares an exported component fails its own build** The export
   list ships as a build artefact, and the lint names the import that replaces the local
   copy rather than only reporting that a duplicate exists.
-
-## Done when — VDS10
-
-- **Importing the bento stylesheet is enough to get the surface and the lift** No
-  consumer copies a class; the tile, glass, grid and header animations all render, and
-  every one of them is disabled under prefers-reduced-motion.
 
 ## Done when — VDS11
 
@@ -136,6 +130,12 @@
 - **A root-only consumer contains no bento module and no bento CSS** A fixture importing
   only the root entry is asserted clean in CI, and the bento subpath carries a recorded
   size baseline of its own.
+
+## Done when — VDS36
+
+- **No colour literal survives in the bento stylesheet's own rules** The pulse glow
+  reads a token, the check that catches Tailwind class names also catches a raw rgba or
+  hex in src/bento, and the glow still renders the same by default.
 
 ## Non-goals
 

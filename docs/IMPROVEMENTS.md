@@ -27,18 +27,6 @@ issue 10940 and move back when it supports 7.1.
 
 ## Block B — Bento becomes a design-system layer
 
-### §VDS10 The stylesheet is the look
-
-bento.styles.css is 216 lines and none of it is decoration. bento-tile carries the hover
-lift, the press and the spring entrance; bento-glass is the frosted surface; bento-grid
-staggers its children; bento-shell-header animates the hero in; the bento-fade custom
-property drives the save-bar morph. A consumer that imports the components without this
-file gets flat cards - precisely the half-migrated look the conventions call the most
-common mistake, and precisely what Shio's 42 Card call sites look like today. Move the
-stylesheet behind the ./bento.css subpath, keep the reduced-motion block that disables
-every one of those animations, and make that guard something VDS6's gate checks rather
-than a comment somebody has to remember when adding a keyframe.
-
 ### §VDS11 The leaves, which everything else composes
 
 Nine components are the vocabulary a bento page is written in: BentoHero,
@@ -184,6 +172,18 @@ and the site editor are the largest forms in that product and exactly the ones a
 parallel bento route would otherwise fork. Move the adapter here, next to both
 components it switches between, and keep the console branch working for as long as the
 console chrome is still exported.
+
+### §VDS36 The pulse glow is the last hardcoded colour
+
+`@keyframes bento-pulse-glow` renders its box-shadow from `rgba(99, 102, 241, …)` --
+Tailwind's indigo-500, written as a literal. It came over verbatim with the stylesheet
+because the block's non-goal is explicit that a move must not also redesign, and it is
+recorded here rather than fixed there. The check VDS9 added catches Tailwind *class*
+names in the bento sources and cannot see a colour written as rgba inside a keyframe, so
+nothing else names this. It should become `--vg-bento-pulse` beside the tone tokens,
+resolved through color-mix the way the frosted surfaces already resolve `--card` and
+`--border`. Small, and worth doing before the components that use `.bento-pulse` arrive,
+so it is re-keyed once rather than in each of their stories.
 
 ## Block C — One look across products
 
