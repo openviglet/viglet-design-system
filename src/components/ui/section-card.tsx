@@ -100,7 +100,7 @@ function SectionCard({ variant = "blue", defaultOpen = true, children, className
 // Header
 // ---------------------------------------------------------------------------
 
-interface HeaderProps {
+export interface HeaderProps {
   icon: React.ElementType;
   title: string;
   description?: string;
@@ -143,7 +143,7 @@ function Header({ icon: Icon, title, description, className }: Readonly<HeaderPr
 // Static Header (non-collapsible)
 // ---------------------------------------------------------------------------
 
-interface StaticHeaderProps {
+export interface StaticHeaderProps {
   icon: React.ElementType;
   title: string;
   description?: string;
@@ -178,7 +178,7 @@ function StaticHeader({ icon: Icon, title, description, className }: Readonly<St
 // Content
 // ---------------------------------------------------------------------------
 
-interface ContentProps {
+export interface ContentProps {
   children: ReactNode;
   className?: string;
 }

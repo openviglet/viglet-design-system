@@ -66,6 +66,13 @@ export { BentoBackLink, BentoHero, type BentoHeroProps } from "./bento-hero";
 export { BentoSaveBar, type BentoSaveBarProps } from "./bento-save-bar";
 export { useBentoScrollFade } from "./bento-scroll-fade";
 export { BentoScrollSaveBar } from "./bento-scroll-save-bar";
+export {
+  AdaptiveSectionCard,
+  type AdaptiveSectionCardProps,
+  SectionCardChromeProvider,
+  type SectionChrome,
+  useSectionChrome,
+} from "./bento-section-chrome";
 export { BentoSection, type BentoSectionProps } from "./bento-section";
 export { BentoStatusMarker, type BentoStatusMarkerProps } from "./bento-status-marker";
 export { BentoTile, type BentoTileProps } from "./bento-tile";

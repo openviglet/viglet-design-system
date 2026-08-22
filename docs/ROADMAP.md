@@ -8,7 +8,6 @@
 ## Block B — Bento becomes a design-system layer
 
 - ⏳ **VDS18** (deps: VDS1 ✅, VDS11 ✅) **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — Turing still holds its own copies of the eight moved suites; deleting them is part of its cutover, which needs a release first. → §VDS18
-- 📋 **VDS22** (deps: VDS11 ✅) **the adapter that renders one form as console cards or as bento sections is a product-local override** — It is what lets a heavy shared form migrate without duplicating its field logic, and both products need it. → §VDS22
 - 📋 **VDS36** (deps: —) **the pulse glow hardcodes an indigo rgba, so a shared animation carries a colour the product cannot re-key** — VDS9 made every tone a token and this one kept its literal, which is the same failure in the place a token check does not look. → §VDS36
 - 📋 **VDS37** (deps: —) **the bento subpath needs react-router-dom, which the manifest calls an optional peer, so a missing one fails at runtime** — The root entry keeps router components behind /router for exactly this, and the bento layer mixes the two conventions. → §VDS37
 - 📋 **VDS38** (deps: —) **the command palette matches an entry's title only, so searching a word from its description finds nothing** — A launcher that misses the words a reader remembers sends them back to the nav they opened it to avoid. → §VDS38
@@ -32,12 +31,6 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
-
-## Done when — VDS22
-
-- **One form renders in either chrome without duplicating a field** The chrome provider
-  is exported, a single form of section cards renders as console cards or as frosted
-  sections, and the console branch still works.
 
 ## Done when — VDS23
 

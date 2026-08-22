@@ -40,18 +40,6 @@ Move the suites for the components that moved, leave the ones covering product-s
 tiles behind, and adapt their mocks - the user context and the i18n passthrough both
 have package-level equivalents.
 
-### §VDS22 One form, two chromes, no duplicated fields
-
-Turing already solved the hardest problem in a migration of this kind, and solved it
-locally. Its SectionCard chrome provider lets a form written once render as console
-section cards or as frosted bento form sections depending on a provider at the top of
-the page, so a heavy form with real field logic moves between chromes without its fields
-being copied. Shio needs it more than Turing does: the post editor, the post-type editor
-and the site editor are the largest forms in that product and exactly the ones a
-parallel bento route would otherwise fork. Move the adapter here, next to both
-components it switches between, and keep the console branch working for as long as the
-console chrome is still exported.
-
 ### §VDS36 The pulse glow is the last hardcoded colour
 
 `@keyframes bento-pulse-glow` renders its box-shadow from `rgba(99, 102, 241, …)` --
