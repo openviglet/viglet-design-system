@@ -36,7 +36,12 @@ export default defineConfig({
           environment: "jsdom",
           globals: false,
           setupFiles: ["./src/test/setup.ts"],
-          include: ["src/**/*.{test,spec}.{ts,tsx}"],
+          include: [
+            "src/**/*.{test,spec}.{ts,tsx}",
+            // The scripts are shipped machinery too: check-duplicates runs in
+            // three products' CI, and check-dist gates every publish.
+            "scripts/**/*.{test,spec}.{ts,tsx}",
+          ],
           css: false,
           restoreMocks: true,
         },

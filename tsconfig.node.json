@@ -16,5 +16,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["vite.config.ts"]
+  // scripts/ holds shipped machinery — check-duplicates runs in three products'
+  // CI — so its tests are type-checked here rather than left to the test run.
+  "include": ["vite.config.ts", "vitest.config.ts", "scripts/**/*.ts"]
 }

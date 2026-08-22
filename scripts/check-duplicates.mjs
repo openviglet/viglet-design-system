@@ -8,6 +8,7 @@
 //   viglet-ds-check-duplicates src app      # scan these directories
 //   viglet-ds-check-duplicates --json       # machine-readable findings
 //   viglet-ds-check-duplicates --warn       # report, but exit 0
+//   viglet-ds-check-duplicates --manifest p # read the export list from p
 //
 // Reporting that a duplicate exists is not the useful half. A local copy is
 // written because the author did not know the shared one existed, so the finding
@@ -38,9 +39,22 @@ const SKIP_DIRS = new Set(["node_modules", ".git", "dist", "build", "out", "cove
 const args = process.argv.slice(2)
 const asJson = args.includes("--json")
 const warnOnly = args.includes("--warn")
-const roots = args.filter((a) => !a.startsWith("--"))
+const manifestFlag = args.indexOf("--manifest")
+const manifestPath = manifestFlag === -1 ? null : args[manifestFlag + 1]
+const roots = args.filter(
+  (a, i) => !a.startsWith("--") && i !== manifestFlag + 1,
+)
 
 function loadManifest() {
+  // An explicit path wins: it is how this repository's own tests pin a fixture,
+  // and how a monorepo checks against a version other than the hoisted one.
+  if (manifestPath) {
+    if (!existsSync(manifestPath)) {
+      console.error(`check-duplicates: no manifest at ${manifestPath}`)
+      process.exit(1)
+    }
+    return JSON.parse(readFileSync(manifestPath, "utf8"))
+  }
   // Installed in the consumer.
   const require = createRequire(join(process.cwd(), "package.json"))
   try {

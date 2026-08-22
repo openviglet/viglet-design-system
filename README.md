@@ -61,6 +61,18 @@ data and merely shares a name — keep it by writing the reason in the file:
 // viglet-ds-allow-duplicate AppFooter -- renders Shio's build version
 ```
 
+In a product's workflow, it is one step beside the lint:
+
+```yaml
+      - name: No local copy of a shared component
+        run: pnpm exec viglet-ds-check-duplicates src
+```
+
+Add `--warn` to report without failing while the existing collisions are being
+worked through, and drop it once the count is zero. `--json` prints the findings
+for a bot to read; `--manifest <path>` checks against an export list other than
+the installed one.
+
 ## Setup
 
 ### 1. Import styles
