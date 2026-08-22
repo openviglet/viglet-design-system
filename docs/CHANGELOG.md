@@ -24,5 +24,6 @@
 - ✅ **VDS10** **bento.styles.css lives inside one product, so the frosted surface and the hover-lift are not installable** — bento.css ships every class and keyframe the product's copy defines, and one guard turns off each of the eight things it animates.
 - ✅ **VDS11** **BentoHero, BentoFormSection, BentoTile, BentoEntityTile and their siblings exist only inside turing-app** — All nine leaves plus BentoBackLink resolve from the installed subpath with their props unchanged, and 24 render tests hold them.
 - ✅ **VDS12** **the hero-to-sticky save-bar morph is a rAF loop and a CSS variable wired inside one product** — The hook and both bars resolve from the subpath beside the CSS they drive, and scrolling writes the property without a React render.
+- ✅ **VDS13** **BentoEntityShell owns inline title editing, the icon picker, the status pill and the delete flow, all product-local** — The shell, inline edit and icon picker resolve from the subpath with the render-prop contract unchanged, over a picker that asks the product for suggestions.
 
 ## Block C — One look across products

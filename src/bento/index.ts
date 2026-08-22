@@ -21,7 +21,16 @@
 export { BentoActionsMenu, type BentoActionsMenuItem, type BentoActionsMenuProps, type BentoActionTone } from "./bento-actions-menu";
 export { BentoCountTile, type BentoCountTileProps } from "./bento-count-tile";
 export { BentoEmptyState, type BentoEmptyStateProps } from "./bento-empty-state";
+export {
+  BentoEntityShell,
+  type BentoEntityShellProps,
+  type BentoEntityShellRenderArgs,
+  type BentoIdentity,
+  type BentoShellFormState,
+} from "./bento-entity-shell";
 export { BentoEntityTile, type BentoEntityTileProps } from "./bento-entity-tile";
+export { BentoHeroIconPicker, type BentoHeroIconPickerProps } from "./bento-hero-icon-picker";
+export { BentoInlineEdit, type BentoInlineEditProps } from "./bento-inline-edit";
 export { BentoFormSection, type BentoFormSectionProps } from "./bento-form-section";
 export { BentoBackLink, BentoHero, type BentoHeroProps } from "./bento-hero";
 export { BentoSaveBar, type BentoSaveBarProps } from "./bento-save-bar";

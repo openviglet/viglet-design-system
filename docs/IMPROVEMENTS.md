@@ -27,18 +27,6 @@ issue 10940 and move back when it supports 7.1.
 
 ## Block B — Bento becomes a design-system layer
 
-### §VDS13 The gold standard, moved whole
-
-BentoEntityShell is the largest single component in the layer and the reference every
-detail page copies. It owns more than a layout: inline title and description editing,
-the icon picker, the Active and Idle status pill, the delete flow, the read-only and
-badge affordances, and the hero half of the save-bar morph. A page using it is a thin
-wrapper around query hooks with the form supplied as a render prop. That is the property
-worth exporting - not the frosted look, but the fact that a detail screen costs one call
-and carries no shell mechanics of its own. Move it together with BentoInlineEdit and
-BentoHeroIconPicker, which exist only to serve it, and keep the render-prop contract
-exactly as it stands so no consuming page needs an edit beyond its import.
-
 ### §VDS14 The other half of the morph, for pages that own their hero
 
 Not every form page can use the entity shell. A multi-section editor, a settings surface

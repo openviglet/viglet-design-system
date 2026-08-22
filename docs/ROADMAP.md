@@ -7,7 +7,6 @@
 
 ## Block B — Bento becomes a design-system layer
 
-- 📋 **VDS13** (deps: VDS12 ✅) **BentoEntityShell owns inline title editing, the icon picker, the status pill and the delete flow, all product-local** — It is the gold standard a detail page copies, and without it a second product invents a fourth layout. → §VDS13
 - 📋 **VDS14** (deps: VDS12 ✅) **BentoFormHero, the drop-in that gives an own-hero form the save-bar morph, is not installable** — Without it every form page outside the entity shell hand-wires two halves that then drift apart. → §VDS14
 - 📋 **VDS15** (deps: VDS11 ✅) **the list mosaic — BentoListPage with its New tile, empty state and drag-reorder — is not installable** — Every product has list screens, and a hand-rolled grid is the fastest way for two consoles to stop matching. → §VDS15
 - 📋 **VDS16** (deps: VDS11 ✅) **the bento shell chrome (nav rail, user menu, back-to-top) is product-local, so a second product has no shell** — A page can look bento inside a console that does not, which the conventions call the first mistake. → §VDS16
@@ -33,12 +32,6 @@
 - **A consumer that re-declares an exported component fails its own build** The export
   list ships as a build artefact, and the lint names the import that replaces the local
   copy rather than only reporting that a duplicate exists.
-
-## Done when — VDS13
-
-- **A detail page costs one call and carries no shell mechanics** The entity shell, the
-  inline edit and the icon picker are exported, the render-prop contract is unchanged,
-  and a consuming page compiles on the import alone.
 
 ## Done when — VDS14
 

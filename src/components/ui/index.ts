@@ -12,6 +12,7 @@ export { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 export { FormActions } from "./form-actions";
 export { FormItemTwoColumns } from "./form-item-two-columns";
 export { GradientButton, gradientButtonVariants } from "./gradient-button";
+export { IconPickerDialog, type IconPickerDialogProps } from "./icon-picker-dialog";
 export { GradientSwitch } from "./gradient-switch";
 export { FloatingFormulasBg, type FloatingFormulasBgProps } from "./floating-formulas-bg";
 export { GlassCard, type GlassCardProps } from "./glass-card";

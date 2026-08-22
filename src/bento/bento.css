@@ -366,3 +366,27 @@
 [data-theme="dark"] .bento-item-danger:focus-visible {
   color: var(--vg-bento-danger-text-dark-hover);
 }
+
+/* A control that clears or removes, warming to the danger intent on hover.
+   The chip's × badge; the menu item's equivalent is .bento-item-danger. */
+.bento-clear:hover {
+  background-color: color-mix(in oklab, var(--vg-bento-danger-mark) 15%, transparent);
+  color: var(--vg-bento-danger-text);
+}
+
+.dark .bento-clear:hover,
+[data-theme="dark"] .bento-clear:hover {
+  color: var(--vg-bento-danger-text-dark);
+}
+
+/* The field being edited in place. The accent is the product's primary rather
+   than a colour of the layer's own — an inline edit is a focus affordance, and
+   focus is already the product's colour everywhere else. */
+.bento-editing {
+  border-style: solid;
+  border-color: color-mix(in oklab, var(--primary) 60%, transparent);
+}
+
+.bento-editing:focus {
+  border-color: var(--primary);
+}
