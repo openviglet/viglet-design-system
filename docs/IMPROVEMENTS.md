@@ -42,18 +42,6 @@ have package-level equivalents.
 
 ## Block C — One look across products
 
-### §VDS25 Prove the two products render the same
-
-The goal of this work is a claim about appearance, and appearance is the one property
-nothing in either repository checks. The evidence today is a person opening two
-browsers: expensive, not run on a pull request, and unable to say what changed. Build a
-cheap textual proof instead. Render a fixed set of compositions - a hero, a form
-section, an entity tile, a list mosaic - under each product's token set, and emit a
-digest of the resolved layout and computed styles. Two products sharing the layer should
-differ only where a brand token says they should, and the digest names the exception
-when they do not. It runs in the CI from VDS2, and it is what turns one look from an
-intention into an asserted property.
-
 ### §VDS26 Measure what the subpath was chosen for
 
 A subpath export was preferred over a single barrel on the argument that a consumer

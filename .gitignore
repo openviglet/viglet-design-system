@@ -48,3 +48,7 @@ npm-debug.log*
 
 # TypeScript build info
 *.tsbuildinfo
+
+# Vitest browser-mode failure screenshots.
+__screenshots__/
+.vitest-attachments/

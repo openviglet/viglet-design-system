@@ -1,5 +1,6 @@
 import { resolve } from "node:path"
 import react from "@vitejs/plugin-react"
+import tailwindcss from "@tailwindcss/vite"
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin"
 import { playwright } from "@vitest/browser-playwright"
 import { defineConfig } from "vitest/config"
@@ -42,6 +43,9 @@ export default defineConfig({
             // three products' CI, and check-dist gates every publish.
             "scripts/**/*.{test,spec}.{ts,tsx}",
           ],
+          // The parity digest needs a browser to compute a style; jsdom would
+          // report the class name back instead of the colour.
+          exclude: ["**/node_modules/**", "src/**/*.parity.test.tsx"],
           css: false,
           restoreMocks: true,
         },
@@ -78,6 +82,24 @@ export default defineConfig({
             instances: [{ browser: "chromium" }],
           },
           setupFiles: [".storybook/vitest.setup.ts"],
+        },
+      },
+      // VDS25 — one look across products, asserted rather than eyeballed. The
+      // digest reads resolved layout and computed styles, so it has to run
+      // somewhere that lays the page out and resolves a colour: jsdom would
+      // hand back the class name.
+      {
+        plugins: [react(), tailwindcss()],
+        resolve: { alias: sourceAlias },
+        test: {
+          name: "parity",
+          include: ["src/**/*.parity.test.tsx"],
+          browser: {
+            enabled: true,
+            headless: true,
+            provider: playwright(),
+            instances: [{ browser: "chromium" }],
+          },
         },
       },
     ],
