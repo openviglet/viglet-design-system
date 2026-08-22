@@ -27,18 +27,6 @@ issue 10940 and move back when it supports 7.1.
 
 ## Block B — Bento becomes a design-system layer
 
-### §VDS12 The morph, which is the part nobody should re-implement
-
-The hero-to-sticky save-bar transition is what most distinguishes a bento page from a
-console page, and it has the most machinery behind it: a requestAnimationFrame loop
-writing a bento-fade custom property on the document element, a sentinel, a spacer, and
-a fixed bar that fades in exactly as the hero title leaves. It re-renders no React,
-which is why it feels the way it does. A second console asked to reproduce that from a
-screenshot will produce a permanently visible sticky bar, and it will be subtly and
-permanently different. Move useBentoScrollFade, BentoSaveBar and BentoScrollSaveBar
-together, and preserve the rule that the scroll bar has no consumer outside the two
-compounds that own it - a rule one product already had to re-establish once.
-
 ### §VDS13 The gold standard, moved whole
 
 BentoEntityShell is the largest single component in the layer and the reference every

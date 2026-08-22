@@ -23,5 +23,6 @@
 - ✅ **VDS9** **a bento tone is a hardcoded Tailwind class string, so a product cannot re-key the tile palette** — A tone is two OKLCH custom properties in the preset that .bento-chip reads, so re-keying one redefines variables and forks nothing.
 - ✅ **VDS10** **bento.styles.css lives inside one product, so the frosted surface and the hover-lift are not installable** — bento.css ships every class and keyframe the product's copy defines, and one guard turns off each of the eight things it animates.
 - ✅ **VDS11** **BentoHero, BentoFormSection, BentoTile, BentoEntityTile and their siblings exist only inside turing-app** — All nine leaves plus BentoBackLink resolve from the installed subpath with their props unchanged, and 24 render tests hold them.
+- ✅ **VDS12** **the hero-to-sticky save-bar morph is a rAF loop and a CSS variable wired inside one product** — The hook and both bars resolve from the subpath beside the CSS they drive, and scrolling writes the property without a React render.
 
 ## Block C — One look across products

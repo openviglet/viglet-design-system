@@ -7,9 +7,8 @@
 
 ## Block B — Bento becomes a design-system layer
 
-- 📋 **VDS12** (deps: VDS11 ✅) **the hero-to-sticky save-bar morph is a rAF loop and a CSS variable wired inside one product** — It is the most distinctive bento behaviour and the one a second console is most likely to hand-roll wrongly. → §VDS12
-- 📋 **VDS13** (deps: VDS12) **BentoEntityShell owns inline title editing, the icon picker, the status pill and the delete flow, all product-local** — It is the gold standard a detail page copies, and without it a second product invents a fourth layout. → §VDS13
-- 📋 **VDS14** (deps: VDS12) **BentoFormHero, the drop-in that gives an own-hero form the save-bar morph, is not installable** — Without it every form page outside the entity shell hand-wires two halves that then drift apart. → §VDS14
+- 📋 **VDS13** (deps: VDS12 ✅) **BentoEntityShell owns inline title editing, the icon picker, the status pill and the delete flow, all product-local** — It is the gold standard a detail page copies, and without it a second product invents a fourth layout. → §VDS13
+- 📋 **VDS14** (deps: VDS12 ✅) **BentoFormHero, the drop-in that gives an own-hero form the save-bar morph, is not installable** — Without it every form page outside the entity shell hand-wires two halves that then drift apart. → §VDS14
 - 📋 **VDS15** (deps: VDS11 ✅) **the list mosaic — BentoListPage with its New tile, empty state and drag-reorder — is not installable** — Every product has list screens, and a hand-rolled grid is the fastest way for two consoles to stop matching. → §VDS15
 - 📋 **VDS16** (deps: VDS11 ✅) **the bento shell chrome (nav rail, user menu, back-to-top) is product-local, so a second product has no shell** — A page can look bento inside a console that does not, which the conventions call the first mistake. → §VDS16
 - 📋 **VDS17** (deps: VDS16) **the command palette reads a nav config hardcoding one product's surfaces, so it cannot be shared as it stands** — The palette is generic and its data is not; moving both together would put Turing routes in Shio. → §VDS17
@@ -34,12 +33,6 @@
 - **A consumer that re-declares an exported component fails its own build** The export
   list ships as a build artefact, and the lint names the import that replaces the local
   copy rather than only reporting that a duplicate exists.
-
-## Done when — VDS12
-
-- **The save-bar morph works in a consumer that wrote none of it** The scroll-fade hook
-  and both bars come from the package, the fade is driven by the custom property, and
-  scrolling a page produces no React re-render.
 
 ## Done when — VDS13
 
