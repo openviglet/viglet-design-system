@@ -6,7 +6,6 @@
 - 📋 **VDS28** (deps: —) **the compiler-era hook rules fire on three components and are demoted to warnings, so setState-in-effect ships unchecked** — These are the rules that catch cascading renders, and the bento layer arriving in Block B is where scroll effects live. → §VDS28
 - 📋 **VDS29** (deps: —) **react-table is held at v8 because a grouped Dependabot bump to v9 broke grid.list and reached the default branch unbuilt** — The pin restored the build, and a dependency held back by a workaround is a dependency nobody upgrades until it is urgent. → §VDS29
 - 📋 **VDS30** (deps: —) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — The package was on 7 and lint could not run at all; one of the two had to move, and the choice should be revisited rather than forgotten. → §VDS30
-- 📋 **VDS33** (deps: —) **building the catalogue rewrites dist/*.d.ts through node_modules paths, so build then catalogue ships broken types** — CI runs the catalogue build last, so the artefact on disk when a job ends is the corrupted one. → §VDS33
 
 ## Block B — Bento becomes a design-system layer
 
@@ -160,12 +159,6 @@
 - **A root-only consumer contains no bento module and no bento CSS** A fixture importing
   only the root entry is asserted clean in CI, and the bento subpath carries a recorded
   size baseline of its own.
-
-## Done when — VDS33
-
-- **The catalogue build leaves dist byte-identical** Running build then build-storybook
-  leaves every declaration importing by package name, check-dist passes after both, and
-  the catalogue still builds and renders every story.
 
 ## Non-goals
 

@@ -31,6 +31,23 @@ const config: StorybookConfig = {
   // to `<shim>.js/index.js` and fails. Storybook compiles in dev mode where the
   // real package resolves fine, so we strip those aliases here.
   async viteFinal(cfg) {
+    // The builder loads the library's vite.config.ts, which carries
+    // vite-plugin-dts pointed at dist. Left in, the catalogue build re-runs the
+    // declaration emit under Storybook's own resolution and overwrites what
+    // `pnpm run build` just wrote — turning every `from "react"` into
+    // `from "../../node_modules/react"`, a path no consumer can resolve, so
+    // React's types vanish in the product. The catalogue needs no declarations
+    // at all, so the plugin comes out. Guarded by scripts/dist-stability.test.ts.
+    if (Array.isArray(cfg.plugins)) {
+      cfg.plugins = cfg.plugins.filter((plugin) => {
+        const name =
+          plugin && typeof plugin === "object" && "name" in plugin
+            ? (plugin as { name?: string }).name
+            : undefined;
+        return name !== "unplugin-dts";
+      });
+    }
+
     if (cfg.resolve?.alias && typeof cfg.resolve.alias === "object" && !Array.isArray(cfg.resolve.alias)) {
       const keep: Record<string, unknown> = {};
       for (const [k, v] of Object.entries(cfg.resolve.alias)) {

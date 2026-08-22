@@ -59,3 +59,10 @@ jobs:
 
       - name: Build the component catalogue
         run: pnpm run build-storybook
+
+      # The catalogue build runs last, so it is what leaves dist in whatever
+      # state the job ends in — and it once rewrote every declaration to import
+      # through a node_modules path (VDS33). check-dist inside `build` cannot
+      # see that, because it has already run by then.
+      - name: dist is still publishable after the catalogue build
+        run: pnpm run check:dist

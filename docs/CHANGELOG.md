@@ -10,6 +10,7 @@
 - ✅ **VDS32** **the package manager was npm while all three consumers are pnpm workspaces, and pnpm's layout broke the published types** — The repository is on pnpm 11.8.0 with a hoisted linker, and scripts/check-dist.mjs fails the build when a declaration imports through node_modules.
 - ✅ **VDS6** **the storybook a11y addon is installed and never run, so no accessibility rule is enforced** — All 222 stories run in Chromium under axe and pass; the forty violations they exposed are fixed, and a new one fails CI.
 - ✅ **VDS27** **nine explicit any in the console-era router components, so the lint that guards them is a warning nobody fails on** — The nine sites carry real types, the tenth behind an eslint-disable went with them, and no-explicit-any is an error again.
+- ✅ **VDS33** **building the catalogue rewrites dist/*.d.ts through node_modules paths, so build then catalogue ships broken types** — The catalogue build drops the declaration plugin, so dist is byte-identical across it, and CI re-checks dist after the catalogue.
 
 ## Block B — Bento becomes a design-system layer
 
