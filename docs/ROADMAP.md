@@ -3,8 +3,9 @@
 ## Block A — The gate the design system never had
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — Both consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
-- 📋 **VDS29** (deps: —) **react-table is held at v8 because a grouped Dependabot bump to v9 broke grid.list and reached the default branch unbuilt** — The pin restored the build, and a dependency held back by a workaround is a dependency nobody upgrades until it is urgent. → §VDS29
+- ⏳ **VDS29** (deps: —) **react-table is held at v8 because a grouped Dependabot bump to v9 broke grid.list and reached the default branch unbuilt** — Turing pins react-table ^8.21.3, and the externalised import binds the package's v9 code to that copy, so its build fails. → §VDS29
 - 📋 **VDS30** (deps: —) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — The package was on 7 and lint could not run at all; one of the two had to move, and the choice should be revisited rather than forgotten. → §VDS30
+- 📋 **VDS34** (deps: —) **thirty deps are externalised at build but declared as dependencies, so their major version is an unstated contract** — react-table proved it: the package moved to v9 and a consumer pinning v8 failed to build, with nothing having warned either side. → §VDS34
 
 ## Block B — Bento becomes a design-system layer
 
@@ -158,6 +159,19 @@
 - **A root-only consumer contains no bento module and no bento CSS** A fixture importing
   only the root entry is asserted clean in CI, and the bento subpath carries a recorded
   size baseline of its own.
+
+## Done when — VDS29
+
+- **GridList runs on react-table v9 with no version hold left** grid.list.tsx compiles
+  and behaves the same against v9, dependabot.yml no longer ignores the package, and
+  both products build against the result.
+
+## Done when — VDS34
+
+- **A consumer on the wrong major is warned at install** Every externalised package is
+  declared as a peer with the range the code needs, the consumers install cleanly
+  against it, and a deliberately wrong major produces an install-time warning rather
+  than a build error.
 
 ## Non-goals
 

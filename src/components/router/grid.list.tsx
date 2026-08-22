@@ -1,9 +1,13 @@
 import {
-    getFilteredRowModel,
-    getPaginationRowModel,
-    getSortedRowModel,
-    getCoreRowModel,
-    useReactTable,
+    columnFilteringFeature,
+    createCoreRowModel,
+    createFilteredRowModel,
+    createPaginatedRowModel,
+    createSortedRowModel,
+    globalFilteringFeature,
+    rowPaginationFeature,
+    rowSortingFeature,
+    useTable,
     type ColumnDef,
     type SortingState,
 } from "@tanstack/react-table";
@@ -94,7 +98,24 @@ function getInitials(name: string): string {
         .join("");
 }
 
-const columns: ColumnDef<VigGridItem>[] = [
+// v9 registers features explicitly rather than shipping them all, and the row
+// model factories live in the same object as the features that require them.
+// Only what this grid uses is listed: it searches, sorts and paginates, and does
+// not group, pin, resize, expand or select.
+const gridFeatures = {
+    columnFilteringFeature,
+    globalFilteringFeature,
+    rowPaginationFeature,
+    rowSortingFeature,
+    coreRowModel: createCoreRowModel(),
+    filteredRowModel: createFilteredRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+    sortedRowModel: createSortedRowModel(),
+};
+
+type GridFeatures = typeof gridFeatures;
+
+const columns: ColumnDef<GridFeatures, VigGridItem>[] = [
     { accessorKey: "name", header: "Name" },
     { accessorKey: "description", header: "Description" },
     { accessorKey: "url", header: "URL" },
@@ -148,14 +169,11 @@ const GridListComponent: React.FC<Props> = ({ gridItemList, children }) => {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [globalFilter, setGlobalFilter] = useState("");
 
-    const table = useReactTable({
+    const table = useTable({
+        features: gridFeatures,
         data: gridItemList,
         columns,
         onSortingChange: setSorting,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
         state: {
             globalFilter,
             pagination,
@@ -295,11 +313,11 @@ const GridListComponent: React.FC<Props> = ({ gridItemList, children }) => {
                     <div className="flex items-center space-x-2">
                         <p className="text-sm text-muted-foreground">{t("forms.common.perPage")}</p>
                         <Select
-                            value={`${table.getState().pagination.pageSize}`}
+                            value={`${table.state.pagination.pageSize}`}
                             onValueChange={(value) => table.setPageSize(Number(value))}
                         >
                             <SelectTrigger className="h-8 w-17.5">
-                                <SelectValue placeholder={table.getState().pagination.pageSize} />
+                                <SelectValue placeholder={table.state.pagination.pageSize} />
                             </SelectTrigger>
                             <SelectContent side="top">
                                 {[12, 24, 36, 48].map((pageSize) => (
@@ -311,7 +329,7 @@ const GridListComponent: React.FC<Props> = ({ gridItemList, children }) => {
                         </Select>
                     </div>
                     <div className="flex w-25 items-center justify-center text-sm font-medium">
-                        {t("forms.common.pageOf", { index: table.getState().pagination.pageIndex + 1, count: table.getPageCount() })}
+                        {t("forms.common.pageOf", { index: table.state.pagination.pageIndex + 1, count: table.getPageCount() })}
                     </div>
                     <div className="flex items-center space-x-2">
                         <GradientButton

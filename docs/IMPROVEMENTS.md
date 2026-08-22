@@ -36,6 +36,19 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
+### §VDS34 Externalised dependencies are peers in everything but the manifest
+
+vite.config.ts externalises thirty packages so consumers tree-shake them alongside their
+own usage -- every Radix primitive, Tabler and Iconify, xlsx, date-fns, axios,
+react-table and the rest. Externalised means the import survives into dist and resolves
+in the consumer's tree, so the version the package's code was compiled against and the
+version it actually binds to are two different things. That is the definition of a peer
+dependency, and all thirty are declared as regular dependencies, where a range mismatch
+is silent. VDS29 walked into it: GridList moved to react-table v9, Shio was already on
+v9 and built, Turing pins ^8.21.3 and failed with MISSING_EXPORT on four symbols. Decide
+which of the thirty are genuinely peers and declare them, so the next mismatch is a
+warning at install rather than a red build in a product.
+
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS7 Draw the line between the layer and the product

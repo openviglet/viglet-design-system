@@ -15,10 +15,6 @@ updates:
         versions: [">=10.0.0"]
       - dependency-name: "@eslint/js"
         versions: [">=10.0.0"]
-      # v9 renamed the row-model factories and re-shaped ColumnDef, which breaks
-      # grid.list.tsx. Held at v8 until the migration lands as its own change.
-      - dependency-name: "@tanstack/react-table"
-        versions: [">=9.0.0"]
     groups:
       # Majors stay out of the grouped pull requests: a breaking bump bundled with
       # fourteen safe ones reads as routine, which is how react-table v9 landed.
