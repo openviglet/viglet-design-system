@@ -1,6 +1,7 @@
 import { IconDotsVertical, IconPlus } from "@tabler/icons-react";
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { markerName } from "@/lib/react-markers";
 import { DialogDelete } from "./dialog.delete";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { GradientButton } from "../ui/gradient-button";
@@ -46,7 +47,7 @@ const SubPageHeaderComponent: React.FC<Props> = ({ icon: Icon, feature, name, de
   // Extract actions from marker children
   const actions: ActionProps[] = [];
   React.Children.forEach(children, (child) => {
-    if (React.isValidElement(child) && (child.type as any)?.displayName === "SubPageHeaderAction") {
+    if (React.isValidElement(child) && markerName(child) === "SubPageHeaderAction") {
       actions.push(child.props as ActionProps);
     }
   });

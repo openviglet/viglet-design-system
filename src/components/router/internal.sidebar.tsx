@@ -18,11 +18,24 @@ import {
   useSidebar,
 } from "../ui/sidebar";
 
-interface NavMainItem {
+/** One entry in the sidebar's main navigation, optionally with sub-entries. */
+export interface NavMainItem {
   title: string;
   url: string;
   icon?: React.ElementType;
   children?: NavMainItem[];
+}
+
+/**
+ * One row of the indexing group: a labelled, formatted count with an optional
+ * icon. `count` is optional because a caller renders the row before the number
+ * arrives — sub.page.tsx passes this straight through, and the two declared it
+ * separately until typing this one showed they disagreed about exactly that.
+ */
+export interface InternalSidebarCount {
+  title: string;
+  count?: number;
+  icon?: React.ElementType;
 }
 
 interface InternalSidebarProps {
@@ -32,7 +45,7 @@ interface InternalSidebarProps {
   urlBase?: string;
   isNew?: boolean;
   data?: {
-    counts?: any[];
+    counts?: InternalSidebarCount[];
     navMain: NavMainItem[];
   };
   onDelete?: () => void;
@@ -138,7 +151,7 @@ export const InternalSidebar: React.FC<InternalSidebarProps> = ({
             <SidebarGroupLabel>{t("sidebar.indexing")}</SidebarGroupLabel>
             <SidebarGroupContent className="flex flex-col gap-2 pt-4">
               <SidebarMenu>
-                {data.counts.map((item: any) => (
+                {data.counts.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       tooltip={item.title + ": " + formatCount(item.count)}

@@ -1,4 +1,4 @@
-import axios, { type AxiosRequestConfig } from "axios";
+import axios, { type AxiosError, type AxiosRequestConfig } from "axios";
 
 const CSRF_HEADER = "X-XSRF-TOKEN";
 const CSRF_ENDPOINT = "/csrf";
@@ -142,7 +142,7 @@ export function setupAxiosInterceptors(options: SetupAxiosOptions = {}) {
       }
       return response;
     },
-    async (error: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+    async (error: AxiosError) => {
       const tokenFromHeader = readCsrfTokenFromHeaders(error.response?.headers);
       if (tokenFromHeader) {
         csrfToken = tokenFromHeader;

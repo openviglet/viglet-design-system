@@ -2,8 +2,7 @@
 
 ## Block A — The gate the design system never had
 
-- ⏳ **VDS5** (deps: VDS2 ✅) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — Both consumers sit on ^2026.3.2, the newest published version, and the CLI exists only in an unpublished build — so the step cannot be added until a release. → §VDS5
-- 📋 **VDS27** (deps: —) **nine explicit any in the console-era router components, so the lint that guards them is a warning nobody fails on** — The gate landed green by demoting the rule, and a warning among sixty other warnings is how a rule stops being read. → §VDS27
+- ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — Both consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS28** (deps: —) **the compiler-era hook rules fire on three components and are demoted to warnings, so setState-in-effect ships unchecked** — These are the rules that catch cascading renders, and the bento layer arriving in Block B is where scroll effects live. → §VDS28
 - 📋 **VDS29** (deps: —) **react-table is held at v8 because a grouped Dependabot bump to v9 broke grid.list and reached the default branch unbuilt** — The pin restored the build, and a dependency held back by a workaround is a dependency nobody upgrades until it is urgent. → §VDS29
 - 📋 **VDS30** (deps: —) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — The package was on 7 and lint could not run at all; one of the two had to move, and the choice should be revisited rather than forgotten. → §VDS30

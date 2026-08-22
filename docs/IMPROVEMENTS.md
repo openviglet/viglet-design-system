@@ -15,17 +15,6 @@ package exports that name, fail and name the import that replaces it. Land it be
 Block B rather than after, because the instrument is what finds the call site nobody
 read.
 
-### §VDS27 Type the console-era router components, then raise the rule
-
-The lint VDS2 introduced runs, and three rule buckets were demoted to warnings so it
-could be green on the day it landed rather than after a refactor. This is the largest:
-nine explicit `any` in grid.list, internal.sidebar, loading-provider, sub.page.header
-and use-grid-adapter. They are all console-era components — the ones VDS24 deprecates —
-so the work is bounded and will not be repeated on the bento layer. Type them, then set
-`@typescript-eslint/no-explicit-any` back to error in eslint.config.js, where the
-demotion already names this line. Doing it in that order means the rule is raised once,
-by the change that earns it.
-
 ### §VDS28 Hold the compiler-era hook rules
 
 eslint-plugin-react-hooks v7 ships rules written for the React compiler:

@@ -1,23 +1,18 @@
 import React, { type Dispatch, type SetStateAction } from "react";
 import { Outlet } from "react-router-dom";
-import { InternalSidebar } from "./internal.sidebar";
+import {
+  InternalSidebar,
+  type InternalSidebarCount,
+  type NavMainItem,
+} from "./internal.sidebar";
 import { SidebarInset, SidebarProvider } from "../ui/sidebar";
 
-interface NavMainItem {
-  title: string;
-  url: string;
-  icon?: React.ElementType;
-}
-
-interface NavCountItem {
-  title: string;
-  icon?: React.ElementType;
-  count?: number;
-}
-
+// `data` is handed straight to InternalSidebar, so its shape is that
+// component's to declare. Re-declaring it here is how the two came to disagree
+// about whether a count is optional.
 interface DataType {
   navMain: NavMainItem[];
-  counts?: NavCountItem[];
+  counts?: InternalSidebarCount[];
 }
 
 interface Props {

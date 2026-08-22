@@ -42,9 +42,7 @@ export default tseslint.config([
       // Debt this gate inherits rather than introduces. Each is a warning so the
       // gate can be green today and still fail on anything new; each has a
       // roadmap line that raises it back to "error" once the count is zero.
-      //   VDS27 — the nine `any`s in the console-era router components
       //   VDS28 — the compiler-era hook rules (setState-in-effect, purity)
-      "@typescript-eslint/no-explicit-any": "warn",
       "react-hooks/set-state-in-effect": "warn",
       "react-hooks/purity": "warn",
     },

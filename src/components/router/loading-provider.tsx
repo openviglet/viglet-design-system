@@ -4,7 +4,12 @@ import { useTranslation } from "react-i18next";
 import { BlankSlate } from "./blank-slate";
 
 interface LoadProviderProps {
-    checkIsNotUndefined?: any;
+    /**
+     * The value the page is waiting on. Only its presence is read — the
+     * skeleton shows while this is `undefined` — so it is deliberately
+     * untyped rather than `any`, which would let a caller's mistake through.
+     */
+    checkIsNotUndefined?: unknown;
     error?: string | null;
     tryAgainUrl?: string;
     children: React.ReactNode;

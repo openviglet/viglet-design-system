@@ -25,14 +25,22 @@ export function useGridAdapter<T>(
       return value === null || value === undefined ? "" : String(value);
     };
 
-    const resolveId = (item: T) => {
+    // VigGridItem.id is declared `string`, and the two `any`s here were what let
+    // a numeric primary key reach it as a number — the field lied about its own
+    // type at every call site that trusted it. Coerced once, here.
+    const resolveId = (item: T): string => {
       if (!config.id) {
-        return (item as any).id;
+        // Convention fallback: most product entities carry an `id`. Nothing in T
+        // promises one, so it is read as unknown rather than asserted.
+        const candidate = (item as { id?: unknown }).id;
+        return candidate === null || candidate === undefined
+          ? ""
+          : String(candidate);
       }
       if (typeof config.id === "function") {
-        return config.id(item);
+        return String(config.id(item));
       }
-      return item[config.id] as any;
+      return String(item[config.id]);
     };
 
     return data.map((item) => ({

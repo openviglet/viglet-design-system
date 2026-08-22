@@ -24,6 +24,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { markerName } from "@/lib/react-markers";
 import type { VigGridItem } from "@/models/grid-item";
 import React from "react";
 import { useTranslation } from "react-i18next";
@@ -108,7 +109,7 @@ const GridListComponent: React.FC<Props> = ({ gridItemList, children }) => {
     const itemActions: { key: string; icon?: ReactNode; label: string; onClick: (item: VigGridItem) => void; position: "left" | "right" }[] = [];
     React.Children.forEach(children, (child) => {
         if (!React.isValidElement(child)) return;
-        if ((child.type as any)?.displayName === "GridListNewButton") {
+        if (markerName(child) === "GridListNewButton") {
             const { to, label } = child.props as NewButtonProps;
             actions.push({
                 key: `new-${label}`,
@@ -119,13 +120,13 @@ const GridListComponent: React.FC<Props> = ({ gridItemList, children }) => {
                     </DropdownMenuItem>
                 ),
             });
-        } else if ((child.type as any)?.displayName === "GridListAction") {
+        } else if (markerName(child) === "GridListAction") {
             const { children: actionChildren } = child.props as ActionProps;
             actions.push({
                 key: `action-${actions.length}`,
                 render: () => <>{actionChildren}</>,
             });
-        } else if ((child.type as any)?.displayName === "GridListItemAction") {
+        } else if (markerName(child) === "GridListItemAction") {
             const props = child.props as ItemActionProps;
             itemActions.push({
                 key: `item-action-${itemActions.length}`,
