@@ -40,7 +40,7 @@ export function BentoStatusMarker({ titleMissing, dirty, className }: Readonly<B
         className={`${base} bento-status bento-status-error ${className ?? ""}`}
       >
         <IconAlertTriangle className="size-3" />
-        {t("bento.saveBar.titleRequired")}
+        {t("bento.saveBar.titleRequired", { defaultValue: "Title required" })}
       </span>
     );
   }
@@ -50,7 +50,7 @@ export function BentoStatusMarker({ titleMissing, dirty, className }: Readonly<B
       className={`${base} bento-status bento-status-warn ${className ?? ""}`}
     >
       <span className="h-1.5 w-1.5 rounded-full bento-status-dot bento-pulse" />
-      {t("bento.saveBar.unsaved")}
+      {t("bento.saveBar.unsaved", { defaultValue: "Unsaved changes" })}
     </span>
   );
 }

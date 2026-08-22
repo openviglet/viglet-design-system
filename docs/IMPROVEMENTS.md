@@ -40,18 +40,6 @@ Move the suites for the components that moved, leave the ones covering product-s
 tiles behind, and adapt their mocks - the user context and the i18n passthrough both
 have package-level equivalents.
 
-### §VDS21 Chrome that speaks its own strings
-
-The package already ships English and Portuguese base translations for buttons, form
-labels, dialog text and navigation, and it already exposes a register function so a
-product merges its own on top. The bento chrome breaks that arrangement: the palette's
-placeholder and no-results text, the rail's labels, the shortcuts dialog and the save
-bar's Save and Cancel all read from one product's bento namespace. Imported elsewhere
-they render raw keys. Move the chrome-only keys into this package's locale bundle in
-both languages, keep the object-form default convention so a missing key still renders
-as words rather than as an identifier, and leave the entity strings - what a thing is
-called - with the product that owns the entity.
-
 ### §VDS22 One form, two chromes, no duplicated fields
 
 Turing already solved the hardest problem in a migration of this kind, and solved it

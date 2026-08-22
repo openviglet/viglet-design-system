@@ -3,6 +3,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 
 // English
+import enBento from "./locales/en/bento.json";
 import enCommon from "./locales/en/common.json";
 import enDialog from "./locales/en/dialog.json";
 import enForms from "./locales/en/forms.json";
@@ -11,6 +12,7 @@ import enSidebar from "./locales/en/sidebar.json";
 import enTheme from "./locales/en/theme.json";
 
 // Portuguese
+import ptBento from "./locales/pt/bento.json";
 import ptCommon from "./locales/pt/common.json";
 import ptDialog from "./locales/pt/dialog.json";
 import ptForms from "./locales/pt/forms.json";
@@ -20,6 +22,7 @@ import ptTheme from "./locales/pt/theme.json";
 
 export const vigDesignSystemTranslations = {
   en: {
+    ...enBento,
     ...enCommon,
     ...enDialog,
     ...enForms,
@@ -28,6 +31,7 @@ export const vigDesignSystemTranslations = {
     ...enTheme,
   },
   pt: {
+    ...ptBento,
     ...ptCommon,
     ...ptDialog,
     ...ptForms,

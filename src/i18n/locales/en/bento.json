@@ -1,0 +1,47 @@
+{
+  "bento": {
+    "nav": {
+      "label": "Primary"
+    },
+    "palette": {
+      "title": "Command palette",
+      "description": "Search and jump to any area",
+      "placeholder": "Search areas…",
+      "search": "Search",
+      "open": "Open command palette",
+      "noResults": "No matches",
+      "opensConsole": "Opens outside this shell"
+    },
+    "saveBar": {
+      "unsaved": "Unsaved changes",
+      "titleRequired": "Title required"
+    },
+    "shortcuts": {
+      "title": "Keyboard shortcuts",
+      "description": "Move around without leaving the keyboard.",
+      "global": "Global",
+      "palette": "Command palette",
+      "openGuide": "Show keyboard shortcuts",
+      "navigate": "Move between results",
+      "openSelected": "Open the selected area",
+      "dismiss": "Close the palette or a dialog"
+    },
+    "layout": {
+      "customize": "Customize layout",
+      "editHint": "Drag tiles to reorder · pick S / M / L to resize",
+      "dragToReorder": "Drag to reorder",
+      "sizeGroup": "Tile size",
+      "size": {
+        "small": "Small",
+        "medium": "Medium",
+        "large": "Large"
+      },
+      "save": "Save layout",
+      "saveGlobal": "Set as default for everyone",
+      "reset": "Reset to default"
+    },
+    "tour": {
+      "replay": "Take the tour"
+    }
+  }
+}

@@ -123,7 +123,7 @@ export function BentoCommandPalette({ open, onOpenChange, items }: Readonly<Bent
           ref={listRef}
           id="bento-palette-list"
           role="listbox"
-          aria-label={t("bento.palette.title", "Command palette")}
+          aria-label={t("bento.palette.title", { defaultValue: "Command palette" })}
           className="max-h-80 overflow-y-auto p-2"
         >
           {results.length === 0 && (
