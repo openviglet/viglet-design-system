@@ -620,6 +620,15 @@ function SidebarMenuBadge({
   )
 }
 
+/** A small stable number from a string, so a width can vary without being random. */
+function hashToRange(value: string) {
+  let hash = 0
+  for (let i = 0; i < value.length; i++) {
+    hash = (hash * 31 + value.charCodeAt(i)) | 0
+  }
+  return Math.abs(hash)
+}
+
 function SidebarMenuSkeleton({
   className,
   showIcon = false,
@@ -627,10 +636,13 @@ function SidebarMenuSkeleton({
 }: React.ComponentProps<"div"> & {
   showIcon?: boolean
 }) {
-  // Random width between 50 to 90%.
-  const width = React.useMemo(() => {
-    return `${Math.floor(Math.random() * 40) + 50}%`
-  }, [])
+  // Width between 50% and 90%, varied per row so a column of skeletons reads as
+  // text rather than as bars. Derived from the element's own id rather than from
+  // Math.random(): a random number drawn during render is a different value on
+  // the server and on the client, which is a hydration mismatch, and it is what
+  // the `purity` rule names.
+  const id = React.useId()
+  const width = `${50 + (hashToRange(id) % 40)}%`
 
   return (
     <div

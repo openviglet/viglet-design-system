@@ -15,17 +15,6 @@ package exports that name, fail and name the import that replaces it. Land it be
 Block B rather than after, because the instrument is what finds the call site nobody
 read.
 
-### §VDS28 Hold the compiler-era hook rules
-
-eslint-plugin-react-hooks v7 ships rules written for the React compiler:
-`set-state-in-effect` and `purity`. Three call sites fail them — use-mobile and
-badge-locale call setState synchronously inside an effect, and sidebar reads during
-render. Each is a known shadcn pattern whose correct form is `useSyncExternalStore`, so
-the fix is small and mechanical, but it changes behaviour and did not belong in the
-change that introduced the gate. Fix the three, then raise both rules to error in
-eslint.config.js. Worth doing before Block B rather than after: the bento save-bar morph
-is a scroll effect driving state, which is exactly the shape these rules exist to check.
-
 ### §VDS29 Migrate GridList to react-table v9
 
 On 2026-08-09 a grouped Dependabot pull request carried fourteen safe bumps and one

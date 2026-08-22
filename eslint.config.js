@@ -38,13 +38,6 @@ export default tseslint.config([
         "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
-
-      // Debt this gate inherits rather than introduces. Each is a warning so the
-      // gate can be green today and still fail on anything new; each has a
-      // roadmap line that raises it back to "error" once the count is zero.
-      //   VDS28 — the compiler-era hook rules (setState-in-effect, purity)
-      "react-hooks/set-state-in-effect": "warn",
-      "react-hooks/purity": "warn",
     },
   },
   {

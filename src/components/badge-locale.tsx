@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Globe } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 interface BadgeLocaleProps {
     locale: string;
@@ -76,13 +76,14 @@ export function getLocaleCountryCode(locale: string): string {
 }
 
 export const BadgeLocale: React.FC<BadgeLocaleProps> = ({ locale, className }) => {
-    const [imgError, setImgError] = useState(false);
-
     const countryCode = getLocaleCountryCode(locale);
 
-    useEffect(() => {
-        setImgError(false);
-    }, [countryCode]);
+    // Which flag failed to load, rather than whether one did. The boolean form
+    // needed an effect to clear itself whenever the locale changed, which is a
+    // second render on every change and one frame of the wrong flag; remembering
+    // the code that failed derives the same answer during the first render.
+    const [failedCode, setFailedCode] = useState<string | null>(null);
+    const imgError = failedCode === countryCode;
 
     return (
         <Badge
@@ -93,7 +94,7 @@ export const BadgeLocale: React.FC<BadgeLocaleProps> = ({ locale, className }) =
                 <img
                     src={`https://flagcdn.com/w40/${countryCode}.png`}
                     alt={countryCode}
-                    onError={() => setImgError(true)}
+                    onError={() => setFailedCode(countryCode)}
                     className="w-5 h-3.5 object-cover rounded-sm shadow-sm"
                 />
             ) : (
