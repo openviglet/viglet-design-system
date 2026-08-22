@@ -390,3 +390,9 @@
 .bento-editing:focus {
   border-color: var(--primary);
 }
+
+/* The dashed "New" tile warms to the product's accent on hover, rather than to
+   a colour of the layer's own — same reasoning as .bento-editing. */
+.bento-new-tile:hover {
+  border-color: color-mix(in oklab, var(--primary) 60%, transparent);
+}

@@ -26,5 +26,6 @@
 - ✅ **VDS12** **the hero-to-sticky save-bar morph is a rAF loop and a CSS variable wired inside one product** — The hook and both bars resolve from the subpath beside the CSS they drive, and scrolling writes the property without a React render.
 - ✅ **VDS13** **BentoEntityShell owns inline title editing, the icon picker, the status pill and the delete flow, all product-local** — The shell, inline edit and icon picker resolve from the subpath with the render-prop contract unchanged, over a picker that asks the product for suggestions.
 - ✅ **VDS14** **BentoFormHero, the drop-in that gives an own-hero form the save-bar morph, is not installable** — BentoFormHero renders the hero controls and the sticky bar from one call, and the imperative actions replace the default pair in both.
+- ✅ **VDS15** **the list mosaic — BentoListPage with its New tile, empty state and drag-reorder — is not installable** — The mosaic, New tile, empty state, error path, emphasis and drag reorder are one call, with layout persistence handed in as props.
 
 ## Block C — One look across products

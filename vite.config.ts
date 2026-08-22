@@ -95,6 +95,7 @@ export default defineConfig({
         // Note: lucide-react stays bundled — DS uses it internally and
         // consumers don't need it as a direct dep.
         if (id === "@tanstack/react-table") return true;
+        if (id.startsWith("@dnd-kit/")) return true;
         if (id === "react-resizable-panels") return true;
         if (id === "vaul") return true;
         if (id === "date-fns" || id.startsWith("date-fns/")) return true;

@@ -27,18 +27,6 @@ issue 10940 and move back when it supports 7.1.
 
 ## Block B — Bento becomes a design-system layer
 
-### §VDS15 The mosaic
-
-BentoListPage is the largest file in the layer and it collapses a whole screen into one
-call: the hero, the tile grid, the dashed New tile, the empty state, per-item emphasis,
-the error and try-again path, and optional drag reorder. Every product has list screens
-- Shio has at least ten - and a hand-rolled grid is the fastest way for two consoles to
-stop matching, because a grid is where the small decisions live: column counts per
-breakpoint, span multiples, what an empty result says and how a failure offers a retry.
-Move it with BentoEntityTile, the tile shape it renders by default, and carry over the
-constraint that spans stay in multiples of two so the mosaic reflows cleanly at every
-breakpoint.
-
 ### §VDS16 A shell, so a page is not bento inside a console that is not
 
 The bento shell has no sidebar provider and no breadcrumb bar; it has a desktop-only nav

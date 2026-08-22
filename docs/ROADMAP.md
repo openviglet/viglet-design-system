@@ -7,7 +7,6 @@
 
 ## Block B — Bento becomes a design-system layer
 
-- 📋 **VDS15** (deps: VDS11 ✅) **the list mosaic — BentoListPage with its New tile, empty state and drag-reorder — is not installable** — Every product has list screens, and a hand-rolled grid is the fastest way for two consoles to stop matching. → §VDS15
 - 📋 **VDS16** (deps: VDS11 ✅) **the bento shell chrome (nav rail, user menu, back-to-top) is product-local, so a second product has no shell** — A page can look bento inside a console that does not, which the conventions call the first mistake. → §VDS16
 - 📋 **VDS17** (deps: VDS16) **the command palette reads a nav config hardcoding one product's surfaces, so it cannot be shared as it stands** — The palette is generic and its data is not; moving both together would put Turing routes in Shio. → §VDS17
 - 📋 **VDS18** (deps: VDS1 ✅, VDS11 ✅) **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — Tests left behind turn one product's regression into two products' regressions. → §VDS18
@@ -31,12 +30,6 @@
 - **A consumer that re-declares an exported component fails its own build** The export
   list ships as a build artefact, and the lint names the import that replaces the local
   copy rather than only reporting that a duplicate exists.
-
-## Done when — VDS15
-
-- **A list screen is one call with a renderTile** The mosaic, the New tile, the empty
-  state, the error path, per-item emphasis and drag reorder all come from the package,
-  with spans in multiples of two.
 
 ## Done when — VDS16
 
