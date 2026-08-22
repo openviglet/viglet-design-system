@@ -2,7 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-- ⏳ **VDS4** (deps: —) **the component catalogue is built into storybook-static and published nowhere a product author can open** — GitHub Pages is not enabled on the repository, so no commit has published yet and the README link is still dark. → §VDS4
 - ⏳ **VDS5** (deps: VDS2 ✅) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — Neither consumer runs viglet-ds-check-duplicates in its own CI, so the seven duplicates it finds in Shio still fail nothing. → §VDS5
 - 📋 **VDS27** (deps: —) **nine explicit any in the console-era router components, so the lint that guards them is a warning nobody fails on** — The gate landed green by demoting the rule, and a warning among sixty other warnings is how a rule stops being read. → §VDS27
 - 📋 **VDS28** (deps: —) **the compiler-era hook rules fire on three components and are demoted to warnings, so setState-in-effect ships unchecked** — These are the rules that catch cascading renders, and the bento layer arriving in Block B is where scroll effects live. → §VDS28
@@ -23,7 +22,7 @@
 - 📋 **VDS16** (deps: VDS11) **the bento shell chrome (nav rail, user menu, back-to-top) is product-local, so a second product has no shell** — A page can look bento inside a console that does not, which the conventions call the first mistake. → §VDS16
 - 📋 **VDS17** (deps: VDS16) **the command palette reads a nav config hardcoding one product's surfaces, so it cannot be shared as it stands** — The palette is generic and its data is not; moving both together would put Turing routes in Shio. → §VDS17
 - 📋 **VDS18** (deps: VDS1 ✅, VDS11) **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — Tests left behind turn one product's regression into two products' regressions. → §VDS18
-- 📋 **VDS19** (deps: VDS4 ⏳, VDS11) **no bento component has a story, though every other component here has one** — The catalogue is how an author finds a component instead of rewriting it, and the newest layer is invisible in it. → §VDS19
+- 📋 **VDS19** (deps: VDS4 ✅, VDS11) **no bento component has a story, though every other component here has one** — The catalogue is how an author finds a component instead of rewriting it, and the newest layer is invisible in it. → §VDS19
 - 📋 **VDS20** (deps: VDS11) **the bento authoring contract is a CONVENTIONS.md inside one product, addressed to that product** — Two consoles diverge the moment the rules live where only one of them reads them. → §VDS20
 - 📋 **VDS21** (deps: VDS16) **bento chrome strings live in one product's locale bundle, so a shared rail and palette render raw keys elsewhere** — This package already ships EN and PT base translations, and chrome it owns should carry its own. → §VDS21
 - 📋 **VDS22** (deps: VDS11) **the adapter that renders one form as console cards or as bento sections is a product-local override** — It is what lets a heavy shared form migrate without duplicating its field logic, and both products need it. → §VDS22
@@ -35,12 +34,6 @@
 - 📋 **VDS25** (deps: VDS2 ✅, VDS11) **nothing proves two products composing the same shared components actually render the same** — One look is the whole goal, and it is judged today by opening two browsers side by side. → §VDS25
 - 📋 **VDS26** (deps: VDS8) **no size budget: a consumer importing nothing from the bento subpath cannot be shown it paid nothing** — The subpath was chosen over one barrel for exactly this, and the choice is so far unmeasured. → §VDS26
 - 📋 **VDS31** (deps: —) **Dumont consumes this package and appears nowhere in the plan, so one-look claims are checked against two of three** — The local-dev command found a third 2026.3 consumer on disk, and a design system that plans for two of its three consoles will diverge on the third. → §VDS31
-
-## Done when — VDS4
-
-- **The component catalogue has a URL and the README links it** The built storybook is
-  published on every default-branch commit, and a product author can open a component's
-  story without cloning this repository.
 
 ## Done when — VDS5
 

@@ -2,18 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-### §VDS4 The catalogue, somewhere an author can open it
-
-Every component here carries a stories file, and storybook-static is built into a
-directory nobody browses. A product author looking for a shared stepper, a sticky save
-bar or a two-column form row has no address to look at, so the cheapest thing to do is
-write one. That is not hypothetical: it is the mechanism by which an entire design
-language - the frosted tile, the airy hero, the mosaic - grew inside one product while a
-design system sat next to it exporting console chrome. Publish the built storybook per
-commit on the default branch and link it from the README. It is also the surface VDS19
-needs: bento stories that nobody can open buy nothing, and the catalogue is the only
-place the two eras of chrome can be seen next to each other.
-
 ### §VDS5 Say what is exported, so a duplicate can fail a build
 
 Nothing in this package declares its own export surface in a form a script can read.
