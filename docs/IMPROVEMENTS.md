@@ -47,6 +47,19 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
+### §VDS33 Keep the catalogue build out of dist
+
+Storybook's react-vite builder loads the project's vite.config.ts, which carries
+vite-plugin-dts pointed at dist. So `pnpm run build-storybook` re-runs the declaration
+emit under Storybook's own resolution and overwrites what `pnpm run build` just wrote,
+turning every `from 'react'` into `from '../../node_modules/react'` -- a path no
+consumer can resolve, which erases React's types in the product. Reproduced directly:
+clean after build, broken after build-storybook. It sent both products' builds red
+mid-session and cost an hour spent looking at the wrong change. npm is safe today only
+because publish.yml does not build the catalogue; CI and the Pages workflow both do.
+.storybook/main.ts already strips the use-sync-external-store aliases in viteFinal,
+which is where the dts plugin should be stripped too.
+
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS7 Draw the line between the layer and the product
