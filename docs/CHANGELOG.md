@@ -12,7 +12,8 @@
 - ✅ **VDS27** **nine explicit any in the console-era router components, so the lint that guards them is a warning nobody fails on** — The nine sites carry real types, the tenth behind an eslint-disable went with them, and no-explicit-any is an error again.
 - ✅ **VDS33** **building the catalogue rewrites dist/*.d.ts through node_modules paths, so build then catalogue ships broken types** — The catalogue build drops the declaration plugin, so dist is byte-identical across it, and CI re-checks dist after the catalogue.
 - ✅ **VDS28** **the compiler-era hook rules fire on three components and are demoted to warnings, so setState-in-effect ships unchecked** — The three call sites use useSyncExternalStore, derived state and a stable id, and both compiler-era hook rules are errors.
-- ✅ **VDS29 (package half)** **react-table is held at v8 because a grouped Dependabot bump to v9 broke grid.list and reached the default branch unbuilt** — GridList runs on the v9 feature API with only the four features it uses, seven behaviour tests guard it, and no version hold is left.
+- ✅ **VDS29** **react-table is held at v8 because a grouped Dependabot bump to v9 broke grid.list and reached the default branch unbuilt** — A consumer pinned to react-table v8 bundles the v9 package cleanly: pnpm gives each side its own copy, under the hoisting all three products use.
+- 🗑 **VDS34** **thirty deps are externalised at build but declared as dependencies, so their major version is an unstated contract** — abandoned: Measured wrong: pnpm gives the package its own copy under both the default and the shamefully-hoist layout, so the major is not a shared contract.
 
 ## Block B — Bento becomes a design-system layer
 

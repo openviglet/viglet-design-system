@@ -15,17 +15,6 @@ package exports that name, fail and name the import that replaces it. Land it be
 Block B rather than after, because the instrument is what finds the call site nobody
 read.
 
-### §VDS29 Migrate GridList to react-table v9
-
-On 2026-08-09 a grouped Dependabot pull request carried fourteen safe bumps and one
-major: @tanstack/react-table 8.21.3 to 9.0.0. v9 renamed every row-model factory
-(getCoreRowModel to createCoreRowModel and its siblings), dropped getPaginationRowModel,
-re-shaped ColumnDef to require a second type argument, and moved useReactTable.
-grid.list.tsx did not compile afterwards, and with no CI nothing said so — the break sat
-on the default branch for two weeks. VDS2 now catches the next one, and dependabot.yml
-keeps majors out of the grouped requests. What is left is the migration itself: port
-grid.list.tsx to the v9 API, then drop the version hold from dependabot.yml.
-
 ### §VDS30 Return to TypeScript 7 when the lint can load it
 
 typescript-eslint 8 throws on import against ts.versionMajorMinor >= 7, and the
@@ -36,18 +25,19 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
-### §VDS34 Externalised dependencies are peers in everything but the manifest
+### §VDS35 Make the local-dev push tell the truth about dependencies
 
-vite.config.ts externalises thirty packages so consumers tree-shake them alongside their
-own usage -- every Radix primitive, Tabler and Iconify, xlsx, date-fns, axios,
-react-table and the rest. Externalised means the import survives into dist and resolves
-in the consumer's tree, so the version the package's code was compiled against and the
-version it actually binds to are two different things. That is the definition of a peer
-dependency, and all thirty are declared as regular dependencies, where a range mismatch
-is silent. VDS29 walked into it: GridList moved to react-table v9, Shio was already on
-v9 and built, Turing pins ^8.21.3 and failed with MISSING_EXPORT on four symbols. Decide
-which of the thirty are genuinely peers and declare them, so the next mismatch is a
-warning at install rather than a red build in a product.
+scripts/use-local.mjs writes dist and package.json over the copy a product's package
+manager installed. That is the whole point -- no manifest edit, no lockfile churn -- but
+it means the package's own dependencies stay whatever the last real install resolved.
+Move a dependency's major and the copied package.json says one thing while the directory
+beside it still links the old version, so the product fails to build against symbols the
+new version exports. VDS29 hit exactly that: react-table went to v9 here, Turing's
+installed tree still linked v8, and the build failed with MISSING_EXPORT on four
+symbols. A fixture install of the packed tarball proved a real consumer is fine. An hour
+went into the wrong explanation and a task was filed on it. The script should compare
+the ranges it is about to copy against what the target resolves, and refuse or say
+plainly what it cannot fix.
 
 ## Block B — Bento becomes a design-system layer
 

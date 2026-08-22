@@ -3,9 +3,8 @@
 ## Block A — The gate the design system never had
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — Both consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
-- ⏳ **VDS29** (deps: —) **react-table is held at v8 because a grouped Dependabot bump to v9 broke grid.list and reached the default branch unbuilt** — Turing pins react-table ^8.21.3, and the externalised import binds the package's v9 code to that copy, so its build fails. → §VDS29
 - 📋 **VDS30** (deps: —) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — The package was on 7 and lint could not run at all; one of the two had to move, and the choice should be revisited rather than forgotten. → §VDS30
-- 📋 **VDS34** (deps: —) **thirty deps are externalised at build but declared as dependencies, so their major version is an unstated contract** — react-table proved it: the package moved to v9 and a consumer pinning v8 failed to build, with nothing having warned either side. → §VDS34
+- 📋 **VDS35** (deps: —) **use:local copies dist over an installed package without reconciling its deps, so a changed range keeps the old one** — It failed a product build on a dependency the package had already moved off, and the failure read as a defect in the change under test. → §VDS35
 
 ## Block B — Bento becomes a design-system layer
 
@@ -160,18 +159,12 @@
   only the root entry is asserted clean in CI, and the bento subpath carries a recorded
   size baseline of its own.
 
-## Done when — VDS29
+## Done when — VDS35
 
-- **GridList runs on react-table v9 with no version hold left** grid.list.tsx compiles
-  and behaves the same against v9, dependabot.yml no longer ignores the package, and
-  both products build against the result.
-
-## Done when — VDS34
-
-- **A consumer on the wrong major is warned at install** Every externalised package is
-  declared as a peer with the range the code needs, the consumers install cleanly
-  against it, and a deliberately wrong major produces an install-time warning rather
-  than a build error.
+- **A dependency the push cannot reconcile is named before the copy** Running use:local
+  after a dependency range changes reports the packages whose installed version no
+  longer satisfies it, and says what to run in the product, rather than leaving a build
+  to fail on it later.
 
 ## Non-goals
 
