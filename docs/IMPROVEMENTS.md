@@ -27,18 +27,6 @@ issue 10940 and move back when it supports 7.1.
 
 ## Block B — Bento becomes a design-system layer
 
-### §VDS16 A shell, so a page is not bento inside a console that is not
-
-The bento shell has no sidebar provider and no breadcrumb bar; it has a desktop-only nav
-rail, a user menu and a back-to-top control, with the rail's gutter reserved by the
-layout. That matters more than it sounds: any component reaching for the sidebar context
-renders blank or crashes inside it, which is the tripwire that catches a page still
-reusing console chrome. Without the shell a second product can import every tile in this
-layer and still ship an airy hero bolted onto a console sidebar - the half-migration the
-conventions name as the first mistake. Move BentoNavRail, BentoUserMenu and
-BentoBackToTop together with the shell layout they assume, and state the no-sidebar rule
-where a consumer meets it rather than in a file it will not read.
-
 ### §VDS17 A generic palette over product-supplied data
 
 bento-nav.config.ts is 15 KB and it is two things at once: the command palette's

@@ -11,6 +11,15 @@
  *
  *   import "@viglet/viglet-design-system/bento.css"
  *
+ * The shell is three pieces and no provider: BentoNavRail down the left,
+ * BentoUserMenu in the header, BentoBackToTop at the corner. Wrap the routed
+ * page in `bento-rail-gutter` so content clears the rail.
+ *
+ * There is deliberately no sidebar provider here, and no context between them.
+ * The console era needs one because its sidebar collapses, remembers and
+ * pushes content around; the rail does none of that -- it is fixed, it is one
+ * width, and it is hidden below md. A provider would be state nothing reads.
+ *
  * docs/BENTO-BOUNDARY.md says which of the product's bento exports belong here
  * and which stay in the product.
  */
@@ -40,6 +49,16 @@ export { BentoHeroIconPicker, type BentoHeroIconPickerProps } from "./bento-hero
 export { BentoInlineEdit, type BentoInlineEditProps } from "./bento-inline-edit";
 export { BentoFormHero, type BentoFormHeroProps } from "./bento-form-hero";
 export { BentoFormSection, type BentoFormSectionProps } from "./bento-form-section";
+export { BentoBackToTop } from "./bento-back-to-top";
+export { BentoNavRail, type BentoNavRailProps } from "./bento-nav-rail";
+export { BentoUserMenu, type BentoUserMenuProps } from "./bento-user-menu";
+export {
+  bentoNavTarget,
+  type BentoNavGroup,
+  type BentoNavItem,
+  type BentoNavSection,
+  type BentoNavSectionId,
+} from "./bento-nav";
 export { BentoBackLink, BentoHero, type BentoHeroProps } from "./bento-hero";
 export { BentoSaveBar, type BentoSaveBarProps } from "./bento-save-bar";
 export { useBentoScrollFade } from "./bento-scroll-fade";

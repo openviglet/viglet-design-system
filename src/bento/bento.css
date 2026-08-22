@@ -396,3 +396,33 @@
 .bento-new-tile:hover {
   border-color: color-mix(in oklab, var(--primary) 60%, transparent);
 }
+
+/* The rail's active section, and the avatar's hover ring. Both take the
+   product's accent — the rail marking "you are here" in a colour of the layer's
+   own is the clearest case of a shared component making one product look wrong. */
+.bento-rail-active {
+  border-color: color-mix(in oklab, var(--primary) 40%, transparent);
+  background-image: linear-gradient(
+    to bottom right,
+    color-mix(in oklab, var(--primary) 15%, transparent),
+    color-mix(in oklab, var(--primary) 15%, transparent)
+  );
+  color: var(--primary);
+}
+
+.bento-ring:hover {
+  --tw-ring-color: color-mix(in oklab, var(--primary) 50%, transparent);
+}
+
+/* Reserves the gutter the fixed nav rail occupies, so page content is not
+   underneath it. The rail is `w-16` and hidden below `md`, and this matches on
+   both counts — put it on whatever element wraps the routed page.
+
+   It is a class rather than a layout component on purpose: a shell is the one
+   thing every product already has, and the useful part is the measurement, not
+   another wrapper to nest inside. */
+@media (min-width: 48rem) {
+  .bento-rail-gutter {
+    padding-left: 4rem;
+  }
+}

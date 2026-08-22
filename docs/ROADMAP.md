@@ -7,12 +7,11 @@
 
 ## Block B — Bento becomes a design-system layer
 
-- 📋 **VDS16** (deps: VDS11 ✅) **the bento shell chrome (nav rail, user menu, back-to-top) is product-local, so a second product has no shell** — A page can look bento inside a console that does not, which the conventions call the first mistake. → §VDS16
-- 📋 **VDS17** (deps: VDS16) **the command palette reads a nav config hardcoding one product's surfaces, so it cannot be shared as it stands** — The palette is generic and its data is not; moving both together would put Turing routes in Shio. → §VDS17
+- 📋 **VDS17** (deps: VDS16 ✅) **the command palette reads a nav config hardcoding one product's surfaces, so it cannot be shared as it stands** — The palette is generic and its data is not; moving both together would put Turing routes in Shio. → §VDS17
 - 📋 **VDS18** (deps: VDS1 ✅, VDS11 ✅) **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — Tests left behind turn one product's regression into two products' regressions. → §VDS18
 - 📋 **VDS19** (deps: VDS4 ✅, VDS11 ✅) **no bento component has a story, though every other component here has one** — The catalogue is how an author finds a component instead of rewriting it, and the newest layer is invisible in it. → §VDS19
 - 📋 **VDS20** (deps: VDS11 ✅) **the bento authoring contract is a CONVENTIONS.md inside one product, addressed to that product** — Two consoles diverge the moment the rules live where only one of them reads them. → §VDS20
-- 📋 **VDS21** (deps: VDS16) **bento chrome strings live in one product's locale bundle, so a shared rail and palette render raw keys elsewhere** — This package already ships EN and PT base translations, and chrome it owns should carry its own. → §VDS21
+- 📋 **VDS21** (deps: VDS16 ✅) **bento chrome strings live in one product's locale bundle, so a shared rail and palette render raw keys elsewhere** — This package already ships EN and PT base translations, and chrome it owns should carry its own. → §VDS21
 - 📋 **VDS22** (deps: VDS11 ✅) **the adapter that renders one form as console cards or as bento sections is a product-local override** — It is what lets a heavy shared form migrate without duplicating its field logic, and both products need it. → §VDS22
 - 📋 **VDS36** (deps: —) **the pulse glow hardcodes an indigo rgba, so a shared animation carries a colour the product cannot re-key** — VDS9 made every tone a token and this one kept its literal, which is the same failure in the place a token check does not look. → §VDS36
 - 📋 **VDS37** (deps: —) **the bento subpath needs react-router-dom, which the manifest calls an optional peer, so a missing one fails at runtime** — The root entry keeps router components behind /router for exactly this, and the bento layer mixes the two conventions. → §VDS37
@@ -20,7 +19,7 @@
 ## Block C — One look across products
 
 - 📋 **VDS23** (deps: —) **the product hue is hardcoded per product: Shio orange in a page header, Turing blue in a glass tint** — One look across products does not mean one colour, and today the difference is spelled in class names, not tokens. → §VDS23
-- 📋 **VDS24** (deps: VDS16) **the package exports both eras of chrome and says nowhere which one a new page should use** — PageHeader, SubPage, GridList and InternalSidebar are the console, and a new page will pick one at random. → §VDS24
+- 📋 **VDS24** (deps: VDS16 ✅) **the package exports both eras of chrome and says nowhere which one a new page should use** — PageHeader, SubPage, GridList and InternalSidebar are the console, and a new page will pick one at random. → §VDS24
 - 📋 **VDS25** (deps: VDS2 ✅, VDS11 ✅) **nothing proves two products composing the same shared components actually render the same** — One look is the whole goal, and it is judged today by opening two browsers side by side. → §VDS25
 - 📋 **VDS26** (deps: VDS8 ✅) **no size budget: a consumer importing nothing from the bento subpath cannot be shown it paid nothing** — The subpath was chosen over one barrel for exactly this, and the choice is so far unmeasured. → §VDS26
 - 📋 **VDS31** (deps: —) **Dumont consumes this package and appears nowhere in the plan, so one-look claims are checked against two of three** — The local-dev command found a third 2026.3 consumer on disk, and a design system that plans for two of its three consoles will diverge on the third. → §VDS31
@@ -30,12 +29,6 @@
 - **A consumer that re-declares an exported component fails its own build** The export
   list ships as a build artefact, and the lint names the import that replaces the local
   copy rather than only reporting that a duplicate exists.
-
-## Done when — VDS16
-
-- **A consumer gets a shell with no sidebar provider** The rail, the user menu and the
-  back-to-top are exported with the layout that reserves the rail gutter, and the
-  no-sidebar rule is stated where a consumer meets it.
 
 ## Done when — VDS17
 
