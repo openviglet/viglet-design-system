@@ -3,6 +3,23 @@ import { useState } from "react";
 
 import { VigletAppSwitcher } from "./viglet-app-switcher";
 
+// The switcher is controlled, so the story owns the open state. Hooks live in a
+// named component rather than in `render` so the rules-of-hooks lint still applies.
+function ControlledSwitcher(
+  args: React.ComponentProps<typeof VigletAppSwitcher>,
+) {
+  const [open, setOpen] = useState(args.open);
+  return (
+    <div className="relative min-h-[360px]">
+      <VigletAppSwitcher
+        {...args}
+        open={open}
+        onToggle={() => setOpen((v) => !v)}
+      />
+    </div>
+  );
+}
+
 const meta = {
   title: "App/VigletAppSwitcher",
   component: VigletAppSwitcher,
@@ -19,18 +36,7 @@ const meta = {
       options: ["cloud", "turing", "shio", "dumont"],
     },
   },
-  render: (args) => {
-    const [open, setOpen] = useState(args.open);
-    return (
-      <div className="relative min-h-[360px]">
-        <VigletAppSwitcher
-          {...args}
-          open={open}
-          onToggle={() => setOpen((v) => !v)}
-        />
-      </div>
-    );
-  },
+  render: (args) => <ControlledSwitcher {...args} />,
 } satisfies Meta<typeof VigletAppSwitcher>;
 
 export default meta;

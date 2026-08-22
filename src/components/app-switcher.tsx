@@ -134,7 +134,10 @@ function AppRow({ app, onToggle }: Readonly<AppRowProps>) {
       {app.image ? (
         <img
           src={app.image}
-          alt={label}
+          // The row already renders the app name as text beside this, so alt
+          // text repeating it makes a screen reader say the name twice.
+          alt=""
+          aria-hidden="true"
           className={`${app.active ? "" : "ml-7"} shrink-0 w-7 h-7 object-contain`}
         />
       ) : (

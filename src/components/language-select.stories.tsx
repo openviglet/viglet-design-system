@@ -13,6 +13,24 @@ const locales: VigLocale[] = [
   { initials: "ja_JP", en: "Japanese", pt: "Japonês" },
 ];
 
+// The select is controlled, so the story owns the value. Hooks live in a named
+// component rather than in `render` so the rules-of-hooks lint still applies.
+function ControlledSelect(args: React.ComponentProps<typeof LanguageSelect>) {
+  const [value, setValue] = useState(args.value);
+  return (
+    <div className="w-72">
+      <LanguageSelect
+        {...args}
+        value={value}
+        onValueChange={(v) => {
+          setValue(v);
+          args.onValueChange(v);
+        }}
+      />
+    </div>
+  );
+}
+
 const meta = {
   title: "App/LanguageSelect",
   component: LanguageSelect,
@@ -21,21 +39,7 @@ const meta = {
     locales,
     onValueChange: () => {},
   },
-  render: (args) => {
-    const [value, setValue] = useState(args.value);
-    return (
-      <div className="w-72">
-        <LanguageSelect
-          {...args}
-          value={value}
-          onValueChange={(v) => {
-            setValue(v);
-            args.onValueChange(v);
-          }}
-        />
-      </div>
-    );
-  },
+  render: (args) => <ControlledSelect {...args} />,
 } satisfies Meta<typeof LanguageSelect>;
 
 export default meta;

@@ -99,6 +99,27 @@
   animation-play-state: paused !important;
 }
 
+/* The same freeze, asked for by the reader rather than by the host. The backdrop
+   is decorative and drifts continuously, which is the shape of motion that costs
+   most: the static layers stay, the movement stops, and the lightning — a
+   repeated flash — is removed outright rather than merely paused mid-frame. The
+   rule is asserted in src/styles/reduced-motion.test.ts. */
+@media (prefers-reduced-motion: reduce) {
+  .ff-term,
+  .ff-bond,
+  .ff-orb {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .ff-lightning,
+  .ff-lightning--nuke,
+  .ff-lightning--flood {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+}
+
 @keyframes ff-drift-a {
   0%   { transform: translate(0, 0) scale(1) rotate(0deg); }
   20%  { transform: translate(80px, -60px) scale(1.15) rotate(5deg); }

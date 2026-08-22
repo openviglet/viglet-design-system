@@ -21,6 +21,7 @@
       "import": "./dist/index.es.js",
       "require": "./dist/index.cjs.js"
     },
+    "./exports.json": "./dist/exports.json",
     "./styles": "./dist/viglet-design-system.css",
     "./preset": "./dist/preset.css",
     "./preset.css": "./dist/preset.css",
@@ -46,16 +47,25 @@
       "require": "./dist/vite.cjs.js"
     }
   },
+  "bin": {
+    "viglet-ds-check-duplicates": "./scripts/check-duplicates.mjs"
+  },
   "files": [
-    "dist"
+    "dist",
+    "scripts/check-duplicates.mjs"
   ],
   "sideEffects": [
     "**/*.css"
   ],
   "scripts": {
     "dev": "vite build --watch",
-    "build": "tsc -b && node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && vite build && node -e \"require('fs').cpSync('src/styles/preset.css','dist/preset.css')\"",
+    "build": "tsc -b && node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && vite build && node -e \"require('fs').cpSync('src/styles/preset.css','dist/preset.css')\" && node scripts/emit-exports.mjs && node scripts/check-dist.mjs",
+    "check:dist": "node scripts/check-dist.mjs",
+    "typecheck": "tsc -b --force",
     "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "use:local": "node scripts/use-local.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "prepublishOnly": "npm run build"
@@ -98,7 +108,7 @@
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@tabler/icons-react": "^3.40.0",
-    "@tanstack/react-table": "^9.0.0",
+    "@tanstack/react-table": "^8.21.3",
     "axios": "^1.13.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -116,28 +126,43 @@
     "@storybook/addon-a11y": "^10.3.5",
     "@storybook/addon-docs": "^10.3.5",
     "@storybook/addon-themes": "^10.3.5",
+    "@storybook/addon-vitest": "10.5.10",
     "@storybook/react-vite": "^10.3.5",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.6",
     "@types/node": "^26.0.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
+    "@vitest/browser": "^4.1.11",
+    "@vitest/browser-playwright": "^4.1.11",
     "eslint": "^9.39.0",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
+    "i18next": "^26.4.0",
+    "i18next-browser-languagedetector": "^8.2.1",
+    "jsdom": "^30.0.1",
+    "next-themes": "^0.4.6",
+    "playwright": "^1.62.1",
+    "react-i18next": "^17.0.12",
     "react-router-dom": "^7.0.0",
+    "sonner": "^2.0.8",
     "storybook": "^10.3.5",
     "tailwindcss": "^4.1.11",
     "tw-animate-css": "^1.4.0",
-    "typescript": "~7.0.2",
+    "typescript": "~6.0.3",
     "typescript-eslint": "^8.58.0",
     "vite": "^8.0.8",
-    "vite-plugin-dts": "^5.0.0"
+    "vite-plugin-dts": "^5.0.0",
+    "vitest": "^4.1.11"
   },
+  "packageManager": "pnpm@11.8.0",
   "engines": {
-    "node": "^24.0.0",
-    "npm": "^11.0.0"
+    "node": ">=26",
+    "pnpm": ">=11"
   }
 }

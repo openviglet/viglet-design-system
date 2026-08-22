@@ -1,0 +1,63 @@
+# VDS4 — the component catalogue, at an address a product author can open.
+#
+# Every component here carries a stories file and the built catalogue went into a
+# directory nobody browses, so the cheapest way to find a shared component was to
+# write a new one. That is not hypothetical: it is how an entire design language
+# grew inside one product while this package sat next to it exporting console
+# chrome. Publishing on every default-branch commit is what makes the catalogue
+# the answer to "does this already exist".
+name: Publish the component catalogue
+
+on:
+  push:
+    branches:
+      - 2026.3
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time; a queued run should supersede, not cancel, the
+# commit ahead of it.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 11.8.0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build the catalogue
+        run: pnpm run build-storybook
+
+      - uses: actions/configure-pages@v6
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: storybook-static
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

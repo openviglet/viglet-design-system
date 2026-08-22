@@ -116,6 +116,10 @@ function StartupFirstSteps({ current, total, className, ...rest }: Readonly<Star
   return (
     <div
       className={`vig-sf__fade-in flex items-center gap-2 mb-4 ${className ?? ""}`}
+      // aria-label is prohibited on a bare div: with no role there is nothing
+      // for the name to name, so screen readers drop it and the step count is
+      // announced nowhere. `group` is the role a set of related dots has.
+      role="group"
       aria-label={`Step ${current} of ${total}`}
       {...rest}
     >

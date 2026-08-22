@@ -2,12 +2,12 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS1** (deps: —) **no test runner: zero test files and no vitest, so a shared component cannot carry a regression test** — Bento arrives with twelve RTL suites and nothing here can run them, so the move would drop the only coverage those components have. → §VDS1
-- 📋 **VDS2** (deps: —) **nothing builds, lints or tests on a push; the only workflow publishes on manual dispatch** — Two products install this package from npm, so a break reaches them at install time instead of at the pull request that caused it. → §VDS2
-- 📋 **VDS3** (deps: —) **both copy-ds.cmd scripts target directories that no longer exist, so there is no local-dev path** — Every bento move is a design-system change a product must try before publishing, and the only script for that is broken. → §VDS3
-- 📋 **VDS4** (deps: —) **the component catalogue is built into storybook-static and published nowhere a product author can open** — A product re-invents a component it cannot see, which is how the bento scaffold grew inside one product in the first place. → §VDS4
-- 📋 **VDS5** (deps: VDS2) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — Unification is a claim nobody can check until a build fails on the duplicate — the instrument comes before the fixes. → §VDS5
-- 📋 **VDS6** (deps: VDS2) **the storybook a11y addon is installed and never run, so no accessibility rule is enforced** — The bento scaffold carries an a11y baseline in prose only; moving it here without a gate turns a convention into folklore. → §VDS6
+- ⏳ **VDS4** (deps: —) **the component catalogue is built into storybook-static and published nowhere a product author can open** — GitHub Pages is not enabled on the repository, so no commit has published yet and the README link is still dark. → §VDS4
+- ⏳ **VDS5** (deps: VDS2 ✅) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — Neither consumer runs viglet-ds-check-duplicates in its own CI, so the seven duplicates it finds in Shio still fail nothing. → §VDS5
+- 📋 **VDS27** (deps: —) **nine explicit any in the console-era router components, so the lint that guards them is a warning nobody fails on** — The gate landed green by demoting the rule, and a warning among sixty other warnings is how a rule stops being read. → §VDS27
+- 📋 **VDS28** (deps: —) **the compiler-era hook rules fire on three components and are demoted to warnings, so setState-in-effect ships unchecked** — These are the rules that catch cascading renders, and the bento layer arriving in Block B is where scroll effects live. → §VDS28
+- 📋 **VDS29** (deps: —) **react-table is held at v8 because a grouped Dependabot bump to v9 broke grid.list and reached the default branch unbuilt** — The pin restored the build, and a dependency held back by a workaround is a dependency nobody upgrades until it is urgent. → §VDS29
+- 📋 **VDS30** (deps: —) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — The package was on 7 and lint could not run at all; one of the two had to move, and the choice should be revisited rather than forgotten. → §VDS30
 
 ## Block B — Bento becomes a design-system layer
 
@@ -22,8 +22,8 @@
 - 📋 **VDS15** (deps: VDS11) **the list mosaic — BentoListPage with its New tile, empty state and drag-reorder — is not installable** — Every product has list screens, and a hand-rolled grid is the fastest way for two consoles to stop matching. → §VDS15
 - 📋 **VDS16** (deps: VDS11) **the bento shell chrome (nav rail, user menu, back-to-top) is product-local, so a second product has no shell** — A page can look bento inside a console that does not, which the conventions call the first mistake. → §VDS16
 - 📋 **VDS17** (deps: VDS16) **the command palette reads a nav config hardcoding one product's surfaces, so it cannot be shared as it stands** — The palette is generic and its data is not; moving both together would put Turing routes in Shio. → §VDS17
-- 📋 **VDS18** (deps: VDS1, VDS11) **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — Tests left behind turn one product's regression into two products' regressions. → §VDS18
-- 📋 **VDS19** (deps: VDS4, VDS11) **no bento component has a story, though every other component here has one** — The catalogue is how an author finds a component instead of rewriting it, and the newest layer is invisible in it. → §VDS19
+- 📋 **VDS18** (deps: VDS1 ✅, VDS11) **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — Tests left behind turn one product's regression into two products' regressions. → §VDS18
+- 📋 **VDS19** (deps: VDS4 ⏳, VDS11) **no bento component has a story, though every other component here has one** — The catalogue is how an author finds a component instead of rewriting it, and the newest layer is invisible in it. → §VDS19
 - 📋 **VDS20** (deps: VDS11) **the bento authoring contract is a CONVENTIONS.md inside one product, addressed to that product** — Two consoles diverge the moment the rules live where only one of them reads them. → §VDS20
 - 📋 **VDS21** (deps: VDS16) **bento chrome strings live in one product's locale bundle, so a shared rail and palette render raw keys elsewhere** — This package already ships EN and PT base translations, and chrome it owns should carry its own. → §VDS21
 - 📋 **VDS22** (deps: VDS11) **the adapter that renders one form as console cards or as bento sections is a product-local override** — It is what lets a heavy shared form migrate without duplicating its field logic, and both products need it. → §VDS22
@@ -32,26 +32,9 @@
 
 - 📋 **VDS23** (deps: —) **the product hue is hardcoded per product: Shio orange in a page header, Turing blue in a glass tint** — One look across products does not mean one colour, and today the difference is spelled in class names, not tokens. → §VDS23
 - 📋 **VDS24** (deps: VDS16) **the package exports both eras of chrome and says nowhere which one a new page should use** — PageHeader, SubPage, GridList and InternalSidebar are the console, and a new page will pick one at random. → §VDS24
-- 📋 **VDS25** (deps: VDS2, VDS11) **nothing proves two products composing the same shared components actually render the same** — One look is the whole goal, and it is judged today by opening two browsers side by side. → §VDS25
+- 📋 **VDS25** (deps: VDS2 ✅, VDS11) **nothing proves two products composing the same shared components actually render the same** — One look is the whole goal, and it is judged today by opening two browsers side by side. → §VDS25
 - 📋 **VDS26** (deps: VDS8) **no size budget: a consumer importing nothing from the bento subpath cannot be shown it paid nothing** — The subpath was chosen over one barrel for exactly this, and the choice is so far unmeasured. → §VDS26
-
-## Done when — VDS1
-
-- **pnpm test runs a real suite and CI fails when it goes red** vitest, jsdom and
-  Testing Library are installed, one existing component has a passing suite, and the
-  workflow runs it on every push.
-
-## Done when — VDS2
-
-- **Every push and pull request builds, type-checks, lints and tests** One workflow runs
-  install, tsc -b, eslint and the test script; a deliberately broken commit is rejected
-  before it can reach npm.
-
-## Done when — VDS3
-
-- **One documented command links this checkout into Shio and Turing** It resolves the
-  checkout rather than a hardcoded version directory, both products build against it,
-  and the README states it beside the install instructions.
+- 📋 **VDS31** (deps: —) **Dumont consumes this package and appears nowhere in the plan, so one-look claims are checked against two of three** — The local-dev command found a third 2026.3 consumer on disk, and a design system that plans for two of its three consoles will diverge on the third. → §VDS31
 
 ## Done when — VDS4
 
@@ -64,12 +47,6 @@
 - **A consumer that re-declares an exported component fails its own build** The export
   list ships as a build artefact, and the lint names the import that replaces the local
   copy rather than only reporting that a duplicate exists.
-
-## Done when — VDS6
-
-- **An accessibility violation in any story fails CI** The checks run over the whole
-  story set, and the reduced-motion guard is one of the rules the gate holds rather than
-  a comment in a stylesheet.
 
 ## Done when — VDS7
 

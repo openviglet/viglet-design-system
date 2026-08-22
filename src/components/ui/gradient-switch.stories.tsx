@@ -16,6 +16,9 @@ const meta = {
   },
   args: {
     variant: "default",
+    // A control with no visible label needs a name of its own, and a story is
+    // the documented example — one that ships unnamed teaches that.
+    "aria-label": "Enable notifications",
   },
 } satisfies Meta<typeof GradientSwitch>;
 
@@ -34,19 +37,19 @@ export const Variants: Story = {
   render: () => (
     <div className="flex flex-col gap-3">
       <div className="flex items-center gap-3">
-        <GradientSwitch variant="default" defaultChecked />
+        <GradientSwitch variant="default" defaultChecked aria-label="Default" />
         <span className="text-sm">Default</span>
       </div>
       <div className="flex items-center gap-3">
-        <GradientSwitch variant="secondary" defaultChecked />
+        <GradientSwitch variant="secondary" defaultChecked aria-label="Secondary" />
         <span className="text-sm">Secondary</span>
       </div>
       <div className="flex items-center gap-3">
-        <GradientSwitch variant="destructive" defaultChecked />
+        <GradientSwitch variant="destructive" defaultChecked aria-label="Destructive" />
         <span className="text-sm">Destructive</span>
       </div>
       <div className="flex items-center gap-3">
-        <GradientSwitch variant="success" defaultChecked />
+        <GradientSwitch variant="success" defaultChecked aria-label="Success" />
         <span className="text-sm">Success</span>
       </div>
     </div>

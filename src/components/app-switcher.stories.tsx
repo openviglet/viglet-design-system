@@ -4,6 +4,17 @@ import { useState } from "react";
 
 import { AppSwitcher, type AppSwitcherItem } from "./app-switcher";
 
+// The switcher is controlled, so the story owns the open state. Hooks live in a
+// named component rather than in `render` so the rules-of-hooks lint still applies.
+function ControlledSwitcher(args: React.ComponentProps<typeof AppSwitcher>) {
+  const [open, setOpen] = useState(args.open);
+  return (
+    <div className="relative min-h-[300px]">
+      <AppSwitcher {...args} open={open} onToggle={() => setOpen((v) => !v)} />
+    </div>
+  );
+}
+
 const sampleApps: AppSwitcherItem[] = [
   {
     id: "cloud",
@@ -52,14 +63,7 @@ const meta = {
     showTrigger: true,
     headerHeight: 56,
   },
-  render: (args) => {
-    const [open, setOpen] = useState(args.open);
-    return (
-      <div className="relative min-h-[300px]">
-        <AppSwitcher {...args} open={open} onToggle={() => setOpen((v) => !v)} />
-      </div>
-    );
-  },
+  render: (args) => <ControlledSwitcher {...args} />,
 } satisfies Meta<typeof AppSwitcher>;
 
 export default meta;

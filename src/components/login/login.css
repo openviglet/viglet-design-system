@@ -59,3 +59,17 @@
 @keyframes vig-login-fade-up {
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* A reader who asked for less motion gets the same layout without the entrance
+   animation: the fade-ins land at their final opacity instead of travelling to
+   it, and nothing loops. The rule is asserted in src/styles/reduced-motion.test.ts. */
+@media (prefers-reduced-motion: reduce) {
+  [class*="vig-login__"],
+  [class*="vig-login__"]::before,
+  [class*="vig-login__"]::after {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

@@ -25,6 +25,13 @@ const preview: Preview = {
   parameters: {
     layout: "centered",
     backgrounds: { disable: true },
+    // VDS6 — the accessibility baseline, as a gate rather than as advice. The
+    // addon was a devDependency no job ran, and the rules it holds (an
+    // aria-label on every icon-only control, aria-hidden on decorative glyphs
+    // with an adjacent screen-reader span, ARIA values as string literals)
+    // survived 118 pages because one team read one file. "error" makes a
+    // violation in any story fail the run.
+    a11y: { test: "error" },
     controls: {
       matchers: { color: /(background|color)$/i, date: /Date$/i },
     },

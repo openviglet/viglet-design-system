@@ -15,6 +15,9 @@ const meta = {
   },
   args: {
     disabled: false,
+    // A control with no visible label needs a name of its own, and a story is
+    // the documented example — one that ships unnamed teaches that.
+    "aria-label": "Accept terms",
   },
 } satisfies Meta<typeof Checkbox>;
 

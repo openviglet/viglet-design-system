@@ -11,6 +11,9 @@ const config: StorybookConfig = {
     "@storybook/addon-docs",
     "@storybook/addon-a11y",
     "@storybook/addon-themes",
+    // Runs the story set as a vitest project, which is what turns the a11y
+    // addon from a panel someone opens into the gate VDS6 asked for.
+    "@storybook/addon-vitest",
   ],
   framework: {
     name: "@storybook/react-vite",

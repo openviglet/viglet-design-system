@@ -11,6 +11,11 @@ const meta = {
     checked: { control: "boolean" },
     disabled: { control: "boolean" },
   },
+  args: {
+    // A control with no visible label needs a name of its own, and a story is
+    // the documented example — one that ships unnamed teaches that.
+    "aria-label": "Enable notifications",
+  },
 } satisfies Meta<typeof Switch>;
 
 export default meta;

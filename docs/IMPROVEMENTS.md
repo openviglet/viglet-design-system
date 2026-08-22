@@ -2,44 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-### §VDS1 A test runner, before anything arrives that needs one
-
-The package ships 45 UI primitives and 23 app-level components to two products and has
-zero test files; vitest is not even a devDependency. Storybook is the only harness, and
-a story asserts nothing. That was survivable while the components were thin wrappers
-over Radix. It stops being survivable the moment the bento layer lands: twelve RTL
-suites currently guard BentoEntityShell, BentoListPage, BentoFormHero, the command
-palette and the nav rail from inside turing-app, and they cannot follow their components
-into a package that cannot run them. Losing them would not be a neutral trade - those
-suites cover the scroll morph, privilege gating and keyboard navigation, none of which a
-type check sees. Add vitest, jsdom and Testing Library, wire a test script, and make one
-existing component prove the harness works before VDS18 moves anything into it.
-
-### §VDS2 A gate on the pull request, not on the install
-
-The only workflow is publish.yml, triggered by workflow_dispatch. Nothing builds, lints,
-type-checks or tests when a commit lands. Both Shio and Turing depend on
-@viglet/viglet-design-system by caret range from npm, so the first thing that notices a
-broken build is a product install, and the person who notices is not the person who
-caused it. The blast radius is about to grow: after Block B this package owns the chrome
-of two consoles rather than a handful of primitives. A workflow running install, tsc -b,
-eslint and the new test script on every push and pull request is the minimum, and it is
-the prerequisite for every other gate this block adds - the export manifest lint, the
-accessibility sweep and the render contract all need somewhere to run.
-
-### §VDS3 A local-dev path that exists
-
-copy-ds.cmd in Shio writes to shio/shio-react/node_modules and the one in Turing to
-turing/2026.1/frontend; neither directory exists any more, since the checkouts are
-shio/2026.3 and turing/2026.3. So the documented way to try a design-system change
-against a product before publishing has been broken for at least two version bumps, and
-the fallback is to publish and see. That is exactly the wrong loop for a block whose
-every task is a change to shared chrome that two consoles must be checked against, and
-it is the loop this work would run several dozen times. Replace both scripts with one
-supported recipe - a workspace link or a file: override - that resolves the checkout
-rather than a hardcoded path, and state it in the README beside the install
-instructions.
-
 ### §VDS4 The catalogue, somewhere an author can open it
 
 Every component here carries a stories file, and storybook-static is built into a
@@ -65,18 +27,48 @@ package exports that name, fail and name the import that replaces it. Land it be
 Block B rather than after, because the instrument is what finds the call site nobody
 read.
 
-### §VDS6 Run the accessibility addon that is already installed
+### §VDS27 Type the console-era router components, then raise the rule
 
-The storybook a11y addon is a devDependency and no job runs it. The bento layer arriving
-in Block B carries an accessibility baseline written as prose in a conventions file:
-icon-only controls need an aria-label, decorative glyphs need aria-hidden with an
-adjacent screen-reader span, ARIA values must be string literals rather than boolean
-expressions, and every animation must sit under the reduced-motion guard. Those rules
-held across 118 pages because one team read one file. Rules that live only in a document
-do not survive a second consumer who never opens it. Run the accessibility checks over
-the story set in CI and fail on violations, so the baseline moves into this package as
-an enforced property rather than as advice, and so VDS19's new stories are gate input
-the day they land.
+The lint VDS2 introduced runs, and three rule buckets were demoted to warnings so it
+could be green on the day it landed rather than after a refactor. This is the largest:
+nine explicit `any` in grid.list, internal.sidebar, loading-provider, sub.page.header
+and use-grid-adapter. They are all console-era components — the ones VDS24 deprecates —
+so the work is bounded and will not be repeated on the bento layer. Type them, then set
+`@typescript-eslint/no-explicit-any` back to error in eslint.config.js, where the
+demotion already names this line. Doing it in that order means the rule is raised once,
+by the change that earns it.
+
+### §VDS28 Hold the compiler-era hook rules
+
+eslint-plugin-react-hooks v7 ships rules written for the React compiler:
+`set-state-in-effect` and `purity`. Three call sites fail them — use-mobile and
+badge-locale call setState synchronously inside an effect, and sidebar reads during
+render. Each is a known shadcn pattern whose correct form is `useSyncExternalStore`, so
+the fix is small and mechanical, but it changes behaviour and did not belong in the
+change that introduced the gate. Fix the three, then raise both rules to error in
+eslint.config.js. Worth doing before Block B rather than after: the bento save-bar morph
+is a scroll effect driving state, which is exactly the shape these rules exist to check.
+
+### §VDS29 Migrate GridList to react-table v9
+
+On 2026-08-09 a grouped Dependabot pull request carried fourteen safe bumps and one
+major: @tanstack/react-table 8.21.3 to 9.0.0. v9 renamed every row-model factory
+(getCoreRowModel to createCoreRowModel and its siblings), dropped getPaginationRowModel,
+re-shaped ColumnDef to require a second type argument, and moved useReactTable.
+grid.list.tsx did not compile afterwards, and with no CI nothing said so — the break sat
+on the default branch for two weeks. VDS2 now catches the next one, and dependabot.yml
+keeps majors out of the grouped requests. What is left is the migration itself: port
+grid.list.tsx to the v9 API, then drop the version hold from dependabot.yml.
+
+### §VDS30 Return to TypeScript 7 when the lint can load it
+
+typescript-eslint 8 throws on import against ts.versionMajorMinor >= 7, and the
+documented side-by-side recipe needs the tool to resolve a second TypeScript, which a
+peer dependency cannot be made to do. So this package moved from 7.0.2 to 6.0.3, which
+also removed a real npm install conflict: i18next declares peerOptional typescript ^5 ||
+^6, and npm treats that as hard, so a plain install failed and the publish workflow with
+it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
+issue 10940 and move back when it supports 7.1.
 
 ## Block B — Bento becomes a design-system layer
 
@@ -323,3 +315,14 @@ module and no bento CSS reaches the output, plus a recorded baseline for the ben
 subpath itself so a component moved here without care surfaces as a number rather than
 as a feeling. Land it with the subpath rather than after it, so the first regression is
 caught by the gate and not by a product.
+
+### §VDS31 Dumont is the third consumer
+
+The roadmap names Shio and Turing throughout, and the README's own first line names
+three products. Discovering the consumers by reading their manifests found dumont-react
+on the 2026.3 line alongside the other two. Nothing here is wrong for Dumont
+specifically — it is that no line accounts for it, so VDS25's render contract compares
+two token sets rather than three, VDS21's chrome strings are checked in two locale
+bundles, and the duplicate lint is planned into two CIs. Decide whether Dumont is a
+consumer this plan holds itself to, and if so widen those lines rather than adding a
+parallel set.

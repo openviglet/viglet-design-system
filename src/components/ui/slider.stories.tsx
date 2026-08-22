@@ -17,6 +17,9 @@ const meta = {
     max: 100,
     step: 1,
     defaultValue: [50],
+    // Radix puts the role on the thumb, so the name has to reach it; without
+    // one the slider is announced as an unlabelled number.
+    "aria-label": "Volume",
   },
   render: (args) => (
     <div className="w-80">

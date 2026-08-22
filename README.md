@@ -2,10 +2,63 @@
 
 Shared component library, design tokens, hooks, utilities, and i18n for Viglet products (Turing, Dumont, Shio).
 
+**[Browse the component catalogue](https://openviglet.github.io/viglet-design-system/)** — every
+component, its variants and its props, rebuilt on each commit to `2026.3`. Look
+there before writing a component: the catalogue is the answer to "does this
+already exist".
+
 ## Installation
 
 ```bash
-npm install @viglet/viglet-design-system
+pnpm add @viglet/viglet-design-system
+```
+
+## Trying a change in a product before publishing
+
+A change here is a change to shared chrome, so the question is always what it
+does to Shio and Turing — and the answer should not require a publish. From this
+checkout:
+
+```bash
+pnpm use:local           # build, then push dist into every 2026.3 product on disk
+pnpm use:local --list    # show what it would write to, and stop
+```
+
+It finds the consumers by reading their `package.json`, and finds where each one
+keeps the installed copy by following the link its own package manager made, so
+neither a version bump nor a switch of package manager breaks the loop. Nothing
+in the product's manifest or lockfile changes: `pnpm install` in the product puts
+the published build back.
+
+Pass directories to narrow it, and `--no-build` to reuse the `dist` already on
+disk:
+
+```bash
+pnpm use:local ../shio/2026.3/shio-react --no-build
+```
+
+## Catching a duplicate before it drifts
+
+The package ships `dist/exports.json` — every name it exports, per entry point —
+and a CLI that reads it. Run it in the product's own CI:
+
+```bash
+viglet-ds-check-duplicates src
+```
+
+It fails, naming the import that replaces each local copy:
+
+```
+src/components/page-header.tsx:18  declares PageHeader
+    replace it with:  import { PageHeader } from "@viglet/viglet-design-system/router"
+```
+
+One-line re-export shims are the sanctioned pattern and are skipped. When a
+collision is deliberate — a product component that renders that product's own
+data and merely shares a name — keep it by writing the reason in the file:
+
+```ts
+// viglet-ds-allow-duplicate AppFooter -- renders Shio's build version
 ```
 
 ## Setup
@@ -194,6 +247,27 @@ Base translations (EN/PT) for common UI strings: buttons, form labels, dialog te
 - Axios with CSRF protection
 - Sonner for toast notifications
 - Lucide + Tabler icons
+
+## Contributing
+
+The package manager is pnpm, matching the Shio and Turing workspaces.
+
+```bash
+pnpm install
+pnpm lint         # eslint
+pnpm typecheck    # tsc -b --force
+pnpm test         # vitest
+pnpm build        # tsc, vite, and the dist checks
+pnpm storybook    # the component catalogue, on :6006
+```
+
+CI runs all of those on every push and pull request, and the publish workflow
+re-runs them before it releases.
+
+`pnpm build` ends in `scripts/check-dist.mjs`, which fails the build when dist
+would be broken for consumers in a way nothing here can see — a declaration
+importing through a `node_modules` path, a test artefact in the published tree,
+or an `exports` entry the build did not produce.
 
 ## License
 

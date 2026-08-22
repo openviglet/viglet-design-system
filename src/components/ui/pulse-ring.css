@@ -26,3 +26,15 @@
   0%, 100% { box-shadow: 0 0 0 0   rgba(var(--ff-color-dark-rgb, 96, 165, 250), 0.3); }
   50%      { box-shadow: 0 0 0 12px rgba(var(--ff-color-dark-rgb, 96, 165, 250), 0); }
 }
+
+/* The ring is a liveness indicator, so it must stay legible without pulsing:
+   the active state keeps its colour and simply stops moving. The rule is
+   asserted in src/styles/reduced-motion.test.ts. */
+@media (prefers-reduced-motion: reduce) {
+  .vig-pulse-ring,
+  .vig-pulse-ring::before,
+  .vig-pulse-ring::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

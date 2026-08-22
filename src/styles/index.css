@@ -191,3 +191,26 @@
 [data-theme="dark"] [data-slot="sidebar-menu-button"][data-active="true"] svg {
   color: var(--color-blue-400) !important;
 }
+
+/* The package-wide reduced-motion answer, for a reader who asked the operating
+   system for less of it.
+
+   Broad on purpose: this stylesheet carries the tokens and the base layer every
+   consumer imports, and the animations it starts (the brand ping, the stepper
+   pop and flow, the accordion) are decoration rather than information — every
+   one of them has a legible final state. Durations are collapsed rather than set
+   to `none` so that transitionend and animationend still fire and nothing that
+   waits on them hangs. Component stylesheets imported on their own carry their
+   own guard; this one never reaches them.
+
+   The rule is asserted in src/styles/reduced-motion.test.ts. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

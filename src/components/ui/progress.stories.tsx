@@ -11,6 +11,9 @@ const meta = {
   },
   args: {
     value: 50,
+    // A progressbar with no name is announced as an unlabelled percentage, and
+    // a story is the documented example.
+    "aria-label": "Upload progress",
   },
   render: (args) => (
     <div className="w-[360px]">
@@ -37,28 +40,28 @@ export const Steps: Story = {
           <span>0%</span>
           <span>0 / 100</span>
         </div>
-        <Progress value={0} />
+        <Progress value={0} aria-label="Step at 0 percent" />
       </div>
       <div className="space-y-1">
         <div className="flex justify-between text-xs text-muted-foreground">
           <span>33%</span>
           <span>33 / 100</span>
         </div>
-        <Progress value={33} />
+        <Progress value={33} aria-label="Step at 33 percent" />
       </div>
       <div className="space-y-1">
         <div className="flex justify-between text-xs text-muted-foreground">
           <span>66%</span>
           <span>66 / 100</span>
         </div>
-        <Progress value={66} />
+        <Progress value={66} aria-label="Step at 66 percent" />
       </div>
       <div className="space-y-1">
         <div className="flex justify-between text-xs text-muted-foreground">
           <span>100%</span>
           <span>100 / 100</span>
         </div>
-        <Progress value={100} />
+        <Progress value={100} aria-label="Step at 100 percent" />
       </div>
     </div>
   ),

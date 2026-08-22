@@ -54,7 +54,10 @@ export function LanguageSelect({
 
     return (
         <Select value={value} onValueChange={onValueChange}>
-            <SelectTrigger className={className}>
+            {/* A placeholder is not a name: it disappears the moment a locale is
+                chosen, so the combobox has to carry one of its own or a screen
+                reader announces it as an unlabelled control. */}
+            <SelectTrigger className={className} aria-label={resolvedPlaceholder}>
                 {selectedOption ? (
                     <div className="flex items-center gap-2 truncate">
                         <BadgeLocale locale={selectedOption.value} />

@@ -6,6 +6,19 @@ const meta = {
   title: "UI/FloatingFormulasBg",
   component: FloatingFormulasBg,
   tags: ["autodocs"],
+  parameters: {
+    a11y: {
+      config: {
+        rules: [
+          // This component is decorative background art: low-opacity chemistry
+          // terms drifting behind a page, already aria-hidden so no screen
+          // reader meets them. Contrast is deliberately below threshold — text
+          // that met it would be the foreground. Every other rule still holds.
+          { id: "color-contrast", enabled: false },
+        ],
+      },
+    },
+  },
   argTypes: {
     itemCount: { control: { type: "number", min: 0, max: 80, step: 1 } },
     color: { control: "color" },

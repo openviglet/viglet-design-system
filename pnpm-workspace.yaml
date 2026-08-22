@@ -1,0 +1,33 @@
+# This package is not a workspace root with members — the file exists because
+# pnpm 11 reads several settings only from here, not from .npmrc.
+packages: []
+
+# See .npmrc for why this package cannot use the symlinked layout: TypeScript
+# writes the resolved .pnpm path into the emitted declarations, and dist ships
+# imports no consumer can resolve. pnpm 11 reads this key here, not from .npmrc.
+nodeLinker: hoisted
+
+# pnpm 11 no longer reads the "pnpm" field in package.json — native build
+# scripts must be allowlisted here instead.
+onlyBuiltDependencies:
+  - esbuild
+  - "@tailwindcss/oxide"
+
+# pnpm 11 prompts before purging a node_modules created by an older layout. CI
+# runs with no TTY, where that prompt aborts the install
+# (ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY) — let it purge silently.
+confirmModulesPurge: false
+
+minimumReleaseAgeExclude:
+  - '@testing-library/user-event@14.6.6'
+
+allowBuilds:
+  esbuild: true
+  "@tailwindcss/oxide": true
+
+# @testing-library/dom nests aria-query 5.3.0 while everything else resolves
+# 5.3.2. Vite pre-bundles one and not the other, and the story project dies on
+# `does not provide an export named 'elementRoles'` before a single story runs.
+# Both consumers ask for ^5, so one copy satisfies them.
+overrides:
+  aria-query: "5.3.2"

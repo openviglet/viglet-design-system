@@ -16,18 +16,34 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 11.8.0
+
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: '24'
+          node-version: 26
+          cache: pnpm
           registry-url: 'https://registry.npmjs.org'
           scope: '@viglet'
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: pnpm install --frozen-lockfile
+
+      # The same gate CI runs on every push. A manual dispatch skips the branch
+      # protection, so publishing re-runs it rather than trusting it.
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Type-check
+        run: pnpm run typecheck
+
+      - name: Test
+        run: pnpm test
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
       - name: Configure git
         run: |
@@ -36,22 +52,24 @@ jobs:
 
       - name: Bump to next available version
         run: |
-          npm version patch --no-git-tag-version
+          pnpm version patch --no-git-tag-version
           VERSION=$(node -p "require('./package.json').version")
           while npm view "${{ github.event.repository.name }}" versions --json 2>/dev/null | grep -q "\"$VERSION\""; do
             echo "Version $VERSION already exists on npm, bumping again..."
-            npm version patch --no-git-tag-version
+            pnpm version patch --no-git-tag-version
             VERSION=$(node -p "require('./package.json').version")
           done
           echo "Will publish version: $VERSION"
 
       - name: Commit and push version bump
         run: |
-          git add package.json package-lock.json
+          git add package.json pnpm-lock.yaml
           git commit -m "chore: bump version to $(node -p "require('./package.json').version")"
           git push
 
+      # `pnpm publish` runs prepublishOnly, which rebuilds — the bump above only
+      # changed the version, and dist must carry it.
       - name: Publish
-        run: npm publish --access public
+        run: pnpm publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

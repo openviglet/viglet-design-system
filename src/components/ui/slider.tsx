@@ -9,6 +9,8 @@ function Slider({
   value,
   min = 0,
   max = 100,
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledBy,
   ...props
 }: React.ComponentProps<typeof SliderPrimitive.Root>) {
   const _values = React.useMemo(
@@ -51,6 +53,16 @@ function Slider({
         <SliderPrimitive.Thumb
           data-slot="slider-thumb"
           key={index}
+          // Radix puts role="slider" on the thumb, not on the root, so a label
+          // left on the root names nothing a screen reader reaches. Forward it
+          // here, and number the thumbs when there is more than one so a range
+          // does not announce two controls with the same name.
+          aria-label={
+            ariaLabel && _values.length > 1
+              ? `${ariaLabel} ${index + 1}`
+              : ariaLabel
+          }
+          aria-labelledby={ariaLabelledBy}
           className="border-primary ring-ring/50 block size-4 shrink-0 rounded-full border bg-white shadow-sm transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
         />
       ))}
