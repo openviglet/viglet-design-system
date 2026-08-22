@@ -6,6 +6,12 @@
  * says `@viglet/viglet-design-system/bento` states which era a page belongs to,
  * which is something a reviewer and a lint can both see.
  *
+ * Requires `react-router-dom`. The package declares that peer optional, which
+ * is true of the root entry and false of this one and ./router — six components
+ * here render a `Link`, and npm cannot say "optional for one entry point, required
+ * for another". Importing this without it fails at build time with a missing
+ * module, so it is stated here, in the README, and enforced by the build.
+ *
  * The stylesheet is a separate entry rather than imported from here, so that a
  * consumer taking only the layout maths does not pull CSS it never renders:
  *

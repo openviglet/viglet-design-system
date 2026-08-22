@@ -293,6 +293,12 @@ The stylesheet is a separate import from the components, so a consumer taking
 only the layout maths does not pull CSS it never renders. It reads the preset's
 tokens, so import the preset too.
 
+**`./bento` requires `react-router-dom`.** The package declares that peer
+optional because the root entry does not need it — only `./router` and `./bento`
+do, and npm cannot mark a peer required for one entry point and optional for
+another. `pnpm run build` fails if any other entry starts importing it, so the
+split above stays true rather than becoming folklore.
+
 [docs/BENTO-AUTHORING.md](docs/BENTO-AUTHORING.md) is the contract for writing a
 bento page: the three page shapes, what the package will not hold for you, and
 the colour, i18n, accessibility and layout rules that keep two consoles looking

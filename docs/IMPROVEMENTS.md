@@ -40,19 +40,6 @@ Move the suites for the components that moved, leave the ones covering product-s
 tiles behind, and adapt their mocks - the user context and the i18n passthrough both
 have package-level equivalents.
 
-### §VDS37 The bento subpath's router dependency is unstated
-
-Six of the leaves render a react-router-dom `Link`, so importing
-`@viglet/viglet-design-system/bento` in a consumer without it throws `Cannot find
-package 'react-router-dom'` -- observed while verifying the move against a fixture. The
-manifest marks that peer optional, which is true of the root entry and false of this
-one, and npm therefore warns nobody at install. The root keeps its router-dependent
-components behind a `./router` subpath precisely so the root can stay router-free; the
-bento layer now mixes both conventions in one entry. Either say so -- the README, and
-the subpath's own doc comment -- or split the routed leaves the way the console era
-already splits its own, and decide which before the shell and the palette arrive with
-more of them.
-
 ### §VDS38 Let the palette match what a reader actually types
 
 `BentoCommandPalette` filters on `t(item.titleKey)` and nothing else. Every entry also

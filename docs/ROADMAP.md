@@ -8,7 +8,6 @@
 ## Block B — Bento becomes a design-system layer
 
 - ⏳ **VDS18** (deps: VDS1 ✅, VDS11 ✅) **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — Turing still holds its own copies of the eight moved suites; deleting them is part of its cutover, which needs a release first. → §VDS18
-- 📋 **VDS37** (deps: —) **the bento subpath needs react-router-dom, which the manifest calls an optional peer, so a missing one fails at runtime** — The root entry keeps router components behind /router for exactly this, and the bento layer mixes the two conventions. → §VDS37
 - 📋 **VDS38** (deps: —) **the command palette matches an entry's title only, so searching a word from its description finds nothing** — A launcher that misses the words a reader remembers sends them back to the nav they opened it to avoid. → §VDS38
 
 ## Block C — One look across products
@@ -54,13 +53,6 @@
 - **A root-only consumer contains no bento module and no bento CSS** A fixture importing
   only the root entry is asserted clean in CI, and the bento subpath carries a recorded
   size baseline of its own.
-
-## Done when — VDS37
-
-- **A consumer learns about the router requirement before runtime** The manifest, the
-  README and the subpath's doc comment agree on whether react-router-dom is required for
-  the bento entry, and a fixture without it either installs with a warning or imports
-  cleanly.
 
 ## Done when — VDS38
 

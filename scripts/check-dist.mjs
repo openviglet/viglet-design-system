@@ -14,9 +14,15 @@
 //      are not part of the published surface.
 //   3. Every path named in package.json "exports" must exist. A rename that
 //      misses the manifest is only found by a consumer's import failing.
+//   4. Only the entries documented as needing react-router-dom may import it.
+//      The manifest calls that peer optional, which is true of the root and
+//      false of ./router and ./bento — npm cannot express a per-subpath peer,
+//      so the split is documented, and this is what keeps the documentation
+//      true. An entry that quietly grows a Link makes a consumer's build fail
+//      on a dependency it was told it did not need.
 
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs"
-import { dirname, join, relative, resolve } from "node:path"
+import { basename, dirname, join, relative, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..")
@@ -78,6 +84,22 @@ for (const promise of promised) {
   const target = join(repoRoot, promise)
   if (!existsSync(target) || !statSync(target).isFile()) {
     failures.push(`package.json promises ./${promise}, which the build did not produce.`)
+  }
+}
+
+// 4. Only ./router and ./bento may reach for the router.
+const ROUTER_ENTRIES = new Set(["router", "bento"])
+for (const file of files) {
+  const match = /^(.+)[.](es|cjs)[.]js$/.exec(basename(file))
+  if (!match) continue
+  const entry = match[1]
+  if (ROUTER_ENTRIES.has(entry)) continue
+  if (/["']react-router-dom["']/.test(readFileSync(file, "utf8"))) {
+    failures.push(
+      `${relative(repoRoot, file)} imports react-router-dom, but only ` +
+        `${[...ROUTER_ENTRIES].map((e) => `./${e}`).join(" and ")} are documented as ` +
+        "needing it. A consumer told the peer was optional will fail to build.",
+    )
   }
 }
 
