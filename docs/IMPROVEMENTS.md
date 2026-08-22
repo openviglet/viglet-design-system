@@ -27,18 +27,6 @@ issue 10940 and move back when it supports 7.1.
 
 ## Block B — Bento becomes a design-system layer
 
-### §VDS9 A tone is a token, not a class string
-
-bento-tones.ts maps a tone name to hardcoded Tailwind colour classes, and the tonal icon
-chip it feeds is the single most repeated visual in the layer - it appears in every
-hero, every form section and every tile. Hardcoded, it means the palette a shared
-component draws from is one product's palette. Shio's console today is orange: its page
-header renders an orange-to-amber gradient chip inside an orange ring. A shared
-component that names its own colours makes one of the two products look borrowed.
-Express each tone as CSS custom properties in the preset, in the OKLCH system the rest
-of the tokens already use, so a product re-keys the palette by redefining variables
-rather than by forking a component, and so VDS23's brand accent has something to drive.
-
 ### §VDS10 The stylesheet is the look
 
 bento.styles.css is 216 lines and none of it is decoration. bento-tile carries the hover

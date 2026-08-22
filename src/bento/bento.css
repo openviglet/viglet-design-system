@@ -18,3 +18,59 @@
     --bento-radius: 1.5rem;
   }
 }
+
+/*
+ * The tonal icon chip.
+ *
+ * A tone used to be a pair of Tailwind colour classes baked into the component,
+ * which meant the palette was the package's rather than the product's: Turing is
+ * blue and Shio is orange, and a shared component naming its own colours makes
+ * one of the two look wrong. Now a tone sets two custom properties and the chip
+ * reads them, so re-keying a tone is redefining `--vg-bento-tone-<name>-from`
+ * and `-to` in the preset — no component is forked to do it.
+ *
+ * A product can also set `--bento-tone-from` / `--bento-tone-to` directly on any
+ * subtree to tint one region without touching the tokens at all.
+ */
+.bento-chip {
+  background-image: linear-gradient(
+    to bottom right,
+    var(--bento-tone-from, var(--vg-bento-tone-slate-from)),
+    var(--bento-tone-to, var(--vg-bento-tone-slate-to))
+  );
+}
+
+.bento-tone-blue {
+  --bento-tone-from: var(--vg-bento-tone-blue-from);
+  --bento-tone-to: var(--vg-bento-tone-blue-to);
+}
+
+.bento-tone-indigo {
+  --bento-tone-from: var(--vg-bento-tone-indigo-from);
+  --bento-tone-to: var(--vg-bento-tone-indigo-to);
+}
+
+.bento-tone-violet {
+  --bento-tone-from: var(--vg-bento-tone-violet-from);
+  --bento-tone-to: var(--vg-bento-tone-violet-to);
+}
+
+.bento-tone-emerald {
+  --bento-tone-from: var(--vg-bento-tone-emerald-from);
+  --bento-tone-to: var(--vg-bento-tone-emerald-to);
+}
+
+.bento-tone-amber {
+  --bento-tone-from: var(--vg-bento-tone-amber-from);
+  --bento-tone-to: var(--vg-bento-tone-amber-to);
+}
+
+.bento-tone-rose {
+  --bento-tone-from: var(--vg-bento-tone-rose-from);
+  --bento-tone-to: var(--vg-bento-tone-rose-to);
+}
+
+.bento-tone-slate {
+  --bento-tone-from: var(--vg-bento-tone-slate-from);
+  --bento-tone-to: var(--vg-bento-tone-slate-to);
+}

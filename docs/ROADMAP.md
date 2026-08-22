@@ -7,9 +7,8 @@
 
 ## Block B — Bento becomes a design-system layer
 
-- 📋 **VDS9** (deps: —) **a bento tone is a hardcoded Tailwind class string, so a product cannot re-key the tile palette** — Turing is blue and Shio is orange, and a shared component that names its own colours makes one of the two look wrong. → §VDS9
 - 📋 **VDS10** (deps: VDS8 ✅) **bento.styles.css lives inside one product, so the frosted surface and the hover-lift are not installable** — The animation is what makes a page read as bento, and no other product can reach those 216 lines. → §VDS10
-- 📋 **VDS11** (deps: VDS9, VDS10) **BentoHero, BentoFormSection, BentoTile, BentoEntityTile and their siblings exist only inside turing-app** — These are what a page composes, so nothing above them can move until they are importable. → §VDS11
+- 📋 **VDS11** (deps: VDS9 ✅, VDS10) **BentoHero, BentoFormSection, BentoTile, BentoEntityTile and their siblings exist only inside turing-app** — These are what a page composes, so nothing above them can move until they are importable. → §VDS11
 - 📋 **VDS12** (deps: VDS11) **the hero-to-sticky save-bar morph is a rAF loop and a CSS variable wired inside one product** — It is the most distinctive bento behaviour and the one a second console is most likely to hand-roll wrongly. → §VDS12
 - 📋 **VDS13** (deps: VDS12) **BentoEntityShell owns inline title editing, the icon picker, the status pill and the delete flow, all product-local** — It is the gold standard a detail page copies, and without it a second product invents a fourth layout. → §VDS13
 - 📋 **VDS14** (deps: VDS12) **BentoFormHero, the drop-in that gives an own-hero form the save-bar morph, is not installable** — Without it every form page outside the entity shell hand-wires two halves that then drift apart. → §VDS14
@@ -35,12 +34,6 @@
 - **A consumer that re-declares an exported component fails its own build** The export
   list ships as a build artefact, and the lint names the import that replaces the local
   copy rather than only reporting that a duplicate exists.
-
-## Done when — VDS9
-
-- **A tone is re-keyed by redefining variables, not by forking a component** Every tone
-  is CSS custom properties in the preset, in the OKLCH system the other tokens use, and
-  no shared component names a Tailwind colour class.
 
 ## Done when — VDS10
 

@@ -16,6 +16,12 @@
  */
 
 export {
+  BENTO_TONES,
+  BENTO_TONE_CLASS,
+  bentoChipClass,
+  type BentoTone,
+} from "./bento-tones";
+export {
   BENTO_EMPHASIS_NEXT,
   BENTO_EMPHASIS_SPAN,
   resolveBentoLayout,

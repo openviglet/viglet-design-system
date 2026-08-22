@@ -105,6 +105,30 @@
   --vg-sidebar-border: oklch(0.922 0 0);
   --vg-sidebar-ring: oklch(0.708 0 0);
 
+  /* Bento tones — the two gradient stops of the tonal icon chip, which is the
+     most repeated visual in the bento layer: every hero, every form section,
+     every tile. A product re-keys a tone by redefining these two properties,
+     not by forking the component that renders it.
+
+     The values are the OKLCH the layer shipped with, so re-keying is a choice
+     rather than something that happened on the way here. Fixed across light and
+     dark on purpose: the chip carries the colour and the surface stays frosted,
+     so the two never compete. */
+  --vg-bento-tone-blue-from: oklch(54.6% 0.245 262.881);
+  --vg-bento-tone-blue-to: oklch(51.1% 0.262 276.966);
+  --vg-bento-tone-indigo-from: oklch(51.1% 0.262 276.966);
+  --vg-bento-tone-indigo-to: oklch(59.1% 0.293 322.896);
+  --vg-bento-tone-violet-from: oklch(54.1% 0.281 293.009);
+  --vg-bento-tone-violet-to: oklch(55.8% 0.288 302.321);
+  --vg-bento-tone-emerald-from: oklch(59.6% 0.145 163.225);
+  --vg-bento-tone-emerald-to: oklch(60% 0.118 184.704);
+  --vg-bento-tone-amber-from: oklch(76.9% 0.188 70.08);
+  --vg-bento-tone-amber-to: oklch(70.5% 0.213 47.604);
+  --vg-bento-tone-rose-from: oklch(58.6% 0.253 17.585);
+  --vg-bento-tone-rose-to: oklch(59.2% 0.249 0.584);
+  --vg-bento-tone-slate-from: oklch(44.6% 0.043 257.281);
+  --vg-bento-tone-slate-to: oklch(37.2% 0.044 257.287);
+
   /* Brand palette */
   --vg-brand: #c2410c;
   --vg-brand-dark: #9a3412;
