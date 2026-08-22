@@ -36,5 +36,6 @@
 - ✅ **VDS22** **the adapter that renders one form as console cards or as bento sections is a product-local override** — AdaptiveSectionCard renders one form's markup as console cards or frosted sections from a provider, and the console branch is the default.
 - ✅ **VDS36** **the pulse glow hardcodes an indigo rgba, so a shared animation carries a colour the product cannot re-key** — The pulse glow reads a token, and the colour check now refuses any hued literal in the layer while leaving neutral shadows alone.
 - ✅ **VDS37** **the bento subpath needs react-router-dom, which the manifest calls an optional peer, so a missing one fails at runtime** — The manifest, README and subpath agree that react-router-dom is required for ./router and ./bento only, and the build enforces it.
+- ✅ **VDS38** **the command palette matches an entry's title only, so searching a word from its description finds nothing** — The palette matches descriptions as well as titles, ranks title matches first, and the test that pinned the old behaviour is replaced.
 
 ## Block C — One look across products

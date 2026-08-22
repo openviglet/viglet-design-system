@@ -94,16 +94,40 @@ describe("BentoCommandPalette", () => {
     expect(screen.queryByText("Language models")).not.toBeInTheDocument()
   })
 
-  it("matches on the title only, which is narrower than it reads", async () => {
+  it("matches on the description too, not just the title", async () => {
     const user = userEvent.setup()
     draw(<BentoCommandPalette open onOpenChange={vi.fn()} items={items} />)
 
-    // "Crawlers and schedules" is Indexing's description, and it finds nothing.
-    // Pinned as the behaviour it is rather than the behaviour it looks like;
-    // widening it is VDS38, not a change to make while moving the file.
+    // "Crawlers and schedules" is Indexing's description. It used to find
+    // nothing, which sent a reader who remembered what a surface does — rather
+    // than what it is called — back to the nav they opened this to avoid.
     await user.type(screen.getByRole("combobox"), "crawler")
 
-    expect(screen.queryByText("Indexing")).not.toBeInTheDocument()
+    expect(screen.getByText("Indexing")).toBeInTheDocument()
+    expect(screen.queryByText("Language models")).not.toBeInTheDocument()
+  })
+
+  it("ranks a title match above a description match", async () => {
+    const user = userEvent.setup()
+    draw(
+      <BentoCommandPalette
+        open
+        onOpenChange={vi.fn()}
+        items={[
+          { ...items[0], titleKey: "Storage", descriptionKey: "Where files live" },
+          { ...items[1], titleKey: "Indexing", descriptionKey: "Storage and schedules" },
+        ]}
+      />,
+    )
+
+    // Both match; the one that is *called* Storage comes first, so a reader
+    // half-remembering a name does not scroll past entries that mention it.
+    await user.type(screen.getByRole("combobox"), "storage")
+
+    const options = screen.getAllByRole("option")
+    expect(options).toHaveLength(2)
+    expect(options[0]).toHaveTextContent("Storage")
+    expect(options[1]).toHaveTextContent("Indexing")
   })
 
   it("marks a surface that has not moved yet, so a jump out is not a surprise", () => {

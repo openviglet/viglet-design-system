@@ -8,7 +8,6 @@
 ## Block B — Bento becomes a design-system layer
 
 - ⏳ **VDS18** (deps: VDS1 ✅, VDS11 ✅) **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — Turing still holds its own copies of the eight moved suites; deleting them is part of its cutover, which needs a release first. → §VDS18
-- 📋 **VDS38** (deps: —) **the command palette matches an entry's title only, so searching a word from its description finds nothing** — A launcher that misses the words a reader remembers sends them back to the nav they opened it to avoid. → §VDS38
 
 ## Block C — One look across products
 
@@ -53,12 +52,6 @@
 - **A root-only consumer contains no bento module and no bento CSS** A fixture importing
   only the root entry is asserted clean in CI, and the bento subpath carries a recorded
   size baseline of its own.
-
-## Done when — VDS38
-
-- **A word from the description finds its entry** Typing a description word returns that
-  entry, the title still ranks first when both match, and the test that pins title-only
-  matching is replaced rather than deleted.
 
 ## Non-goals
 

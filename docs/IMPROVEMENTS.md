@@ -40,18 +40,6 @@ Move the suites for the components that moved, leave the ones covering product-s
 tiles behind, and adapt their mocks - the user context and the i18n passthrough both
 have package-level equivalents.
 
-### §VDS38 Let the palette match what a reader actually types
-
-`BentoCommandPalette` filters on `t(item.titleKey)` and nothing else. Every entry also
-carries a `descriptionKey` -- rendered right under the title in the same list -- and
-typing a word from it returns an empty palette. "Crawlers and schedules" is on screen
-beside "Indexing", and searching "crawler" finds neither. It came over unchanged because
-a move must not also redesign, and the current behaviour is pinned by a test so widening
-it is a deliberate change rather than a silent one. Match the description too, and
-consider the section label: a reader who remembers "that thing under Generative AI" is
-describing a real way people navigate. Worth doing before VDS19 gives the palette a
-story, so the story shows the behaviour that stays.
-
 ## Block C — One look across products
 
 ### §VDS23 Brand accent as a token, not as a class

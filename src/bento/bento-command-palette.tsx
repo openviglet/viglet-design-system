@@ -40,9 +40,24 @@ export function BentoCommandPalette({ open, onOpenChange, items }: Readonly<Bent
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const labelled = items.map((item) => ({ item, label: t(item.titleKey) }));
+    const labelled = items.map((item) => ({
+      item,
+      label: t(item.titleKey),
+      description: t(item.descriptionKey),
+    }));
     if (!q) return labelled;
-    return labelled.filter(({ label }) => label.toLowerCase().includes(q));
+
+    // Title matches first, then description matches. A reader who half-remembers
+    // a name should not scroll past entries that merely mention it; a reader who
+    // only remembers what a surface does should still find it. Matching titles
+    // alone sent that second reader back to the nav they opened this to avoid.
+    const byTitle = [];
+    const byDescription = [];
+    for (const entry of labelled) {
+      if (entry.label.toLowerCase().includes(q)) byTitle.push(entry);
+      else if (entry.description.toLowerCase().includes(q)) byDescription.push(entry);
+    }
+    return [...byTitle, ...byDescription];
   }, [items, query, t]);
 
   // Reset transient state whenever the palette (re)opens, and keep the active
