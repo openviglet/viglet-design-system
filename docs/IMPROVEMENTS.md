@@ -25,20 +25,6 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
-### §VDS35 Make the local-dev push tell the truth about dependencies
-
-scripts/use-local.mjs writes dist and package.json over the copy a product's package
-manager installed. That is the whole point -- no manifest edit, no lockfile churn -- but
-it means the package's own dependencies stay whatever the last real install resolved.
-Move a dependency's major and the copied package.json says one thing while the directory
-beside it still links the old version, so the product fails to build against symbols the
-new version exports. VDS29 hit exactly that: react-table went to v9 here, Turing's
-installed tree still linked v8, and the build failed with MISSING_EXPORT on four
-symbols. A fixture install of the packed tarball proved a real consumer is fine. An hour
-went into the wrong explanation and a task was filed on it. The script should compare
-the ranges it is about to copy against what the target resolves, and refuse or say
-plainly what it cannot fix.
-
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS7 Draw the line between the layer and the product

@@ -14,6 +14,7 @@
 //   pnpm use:local <dir> [dir]  # push to these consumers only
 //   pnpm use:local --no-build   # reuse the dist already on disk
 //   pnpm use:local --all        # include checkouts off the current line
+//   pnpm use:local --skip-dep-check   # push over a tree whose deps are behind
 //
 // dist and package.json are copied over the installed copy in place. Nothing is
 // linked: a link makes the product resolve this checkout's node_modules too,
@@ -25,6 +26,8 @@ import { spawnSync } from "node:child_process"
 import { cpSync, existsSync, readdirSync, readFileSync, realpathSync, rmSync, statSync } from "node:fs"
 import { dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
+
+import { describeFindings, unsatisfiedDependencies } from "./lib/dependency-check.mjs"
 
 const PACKAGE_NAME = "@viglet/viglet-design-system"
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..")
@@ -54,6 +57,7 @@ const args = process.argv.slice(2)
 const listOnly = args.includes("--list")
 const skipBuild = args.includes("--no-build")
 const includeAll = args.includes("--all")
+const skipDepCheck = args.includes("--skip-dep-check")
 const explicit = args.filter((a) => !a.startsWith("--"))
 
 function dependsOnUs(packageJsonPath) {
@@ -142,6 +146,34 @@ for (const consumer of consumers) {
 }
 
 if (targets.length === 0) process.exit(1)
+
+// Copying dist writes files; it does not re-resolve dependencies. So if a range
+// moved here since the product last installed, the manifest this is about to
+// copy asks for a version the directory beside it does not have, and the product
+// fails to build on symbols that version does not export. That happened, and it
+// read as a defect in the design-system change rather than as a stale tree.
+if (!skipDepCheck) {
+  const ourRanges = JSON.parse(readFileSync(join(repoRoot, "package.json"), "utf8")).dependencies
+  const problems = []
+  for (const { consumer, installed } of targets) {
+    const described = describeFindings(
+      unsatisfiedDependencies(ourRanges, installed),
+      consumer,
+    )
+    if (described) problems.push(described)
+  }
+  if (problems.length > 0) {
+    // --list writes nothing, so it reports and leaves rather than refusing.
+    const header = listOnly
+      ? "\nThese trees are behind this checkout, and a push would be refused:\n"
+      : "\nNot pushed. The installed tree is behind this checkout:\n"
+    console.error(header)
+    for (const problem of problems) console.error(problem)
+    console.error("")
+    if (!listOnly) process.exit(1)
+  }
+}
+
 if (listOnly) process.exit(0)
 
 if (!skipBuild) {

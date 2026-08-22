@@ -4,7 +4,6 @@
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — Both consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS30** (deps: —) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — The package was on 7 and lint could not run at all; one of the two had to move, and the choice should be revisited rather than forgotten. → §VDS30
-- 📋 **VDS35** (deps: —) **use:local copies dist over an installed package without reconciling its deps, so a changed range keeps the old one** — It failed a product build on a dependency the package had already moved off, and the failure read as a defect in the change under test. → §VDS35
 
 ## Block B — Bento becomes a design-system layer
 
@@ -158,13 +157,6 @@
 - **A root-only consumer contains no bento module and no bento CSS** A fixture importing
   only the root entry is asserted clean in CI, and the bento subpath carries a recorded
   size baseline of its own.
-
-## Done when — VDS35
-
-- **A dependency the push cannot reconcile is named before the copy** Running use:local
-  after a dependency range changes reports the packages whose installed version no
-  longer satisfies it, and says what to run in the product, rather than leaving a build
-  to fail on it later.
 
 ## Non-goals
 

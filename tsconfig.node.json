@@ -6,6 +6,7 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "bundler",
+    "allowJs": true,
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "moduleDetection": "force",
@@ -18,5 +19,7 @@
   },
   // scripts/ holds shipped machinery — check-duplicates runs in three products'
   // CI — so its tests are type-checked here rather than left to the test run.
-  "include": ["vite.config.ts", "vitest.config.ts", "scripts/**/*.ts"]
+  // The scripts themselves are .mjs because node runs them with no build step,
+  // so allowJs is what lets a test import one and still be checked against it.
+  "include": ["vite.config.ts", "vitest.config.ts", "scripts/**/*.ts", "scripts/**/*.mjs"]
 }

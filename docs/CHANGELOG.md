@@ -14,6 +14,7 @@
 - ✅ **VDS28** **the compiler-era hook rules fire on three components and are demoted to warnings, so setState-in-effect ships unchecked** — The three call sites use useSyncExternalStore, derived state and a stable id, and both compiler-era hook rules are errors.
 - ✅ **VDS29** **react-table is held at v8 because a grouped Dependabot bump to v9 broke grid.list and reached the default branch unbuilt** — A consumer pinned to react-table v8 bundles the v9 package cleanly: pnpm gives each side its own copy, under the hoisting all three products use.
 - 🗑 **VDS34** **thirty deps are externalised at build but declared as dependencies, so their major version is an unstated contract** — abandoned: Measured wrong: pnpm gives the package its own copy under both the default and the shamefully-hoist layout, so the major is not a shared contract.
+- ✅ **VDS35** **use:local copies dist over an installed package without reconciling its deps, so a changed range keeps the old one** — use:local compares the ranges it is about to copy against what the target resolves, names the packages that do not satisfy them, and refuses.
 
 ## Block B — Bento becomes a design-system layer
 

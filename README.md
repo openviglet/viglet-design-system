@@ -37,6 +37,15 @@ disk:
 pnpm use:local ../shio/2026.3/shio-react --no-build
 ```
 
+One thing it refuses to do: push over a tree whose dependencies are behind. It
+writes files, and files cannot re-resolve a dependency — so if a range moved
+here since the product last installed, the manifest it copies would ask for a
+version the directory beside it does not have, and the product would fail to
+build on symbols that version does not export. It names those packages and
+stops. That is a real limit rather than a check to switch off: a range that
+moved reaches a product through a release, not through this. `--skip-dep-check`
+pushes anyway when you know why you want it.
+
 ## Catching a duplicate before it drifts
 
 The package ships `dist/exports.json` — every name it exports, per entry point —
