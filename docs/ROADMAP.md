@@ -9,8 +9,6 @@
 
 - ⏳ **VDS18** (deps: VDS1 ✅, VDS11 ✅, a 2026.3.3 release to npm) **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — The product cannot import from here until a release, so its copies stay until that cutover. → §VDS18
 
-## Block C — One look across products
-
 ## Done when — VDS5
 
 - **A consumer that re-declares an exported component fails its own build** The export

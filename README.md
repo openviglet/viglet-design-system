@@ -2,16 +2,16 @@
 
 Shared component library, design tokens, hooks, utilities, and i18n for Viglet products (Turing, Dumont, Shio).
 
-Those three are the consumers this package holds itself to, declared in
-[`consumers.json`](consumers.json) rather than remembered: the render-parity
-digest carries one token set per consumer, and a guard refuses prose that names
-two of them as though it were all of them. A fourth console is one entry there,
-and the checks widen with it.
-
 **[Browse the component catalogue](https://openviglet.github.io/viglet-design-system/)** — every
 component, its variants and its props, rebuilt on each commit to `2026.3`. Look
 there before writing a component: the catalogue is the answer to "does this
 already exist".
+
+Those three products are the consumers this package holds itself to, declared in
+[`consumers.json`](consumers.json) rather than remembered: the render-parity
+digest carries one accent per consumer, and CI refuses prose that names two of
+them as though it were all three. A fourth console is one entry there, and the
+checks widen with it.
 
 ## Installation
 
@@ -187,20 +187,20 @@ import {
 
 ```tsx
 import {
-  PageHeader,
-  SubPageHeader,
-  GridList,
   DialogDelete,
-  BlankSlate,
   LoadProvider,
-  NavUser,
+  GradientButtonLink,
   AppFooter,
   LanguageSelect,
   ModeToggle,
 } from "@viglet/viglet-design-system";
 ```
 
-#### Two eras, and which one a new page should use
+A page's chrome — its header, its list, its sidebar — comes from the
+[bento layer](#the-bento-layer) rather than from here. Read the next section
+before reaching for `PageHeader`, `GridList` or `InternalSidebar`.
+
+### Two eras, and which one a new page should use
 
 This package exports two complete page vocabularies. The **console era** is what all three products ship on today; the **[bento layer](#the-bento-layer)** is the current one. Every console-era export is marked `@deprecated` in its own types, so an editor strikes it through and offers the swap.
 
@@ -265,7 +265,9 @@ Accordion, Avatar, Badge, Breadcrumb, Button, Card, Checkbox, Dialog, Drawer, Dr
 
 ### App Components (23 components)
 
-AppFooter, BadgeColorful, BadgeLocale, BlankSlate, DialogDelete, GridList, InternalSidebar, LanguageSelect, LoadProvider, ModeToggle, NavMain, NavSecondary, NavUser, Page, PageContent, PageHeader, SubPage, SubPageHeader, ThemeProvider
+AppFooter, BadgeColorful, BadgeLocale, DialogDelete, GradientButtonLink, LanguageSelect, LoadProvider, ModeToggle, NavSecondary, ThemeProvider
+
+Console-era, `@deprecated`, still exported — see [the swap table](#two-eras-and-which-one-a-new-page-should-use): BlankSlate, GridList, InternalSidebar, NavMain, NavUser, Page, PageContent, PageHeader, StickyPageHeader, SubPage, SubPageHeader
 
 ### Hooks
 

@@ -39,5 +39,3 @@ not, each of those becomes a regression two products discover separately at runt
 Move the suites for the components that moved, leave the ones covering product-specific
 tiles behind, and adapt their mocks - the user context and the i18n passthrough both
 have package-level equivalents.
-
-## Block C — One look across products
