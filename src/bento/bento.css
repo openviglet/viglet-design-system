@@ -39,10 +39,17 @@
  */
 .bento-chip {
   background-image: linear-gradient(
-    to bottom right,
+    var(--bento-tone-angle, to bottom right),
     var(--bento-tone-from, var(--vg-bento-tone-slate-from)),
     var(--bento-tone-to, var(--vg-bento-tone-slate-to))
   );
+}
+
+/* The tile's upper glow runs the other way, so the two blooms behind one tile
+   do not read as a single band. Direction is a property for the same reason the
+   colours are: a product changes it without forking the component. */
+.bento-chip-tr {
+  --bento-tone-angle: to top right;
 }
 
 .bento-tone-blue {
@@ -285,4 +292,77 @@
   ::view-transition-new(bento-hero) {
     animation: none !important;
   }
+}
+
+/* ---------------------------------------------------------------------------
+ * Status intents.
+ *
+ * The "Active" pill, the warning and error markers, and the destructive item in
+ * an actions menu. These were Tailwind colour classes inside the components,
+ * which is the same failure the tones had: a shared component naming colours
+ * the product cannot re-key. The tint percentages are the ones the classes
+ * encoded — border at 40%, surface at 10% — so nothing shifted on the way here.
+ * ------------------------------------------------------------------------- */
+.bento-status {
+  border-color: color-mix(in oklab, var(--bento-status-mark) 40%, transparent);
+  background-color: color-mix(in oklab, var(--bento-status-mark) 10%, transparent);
+  color: var(--bento-status-text);
+}
+
+/* The dot inside a pill, and any bare mark that takes the intent colour. */
+.bento-status-dot {
+  background-color: var(--bento-status-mark);
+}
+
+.bento-status-on {
+  --bento-status-mark: var(--vg-bento-on-mark);
+  --bento-status-text: var(--vg-bento-on-text);
+}
+
+.bento-status-warn {
+  --bento-status-mark: var(--vg-bento-warn-mark);
+  --bento-status-text: var(--vg-bento-warn-text);
+}
+
+.bento-status-error {
+  --bento-status-mark: var(--vg-bento-error-mark);
+  --bento-status-text: var(--vg-bento-error-text);
+}
+
+.dark .bento-status-on,
+[data-theme="dark"] .bento-status-on {
+  --bento-status-text: var(--vg-bento-on-text-dark);
+}
+
+.dark .bento-status-warn,
+[data-theme="dark"] .bento-status-warn {
+  --bento-status-text: var(--vg-bento-warn-text-dark);
+}
+
+.dark .bento-status-error,
+[data-theme="dark"] .bento-status-error {
+  --bento-status-text: var(--vg-bento-error-text-dark);
+}
+
+/* The destructive item in a menu: text only until focused, then a faint wash. */
+.bento-item-danger {
+  color: var(--vg-bento-danger-text);
+}
+
+.bento-item-danger:focus,
+.bento-item-danger:focus-visible {
+  background-color: color-mix(in oklab, var(--vg-bento-danger-mark) 10%, transparent);
+  color: var(--vg-bento-danger-text);
+}
+
+.dark .bento-item-danger,
+[data-theme="dark"] .bento-item-danger {
+  color: var(--vg-bento-danger-text-dark);
+}
+
+.dark .bento-item-danger:focus,
+.dark .bento-item-danger:focus-visible,
+[data-theme="dark"] .bento-item-danger:focus,
+[data-theme="dark"] .bento-item-danger:focus-visible {
+  color: var(--vg-bento-danger-text-dark-hover);
 }

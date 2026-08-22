@@ -15,6 +15,19 @@
  * and which stay in the product.
  */
 
+// The leaf components — what a page composes. Props are unchanged from the
+// product they grew in, so a page moving to the package changes its imports
+// and nothing else.
+export { BentoActionsMenu, type BentoActionsMenuItem, type BentoActionsMenuProps, type BentoActionTone } from "./bento-actions-menu";
+export { BentoCountTile, type BentoCountTileProps } from "./bento-count-tile";
+export { BentoEmptyState, type BentoEmptyStateProps } from "./bento-empty-state";
+export { BentoEntityTile, type BentoEntityTileProps } from "./bento-entity-tile";
+export { BentoFormSection, type BentoFormSectionProps } from "./bento-form-section";
+export { BentoBackLink, BentoHero, type BentoHeroProps } from "./bento-hero";
+export { BentoSection, type BentoSectionProps } from "./bento-section";
+export { BentoStatusMarker, type BentoStatusMarkerProps } from "./bento-status-marker";
+export { BentoTile, type BentoTileProps } from "./bento-tile";
+
 export {
   BENTO_TONES,
   BENTO_TONE_CLASS,

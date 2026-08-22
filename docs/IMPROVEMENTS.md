@@ -27,18 +27,6 @@ issue 10940 and move back when it supports 7.1.
 
 ## Block B — Bento becomes a design-system layer
 
-### §VDS11 The leaves, which everything else composes
-
-Nine components are the vocabulary a bento page is written in: BentoHero,
-BentoFormSection, BentoTile, BentoEntityTile, BentoSection, BentoCountTile,
-BentoEmptyState, BentoStatusMarker and BentoActionsMenu. They depend on nothing of
-Turing's beyond a router link, so they are the cheapest half of the move and the one
-that unblocks the rest - the entity shell, the form hero and the list page are all
-compositions of these. Move them behind the subpath with their props unchanged, and in
-the same commit replace Turing's copies with re-export shims so all 118 bento pages keep
-compiling untouched. The shims are the same pattern Turing already uses for 39
-design-system primitives, and they stand until Turing's own block deletes them.
-
 ### §VDS12 The morph, which is the part nobody should re-implement
 
 The hero-to-sticky save-bar transition is what most distinguishes a bento page from a
@@ -184,6 +172,19 @@ nothing else names this. It should become `--vg-bento-pulse` beside the tone tok
 resolved through color-mix the way the frosted surfaces already resolve `--card` and
 `--border`. Small, and worth doing before the components that use `.bento-pulse` arrive,
 so it is re-keyed once rather than in each of their stories.
+
+### §VDS37 The bento subpath's router dependency is unstated
+
+Six of the leaves render a react-router-dom `Link`, so importing
+`@viglet/viglet-design-system/bento` in a consumer without it throws `Cannot find
+package 'react-router-dom'` -- observed while verifying the move against a fixture. The
+manifest marks that peer optional, which is true of the root entry and false of this
+one, and npm therefore warns nobody at install. The root keeps its router-dependent
+components behind a `./router` subpath precisely so the root can stay router-free; the
+bento layer now mixes both conventions in one entry. Either say so -- the README, and
+the subpath's own doc comment -- or split the routed leaves the way the console era
+already splits its own, and decide which before the shell and the palette arrive with
+more of them.
 
 ## Block C — One look across products
 

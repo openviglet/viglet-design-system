@@ -129,6 +129,25 @@
   --vg-bento-tone-slate-from: oklch(44.6% 0.043 257.281);
   --vg-bento-tone-slate-to: oklch(37.2% 0.044 257.287);
 
+  /* Bento status intents — the pills and the destructive menu item. Same reason
+     the tones are tokens: a shared component that names its own colours makes
+     one product look wrong. `-mark` is the dot and the border/background tint;
+     `-text` is the label, with a lighter value on dark where the tinted surface
+     is darker. Values are the OKLCH the layer shipped with. */
+  --vg-bento-on-mark: oklch(69.6% 0.17 162.48);
+  --vg-bento-on-text: oklch(59.6% 0.145 163.225);
+  --vg-bento-on-text-dark: oklch(76.5% 0.177 163.223);
+  --vg-bento-warn-mark: oklch(76.9% 0.188 70.08);
+  --vg-bento-warn-text: oklch(66.6% 0.179 58.318);
+  --vg-bento-warn-text-dark: oklch(82.8% 0.189 84.429);
+  --vg-bento-error-mark: oklch(63.7% 0.237 25.331);
+  --vg-bento-error-text: oklch(57.7% 0.245 27.325);
+  --vg-bento-error-text-dark: oklch(70.4% 0.191 22.216);
+  --vg-bento-danger-mark: oklch(64.5% 0.246 16.439);
+  --vg-bento-danger-text: oklch(58.6% 0.253 17.585);
+  --vg-bento-danger-text-dark: oklch(71.2% 0.194 13.428);
+  --vg-bento-danger-text-dark-hover: oklch(81% 0.117 11.638);
+
   /* Brand palette */
   --vg-brand: #c2410c;
   --vg-brand-dark: #9a3412;
