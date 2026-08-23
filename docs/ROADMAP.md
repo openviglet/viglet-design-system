@@ -8,6 +8,7 @@
 ## Block B — Bento becomes a design-system layer
 
 - ⏳ **VDS18** (deps: VDS1 ✅, VDS11 ✅, a 2026.3.3 release to npm) **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — The product cannot import from here until a release, so its copies stay until that cutover. → §VDS18
+- 📋 **VDS59** (deps: —) **a rejecting onSave escapes BentoInlineEdit as an unhandled rejection, because commit awaits it with no catch** — The prop documents being awaited; the package's own caller catches internally, so nothing here ever rejected and nobody noticed. → §VDS59
 
 ## Done when — VDS5
 
@@ -20,6 +21,15 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
+
+## Done when — VDS59
+
+- **a rejecting onSave produces no unhandled rejection** a test rejects it and the run
+  reports none, which is what vitest flagged when the probe found this.
+- **a refused edit goes back rather than looking saved** the draft returns to value,
+  matching what VDS58 decided one layer up in the shell.
+- **the prop says what rejecting means** onSave's doc states the outcome, so a product
+  wiring a mutation to it knows without reading commit.
 
 ## Non-goals
 

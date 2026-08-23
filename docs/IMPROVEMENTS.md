@@ -39,3 +39,30 @@ not, each of those becomes a regression two products discover separately at runt
 Move the suites for the components that moved, leave the ones covering product-specific
 tiles behind, and adapt their mocks - the user context and the i18n passthrough both
 have package-level equivalents.
+
+### §VDS59 A promise the component awaits and never catches
+
+`onSave` is documented as "Awaited if a Promise is returned — used to keep the field in
+`saving` state while the underlying mutation resolves." `commit` awaits it inside `try {
+… } finally { … }`, with no `catch`, and is wired straight to `onBlur={commit}`, where
+React discards the promise it returns.
+
+So a rejecting `onSave` leaves the run: the rejection escapes `commit`, nothing is
+subscribed to it, and it lands as an `unhandledrejection`. Products route that to error
+reporting or to a crash overlay; a test run reports it as an unhandled error that "might
+cause false positives".
+
+Awaiting a promise is a claim to handle what it settles to, and half of that is missing.
+The `finally` is the tell — written knowing the await could throw, it puts the field
+back into display mode either way, so the failure is not merely unreported: it is made
+to look like a success.
+
+It went unnoticed because the only caller inside this package cannot trigger it.
+`BentoEntityShell.persistField` catches its own mutation and resolves, so the
+failure-path tests VDS58 added pass through here without a rejection ever reaching
+`commit`. Every other caller is a product's.
+
+What it should do is what VDS58 decided one layer up: a refused edit goes back. The
+draft returns to `value`, the field is not silently left looking saved, and the
+rejection is either handled here or handed on deliberately rather than dropped — which
+is a decision to make, not a default to inherit.
