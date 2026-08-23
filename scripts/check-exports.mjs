@@ -71,6 +71,45 @@ export function importEverything(exportsMap) {
 }
 
 /**
+ * A CommonJS module requiring every entry that offers a `require` condition.
+ *
+ * The half VDS49 left out, and it was hiding a real one: `type: "module"` makes
+ * Node read any `.js` as ESM, and the entries were named `<entry>.cjs.js`, so
+ * every `require()` of this package failed with "exports is not defined in ES
+ * module scope" (VDS50). No product met it because all three bundle with Vite
+ * and take the `import` condition.
+ *
+ * Each result is read, for the same reason the ESM probe reads its namespaces:
+ * a require that returns something empty is not a require that worked.
+ */
+export function requireEverything(exportsMap) {
+  const subpaths = Object.entries(exportsMap)
+    .filter(([, target]) => typeof target === "object" && typeof target.require === "string")
+    .map(([subpath]) => subpath)
+
+  return [
+    `const subpaths = ${JSON.stringify(subpaths)};`,
+    `const PKG = ${JSON.stringify(PKG)};`,
+    "const failures = [];",
+    "for (const sub of subpaths) {",
+    '  const spec = sub === "." ? PKG : PKG + sub.slice(1);',
+    "  try {",
+    "    const loaded = require(spec);",
+    '    if (Object.keys(loaded).length === 0) failures.push(sub + " required to an empty object");',
+    "  } catch (error) {",
+    // The generated code splits on a newline, which is a backslash-n inside
+    // this string and has been eaten by a shell more than once today.
+    "    failures.push(sub + ': ' + String(error.message).split(String.fromCharCode(10))[0]);",
+    "  }",
+    "}",
+    "if (failures.length > 0) {",
+    "  console.error(failures.join(String.fromCharCode(10)));",
+    "  process.exitCode = 1;",
+    "}",
+  ].join("\n")
+}
+
+/**
  * A TypeScript module importing one real value from every typed entry.
  *
  * Reading the names from the catalogue rather than naming them here is what
@@ -150,6 +189,17 @@ async function main() {
     }
   })
 
+  await withConsumer(root, PKG, { "probe.cjs": requireEverything(exportsMap) }, async (dir) => {
+    const node = spawnSync(process.execPath, [join(dir, "probe.cjs")], {
+      cwd: dir,
+      encoding: "utf8",
+    })
+    if (node.status !== 0) {
+      const said = (node.stderr || node.stdout || "").trim().split("\n").slice(0, 6).join("\n      ")
+      failures.push(`a subpath did not require:\n      ${said}`)
+    }
+  })
+
   await withConsumer(
     root,
     PKG,
@@ -167,6 +217,7 @@ async function main() {
     },
   )
 
+  const cjs = Object.values(exportsMap).filter((t) => typeof t === "object" && t.require).length
   const typed = Object.keys(catalogue.entries).length
   const total = Object.keys(exportsMap).length
 
@@ -178,7 +229,7 @@ async function main() {
     return
   }
 
-  console.log(`check-exports: ${total} subpaths import, ${typed} type-check — clean.`)
+  console.log(`check-exports: ${total} subpaths import, ${cjs} require, ${typed} type-check — clean.`)
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url))) {

@@ -73,8 +73,13 @@ export default defineConfig({
         ),
       },
       formats: ["es", "cjs"],
+      // `.cjs`, not `.cjs.js`. package.json declares "type": "module", so Node
+      // reads any `.js` as ESM — and these are real CommonJS, so every
+      // require() of this package failed with "exports is not defined in ES
+      // module scope" (VDS50). The chunks were already `.cjs`; only the entry
+      // files carried the extra extension.
       fileName: (format, entryName) =>
-        `${entryName}.${format === "es" ? "es" : "cjs"}.js`,
+        format === "es" ? `${entryName}.es.js` : `${entryName}.cjs`,
     },
     rollupOptions: {
       // Shared with scripts/check-size.mjs so the two cannot disagree about

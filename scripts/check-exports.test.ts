@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs"
 import { join, resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 
-import { importEverything, typeProbe } from "./check-exports.mjs"
+import { importEverything, requireEverything, typeProbe } from "./check-exports.mjs"
 
 const root = resolve(import.meta.dirname, "..")
 
@@ -44,6 +44,36 @@ describe("the module that imports every subpath", () => {
   it("gives JSON an import attribute, which is how a bundler will take it", () => {
     const source = importEverything({ "./exports.json": "./dist/exports.json" })
     expect(source).toContain('with { type: "json" }')
+  })
+})
+
+describe("the module that requires every CJS entry", () => {
+  const exportsMap = {
+    ".": { import: "./dist/index.es.js", require: "./dist/index.cjs" },
+    "./bento": { import: "./dist/bento.es.js", require: "./dist/bento.cjs" },
+    "./bento.css": "./dist/bento.css",
+    "./styles": "./dist/viglet-design-system.css",
+  }
+
+  it("requires each entry that offers the condition, and no stylesheet", () => {
+    const source = requireEverything(exportsMap)
+    expect(source).toContain('["' + '.","./bento"]')
+    expect(source).not.toContain("bento.css")
+  })
+
+  it("fails on an entry that requires to nothing", () => {
+    // VDS50 was the loud version — Node refusing the file outright — but an
+    // entry that loads to an empty object is the same promise broken quietly.
+    expect(requireEverything(exportsMap)).toContain("required to an empty object")
+  })
+
+  it("exits non-zero rather than only printing", () => {
+    expect(requireEverything(exportsMap)).toContain("process.exitCode = 1")
+  })
+
+  it("says nothing where no entry offers require", () => {
+    const source = requireEverything({ "./styles": "./dist/viglet-design-system.css" })
+    expect(source).toContain("const subpaths = []")
   })
 })
 

@@ -12,25 +12,25 @@
     "access": "public",
     "registry": "https://registry.npmjs.org"
   },
-  "main": "./dist/index.cjs.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",
-      "require": "./dist/index.cjs.js"
+      "require": "./dist/index.cjs"
     },
     "./bento": {
       "types": "./dist/bento/index.d.ts",
       "import": "./dist/bento.es.js",
-      "require": "./dist/bento.cjs.js"
+      "require": "./dist/bento.cjs"
     },
     "./bento.css": "./dist/bento.css",
     "./assets": {
       "types": "./dist/assets/products/index.d.ts",
       "import": "./dist/assets.es.js",
-      "require": "./dist/assets.cjs.js"
+      "require": "./dist/assets.cjs"
     },
     "./exports.json": "./dist/exports.json",
     "./styles": "./dist/viglet-design-system.css",
@@ -41,23 +41,23 @@
     "./i18n": {
       "types": "./dist/i18n/index.d.ts",
       "import": "./dist/i18n.es.js",
-      "require": "./dist/i18n.cjs.js"
+      "require": "./dist/i18n.cjs"
     },
     "./router": {
       "types": "./dist/router.d.ts",
       "import": "./dist/router.es.js",
-      "require": "./dist/router.cjs.js"
+      "require": "./dist/router.cjs"
     },
     "./floating-formulas-bg": {
       "types": "./dist/components/ui/floating-formulas-bg.d.ts",
       "import": "./dist/floating-formulas-bg.es.js",
-      "require": "./dist/floating-formulas-bg.cjs.js"
+      "require": "./dist/floating-formulas-bg.cjs"
     },
     "./floating-formulas-bg.css": "./dist/floating-formulas-bg.css",
     "./vite": {
       "types": "./dist/vite/index.d.ts",
       "import": "./dist/vite.es.js",
-      "require": "./dist/vite.cjs.js"
+      "require": "./dist/vite.cjs"
     }
   },
   "bin": {

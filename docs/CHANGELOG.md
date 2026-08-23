@@ -25,6 +25,7 @@
 - ✅ **VDS47** **the size gate hand-declares which subpath a root consumer skips, and the gate already builds the answer** — The gate reads which subpaths a bundle skipped off its own module ids, so a component leaving the root barrel widens the check with no list to edit.
 - ✅ **VDS48** **size-budget records 271KB for ./fonts where a page fetches about 74KB, and says nothing about the difference** — size-budget records what a Latin page fetches beside what the entry ships — 79KB against 279KB — and CI fails if either moves or subsetting stops.
 - ✅ **VDS49** **nothing checks that a consumer can import each subpath; check-dist proves the file exists, not that it loads** — Each build imports all fifteen subpaths through the real exports map and type-checks a generated probe against every typed one, in about a second.
+- ✅ **VDS50** **every require() of this package fails: the CJS entries are named .js under type module, so Node reads them as ESM** — The CJS entries are named .cjs, so every require() loads; the export gate requires the seven that offer it and catches the naming.
 
 ## Block B — Bento becomes a design-system layer
 

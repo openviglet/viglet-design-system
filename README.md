@@ -410,11 +410,17 @@ the subpath exists. `./floating-formulas-bg` has its own entry *and*
 correct rather than a leak. The subpath is for a consumer who wants only that
 background.
 
-Every subpath in the table above is also **imported and type-checked as you
-would import it** on each build: one fixture pulls all fifteen through the real
-`exports` map, and a generated probe imports a value from each typed entry and
-uses it, so a `types` field resolving to the wrong declarations fails here
-rather than turning into `any` in your editor.
+Every subpath in the table above is also **imported, required and type-checked
+as you would use it** on each build: one fixture pulls all fifteen through the
+real `exports` map, a CommonJS probe requires the seven that offer it, and a
+generated TypeScript probe imports a value from each typed entry and uses it —
+so a `types` field resolving to the wrong declarations fails here rather than
+turning into `any` in your editor.
+
+That last check found a real one. `"type": "module"` makes Node read any `.js`
+as ESM, and the CommonJS entries were named `<entry>.cjs.js`, so every
+`require()` of this package failed. They are `<entry>.cjs` now. No product met
+it, because all three bundle with Vite and take the `import` condition.
 
 **`./bento` requires `react-router-dom`.** The package declares that peer
 optional because the root entry does not need it — only `./router` and `./bento`
