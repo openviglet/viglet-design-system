@@ -53,3 +53,29 @@ That is a statement about two components in this package and about how a caller 
 the second one, which is what the contract here is for. It stayed behind only because
 nobody moved it. Bringing it over closes the last thing Turing's file says this contract
 does not state, and lets that file's section 6 be deleted rather than maintained.
+
+### §VDS76 What SubPage would need to absorb Turing's
+
+Turing still declares SubPage and InternalSidebar locally, and its T1008 cannot shim
+them because this package's copies are each narrower in a specific way. All four
+differences were read off a diff rather than inferred.
+
+Three are additive and safe, each defaulting to today's behaviour:
+
+- SubPage drops outletContext. Turing passes a form instance through
+  Outlet context so the LLM editor's section sub-pages share one useForm; there
+  is no other way for a routed child to reach it.
+- NavMainItem requires url. Turing deliberately allows none: an item with
+  children and no url renders as a SidebarGroupLabel heading them, which is how
+  it groups sub-pages without inventing a clickable parent.
+- NavMainItem drops showOnNew, which keeps an item visible while an entity is
+  being created. Its absence falls back to a url === "/detail" heuristic.
+
+The fourth is a decision, not an addition. The two paddings differ -- this copy pads
+px-1 md:px-6 lg:px-8 py-1 md:py-4 where Turing's pads none -- so a product adopting this
+component sees its console pages reflow. Either the padding becomes a prop with Turing's
+values as one option, or the difference is accepted and stated, but it should not arrive
+as a surprise inside a shim.
+
+Worth doing after VDS25's digest is reachable from that product, which is what would
+show the reflow rather than describe it.
