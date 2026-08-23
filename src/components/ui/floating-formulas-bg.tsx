@@ -142,9 +142,49 @@ function pickOrbCount(density: number): number {
   return 3;
 }
 
-function buildFloatingItems(texts: string[], count: number) {
-  const rand = seededRandom(Date.now() % 100000);
-  const picked = [...texts].sort(() => rand() - 0.5).slice(0, count);
+/**
+ * A seed derived from what is about to be rendered.
+ *
+ * `Date.now()` stood here, which meant the same props laid out differently on
+ * every mount — and a `seededRandom` seeded from the clock is not seeded at all.
+ * Nothing that compares two renders could say anything about this component: not
+ * the parity digest, not a snapshot, not a screenshot review. A product that
+ * wants a fresh arrangement per visit passes `seed` itself, which puts the
+ * nondeterminism at the call site where it is visible.
+ */
+function hashSeed(parts: readonly string[]): number {
+  let h = 2166136261;
+  for (const part of parts) {
+    for (let i = 0; i < part.length; i += 1) {
+      h ^= part.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+  }
+  // The generator below is a Lehmer LCG: zero is its fixed point, and the state
+  // has to stay under the modulus.
+  return (Math.abs(h) % 2147483646) + 1;
+}
+
+/**
+ * Fisher-Yates, replacing `sort(() => rand() - 0.5)`.
+ *
+ * That was not a shuffle. A comparator has to impose a consistent order, and one
+ * returning a fresh random sign for the same pair does not, so what the engine
+ * makes of it is unspecified and the arrangement it lands on is biased toward
+ * leaving elements near where they started.
+ */
+function shuffled<T>(items: readonly T[], rand: () => number): T[] {
+  const out = [...items];
+  for (let i = out.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(rand() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
+function buildFloatingItems(texts: string[], count: number, seed: number) {
+  const rand = seededRandom(seed);
+  const picked = shuffled(texts, rand).slice(0, count);
   return picked.map((text) => ({
     text,
     top: `${rand() * 85 + 2}%`,
@@ -165,6 +205,13 @@ export interface FloatingFormulasBgProps {
    * mix into the formula pool. Tokenized on whitespace/`-`/`_`.
    */
   extraTokens?: string[];
+  /**
+   * Fixes the arrangement. Omitted, it is derived from the formula pool, so the
+   * same props always lay out the same way — which is what lets a snapshot or a
+   * visual check hold this component. Pass a changing value (`Date.now()`) for a
+   * fresh arrangement per visit.
+   */
+  seed?: number;
   /** Accent color for formulas / bonds / orbs / lightning. Defaults to Turing blue. */
   color?: string;
   /** Accent color in dark mode. Defaults to Turing dark blue. */
@@ -195,6 +242,7 @@ export interface FloatingFormulasBgProps {
 export function FloatingFormulasBg({
   itemCount = 35,
   extraTokens,
+  seed,
   color,
   colorDark,
   withFormulas = true,
@@ -215,13 +263,12 @@ export function FloatingFormulasBg({
   );
   const orbCount = pickOrbCount(density);
 
-  const items = useMemo(
-    () => buildFloatingItems(
-      [...FORMULAS, ...(extraTokens ? tokenizeNames(extraTokens) : [])],
-      scaledItemCount,
-    ),
-    [scaledItemCount, extraTokens],
-  );
+  const items = useMemo(() => {
+    const pool = [...FORMULAS, ...(extraTokens ? tokenizeNames(extraTokens) : [])];
+    // Seeded from the pool and not from the count, so thinning out on a narrow
+    // viewport drops trailing terms instead of rearranging the ones on screen.
+    return buildFloatingItems(pool, scaledItemCount, seed ?? hashSeed(pool));
+  }, [scaledItemCount, extraTokens, seed]);
 
   const themeStyle: Record<string, string> = {};
   if (color) themeStyle["--ff-color"] = color;

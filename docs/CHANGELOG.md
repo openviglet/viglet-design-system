@@ -29,6 +29,7 @@
 - ✅ **VDS51** **twenty strings the package asks for in its own namespaces ship in neither locale, so Portuguese renders English** — The twenty ship in both locales, and a check holds every namespace the bundles declare rather than bento alone, in both directions.
 - ✅ **VDS52** **useGridAdapter memoizes on data alone while config supplies every extractor, so a changed config yields stale rows** — useGridAdapter depends on each extractor, so a changed url builder or locale re-maps the rows; exhaustive-deps is an error.
 - ✅ **VDS53** **a story passes collapsible to a multiple accordion, React rejects the DOM attribute, and the suite stays green** — an undeclared React console error fails the story file that logged it; the accordion and a duplicate-key bond node no longer log one.
+- ✅ **VDS54** **FloatingFormulasBg seeds its layout from Date.now() inside render, so the same props render differently every time** — the layout is a function of the props and a seed prop pins it; a page that wants variety now passes seed itself.
 
 ## Block B — Bento becomes a design-system layer
 

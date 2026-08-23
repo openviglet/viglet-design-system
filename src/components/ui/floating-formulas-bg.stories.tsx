@@ -21,6 +21,7 @@ const meta = {
   },
   argTypes: {
     itemCount: { control: { type: "number", min: 0, max: 80, step: 1 } },
+    seed: { control: { type: "number" } },
     color: { control: "color" },
     colorDark: { control: "color" },
     withFormulas: { control: "boolean" },
@@ -141,5 +142,35 @@ export const FullEffects: Story = {
     <Container>
       <FloatingFormulasBg {...args} />
     </Container>
+  ),
+};
+
+/**
+ * The arrangement is a function of the props. Two backgrounds given the same
+ * `seed` are identical; change the seed and the terms are placed afresh. Omit it
+ * and the seed comes from the formula pool, so a page looks the same on every
+ * visit — pass `seed={Date.now()}` where a product wants it to vary.
+ */
+export const SeededLayout: Story = {
+  args: {
+    itemCount: 14,
+    withBonds: false,
+    withOrbs: false,
+    withGrid: false,
+  },
+  render: (args) => (
+    <div className="flex gap-3">
+      {[1, 1, 2].map((seed, index) => (
+        <div
+          key={`${seed}-${index}`}
+          className="relative h-[240px] w-[220px] overflow-hidden rounded-lg border bg-background"
+        >
+          <FloatingFormulasBg {...args} seed={seed} />
+          <span className="absolute bottom-2 left-2 rounded bg-background/80 px-1.5 py-0.5 text-xs text-muted-foreground">
+            seed={seed}
+          </span>
+        </div>
+      ))}
+    </div>
   ),
 };
