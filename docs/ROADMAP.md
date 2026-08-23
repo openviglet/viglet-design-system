@@ -5,6 +5,7 @@
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — All three consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS30** (deps: typescript-eslint supporting TS 7) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — It throws on import against ts.versionMajorMinor >= 7, and no side-by-side recipe makes a peer resolve a second TypeScript. → §VDS30
 - 📋 **VDS52** (deps: —) **useGridAdapter memoizes on data alone while config supplies every extractor, so a changed config yields stale rows** — exhaustive-deps stayed a warning after VDS28, and the naive [data, config] fix defeats the memo for an inline literal. → §VDS52
+- 📋 **VDS53** (deps: —) **a story passes collapsible to a multiple accordion, React rejects the DOM attribute, and the suite stays green** — Radix consumes collapsible only for type='single', and no gate fails a build on a React console error. → §VDS53
 
 ## Block B — Bento becomes a design-system layer
 
@@ -32,6 +33,15 @@
 - **npm run lint fails on the dependency array it used to warn about** exhaustive-deps
   is an error, so the next wrong memo stops the gate instead of adding a line to its
   output.
+
+## Done when — VDS53
+
+- **the Multiple story renders without a React console error** collapsible is scoped to
+  the single-type stories rather than inherited from meta args by every variant.
+- **a React error logged during a test fails that test** the setup file fails the run on
+  console.error, so the next leaked prop stops the suite instead of scrolling past it.
+- **the error-boundary story stays green under that rule** its console.error is
+  deliberate, so the gate distinguishes an asserted error from an unhandled one.
 
 ## Non-goals
 
