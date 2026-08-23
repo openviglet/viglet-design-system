@@ -379,7 +379,15 @@ Base translations (EN/PT) for common UI strings: buttons, form labels, dialog te
 
 Turing grew a second era of chrome — the frosted tile, the airy hero, the
 mosaic — inside one product while this package sat next to it exporting console
-chrome. It is being moved here.
+chrome. It lives here now: the components, their stylesheet, their strings and
+their suites. Turing consumes them through one-line re-exports at the paths its
+pages already imported, so a product adopting the layer writes the imports above
+rather than a second copy.
+
+What stayed behind is the product's, deliberately: commercial chrome (activation,
+quota, the first-run tour) and navigation data. `BentoListPage` takes a `layout`
+object rather than fetching one, because where a layout is stored is the
+product's business — its API, its cache, its mutation library.
 
 It is a separate entry point, so a console still on the first era carries none
 of it:

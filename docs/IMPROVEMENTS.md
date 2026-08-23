@@ -25,8 +25,6 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
-## Block B — Bento becomes a design-system layer
-
 ## Block C — One look across products
 
 ### §VDS73 Counting the consumers that are not SPAs
