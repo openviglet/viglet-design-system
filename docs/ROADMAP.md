@@ -4,6 +4,7 @@
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — Both consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS30** (deps: typescript-eslint supporting TS 7) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — It throws on import against ts.versionMajorMinor >= 7, and no side-by-side recipe makes a peer resolve a second TypeScript. → §VDS30
+- 📋 **VDS47** (deps: —) **the size gate hand-declares which subpath a root consumer skips, and the gate already builds the answer** — It is the fourth restated list in this block, and the third to be wrong: VDS46 was a hand-read of the barrel. → §VDS47
 
 ## Block B — Bento becomes a design-system layer
 
@@ -20,6 +21,12 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
+
+## Done when — VDS47
+
+- **The gate works out which subpath a root consumer skips** A subpath added with a
+  stylesheet is covered without anyone editing a list, and the formulas background is
+  still not reported.
 
 ## Non-goals
 

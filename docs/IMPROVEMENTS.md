@@ -25,6 +25,24 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
+### §VDS47 Derive what a root consumer skips
+
+`check-size` names the set in a literal: `ROOT_UNREACHABLE = { "./bento.css": … }`. A
+fourth genuinely separate subpath would not be added to it, and the check would go on
+passing while covering nothing new - the failure mode of every restated list this block
+has met. The externals were one (VDS43), the font families another (VDS45), and VDS46
+was a third: a hand-read of the root barrel that stopped one re-export short and took
+the formulas rules out of `./styles`.
+
+The answer is in the same bundle the gate already builds. A subpath's code is absent
+from the root-only fixture or it is not, and that is exactly the condition under which
+its CSS must be absent too. `./bento` is absent; `./floating-formulas-bg` is not, which
+is why its rules belong where they are.
+
+Derive it: for each subpath with a stylesheet, bundle its entry, take the modules that
+are its own, and ask whether the root-only bundle has them. Then a fourth subpath is
+covered on the day it is added, and nobody has to remember which kind it is.
+
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components
