@@ -9,6 +9,9 @@ export interface BentoInlineEditProps {
    * Called when the user commits a non-empty change. Awaited if a Promise
    * is returned — used to keep the field in "saving" state while the
    * underlying mutation resolves.
+   *
+   * Reject to refuse the edit: the field returns to `value` and the rejection
+   * is not rethrown. Reporting it is yours — you know what failed.
    */
   onSave: (next: string) => void | Promise<void>;
   /** Multiline mode renders a textarea + Cmd/Ctrl+Enter to save (Enter just adds a line). */
@@ -103,6 +106,18 @@ export function BentoInlineEdit({
     setSaving(true);
     try {
       await onSave(next);
+    } catch {
+      // A rejection used to escape here: `commit` is wired to `onBlur`, which
+      // discards the promise it returns, so it landed as an unhandledrejection
+      // — reported by a product's error tracking, and by a test run as an
+      // unhandled error. Awaiting a promise is a claim to handle both ways it
+      // settles, and this was only handling one.
+      //
+      // The edit goes back, which is what BentoEntityShell decided one layer up
+      // (VDS58): the caller refused it, so the persisted value is the truth.
+      // Announcing the failure stays the caller's — it knows what failed and
+      // already owns the toast.
+      setDraft(value);
     } finally {
       setSaving(false);
       setEditing(false);

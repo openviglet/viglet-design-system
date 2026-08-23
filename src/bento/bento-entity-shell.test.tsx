@@ -247,6 +247,60 @@ describe("BentoInlineEdit", () => {
     expect(onSave).toHaveBeenCalledWith("New")
   })
 
+  // VDS59 — commit awaits onSave, and onBlur discards the promise commit
+  // returns, so a rejection had nothing subscribed to it and left the run as an
+  // unhandledrejection. It went unseen because the only caller in this package,
+  // persistField, catches its own mutation and resolves.
+  it("puts the edit back when onSave rejects, without escaping the run", async () => {
+    // On `process`, not on `window`: the rejection escapes into the runner,
+    // which is why reverting the catch makes vitest report "unhandled errors"
+    // rather than firing jsdom's unhandledrejection event. A window listener
+    // here would pass either way and prove nothing.
+    const unhandled: unknown[] = []
+    const record = (reason: unknown) => unhandled.push(reason)
+    process.on("unhandledRejection", record)
+
+    try {
+      const user = userEvent.setup()
+      const onSave = vi.fn().mockRejectedValue(new Error("refused"))
+
+      draw(<BentoInlineEdit value="Old" onSave={onSave} ariaLabel="Title" />)
+
+      await user.click(screen.getByText("Old"))
+      const field = screen.getByLabelText("Title")
+      await user.clear(field)
+      await user.type(field, "New")
+      await user.tab()
+
+      expect(onSave).toHaveBeenCalledWith("New")
+      // Back to display mode showing the persisted value, not the refused edit.
+      expect(screen.getByRole("button")).toHaveTextContent("Old")
+
+      // A turn past the rejection, which is where it used to surface.
+      await new Promise((resolve) => setTimeout(resolve, 0))
+      expect(unhandled).toEqual([])
+    } finally {
+      process.off("unhandledRejection", record)
+    }
+  })
+
+  it("reopens on the persisted value after a refusal, not the refused text", async () => {
+    const user = userEvent.setup()
+    const onSave = vi.fn().mockRejectedValue(new Error("refused"))
+
+    draw(<BentoInlineEdit value="Old" onSave={onSave} ariaLabel="Title" />)
+
+    await user.click(screen.getByText("Old"))
+    await user.clear(screen.getByLabelText("Title"))
+    await user.type(screen.getByLabelText("Title"), "New")
+    await user.tab()
+
+    // The draft is what the next edit starts from — it must not still hold the
+    // value that was refused.
+    await user.click(screen.getByRole("button"))
+    expect(screen.getByLabelText("Title")).toHaveValue("Old")
+  })
+
   it("does not save an unchanged value", async () => {
     const user = userEvent.setup()
     const onSave = vi.fn()
