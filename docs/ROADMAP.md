@@ -4,7 +4,6 @@
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — All three consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS30** (deps: typescript-eslint supporting TS 7) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — It throws on import against ts.versionMajorMinor >= 7, and no side-by-side recipe makes a peer resolve a second TypeScript. → §VDS30
-- 📋 **VDS55** (deps: —) **the console gate covers every story render and no unit test, so a React error in jsdom passes** — VDS53 installed it in the Storybook setup alone, and an act warning in jsdom is what it would catch. → §VDS55
 
 ## Block B — Bento becomes a design-system layer
 
@@ -21,16 +20,6 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
-
-## Done when — VDS55
-
-- **a React console error in a unit test fails that run** src/test/setup.ts installs the
-  gate, proven by making a test log one on purpose and watching it fail.
-- **a test that means to log an error can declare it** an exported helper replaces the
-  story parameters the unit project does not have, and bento-entity-shell's catch paths
-  use it.
-- **the blame is as fine as jsdom allows** whether afterEach names the test or only the
-  file is established by a deliberate failure, not assumed from the story gate.
 
 ## Non-goals
 

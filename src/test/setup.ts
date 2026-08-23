@@ -3,10 +3,24 @@ import "@testing-library/jest-dom/vitest"
 import { cleanup } from "@testing-library/react"
 import { afterEach, vi } from "vitest"
 
+import {
+  assertNoUndeclaredConsoleErrors,
+  installConsoleErrorGate,
+} from "./console-error-gate"
+
+// VDS55 — the console gate, which VDS53 gave to the catalogue and not to this
+// project. Installed at module scope so the patch is in place before the first
+// render, and asserted per test: jsdom renders inside `act()`, so unlike the
+// story project the error lands in the test that caused it. A test that means to
+// log one calls `expectConsoleErrors()`.
+installConsoleErrorGate()
+
 // Testing Library's auto-cleanup only registers itself when globals are on; this
 // suite runs with explicit imports, so unmount between tests here instead.
-afterEach(() => {
+// Unmount first: an effect cleanup that logs belongs to the test being torn down.
+afterEach(async () => {
   cleanup()
+  await assertNoUndeclaredConsoleErrors()
 })
 
 // jsdom implements neither of these, and components in this package read both:

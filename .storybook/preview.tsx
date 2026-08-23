@@ -5,7 +5,7 @@ import { I18nextProvider } from "react-i18next";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
-import { allowConsoleErrors } from "./console-error-gate";
+import { allowConsoleErrors } from "../src/test/console-error-gate";
 import { vigDesignSystemTranslations } from "../src/i18n";
 import "../src/styles/index.css";
 // The brand faces are a separate import since VDS41 — 741KB of woff2 that a

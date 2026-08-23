@@ -3,7 +3,7 @@ import { afterAll } from "vitest"
 import {
   assertNoUndeclaredConsoleErrors,
   installConsoleErrorGate,
-} from "./console-error-gate"
+} from "../src/test/console-error-gate"
 
 // Storybook 10 applies preview.tsx's decorators and parameters to the story-set
 // project on its own, so a story is checked with the i18n provider, the router
