@@ -14,6 +14,16 @@ export function useGridAdapter<T>(
   data: T[] | undefined | null,
   config: GridAdapterConfig<T>,
 ): VigGridItem[] {
+  // The memo read every one of these and depended on `data` alone, so a `url`
+  // builder closing over a route param — or a `description` extractor closing
+  // over the active locale — kept handing back the previous array. Depending on
+  // `config` itself would be the other error: every call site writes an inline
+  // literal, which is a new object each render, and the memo would never hold.
+  // The extractors are the real inputs, so they are the dependencies; a caller
+  // that keeps them stable keeps the memo, and one that inlines an arrow pays
+  // for a recompute rather than reading a stale row.
+  const { id, name, description, url, icon } = config;
+
   return useMemo(() => {
     if (!Array.isArray(data) || data.length === 0) return [];
 
@@ -29,7 +39,7 @@ export function useGridAdapter<T>(
     // a numeric primary key reach it as a number — the field lied about its own
     // type at every call site that trusted it. Coerced once, here.
     const resolveId = (item: T): string => {
-      if (!config.id) {
+      if (!id) {
         // Convention fallback: most product entities carry an `id`. Nothing in T
         // promises one, so it is read as unknown rather than asserted.
         const candidate = (item as { id?: unknown }).id;
@@ -37,18 +47,18 @@ export function useGridAdapter<T>(
           ? ""
           : String(candidate);
       }
-      if (typeof config.id === "function") {
-        return String(config.id(item));
+      if (typeof id === "function") {
+        return String(id(item));
       }
-      return String(item[config.id]);
+      return String(item[id]);
     };
 
     return data.map((item) => ({
       id: resolveId(item),
-      name: resolveField(item, config.name),
-      description: resolveField(item, config.description),
-      url: config.url(item),
-      icon: config.icon ? resolveField(item, config.icon) || null : null,
+      name: resolveField(item, name),
+      description: resolveField(item, description),
+      url: url(item),
+      icon: icon ? resolveField(item, icon) || null : null,
     }));
-  }, [data]);
+  }, [data, id, name, description, url, icon]);
 }

@@ -323,6 +323,8 @@ Console-era, `@deprecated`, still exported — see [the swap table](#two-eras-an
 
 `useIsMobile`, `useDateLocale`, `useGridAdapter`, `useSubPageBreadcrumb`
 
+`useGridAdapter(data, config)` tracks each extractor in `config`, not the object holding them, so a `url` builder that closes over a route param or a locale re-maps the rows when it changes. Pass the config inline if you like — keep the extractors themselves stable (a field name, a module-level function, a `useCallback`) and the memo holds.
+
 ### Contexts
 
 `BreadcrumbProvider` / `useBreadcrumb`, `UserProvider` / `useCurrentUser`, `ThemeProvider` / `useTheme`

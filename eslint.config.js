@@ -38,6 +38,11 @@ export default tseslint.config([
         "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
+      // Left a warning when VDS28 promoted the compiler-era rules, and it spent
+      // that time reporting a real stale memo in an exported hook while lint
+      // exited 0. A dependency array this rule disagrees with is a defect, so
+      // the next one stops the gate instead of adding a line to its output.
+      "react-hooks/exhaustive-deps": "error",
     },
   },
   {
