@@ -25,6 +25,31 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
+### §VDS52 useGridAdapter memoizes on half its inputs
+
+`useGridAdapter(data, config)` is an exported hook: a product hands it rows and a
+`config` of extractors — `name`, `description`, `url`, `icon`, `id` — and gets
+`VigGridItem[]` back. The memo reads all of them and depends on `[data]` alone.
+
+So the hook is correct only while `config` never changes. It does. A `url` builder
+closes over a route param; a `description` extractor closes over the active locale. When
+one changes and the rows do not, the memo returns the previous array: links to the old
+route, descriptions in the old language. Nothing warns at runtime, which is what makes
+it hard to trace back to a hook two layers away.
+
+`react-hooks/exhaustive-deps` flags it. It is a warning, and `npm run lint` exits 0 on
+warnings, so the gate reports green over a known-wrong dependency array. VDS28 promoted
+the compiler-era rules to errors and left this one alone; the file is the evidence that
+the remaining warning was not the harmless half.
+
+The reason it was left is real, and it is why this is a task and not a one-line fix.
+Adding `config` to the array is wrong in the common case: every call site writes an
+inline literal, so `config` is a fresh reference each render and the memo stops
+memoizing — trading correctness for the recomputation the hook exists to avoid.
+
+Done right, the hook depends on the extractors rather than on the object holding them,
+and the gate that let this through stops exiting 0 over it.
+
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components

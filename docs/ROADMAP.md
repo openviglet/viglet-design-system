@@ -4,6 +4,7 @@
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — All three consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS30** (deps: typescript-eslint supporting TS 7) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — It throws on import against ts.versionMajorMinor >= 7, and no side-by-side recipe makes a peer resolve a second TypeScript. → §VDS30
+- 📋 **VDS52** (deps: —) **useGridAdapter memoizes on data alone while config supplies every extractor, so a changed config yields stale rows** — exhaustive-deps stayed a warning after VDS28, and the naive [data, config] fix defeats the memo for an inline literal. → §VDS52
 
 ## Block B — Bento becomes a design-system layer
 
@@ -20,6 +21,17 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
+
+## Done when — VDS52
+
+- **the memo recomputes when an extractor changes and the rows do not** a test renders
+  the hook, swaps the url builder with the same data array, and asserts the returned
+  urls changed.
+- **a stable config does not defeat the memo** the same test asserts the returned array
+  is referentially identical across a re-render with unchanged data and extractors.
+- **npm run lint fails on the dependency array it used to warn about** exhaustive-deps
+  is an error, so the next wrong memo stops the gate instead of adding a line to its
+  output.
 
 ## Non-goals
 
