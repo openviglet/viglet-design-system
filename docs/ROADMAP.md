@@ -4,6 +4,7 @@
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — All three consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS30** (deps: typescript-eslint supporting TS 7) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — It throws on import against ts.versionMajorMinor >= 7, and no side-by-side recipe makes a peer resolve a second TypeScript. → §VDS30
+- 📋 **VDS56** (deps: —) **two components read the viewport into state an effect catches up, so the first paint is wrong** — useIsMobile was rewritten to useSyncExternalStore for this, and set-state-in-effect misses both: the setState sits behind a named function. → §VDS56
 
 ## Block B — Bento becomes a design-system layer
 
@@ -20,6 +21,16 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
+
+## Done when — VDS56
+
+- **the first render reports the real viewport** a test renders both at a narrow width
+  and asserts the thinned-out output on the first pass, with no second commit.
+- **neither reads the viewport through a useState an effect catches up** both go through
+  useSyncExternalStore, the way useIsMobile already does, with a server snapshot that
+  names its guess.
+- **the gate that missed this stops missing it** whatever catches a setState behind a
+  named function is turned on, or the roadmap records why nothing can.
 
 ## Non-goals
 

@@ -25,6 +25,33 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
+### §VDS56 The leftovers of the useIsMobile rewrite
+
+`useIsMobile` used to copy a media query into `useState` and let an effect catch it up.
+It was rewritten to `useSyncExternalStore` because that returned the desktop answer on
+the first render whatever the viewport was, and corrected one commit later — a layout
+flash on every mobile load. Its own comment says so.
+
+Two places still do it.
+
+`useDensityFactor`, in `floating-formulas-bg.tsx`, starts at `1` — full density — and
+computes the real factor in an effect. On a phone the first paint is therefore 35
+drifting terms, every bond and three blurred orbs, which is precisely the "many animated
++ blurred layers at once" its own doc comment says mobile GPUs flicker on, and only then
+does it drop to a quarter of that. The mitigation misses the paint it exists for, and
+pays a second full render to get there.
+
+`BentoBackToTop` starts `false` and reads `window.scrollY` in an effect. A page restored
+to a saved scroll position, or opened on an anchor, renders without the button and then
+pops it in.
+
+Neither is caught, and that is the part that belongs to this block.
+`react-hooks/set-state-in-effect` is an error here — VDS28 promoted it for this exact
+shape — and it fires on neither, because in both the `setState` sits inside a named
+function the effect calls rather than in the effect body. A rule that matches on syntax
+stops at one level of indirection, so the gate reports clean over the defect it was
+turned on to name.
+
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components
