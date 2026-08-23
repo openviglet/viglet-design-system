@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { parseLocale } from "@/lib/utils";
 import { Globe } from "lucide-react";
 import React, { useState } from "react";
 
@@ -58,15 +59,15 @@ const COUNTRY_OVERRIDES: Record<string, string> = {
 export function getLocaleCountryCode(locale: string): string {
     if (!locale) return "";
 
-    const normalizedLocale = locale.trim().replaceAll("-", "_").toUpperCase();
-    const localeParts = normalizedLocale.split("_");
+    // Shared with `getFlagEmoji`, which read the region itself and understood
+    // only the underscore spelling. One normalisation, so the next locale format
+    // lands in one place; the maps below stay here, where they are used.
+    const { language: languageCode, region: regionCode } = parseLocale(locale);
 
-    if (localeParts.length > 1 && localeParts[1].length === 2) {
-        const regionCode = localeParts[1];
+    if (regionCode) {
         return (COUNTRY_OVERRIDES[regionCode] || regionCode).toLowerCase();
     }
 
-    const languageCode = localeParts[0];
     const countryByLanguage = LANGUAGE_TO_COUNTRY[languageCode];
     if (countryByLanguage) {
         return countryByLanguage.toLowerCase();

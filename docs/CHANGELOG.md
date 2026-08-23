@@ -37,6 +37,7 @@
 - ✅ **VDS61** **a slow icon search overwrites a newer one, so the grid shows results for a query already replaced** — a search response that is no longer the current one is dropped, so the grid keeps the results for the query on screen.
 - ✅ **VDS63** **concurrent mutating requests each fetch their own CSRF token, so a rotating server invalidates all but the last** — concurrent mutating requests share one CSRF fetch, and axios.ts is covered by tests for the first time.
 - ✅ **VDS64** **exportToXlsx names every sheet Logging and writes no header row at all when the data is empty** — the sheet is named by the caller and the header row is written from headers, so an empty export still has columns.
+- ✅ **VDS65** **getFlagEmoji returns the globe for pt-BR, the form every browser produces, and truncateMiddle overruns its own limit** — both spellings of a locale reach the region through one shared normalisation, and truncateMiddle honours its limit.
 
 ## Block B — Bento becomes a design-system layer
 
