@@ -25,32 +25,6 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
-### §VDS57 The rule catches the shape nobody writes
-
-VDS28 promoted `react-hooks/set-state-in-effect` to an error. VDS56 then found two
-components doing exactly what it names, both of which it had reported clean on for as
-long as they existed.
-
-A probe of the three ways to write the same defect settles why. Given `useEffect` with
-`setN(window.innerWidth)` in the body, the rule fires. Move that identical call into a
-`function update() { … }` the effect calls, or an arrow assigned to a const, and it
-fires on neither. One level of indirection is the whole difference — and the indirect
-form is the one anybody writes, because it is what a listener needs: you name the
-function so you can hand it to `addEventListener` and remove it again.
-
-So the rule catches the shape nobody writes and misses the shape everybody does. That is
-worse than it being off, because a clean run is read as evidence.
-
-VDS56 left two tests standing in its place, and they are better evidence than a lint
-rule: they hold the painted frame rather than the syntax behind it. But they guard two
-components. A third written tomorrow is unguarded, and the two that were fixed had been
-wrong since they were written.
-
-What closes it is a check that reads what an effect *reaches* rather than what it
-contains — call-graph awareness, a compiler diagnostic, or a lint rule of this project's
-own. Which is affordable is the task, and finding that none is would also close it, in
-the ledger.
-
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components

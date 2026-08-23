@@ -32,6 +32,7 @@
 - ✅ **VDS54** **FloatingFormulasBg seeds its layout from Date.now() inside render, so the same props render differently every time** — the layout is a function of the props and a seed prop pins it; a page that wants variety now passes seed itself.
 - ✅ **VDS55** **the console gate covers every story render and no unit test, so a React error in jsdom passes** — a React console error in a jsdom test fails that test by name; a test that means to log one calls expectConsoleErrors().
 - ✅ **VDS56** **two components read the viewport into state an effect catches up, so the first paint is wrong** — both read the viewport through useSyncExternalStore, so the first painted frame is already thinned and the button already shown.
+- ✅ **VDS57** **set-state-in-effect fires only when the setState is in the effect body, which is the form nobody writes** — a project rule reports the setState an effect reaches through a named function; both pre-VDS56 components fail it.
 
 ## Block B — Bento becomes a design-system layer
 
