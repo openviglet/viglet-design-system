@@ -25,6 +25,30 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
+### §VDS54 A render that is not a function of its props
+
+`buildFloatingItems` opens with `seededRandom(Date.now() % 100000)`, and it is called
+from a `useMemo` during render. So the function named for determinism has none: the same
+props produce a different layout on every mount, and `extraTokens` is an array prop, so
+a consumer passing a literal re-seeds it on every render.
+
+That is not a cosmetic complaint about a decorative background. It is the property every
+gate in this block depends on. The parity digest reads resolved layout and computed
+styles to assert one look across products; a snapshot, a visual diff and a screenshot
+review all compare two renders and expect the difference to mean something. None of them
+can say anything about a component that answers differently each time it is asked. It is
+outside the reach of the tooling by construction, which is why an unrelated gate found
+its duplicate keys.
+
+The second defect is in the same line of code. `[...texts].sort(() => rand() - 0.5)` is
+not a shuffle: a comparator must impose a consistent order, and one returning a fresh
+random sign for the same pair does not. What the engine does with an inconsistent
+comparator is unspecified, and the distribution it lands on is measurably biased toward
+leaving elements near where they started — so the pool is not sampled evenly either.
+
+Done right, the seed is derived from something the props carry, and the shuffle is a
+shuffle. Both make the render reproducible, which is what lets a gate hold it.
+
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components

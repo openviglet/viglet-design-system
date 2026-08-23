@@ -4,6 +4,7 @@
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — All three consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS30** (deps: typescript-eslint supporting TS 7) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — It throws on import against ts.versionMajorMinor >= 7, and no side-by-side recipe makes a peer resolve a second TypeScript. → §VDS30
+- 📋 **VDS54** (deps: —) **FloatingFormulasBg seeds its layout from Date.now() inside render, so the same props render differently every time** — Nothing can assert a render that is not derived from props, and the shuffle is an invalid comparator sort. → §VDS54
 
 ## Block B — Bento becomes a design-system layer
 
@@ -20,6 +21,15 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
+
+## Done when — VDS54
+
+- **the same props render the same layout twice** a test mounts the component twice with
+  identical props and asserts the term positions match.
+- **the shuffle is a shuffle** Fisher-Yates over the seeded generator replaces the
+  comparator sort, so the pool is sampled evenly.
+- **the seed is reachable by a consumer that needs a fixed layout** it derives from
+  props rather than the clock, so a product can pin it and a gate can hold the render.
 
 ## Non-goals
 
