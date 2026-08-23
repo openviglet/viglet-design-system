@@ -1,29 +1,48 @@
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import { useMemo, useSyncExternalStore, type CSSProperties } from "react";
 import "./floating-formulas-bg.css";
 
+/** Viewport width below which the backdrop thins to the paired factor. */
+const DENSITY_STEPS: readonly (readonly [number, number])[] = [
+  [480, 0.25],
+  [640, 0.35],
+  [768, 0.5],
+  [1024, 0.7],
+];
+
+function densityFactor(): number {
+  const w = window.innerWidth;
+  for (const [below, factor] of DENSITY_STEPS) {
+    if (w < below) return factor;
+  }
+  return 1;
+}
+
+function subscribeToViewport(onChange: () => void) {
+  window.addEventListener("resize", onChange, { passive: true });
+  return () => window.removeEventListener("resize", onChange);
+}
+
 /**
- * Returns a 0..1 density factor based on viewport width so the backdrop can
- * thin itself out on smaller screens. Mobile GPUs flicker when asked to
- * composite many animated + blurred layers at once; scaling the element
- * count keeps the vibe without the jank.
+ * A 0..1 density factor from the viewport width, so the backdrop thins itself
+ * out on smaller screens. Mobile GPUs flicker when asked to composite many
+ * animated + blurred layers at once; scaling the element count keeps the vibe
+ * without the jank.
+ *
+ * The viewport is external state, so it is read through `useSyncExternalStore`
+ * rather than copied into a `useState` an effect then catches up. That form
+ * started at 1 — full density — whatever the screen was, so a phone's first
+ * paint was the whole 35 terms, every bond and three blurred orbs: exactly the
+ * composite this hook exists to avoid, and it arrived before the thinning did.
+ * `useIsMobile` was rewritten away from the same shape, for the same reason.
  */
 function useDensityFactor(): number {
-  const [factor, setFactor] = useState(1);
-  useEffect(() => {
-    const compute = () => {
-      const w = window.innerWidth;
-      if (w < 480) return 0.25;
-      if (w < 640) return 0.35;
-      if (w < 768) return 0.5;
-      if (w < 1024) return 0.7;
-      return 1;
-    };
-    const update = () => setFactor(compute());
-    update();
-    window.addEventListener("resize", update, { passive: true });
-    return () => window.removeEventListener("resize", update);
-  }, []);
-  return factor;
+  return useSyncExternalStore(
+    subscribeToViewport,
+    densityFactor,
+    // On the server there is no viewport. Full density matches what the effect
+    // version rendered first anyway, so no consumer's markup changes.
+    () => 1,
+  );
 }
 
 /**

@@ -1,7 +1,16 @@
 import { IconArrowUp } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 const REVEAL_THRESHOLD_PX = 480;
+
+function subscribeToScroll(onChange: () => void) {
+  window.addEventListener("scroll", onChange, { passive: true });
+  return () => window.removeEventListener("scroll", onChange);
+}
+
+function scrolledPastThreshold(): boolean {
+  return window.scrollY > REVEAL_THRESHOLD_PX;
+}
 
 /**
  * Floating "scroll to top" button — appears with an iOS spring
@@ -13,16 +22,18 @@ const REVEAL_THRESHOLD_PX = 480;
  * the long way back when content is heavy.
  */
 export function BentoBackToTop() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    function update() {
-      setVisible(window.scrollY > REVEAL_THRESHOLD_PX);
-    }
-    update();
-    window.addEventListener("scroll", update, { passive: true });
-    return () => window.removeEventListener("scroll", update);
-  }, []);
+  // The scroll position is external state, so it is read through
+  // `useSyncExternalStore` rather than copied into a `useState` an effect then
+  // catches up. That form rendered hidden whatever the position was, so a page
+  // restored to a saved offset — or opened on an anchor — showed no button and
+  // then popped it in. `useIsMobile` was rewritten away from the same shape.
+  const visible = useSyncExternalStore(
+    subscribeToScroll,
+    scrolledPastThreshold,
+    // No scroll position on the server; hidden is what the effect version
+    // rendered first anyway.
+    () => false,
+  );
 
   return (
     <button

@@ -31,6 +31,7 @@
 - ✅ **VDS53** **a story passes collapsible to a multiple accordion, React rejects the DOM attribute, and the suite stays green** — an undeclared React console error fails the story file that logged it; the accordion and a duplicate-key bond node no longer log one.
 - ✅ **VDS54** **FloatingFormulasBg seeds its layout from Date.now() inside render, so the same props render differently every time** — the layout is a function of the props and a seed prop pins it; a page that wants variety now passes seed itself.
 - ✅ **VDS55** **the console gate covers every story render and no unit test, so a React error in jsdom passes** — a React console error in a jsdom test fails that test by name; a test that means to log one calls expectConsoleErrors().
+- ✅ **VDS56** **two components read the viewport into state an effect catches up, so the first paint is wrong** — both read the viewport through useSyncExternalStore, so the first painted frame is already thinned and the button already shown.
 
 ## Block B — Bento becomes a design-system layer
 
