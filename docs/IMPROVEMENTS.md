@@ -39,3 +39,78 @@ not, each of those becomes a regression two products discover separately at runt
 Move the suites for the components that moved, leave the ones covering product-specific
 tiles behind, and adapt their mocks - the user context and the i18n passthrough both
 have package-level equivalents.
+
+## Block C — One look across products
+
+### §VDS73 Counting the consumers that are not SPAs
+
+`consumers.json` exists because a claim checked against a subset is a claim nobody
+checked, and its own note says the membership is what the guards read. The membership is
+three Vite SPAs. Two Next installs — the cloud console, and the schools admissions front
+door — appear nowhere in it, which is the same defect one framework wider.
+
+What the omission costs is specific. The render-parity digest carries one accent per
+consumer and so carries none for a server-rendered page. The prose guard cannot fail a
+paragraph that says "all three consumers" while five install the package. And
+`use:local` discovers consumers by walking a products root on the current line, so a
+checkout outside that tree is unreachable by the loop this package offers instead of a
+publish.
+
+Adding the entries is the small half. The larger half is that a Next consumer takes a
+different set of entry points: no `./router`, because react-router-dom is what the App
+Router replaces, and no `./vite`. A guard that assumes every consumer resolves
+`./router` is asserting something two of five cannot do, and `chrome: "console"` does
+not describe a public front door either — so the entry needs a value that says which
+chrome and which framework, not just which package.
+
+Nothing here asks for a fourth and fifth product to be supported differently. It asks
+for them to be counted, so that the next one-look claim is checked against what actually
+installs this package.
+
+## Block D — The package in a server-rendered framework
+
+### §VDS71 The directive the Vite consumers never needed
+
+Measured, not inferred: `dist/index.es.js` contains zero `use client` directives.
+Nothing was wrong for the three declared consumers — Vite serves the whole tree as
+client code, so the directive would have been noise. It stops being noise the moment a
+consumer compiles with React Server Components, where a module without it is a server
+module: the App Router then fails the build on the first hook it reaches.
+
+Two Next consumers already exist. cloud-console pays for it by gating its whole tree
+behind an effect, which ships a spinner as its server-rendered HTML; japode/schools pays
+for it with a re-export module carrying the directive for the package. Both are the same
+workaround written twice, in repositories that cannot fix it.
+
+The directive belongs on the build output here, because only this build knows which
+modules are interactive. The cheap version is a banner on every emitted chunk, which is
+honest for a library that is interactive throughout and costs a server consumer nothing
+it was not already paying. The precise version marks only the entry points that touch
+hooks, context or Radix, and leaves the pure helpers and the token exports
+server-renderable — worth more to a consumer, and worth deciding rather than assuming.
+
+Whichever lands, the CSS entries and `exports.json` are unaffected: this is about the
+JavaScript the framework classifies, not about styles.
+
+### §VDS72 One theme source, and it has to survive SSR
+
+`ThemeProvider` initialises its state with `localStorage.getItem(storageKey)` inside the
+`useState` callback. That callback runs during render, so on any server render there is
+no `localStorage` and it throws — which is why cloud-console renders a spinner until an
+effect says the client is ready, and why japode/schools does not use this provider at
+all.
+
+The package already depends on the answer. Its own `Toaster` calls `useTheme` from
+next-themes, and `next-themes` is a declared peer dependency, so a consumer that mounts
+`ThemeProvider` and a Toaster is running two theme sources that agree only by luck: this
+one writes a class from its own storage key, next-themes writes one from `theme`.
+
+So the fix is a convergence rather than a patch. Either this provider becomes a thin
+wrapper over next-themes — same props, same storage key, one source of truth, SSR-safe
+because next-themes already is — or it reads storage in an effect and seeds from
+`defaultTheme`, which fixes the throw but leaves the two sources. The wrapper is the
+smaller surface and the one the Toaster already assumes.
+
+Either way `useTheme` keeps its current shape, because three consoles import it. A
+consumer that mounts nothing and lets next-themes own the class must keep working too —
+that is what schools does today.

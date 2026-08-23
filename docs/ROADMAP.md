@@ -9,6 +9,15 @@
 
 - ⏳ **VDS18** (deps: VDS1 ✅, VDS11 ✅, a 2026.3.3 release to npm) **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — The product cannot import from here until a release, so its copies stay until that cutover. → §VDS18
 
+## Block C — One look across products
+
+- 📋 **VDS73** (deps: —) **consumers.json declares three Vite SPAs, so the two Next installs are counted by no guard and no parity digest** — The file's own note makes membership what the guards read, so a consumer absent from it is one every one-look claim skips. → §VDS73
+
+## Block D — The package in a server-rendered framework
+
+- 📋 **VDS71** (deps: —) **the published build carries no use client directive, so a React Server Components consumer fails on the first hook** — Two Next consumers already work around it in their own repositories, and only this build knows which modules are interactive. → §VDS71
+- 📋 **VDS72** (deps: —) **ThemeProvider reads localStorage in a useState initialiser, so it throws on any server render** — The package's own Toaster already reads next-themes, so a consumer mounting both runs two theme sources that agree only by luck. → §VDS72
+
 ## Done when — VDS5
 
 - **A consumer that re-declares an exported component fails its own build** The export
@@ -20,6 +29,24 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
+
+## Done when — VDS71
+
+- **A server component can import the package and build** A Next App Router route
+  renders an exported component with no use client of the consumer's own, and next build
+  succeeds.
+
+## Done when — VDS72
+
+- **ThemeProvider renders on a server without throwing** One theme source drives the
+  class, a consumer that mounts only next-themes still themes correctly, and useTheme
+  keeps its shape for the three consoles.
+
+## Done when — VDS73
+
+- **Every install of this package is an entry in consumers.json** The two Next consumers
+  are listed with the entries they actually take, and the prose guard fails a paragraph
+  that names only the SPAs.
 
 ## Non-goals
 
