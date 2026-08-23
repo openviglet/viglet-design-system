@@ -19,14 +19,21 @@ installConsoleErrorGate()
 // suite runs with explicit imports, so unmount between tests here instead.
 // Unmount first: an effect cleanup that logs belongs to the test being torn down.
 afterEach(async () => {
-  cleanup()
+  if (typeof document !== "undefined") cleanup()
   await assertNoUndeclaredConsoleErrors()
 })
+
+// VDS72 — everything below patches jsdom, and a file that declares
+// `@vitest-environment node` has no jsdom to patch. That is not a corner case
+// here: rendering without a DOM is exactly what a server-render test asserts,
+// and this setup runs for it too. The console gate above is environment-free
+// and stays.
+const hasDom = typeof window !== "undefined"
 
 // jsdom implements neither of these, and components in this package read both:
 // the reduced-motion guard the accessibility baseline requires, and the resize
 // observation every Radix popper does on open.
-if (!window.matchMedia) {
+if (hasDom && !window.matchMedia) {
   window.matchMedia = vi.fn().mockImplementation((query: string) => ({
     matches: false,
     media: query,
@@ -41,7 +48,7 @@ if (!window.matchMedia) {
 
 // jsdom implements no scrolling at all, and any component that keeps an active
 // row in view calls this on every move — the command palette does.
-if (!Element.prototype.scrollIntoView) {
+if (hasDom && !Element.prototype.scrollIntoView) {
   Element.prototype.scrollIntoView = vi.fn()
 }
 
@@ -49,13 +56,13 @@ if (!Element.prototype.scrollIntoView) {
 // the three calls. Without them the trigger's own handler throws before the menu
 // mounts, so every dropdown in this package is unopenable in a unit test — which
 // is why the entity shell's delete path had never been driven from one.
-if (!Element.prototype.hasPointerCapture) {
+if (hasDom && !Element.prototype.hasPointerCapture) {
   Element.prototype.hasPointerCapture = () => false
   Element.prototype.setPointerCapture = () => {}
   Element.prototype.releasePointerCapture = () => {}
 }
 
-if (!globalThis.ResizeObserver) {
+if (hasDom && !globalThis.ResizeObserver) {
   globalThis.ResizeObserver = class {
     observe() {}
     unobserve() {}

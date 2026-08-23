@@ -180,6 +180,21 @@ function App() {
 }
 ```
 
+`ThemeProvider` is a thin wrapper over [`next-themes`](https://github.com/pacocoursey/next-themes),
+which is a peer dependency. Three consequences worth knowing:
+
+- **It renders on a server.** No `localStorage` is read during render, so a
+  server-rendered or React Server Components consumer can mount it.
+- **There is one theme source.** This package's `Toaster` reads `next-themes`
+  directly, so mounting both used to run two theme systems writing the class
+  from two storage keys. It no longer does.
+- **You can skip it.** A consumer that mounts `next-themes`'s own provider gets
+  the same result, and `useTheme` from here reads that one — useful when a
+  framework already sets the theme up for you.
+
+`useTheme()` returns `{ theme, setTheme }`, where `theme` is the *setting*
+(`"light" | "dark" | "system"`) rather than the resolved colour.
+
 ### 4. Setup Axios CSRF protection
 
 ```ts

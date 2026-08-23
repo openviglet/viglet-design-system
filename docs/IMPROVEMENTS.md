@@ -76,26 +76,3 @@ server-renderable — worth more to a consumer, and worth deciding rather than a
 
 Whichever lands, the CSS entries and `exports.json` are unaffected: this is about the
 JavaScript the framework classifies, not about styles.
-
-### §VDS72 One theme source, and it has to survive SSR
-
-`ThemeProvider` initialises its state with `localStorage.getItem(storageKey)` inside the
-`useState` callback. That callback runs during render, so on any server render there is
-no `localStorage` and it throws — which is why cloud-console renders a spinner until an
-effect says the client is ready, and why japode/schools does not use this provider at
-all.
-
-The package already depends on the answer. Its own `Toaster` calls `useTheme` from
-next-themes, and `next-themes` is a declared peer dependency, so a consumer that mounts
-`ThemeProvider` and a Toaster is running two theme sources that agree only by luck: this
-one writes a class from its own storage key, next-themes writes one from `theme`.
-
-So the fix is a convergence rather than a patch. Either this provider becomes a thin
-wrapper over next-themes — same props, same storage key, one source of truth, SSR-safe
-because next-themes already is — or it reads storage in an effect and seeds from
-`defaultTheme`, which fixes the throw but leaves the two sources. The wrapper is the
-smaller surface and the one the Toaster already assumes.
-
-Either way `useTheme` keeps its current shape, because three consoles import it. A
-consumer that mounts nothing and lets next-themes own the class must keep working too —
-that is what schools does today.

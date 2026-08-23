@@ -12,7 +12,6 @@
 ## Block D — The package in a server-rendered framework
 
 - 📋 **VDS71** (deps: —) **the published build carries no use client directive, so a React Server Components consumer fails on the first hook** — Two Next consumers already work around it in their own repositories, and only this build knows which modules are interactive. → §VDS71
-- 📋 **VDS72** (deps: —) **ThemeProvider reads localStorage in a useState initialiser, so it throws on any server render** — The package's own Toaster already reads next-themes, so a consumer mounting both runs two theme sources that agree only by luck. → §VDS72
 
 ## Done when — VDS5
 
@@ -25,12 +24,6 @@
 - **A server component can import the package and build** A Next App Router route
   renders an exported component with no use client of the consumer's own, and next build
   succeeds.
-
-## Done when — VDS72
-
-- **ThemeProvider renders on a server without throwing** One theme source drives the
-  class, a consumer that mounts only next-themes still themes correctly, and useTheme
-  keeps its shape for the three consoles.
 
 ## Done when — VDS73
 

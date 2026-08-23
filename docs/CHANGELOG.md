@@ -80,3 +80,4 @@
 
 ## Block D — The package in a server-rendered framework
 
+- ✅ **VDS72** **ThemeProvider reads localStorage in a useState initialiser, so it throws on any server render** — ThemeProvider is a thin wrapper over next-themes: it renders on a server without reading localStorage, and the Toaster's theme source is now the provider's too.
