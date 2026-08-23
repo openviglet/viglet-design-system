@@ -4,6 +4,7 @@
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — All three consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS30** (deps: typescript-eslint supporting TS 7) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — It throws on import against ts.versionMajorMinor >= 7, and no side-by-side recipe makes a peer resolve a second TypeScript. → §VDS30
+- 📋 **VDS51** (deps: —) **twenty strings the package asks for in its own namespaces ship in neither locale, so Portuguese renders English** — They fall back to an English defaultValue, and the i18n test is scoped to bento, which is where the strings do exist. → §VDS51
 
 ## Block B — Bento becomes a design-system layer
 
@@ -20,6 +21,12 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
+
+## Done when — VDS51
+
+- **Every string the package asks for, it ships in both locales** A Portuguese product
+  renders no English from this package, and a key added to one locale only fails the
+  build.
 
 ## Non-goals
 

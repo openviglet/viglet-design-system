@@ -25,6 +25,26 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
+### §VDS51 The strings a component asks for are the package's to ship
+
+Nine of the twenty are the whole icon picker - `forms.iconPicker.chooseAnIcon`,
+`searchIcons`, `aiSuggest`, `searching`, `noIconsFound`, `done` and the rest. The others
+are `forms.formActions.*`, `common.active|idle` with their tooltips, `common.docs`,
+`common.apps` and two `nav.*` entries. Each is called with an English `defaultValue`, so
+nothing crashes and nothing shows a raw key: a Portuguese product simply renders
+English, which is the quiet failure this block keeps meeting.
+
+`bento-i18n.test.tsx` checks exactly this and is scoped to `bento.*` on purpose - those
+are the strings that layer owns - so the console-era and shared UI components have never
+been asked. The scoping was right and the gap is that nothing else took the other half.
+
+Ship the twenty in both locales and widen the check to every namespace under
+`src/i18n/locales`, keeping the rule that a key outside them is the consumer's to
+provide: `llm.title` and `home.title` are asked for too and are correctly absent.
+
+Worth measuring while there: fifty-one shipped keys are asked for nowhere in this
+package. Some are a consumer's to use; some are likely dead.
+
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components
