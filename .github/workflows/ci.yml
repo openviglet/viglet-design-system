@@ -69,8 +69,11 @@ jobs:
       - name: dist is still publishable after the catalogue build
         run: pnpm run check:dist
 
-      # Same reason, for the other half: the catalogue build rewriting dist
-      # would change what a consumer bundles, and `build` measured it before
-      # that happened.
+      # Same reason, for the other two: the catalogue build rewriting dist
+      # would change what a consumer bundles and what their types resolve to,
+      # and `build` checked both before that happened.
       - name: dist still weighs what it did after the catalogue build
         run: pnpm run check:size
+
+      - name: every subpath still imports and type-checks after it
+        run: pnpm run check:exports

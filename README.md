@@ -410,6 +410,12 @@ the subpath exists. `./floating-formulas-bg` has its own entry *and*
 correct rather than a leak. The subpath is for a consumer who wants only that
 background.
 
+Every subpath in the table above is also **imported and type-checked as you
+would import it** on each build: one fixture pulls all fifteen through the real
+`exports` map, and a generated probe imports a value from each typed entry and
+uses it, so a `types` field resolving to the wrong declarations fails here
+rather than turning into `any` in your editor.
+
 **`./bento` requires `react-router-dom`.** The package declares that peer
 optional because the root entry does not need it — only `./router` and `./bento`
 do, and npm cannot mark a peer required for one entry point and optional for

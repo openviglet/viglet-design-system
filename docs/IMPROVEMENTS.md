@@ -25,24 +25,6 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
-### §VDS49 An export is a promise a consumer can keep
-
-`check-dist` asserts every path the `exports` map promises is a file in `dist`. That is
-weaker than the promise: a `types` field pointing at the wrong `.d.ts`, an `import`
-naming a chunk that fails to resolve, a subpath whose entry throws at module scope -
-each leaves the file exactly where it said and breaks in a product.
-
-`./assets` and `./fonts` were both added this session with hand-written `import`,
-`require` and `types` fields, and what said they worked was running a probe by hand.
-That is the thing a gate is for, and this repository has the machinery already:
-`check-size` bundles fixtures through the real `exports` map with a symlinked
-`node_modules`, which is the same resolution a consumer gets.
-
-Bundle every subpath, not the three the size fixtures happen to use, and type-check a
-small consumer against the typed ones - importing a value from each and using it, so a
-`types` field that resolves to the wrong declarations is a failure rather than an `any`.
-Both currently pass, which is the right moment to write them down.
-
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components

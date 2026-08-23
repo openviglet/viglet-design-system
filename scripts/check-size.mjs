@@ -30,20 +30,12 @@
  *   node scripts/check-size.mjs --json      # machine-readable result
  */
 import { gzipSync } from "node:zlib"
-import {
-  mkdirSync,
-  readdirSync,
-  mkdtempSync,
-  readFileSync,
-  rmSync,
-  symlinkSync,
-  writeFileSync,
-} from "node:fs"
+import { readFileSync, readdirSync, writeFileSync } from "node:fs"
 import { basename, dirname, join, resolve } from "node:path"
-import { tmpdir } from "node:os"
 import { fileURLToPath } from "node:url"
 
 import { EXTERNAL_PATTERNS } from "./lib/externals.mjs"
+import { withConsumer } from "./lib/consumer-fixture.mjs"
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..")
 const PKG = JSON.parse(readFileSync(join(root, "package.json"), "utf8")).name
@@ -363,17 +355,10 @@ export function drift(name, measured, recorded, tolerance = TOLERANCE) {
 async function bundle(name, { source }) {
   const { build } = await import("vite")
 
-  const dir = mkdtempSync(join(tmpdir(), `vds-size-${name}-`))
-  try {
-    // A real node_modules entry, so Vite resolves through the package's exports
-    // map exactly as a product does. A junction is used because it needs no
-    // elevation on Windows; symlinkSync falls back to it there.
-    const linked = join(dir, "node_modules", ...PKG.split("/"))
-    mkdirSync(dirname(linked), { recursive: true })
-    symlinkSync(root, linked, "junction")
-
-    writeFileSync(join(dir, "entry.js"), source)
-
+  // The fixture is `withConsumer`: a junction to this repository under a real
+  // node_modules, so every specifier resolves through the exports map exactly
+  // as a product does. Shared with check-exports rather than written twice.
+  return withConsumer(root, PKG, { "entry.js": source }, async (dir) => {
     const output = await build({
       root: dir,
       logLevel: "silent",
@@ -411,9 +396,7 @@ async function bundle(name, { source }) {
     const wire = wireBytes(chunks)
 
     return { raw, gzip, wire, chunks, modules }
-  } finally {
-    rmSync(dir, { recursive: true, force: true })
-  }
+  })
 }
 
 /**
