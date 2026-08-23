@@ -19,6 +19,7 @@
 - ✅ **VDS41** **the shipped stylesheet is 77% base64 fonts: 741KB of its 964KB is 22 inlined font files** — The faces are a ./fonts import a product opts into, taking ./styles from 594KB to 31KB gzipped, and a fixture proves they still resolve.
 - ✅ **VDS42** **the size gate records a baseline but never runs on a local build, so a regression is found on the pull request** — check-size runs at the end of build beside check-dist, so a size regression fails locally; it costs 1.6s of an 11s build.
 - ✅ **VDS43** **the size baseline counts the consumer's own dependencies, so a dependabot bump to xlsx can fail the build** — The library build and the size fixture read one externals module, so the baseline describes this package: root-only fell from 328KB to 87KB gzipped.
+- ✅ **VDS44** **the shipped fonts.css and preset.css import @fontsource by bare specifier, resolved in the consumer's tree** — dist/fonts.css is built, not copied: 5KB of rules pointing at 11 woff2 files beside it, so nothing resolves through the consumer's tree.
 
 ## Block B — Bento becomes a design-system layer
 

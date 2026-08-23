@@ -103,6 +103,40 @@ for (const file of files) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// VDS44 — a shipped stylesheet resolves nothing through the consumer's tree.
+//
+// `fonts.css` used to ship verbatim with `@import "@fontsource-variable/inter"`
+// in it, resolved by whatever the consumer's bundler looked at. That worked
+// only because all three products use pnpm's hoisted linker, and its failure is
+// the silent kind: a missing `@import` is not an error, the type falls back to
+// `system-ui`, and nobody sees it until a screenshot.
+//
+// So: no bare specifier in any shipped CSS, and every `url()` points at a file
+// that is actually in the package.
+for (const file of files.filter((f) => f.endsWith(".css"))) {
+  const css = readFileSync(file, "utf8")
+  const name = relative(repoRoot, file)
+
+  // Only a real rule — the doc comments in preset.css quote `@import` lines as
+  // usage examples, and quoting one is not shipping one.
+  const withoutComments = css.replaceAll(/\/\*[\s\S]*?\*\//g, "")
+  for (const [, specifier] of withoutComments.matchAll(/@import\s+["']([^"']+)["']/g)) {
+    if (specifier.startsWith(".") || specifier.startsWith("/")) continue
+    failures.push(
+      `${name} imports "${specifier}" by bare specifier, which resolves in the ` +
+        "consumer's tree rather than here. It works under a hoisting linker and " +
+        "silently does nothing under another.",
+    )
+  }
+
+  for (const [, url] of css.matchAll(/url\(\s*["']?(\.[^"')]+)["']?\s*\)/g)) {
+    if (!existsSync(resolve(dirname(file), url))) {
+      failures.push(`${name} references ${url}, which is not in dist/`)
+    }
+  }
+}
+
 if (failures.length > 0) {
   console.error(`\ncheck-dist: ${failures.length} problem(s) in dist/\n`)
   for (const failure of failures) console.error(`  - ${failure}`)

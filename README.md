@@ -113,11 +113,16 @@ The brand faces are a **separate import**, and one you probably want:
 
 They used to be inside `./styles`, where they were 741 KB of its 964 KB —
 Vite's library mode inlines every asset regardless of `assetsInlineLimit`, so
-all 22 Unicode subsets of Inter and Plus Jakarta Sans were base64 in the CSS.
-Base64 of an already-compressed woff2 does not compress again, which is why
-2,276 rules gzipped to 594 KB. Splitting them takes `./styles` to 31 KB gzipped
-and lets the faces be cached, preloaded, or dropped by a product already serving
-Inter.
+every subset of Inter and Plus Jakarta Sans was base64 in the CSS, twice over
+because the preset imported them as well. Base64 of an already-compressed woff2
+does not compress again, which is why 2,276 rules gzipped to 594 KB. Splitting
+them takes `./styles` to 31 KB gzipped.
+
+`./fonts` is 5 KB of rules pointing at 11 `.woff2` files shipped beside it in
+`dist/fonts/`. Nothing in it resolves through your `node_modules`, and your CDN
+and browser cache the faces apart from the rules — so a change to any rule no
+longer re-downloads every font, and a product already serving Inter can drop
+this copy.
 
 **Upgrading:** add the second line, or the type falls back through `--font-sans`
 to `system-ui`. That is a real look rather than a broken one, but it is not the

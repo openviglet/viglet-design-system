@@ -72,7 +72,7 @@
   ],
   "scripts": {
     "dev": "vite build --watch",
-    "build": "tsc -b && node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && vite build && node -e \"require('fs').cpSync('src/styles/preset.css','dist/preset.css');require('fs').cpSync('src/styles/fonts.css','dist/fonts.css')\" && node scripts/emit-exports.mjs && node scripts/check-dist.mjs && node scripts/check-size.mjs",
+    "build": "tsc -b && node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && vite build && node -e \"require('fs').cpSync('src/styles/preset.css','dist/preset.css')\" && node scripts/build-fonts.mjs && node scripts/emit-exports.mjs && node scripts/check-dist.mjs && node scripts/check-size.mjs",
     "check:dist": "node scripts/check-dist.mjs",
     "check:size": "node scripts/check-size.mjs",
     "typecheck": "tsc -b --force",
@@ -82,7 +82,8 @@
     "use:local": "node scripts/use-local.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "build:fonts": "node scripts/build-fonts.mjs"
   },
   "peerDependencies": {
     "i18next": ">=25.0.0",

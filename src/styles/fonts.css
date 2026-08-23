@@ -23,6 +23,15 @@
    Skip it and the type falls back through `--font-sans` to
    `system-ui`, which is a real look rather than a broken one — and
    the right one for a product supplying its own copy of Inter.
+
+   This file is a *source*, not what ships. `scripts/build-fonts.mjs`
+   resolves the two imports below here and writes `dist/fonts.css`
+   with the faces as files in `dist/fonts/`, so nothing resolves
+   through the consumer's node_modules and the woff2 can be cached
+   apart from the rules. Shipping this file verbatim was VDS44: it
+   worked only under a hoisting linker and failed silently under any
+   other, and `check-dist` now refuses a bare specifier in anything
+   shipped.
    ============================================================= */
 
 @import "@fontsource-variable/inter";
