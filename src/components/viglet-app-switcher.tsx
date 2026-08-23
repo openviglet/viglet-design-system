@@ -44,6 +44,9 @@ export interface VigletAppSwitcherProps {
  * Pre-configured Viglet app switcher — same list of apps across the entire
  * suite (Cloud, Turing, Shio, Dumont, Docs). Highlights the current product
  * and opens the others in a new tab.
+ * viglet-ds-consumer-pair -- the suite a visitor can navigate to, which is not
+ * the set that installs this package: Docs installs nothing, and the Cloud
+ * Console and Schools install it without appearing as destinations.
  *
  * Keeping the list hard-coded here ensures the navigation is consistent
  * across every deployment. Apps that need to customize the URLs (custom
@@ -61,6 +64,8 @@ export function VigletAppSwitcher({
   const { t } = useTranslation();
   const u = { ...DEFAULT_URLS, ...urls };
 
+  // viglet-ds-consumer-pair -- destinations in the suite's navigation, not the
+  // consumer set. Same reason as the docblock above.
   const apps: AppSwitcherItem[] = [
     {
       id: "cloud",

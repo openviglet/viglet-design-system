@@ -4,7 +4,15 @@ import { describe, expect, it } from "vitest"
 
 const root = resolve(import.meta.dirname, "..")
 const manifest = JSON.parse(readFileSync(join(root, "consumers.json"), "utf8")) as {
-  consumers: { id: string; name: string; package: string; entries: string[]; chrome: string }[]
+  consumers: {
+    id: string
+    name: string
+    package: string
+    framework: "vite" | "next"
+    chrome: string
+    accent: string
+    entries: string[]
+  }[]
 }
 
 const NAMES = manifest.consumers.map((c) => c.name)
@@ -102,14 +110,35 @@ describe("the consumer set is declared, not remembered", () => {
     expect(offenders, "widen the sentence rather than leaving a consumer out").toEqual([])
   })
 
-  it("holds the render contract to every declared token set", () => {
-    // VDS25 compared two token sets. A third consumer means a third set, and
-    // the digest is where "one look" stops being an intention.
+  it("holds the render contract to every accent a consumer renders with", () => {
+    // VDS25 compared two token sets and this counted them against the number of
+    // consumers, which held while both numbers were three and stopped meaning
+    // anything the moment they diverged.
+    //
+    // VDS73 measured it: not one of the six consumers overrides
+    // `--vg-accent-from`. All six take the preset default, which is the `cool`
+    // set. So `warm` and `green` are hues the digest proves the mechanism
+    // against, not accents anybody ships, and a sixth consumer never implied a
+    // sixth set. Counting sets against consumers was a category error.
+    //
+    // What is true, and what this asserts: every accent a consumer declares has
+    // a set in the digest, so the day a product re-keys — which is the whole
+    // point of VDS23 making the accent a token — the digest is required to
+    // carry it. The floor of three keeps the mechanism proven across hues
+    // rather than against the one colour everybody happens to use.
     const parity = readFileSync(join(root, "src", "bento", "render-parity.parity.test.tsx"), "utf8")
-    const sets = parity.match(/^\s{2}[a-z]+: \{$/gm) ?? []
+    const sets = (parity.match(/^\s{2}([a-z]+): \{$/gm) ?? []).map((m) => m.trim().replace(":", "").replace("{", "").trim())
+
+    for (const accent of new Set(manifest.consumers.map((c) => c.accent))) {
+      expect(
+        sets,
+        `a consumer renders with the "${accent}" accent and the parity digest has no such set`,
+      ).toContain(accent)
+    }
+
     expect(
       sets.length,
-      "the parity digest compares fewer token sets than there are consumers",
-    ).toBeGreaterThanOrEqual(manifest.consumers.length)
+      "the digest proves the token mechanism across hues, and needs more than one",
+    ).toBeGreaterThanOrEqual(3)
   })
 })

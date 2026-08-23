@@ -109,7 +109,10 @@ describe("the locale bundles hold no product's strings", () => {
     const bento = (vigDesignSystemTranslations[lang] as Record<string, unknown>).bento
     const text = JSON.stringify(bento)
 
-    for (const product of ["Turing", "Shio", "Dumont"]) {
+    // VDS73 — every consumer's name, not the three the strings were extracted
+// from. A shared string naming any product is the defect; widening the list
+// only strengthens it.
+for (const product of ["Turing", "Shio", "Dumont", "Cloud Console", "Cloud Home", "Schools"]) {
       expect(text, `the ${lang} bento strings name ${product}`).not.toContain(product)
     }
   })

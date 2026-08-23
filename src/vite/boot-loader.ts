@@ -64,9 +64,13 @@ export interface VigletBootLoaderOptions {
 
 /**
  * Vite plugin that injects the shared Viglet boot loader into `index.html` at
- * build/dev time. Every product (Turing, Shio, Dumont, Cloud Marketing)
- * consumes this plugin so the loader visuals stay identical across the
- * ecosystem and there's a single place to evolve the design.
+ * build/dev time, so the loader visuals stay identical across the ecosystem and
+ * there is a single place to evolve the design.
+ *
+ * Four of the six consumers take it: Turing, Shio, Dumont and the Cloud Home.
+ * The Cloud Console and Schools are Next applications and have no Vite build to
+ * plug into — they render their own first paint, which is what a server-rendered
+ * page does instead of a boot loader.
  *
  * What the plugin injects:
  *

@@ -49,6 +49,8 @@ export interface AppSwitcherProps {
  * Application switcher — a side panel listing related apps in a multi-product
  * suite (e.g. Cloud, Turing, Shio, Dumont). Designed to live in the top-right
  * corner of a sticky header.
+ * viglet-ds-consumer-pair -- an example of a suite, not a claim about who
+ * installs this package. The apps are the caller's to pass in.
  */
 export function AppSwitcher({
   open,

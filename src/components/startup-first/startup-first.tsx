@@ -9,6 +9,9 @@ import "./startup-first.css";
  * StartupFirst — compound component for the product's first-access /
  * initial-setup screen (shown the first time an admin opens Turing, Dumont or
  * Shio, before any user has been configured).
+ * viglet-ds-consumer-pair -- the three that have a first-access screen. The
+ * Cloud Console provisions through Cloud, and the Cloud Home and Schools are
+ * public surfaces with no admin to set up.
  *
  * Mirrors the {@link Login} composition style so every product can reuse the
  * same palette, animated background and glass card. Content is fully slot-

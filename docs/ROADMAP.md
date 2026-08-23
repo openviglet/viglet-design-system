@@ -7,19 +7,11 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS73** (deps: —) **consumers.json declares three Vite SPAs, so the two Next installs are counted by no guard and no parity digest** — The file's own note makes membership what the guards read, so a consumer absent from it is one every one-look claim skips. → §VDS73
-
 ## Done when — VDS5
 
 - **A consumer that re-declares an exported component fails its own build** The export
   list ships as a build artefact, and the lint names the import that replaces the local
   copy rather than only reporting that a duplicate exists.
-
-## Done when — VDS73
-
-- **Every install of this package is an entry in consumers.json** The two Next consumers
-  are listed with the entries they actually take, and the prose guard fails a paragraph
-  that names only the SPAs.
 
 ## Non-goals
 

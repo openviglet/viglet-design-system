@@ -7,39 +7,103 @@
     "prose that names a subset as though it were the whole is a test failure,",
     "not a style note.",
     "",
+    "VDS73 widened it again, and by more than the line predicted. It expected two",
+    "Next installs; three consumers were absent, because cloud-frontend is a Vite",
+    "SPA nobody had written down either. Being outside the products root that",
+    "`use:local` walks is what kept all three invisible: the loop this package",
+    "offers instead of a publish could not reach them, so nothing ever asked.",
+    "",
+    "`framework` is why the membership could not just grow. A Next consumer takes",
+    "a different set: no `./router`, because the App Router is what replaces",
+    "react-router-dom, and no `./vite`. A guard that assumes every consumer",
+    "resolves `./router` asserts something three of six cannot do.",
+    "",
+    "`chrome` says which surface, and `console` stopped covering it: a platform",
+    "home and a public admissions front door are neither consoles nor bento.",
+    "",
+    "`accent` is the token set a consumer renders with, and today every one of",
+    "them says `cool`. That is worth recording rather than assuming: VDS23 made",
+    "the brand accent a token so a product could re-key without forking a header,",
+    "and no product has re-keyed yet. The parity digest reads this, so the day one",
+    "does, the digest is required to carry that set.",
+    "",
     "`entries` is what each product imports today, read from its source. It is a",
     "snapshot and will drift; what does not drift is the membership, which is",
-    "what the guards read."
+    "what the guards read. Measured over product source only: shio-react's test",
+    "directory greps for `./bento` to census the pages that import it, and",
+    "counting a lint that looks for a subpath as the product taking it would",
+    "record the opposite of what SH887 says."
   ],
   "consumers": [
     {
       "id": "shio",
       "name": "Shio",
       "package": "shio-react",
-      "entries": [
-        "."
-      ],
-      "chrome": "console"
+      "framework": "vite",
+      "chrome": "console",
+      "accent": "cool",
+      "entries": [".", "./styles", "./vite"]
     },
     {
       "id": "turing",
       "name": "Turing",
       "package": "turing-app",
+      "framework": "vite",
+      "chrome": "bento",
+      "accent": "cool",
       "entries": [
         ".",
-        "./router"
-      ],
-      "chrome": "console"
+        "./bento",
+        "./bento.css",
+        "./floating-formulas-bg",
+        "./i18n",
+        "./router",
+        "./styles",
+        "./vite"
+      ]
     },
     {
       "id": "dumont",
       "name": "Dumont",
       "package": "dumont-react",
+      "framework": "vite",
+      "chrome": "console",
+      "accent": "cool",
       "entries": [
         ".",
-        "./router"
-      ],
-      "chrome": "console"
+        "./floating-formulas-bg",
+        "./i18n",
+        "./router",
+        "./styles",
+        "./vite"
+      ]
+    },
+    {
+      "id": "cloud-console",
+      "name": "Cloud Console",
+      "package": "@viglet/cloud-console",
+      "framework": "next",
+      "chrome": "console",
+      "accent": "cool",
+      "entries": [".", "./i18n", "./styles"]
+    },
+    {
+      "id": "cloud-frontend",
+      "name": "Cloud Home",
+      "package": "@viglet/cloud-frontend",
+      "framework": "vite",
+      "chrome": "platform-home",
+      "accent": "cool",
+      "entries": [".", "./i18n", "./styles", "./vite"]
+    },
+    {
+      "id": "schools",
+      "name": "Schools",
+      "package": "schools",
+      "framework": "next",
+      "chrome": "front-door",
+      "accent": "cool",
+      "entries": [".", "./fonts", "./preset", "./styles"]
     }
   ]
 }

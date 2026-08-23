@@ -5,10 +5,12 @@ import { dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 import { afterAll, beforeAll, describe, expect, it } from "vitest"
 
-// This CLI ships to Turing, Shio and Dumont and runs in their CI, so a change to
-// its parsing turns a product's build red or, worse, silently green. It is
-// exercised the way a consumer runs it — as a process, over files on disk —
-// because the exit code and the printed replacement are the whole contract.
+// This CLI ships to every consumer — Turing, Shio, Dumont, the Cloud Console,
+// the Cloud Home and Schools — and runs in the CI of the ones that have adopted
+// it, so a change to its parsing turns a product's build red or, worse, silently
+// green. It is exercised the way a consumer runs it — as a process, over files
+// on disk — because the exit code and the printed replacement are the whole
+// contract.
 //
 // The manifest is a fixture rather than this package's own dist/exports.json:
 // the test job runs before the build job, so a test that needed dist would pass

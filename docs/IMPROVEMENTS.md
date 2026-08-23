@@ -26,28 +26,3 @@ it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-
 issue 10940 and move back when it supports 7.1.
 
 ## Block C — One look across products
-
-### §VDS73 Counting the consumers that are not SPAs
-
-`consumers.json` exists because a claim checked against a subset is a claim nobody
-checked, and its own note says the membership is what the guards read. The membership is
-three Vite SPAs. Two Next installs — the cloud console, and the schools admissions front
-door — appear nowhere in it, which is the same defect one framework wider.
-
-What the omission costs is specific. The render-parity digest carries one accent per
-consumer and so carries none for a server-rendered page. The prose guard cannot fail a
-paragraph that says "all three consumers" while five install the package. And
-`use:local` discovers consumers by walking a products root on the current line, so a
-checkout outside that tree is unreachable by the loop this package offers instead of a
-publish.
-
-Adding the entries is the small half. The larger half is that a Next consumer takes a
-different set of entry points: no `./router`, because react-router-dom is what the App
-Router replaces, and no `./vite`. A guard that assumes every consumer resolves
-`./router` is asserting something two of five cannot do, and `chrome: "console"` does
-not describe a public front door either — so the entry needs a value that says which
-chrome and which framework, not just which package.
-
-Nothing here asks for a fourth and fifth product to be supported differently. It asks
-for them to be counted, so that the next one-look claim is checked against what actually
-installs this package.
