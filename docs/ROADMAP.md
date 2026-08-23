@@ -8,6 +8,7 @@
 ## Block B — Bento becomes a design-system layer
 
 - ⏳ **VDS18** (deps: VDS1 ✅, VDS11 ✅, a 2026.3.3 release to npm) **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — The product cannot import from here until a release, so its copies stay until that cutover. → §VDS18
+- 📋 **VDS62** (deps: —) **a rejecting layout save keeps the panel open but drops the rejection, so nothing tells the user** — run awaits the product's write with no catch on three onClick handlers, and the panel has no failure surface. → §VDS62
 
 ## Done when — VDS5
 
@@ -20,6 +21,15 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
+
+## Done when — VDS62
+
+- **a rejecting write produces no unhandled rejection** a test rejects each of the three
+  controls and process.on reports none, the way VDS59 and VDS60 are held.
+- **the panel says the write failed** staying open reads as an unresponsive button; the
+  user needs to see that the save was refused, not infer it.
+- **the product can still report it itself** BentoEntityShell owns its own toast, so the
+  rejection is handed back rather than swallowed here.
 
 ## Non-goals
 

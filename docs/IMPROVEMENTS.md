@@ -39,3 +39,35 @@ not, each of those becomes a regression two products discover separately at runt
 Move the suites for the components that moved, leave the ones covering product-specific
 tiles behind, and adapt their mocks - the user context and the i18n passthrough both
 have package-level equivalents.
+
+### §VDS62 Half a failure path
+
+```
+const run = (write) => async () => {
+  if (!write) return;
+  await write();
+  onClose();
+};
+```
+
+Its comment says "Each control awaits the product's write before closing, so the panel
+never shuts on a save that then fails." That half works — a probe rejecting `onSave`
+leaves the panel open. The other half is missing: there is no `catch`, and `run` is
+wired to three `onClick` handlers — reset, save, save-global — where React discards the
+promise it returns. So the rejection leaves the run as `unhandledRejection: Error: write
+failed`.
+
+This is the same shape as VDS59, down to the tell. There, a `finally` showed the author
+knew the await could throw; here it is a comment reasoning about the failure explicitly.
+In both, the visible consequence was handled and the rejection was not.
+
+Staying open is right but it is not enough on its own. Nothing on the panel says
+anything: the user presses Save, the panel does not close, and no message appears —
+which reads as an unresponsive button rather than a refused write. `layout.saving` is
+the only state the panel takes, and it is a boolean the product sets for a spinner;
+there is nowhere to put "this failed".
+
+So the fix is the pair VDS60 settled for the user provider: catch what the write rejects
+with, and give the panel somewhere to show it. Announcing it may well belong to the
+product, as it does in `BentoEntityShell` — but then the panel has to hand the rejection
+back rather than swallow it.
