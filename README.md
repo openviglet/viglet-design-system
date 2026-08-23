@@ -195,6 +195,21 @@ which is a peer dependency. Three consequences worth knowing:
 `useTheme()` returns `{ theme, setTheme }`, where `theme` is the *setting*
 (`"light" | "dark" | "system"`) rather than the resolved colour.
 
+### React Server Components
+
+The published entries carry a `"use client"` directive where they need one, so a
+Next App Router server component can import this package without adding a
+directive of its own:
+
+| Entry | |
+|---|---|
+| `.`, `./bento`, `./router`, `./floating-formulas-bg`, `./i18n` | client — they reach React state, context or a browser API |
+| `./assets`, `./vite` | server-renderable — logo data, and a build-time Vite plugin |
+
+`./i18n` is the one worth pointing at: it looks pure, and it pulls
+`i18next-browser-languagedetector`. `./assets` staying unmarked is deliberate —
+a server component can read a product logo without a client boundary.
+
 ### 4. Setup Axios CSRF protection
 
 ```ts

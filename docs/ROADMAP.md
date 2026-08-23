@@ -11,19 +11,11 @@
 
 ## Block D — The package in a server-rendered framework
 
-- 📋 **VDS71** (deps: —) **the published build carries no use client directive, so a React Server Components consumer fails on the first hook** — Two Next consumers already work around it in their own repositories, and only this build knows which modules are interactive. → §VDS71
-
 ## Done when — VDS5
 
 - **A consumer that re-declares an exported component fails its own build** The export
   list ships as a build artefact, and the lint names the import that replaces the local
   copy rather than only reporting that a duplicate exists.
-
-## Done when — VDS71
-
-- **A server component can import the package and build** A Next App Router route
-  renders an exported component with no use client of the consumer's own, and next build
-  succeeds.
 
 ## Done when — VDS73
 

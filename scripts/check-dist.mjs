@@ -137,6 +137,49 @@ for (const file of files.filter((f) => f.endsWith(".css"))) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// VDS71 — every entry is on one side of the React Server Components boundary,
+// and the build says which.
+//
+// Under RSC a module without `"use client"` *is* a server module, so an entry
+// that reaches a hook and lacks the directive fails a consumer's build on the
+// first one — which is what two Next consumers were each working around in
+// their own repository. The reverse costs too: a directive on `./vite`, a
+// build-time plugin that runs in Node, or on `./assets`, which is logo data,
+// takes away a server component's ability to import them for no gain.
+//
+// The list lives in vite.config.ts, which is what writes the banner. This
+// asserts the emitted files agree with it, in both formats, because a config
+// that stops taking effect is silent: the build still succeeds and the
+// directive is simply gone.
+const CLIENT_ENTRIES = new Set(["index", "bento", "router", "floating-formulas-bg", "i18n"])
+const SERVER_ENTRIES = new Set(["assets", "vite"])
+const DIRECTIVE = /^\s*["']use client["']/
+
+for (const entry of [...CLIENT_ENTRIES, ...SERVER_ENTRIES]) {
+  for (const file of [`${entry}.es.js`, `${entry}.cjs`]) {
+    const path = join(dist, file)
+    if (!existsSync(path)) {
+      failures.push(`${file} is missing, so its client boundary cannot be checked`)
+      continue
+    }
+    const has = DIRECTIVE.test(readFileSync(path, "utf8"))
+    if (CLIENT_ENTRIES.has(entry) && !has) {
+      failures.push(
+        `${file} carries no "use client" directive. It reaches React state, ` +
+          "context or a browser API, so a server component importing it fails " +
+          "the consumer's build on the first hook.",
+      )
+    }
+    if (SERVER_ENTRIES.has(entry) && has) {
+      failures.push(
+        `${file} carries a "use client" directive and should not. It is ` +
+          "server-renderable, and marking it takes that away from a consumer.",
+      )
+    }
+  }
+}
+
 if (failures.length > 0) {
   console.error(`\ncheck-dist: ${failures.length} problem(s) in dist/\n`)
   for (const failure of failures) console.error(`  - ${failure}`)

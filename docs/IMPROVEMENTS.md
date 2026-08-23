@@ -53,26 +53,3 @@ for them to be counted, so that the next one-look claim is checked against what 
 installs this package.
 
 ## Block D — The package in a server-rendered framework
-
-### §VDS71 The directive the Vite consumers never needed
-
-Measured, not inferred: `dist/index.es.js` contains zero `use client` directives.
-Nothing was wrong for the three declared consumers — Vite serves the whole tree as
-client code, so the directive would have been noise. It stops being noise the moment a
-consumer compiles with React Server Components, where a module without it is a server
-module: the App Router then fails the build on the first hook it reaches.
-
-Two Next consumers already exist. cloud-console pays for it by gating its whole tree
-behind an effect, which ships a spinner as its server-rendered HTML; japode/schools pays
-for it with a re-export module carrying the directive for the package. Both are the same
-workaround written twice, in repositories that cannot fix it.
-
-The directive belongs on the build output here, because only this build knows which
-modules are interactive. The cheap version is a banner on every emitted chunk, which is
-honest for a library that is interactive throughout and costs a server consumer nothing
-it was not already paying. The precise version marks only the entry points that touch
-hooks, context or Radix, and leaves the pure helpers and the token exports
-server-renderable — worth more to a consumer, and worth deciding rather than assuming.
-
-Whichever lands, the CSS entries and `exports.json` are unaffected: this is about the
-JavaScript the framework classifies, not about styles.

@@ -7,6 +7,21 @@ import dts from "vite-plugin-dts"
 
 import { isExternal } from "./scripts/lib/externals.mjs"
 
+// VDS71 — which built entries a React Server Components consumer must treat as
+// client code. Named here rather than derived, because the answer is a fact
+// about each entry's contents and the build cannot infer intent: `./vite` runs
+// in Node at build time and `./assets` is logo data, so both stay
+// server-renderable and a server component can import them.
+const CLIENT_ENTRIES = new Set([
+  "index",
+  "bento",
+  "router",
+  "floating-formulas-bg",
+  // Not obvious: this pulls i18next-browser-languagedetector, which reads
+  // navigator and localStorage.
+  "i18n",
+])
+
 // Stylesheets a consumer imports by their own subpath, copied verbatim so the
 // entry in the exports map is the file itself.
 //
@@ -93,6 +108,27 @@ export default defineConfig({
           "react/jsx-runtime": "jsxRuntime",
           "react-router-dom": "ReactRouterDOM",
         },
+        // VDS71 — the directive the three Vite consumers never needed. Vite
+        // serves the whole tree as client code, so its absence cost nothing;
+        // under React Server Components a module without it *is* a server
+        // module, and the App Router fails the build on the first hook it
+        // reaches. Two Next consumers were each paying for that in their own
+        // repository, one gating its whole tree behind an effect and one
+        // re-exporting this package through a module that carries the
+        // directive for it.
+        //
+        // Per entry rather than on every chunk, because two of the seven are
+        // genuinely server-safe and marking them would take that away:
+        // `./vite` is a build-time plugin that runs in Node, and `./assets` is
+        // logo data. The other five reach React state, context or a browser
+        // API — `./i18n` included, which is easy to misread as pure until you
+        // see it pull i18next-browser-languagedetector.
+        //
+        // Only entries need it. The six shared chunks are not in the exports
+        // map, so nothing imports them directly, and a client entry makes its
+        // whole imported graph client anyway.
+        banner: (chunk) =>
+          chunk.isEntry && CLIENT_ENTRIES.has(chunk.name) ? '"use client";' : "",
       },
     },
     // Merged, not split per entry.
