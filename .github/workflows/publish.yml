@@ -31,6 +31,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # VDS70 — `pnpm test` runs the story project in a real browser, so this is
+      # part of the gate and not a CI-only convenience. Without it the release
+      # depended on the runner happening to have a warm playwright cache: one
+      # dispatch reached the export check, the next died at browserType.launch.
+      - name: Install Chromium
+        run: pnpm exec playwright install --with-deps chromium
+
       # The same gate CI runs on every push. A manual dispatch skips the branch
       # protection, so publishing re-runs it rather than trusting it.
       - name: Lint
