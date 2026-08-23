@@ -7,11 +7,17 @@ import dts from "vite-plugin-dts"
 
 import { isExternal } from "./scripts/lib/externals.mjs"
 
-// Stylesheets a consumer imports by their own subpath, rather than through the
-// bundle. They are copied verbatim so the entry point in the exports map is the
-// file itself, and `sideEffects` keeps them.
+// A stylesheet a consumer imports by its own subpath and that no entry pulls.
+//
+// Only bento's, and for a reason worth keeping: nothing in `src/bento` imports
+// `bento.css`, so a consumer taking the layout maths carries no CSS at all.
+// That also means the build emits nothing for it — there is no module graph to
+// find it through — so it is copied verbatim.
+//
+// `floating-formulas-bg.css` used to be here too and is not: its component
+// imports it, so `cssCodeSplit` emits it per entry. Merged, it was inside
+// `./styles` for every consumer (VDS45).
 const STANDALONE_CSS: Array<[from: string, to: string]> = [
-  ["src/components/ui/floating-formulas-bg.css", "dist/floating-formulas-bg.css"],
   ["src/bento/bento.css", "dist/bento.css"],
 ]
 
@@ -83,6 +89,14 @@ export default defineConfig({
         },
       },
     },
-    cssCodeSplit: false,
+    // Split per entry. Merged, every entry's CSS landed in one file, so
+    // floating-formulas-bg.css — a component deliberately behind its own
+    // subpath and absent from the root barrel — shipped inside ./styles to
+    // every consumer (VDS45).
+    //
+    // The main entry's stylesheet is `index.css` under splitting; `lib.cssFileName`
+    // only applies to a single-entry build, so `./styles` names that path instead.
+    // No consumer deep-imports the file, so the subpath is the whole contract.
+    cssCodeSplit: true,
   },
 })

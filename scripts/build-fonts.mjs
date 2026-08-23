@@ -28,8 +28,30 @@ import { fileURLToPath } from "node:url"
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..")
 const require = createRequire(join(root, "package.json"))
 
-/** The families `--font-sans` and `--font-brand` name, in the preset. */
-const FAMILIES = ["@fontsource-variable/inter", "@fontsource-variable/plus-jakarta-sans"]
+const SOURCE_CSS = join(root, "src", "styles", "fonts.css")
+
+/**
+ * The families to ship, read from `src/styles/fonts.css` rather than listed
+ * here.
+ *
+ * They were listed in both, which is the defect VDS43 had just removed from the
+ * externals: two places naming one set, free to disagree. Here the source
+ * stylesheet is the statement and this script is its reader.
+ */
+export function familiesIn(css) {
+  // Comments first: the banner in that file quotes the two `@import` lines a
+  // consumer writes, and quoting one is not declaring one. Reading them as
+  // declarations made this script try to resolve the package into itself.
+  const rules = css.replaceAll(/\/\*[^*]*\*+(?:[^/*][^*]*\*+)*\//g, "")
+  const found = [...rules.matchAll(/@import\s+["']([^"'.][^"']*)["']/g)].map((m) => m[1])
+  if (found.length === 0) {
+    throw new Error(
+      `${SOURCE_CSS} imports no font package — either the families moved, or this ` +
+        "script is about to write a stylesheet with no faces in it",
+    )
+  }
+  return found
+}
 
 const OUT_CSS = join(root, "dist", "fonts.css")
 const OUT_DIR = join(root, "dist", "fonts")
@@ -93,7 +115,7 @@ function main() {
 
   const parts = [BANNER]
   let files = 0
-  for (const pkg of FAMILIES) {
+  for (const pkg of familiesIn(readFileSync(SOURCE_CSS, "utf8"))) {
     const family = familyCss(pkg)
     parts.push(`/* ${pkg} */`, family.css)
     files += family.files

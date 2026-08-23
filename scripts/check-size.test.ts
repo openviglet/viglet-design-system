@@ -9,6 +9,8 @@ import {
   bentoEvidence,
   drift,
   oversizedAssets,
+  selectorsIn,
+  subpathLeakage,
 } from "./check-size.mjs"
 
 // VDS26/VDS42 — the three fixtures actually bundle at the end of
@@ -114,6 +116,37 @@ describe("what one fixture is held to", () => {
     expect(assess("root-only", { bentoExpected: false }, [plain])).toEqual([])
     expect(assess("bento", { bentoExpected: true }, [bentoChunk])).toEqual([])
     expect(assess("fonts", { bentoExpected: false, mustEmbedFonts: true }, [fontCss])).toEqual([])
+  })
+})
+
+describe("a subpath's rules staying behind its subpath", () => {
+  const subpath = { "./floating-formulas-bg.css": ".ff-term{}.ff-bond{}.ff-bond-line{}.ff-atom{}.ff-orbit{}.ff-glow{}.ff-drift{}" }
+
+  it("names the subpath and how much of it arrived", () => {
+    const leaked = asset("entry.css", ".ff-term{}.ff-bond{}.ff-bond-line{}.ff-atom{}.ff-orbit{}.ff-glow{}.ff-drift{}")
+    const found = subpathLeakage([leaked], subpath)
+
+    expect(found).toHaveLength(1)
+    expect(found[0]).toContain("./floating-formulas-bg.css")
+    expect(found[0]).toContain("7 of its selectors")
+  })
+
+  it("tolerates a few names in common — that is coincidence, not a layer", () => {
+    // Two stylesheets can each define `.sr-only`. A subpath arriving whole
+    // looks nothing like that, so the threshold is what separates them.
+    const overlap = asset("entry.css", ".ff-term{}.ff-bond{}")
+    expect(subpathLeakage([overlap], subpath)).toEqual([])
+  })
+
+  it("says nothing about a bundle with no CSS", () => {
+    expect(subpathLeakage([chunk("entry.js", "const x=1")], subpath)).toEqual([])
+  })
+
+  it("reads class selectors and not custom properties", () => {
+    // `--vg-bento-*` and friends are tokens in the preset, which a root
+    // consumer is supposed to carry. Counting them would fail every build.
+    expect([...selectorsIn(":root{--vg-bento-tone-blue-from:red}")]).toEqual([])
+    expect([...selectorsIn(".ff-term{color:red}")]).toEqual(["ff-term"])
   })
 })
 

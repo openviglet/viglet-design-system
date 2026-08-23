@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs"
 import { dirname, join, resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 
-import { rewriteFaces } from "./build-fonts.mjs"
+import { familiesIn, rewriteFaces } from "./build-fonts.mjs"
 
 const root = resolve(import.meta.dirname, "..")
 
@@ -61,6 +61,40 @@ describe("the font stylesheet is rewritten to files beside it", () => {
     const { css, files } = rewriteFaces(already, { onFile: () => {} })
     expect(css).toBe(already)
     expect(files.size).toBe(0)
+  })
+})
+
+describe("the families are named once", () => {
+  it("reads them from the source stylesheet", () => {
+    // VDS45 — they were listed here and in fonts.css, which is the defect VDS43
+    // removed from the externals: two places naming one set, free to disagree.
+    const source = readFileSync(join(root, "src", "styles", "fonts.css"), "utf8")
+    expect(familiesIn(source)).toEqual([
+      "@fontsource-variable/inter",
+      "@fontsource-variable/plus-jakarta-sans",
+    ])
+  })
+
+  it("ignores the imports the banner quotes as an example", () => {
+    // The comment in that file shows a consumer the two lines to write. Reading
+    // those as declarations made the script try to resolve this package into
+    // itself, which is how this was found.
+    const quoted = [
+      '/* Usage:',
+      '     @import "@viglet/viglet-design-system/styles";',
+      '     @import "@viglet/viglet-design-system/fonts";',
+      ' */',
+      '@import "@fontsource-variable/inter";',
+    ].join("\n")
+    expect(familiesIn(quoted)).toEqual(["@fontsource-variable/inter"])
+  })
+
+  it("refuses rather than writing a stylesheet with no faces in it", () => {
+    expect(() => familiesIn("/* nothing here */")).toThrow(/imports no font package/)
+  })
+
+  it("ignores a relative import, which is not a family", () => {
+    expect(() => familiesIn('@import "./preset.css";')).toThrow(/imports no font package/)
   })
 })
 

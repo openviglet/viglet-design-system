@@ -33,7 +33,7 @@
       "require": "./dist/assets.cjs.js"
     },
     "./exports.json": "./dist/exports.json",
-    "./styles": "./dist/viglet-design-system.css",
+    "./styles": "./dist/index.css",
     "./fonts": "./dist/fonts.css",
     "./fonts.css": "./dist/fonts.css",
     "./preset": "./dist/preset.css",

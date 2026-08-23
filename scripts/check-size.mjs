@@ -30,8 +30,16 @@
  *   node scripts/check-size.mjs --json      # machine-readable result
  */
 import { gzipSync } from "node:zlib"
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs"
-import { dirname, join, resolve } from "node:path"
+import {
+  mkdirSync,
+  readdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from "node:fs"
+import { basename, dirname, join, resolve } from "node:path"
 import { tmpdir } from "node:os"
 import { fileURLToPath } from "node:url"
 
@@ -71,6 +79,10 @@ const FIXTURES = {
       "globalThis.__vdsProbe = Object.keys(ds).length;",
     ].join("\n"),
     bentoExpected: false,
+    // And no other subpath's rules either. `./bento` had a check of its own;
+    // `./floating-formulas-bg` did not, and shipped inside `./styles` to
+    // everyone for want of one (VDS45).
+    subpathFree: true,
   },
   bento: {
     source: [
@@ -122,6 +134,47 @@ export function bentoEvidence(chunks) {
   }
 
   return found
+}
+
+/**
+ * Class selectors a stylesheet defines, as a set.
+ *
+ * Used to ask the general question the bento check asks the specific one: does
+ * a consumer of `./styles` carry rules that belong to a subpath? It did —
+ * `cssCodeSplit: false` merged every entry's CSS, so `floating-formulas-bg.css`
+ * shipped to everyone while its component sat behind its own subpath (VDS45).
+ * A bento-shaped check could not see that, which is the argument for asking by
+ * selector rather than by name.
+ */
+export function selectorsIn(css) {
+  const found = new Set()
+  for (const [, name] of css.matchAll(/(?:^|[\s,{}>+~])\.([a-zA-Z][\w-]{4,})/g)) found.add(name)
+  return found
+}
+
+/**
+ * Rules from a subpath stylesheet that turned up in a bundle that never asked
+ * for it. `subpathCss` is `{ label: css }` — the stylesheets a consumer imports
+ * separately, read from `dist`.
+ */
+export function subpathLeakage(chunks, subpathCss) {
+  const bundled = new Set()
+  for (const chunk of chunks) {
+    if (chunk.fileName.endsWith(".css")) {
+      for (const name of selectorsIn(String(chunk.source))) bundled.add(name)
+    }
+  }
+
+  const leaks = []
+  for (const [label, css] of Object.entries(subpathCss)) {
+    const shared = [...selectorsIn(css)].filter((name) => bundled.has(name))
+    // A handful of names can coincide — a utility both files happen to define.
+    // A subpath arriving whole looks nothing like that.
+    if (shared.length > 5) {
+      leaks.push(`${label}: ${shared.length} of its selectors are here, e.g. .${shared.slice(0, 3).join(", .")}`)
+    }
+  }
+  return leaks
 }
 
 /**
@@ -235,10 +288,16 @@ async function bundle(name, { source }) {
  * fixture must contain is as much a decision as what it must not, and both
  * halves have been wrong here before.
  */
-export function assess(name, fixture, chunks) {
+export function assess(name, fixture, chunks, subpathCss = {}) {
   const failures = []
   const bento = bentoEvidence(chunks)
   const faces = fontFaces(chunks)
+
+  if (fixture.subpathFree) {
+    for (const leak of subpathLeakage(chunks, subpathCss)) {
+      failures.push(`${name}: ${leak} — a subpath's rules reached a consumer that did not import it`)
+    }
+  }
 
   if (fixture.bentoExpected && bento.length === 0) {
     // Without this the opposite assertion is vacuous: a fixture that resolves
@@ -277,6 +336,43 @@ async function main() {
   const asJson = args.has("--json")
 
   const baseline = update ? {} : JSON.parse(readFileSync(BASELINE, "utf8"))
+  // The stylesheets a consumer imports separately, read from **source**.
+  //
+  // Reading them from `dist` was the first attempt and was vacuous in exactly
+  // the failure it guards: with the CSS merged, `dist/floating-formulas-bg.css`
+  // is never emitted, so there was nothing to compare the bundle against and
+  // the leak went unnoticed. The source is there either way.
+  //
+  // A stylesheet counts as a subpath's when the `exports` map publishes it as
+  // its own entry — not merely because it exists. `login.css` and
+  // `startup-first.css` belong to components in the root barrel, so their rules
+  // are exactly what `./styles` is for; a first draft swept those up and said
+  // so. Discovered rather than listed, so a fourth entry is covered the day it
+  // is added.
+  const MAIN_CHAIN = new Set(["./styles", "./preset", "./preset.css"])
+  const subpathCss = {}
+  const sources = new Map()
+  const findCss = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name)
+      if (entry.isDirectory()) findCss(full)
+      else if (entry.name.endsWith(".css")) sources.set(entry.name, full)
+    }
+  }
+  findCss(join(root, "src"))
+
+  for (const [subpath, target] of Object.entries(
+    JSON.parse(readFileSync(join(root, "package.json"), "utf8")).exports,
+  )) {
+    if (typeof target !== "string" || !target.endsWith(".css")) continue
+    if (MAIN_CHAIN.has(subpath)) continue
+    // From source, not from dist: with the CSS merged, `dist/…` is never
+    // emitted, so there would be nothing to compare against in exactly the
+    // failure this guards. A first draft read dist and was vacuous for it.
+    const source = sources.get(basename(target))
+    if (source) subpathCss[subpath] = readFileSync(source, "utf8")
+  }
+
   const measured = {}
   const failures = []
 
@@ -284,7 +380,7 @@ async function main() {
     const { raw, gzip, chunks } = await bundle(name, fixture)
     measured[name] = { raw, gzip }
 
-    failures.push(...assess(name, fixture, chunks))
+    failures.push(...assess(name, fixture, chunks, subpathCss))
 
     if (!update) {
       const d = drift(name, gzip, baseline[name]?.gzip)
