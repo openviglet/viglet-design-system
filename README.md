@@ -210,6 +210,12 @@ directive of its own:
 `i18next-browser-languagedetector`. `./assets` staying unmarked is deliberate —
 a server component can read a product logo without a client boundary.
 
+**The directive is not the whole story for a Next consumer.** `./router` and
+`./bento` import `react-router-dom` (see the peer note further down), which an
+App Router application does not use. Being marked client makes them *compile*
+under RSC; it does not make them route. Today a Next consumer takes the root
+entry, `./assets`, `./floating-formulas-bg` and the styles.
+
 ### 4. Setup Axios CSRF protection
 
 ```ts

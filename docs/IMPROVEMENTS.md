@@ -51,5 +51,3 @@ chrome and which framework, not just which package.
 Nothing here asks for a fourth and fifth product to be supported differently. It asks
 for them to be counted, so that the next one-look claim is checked against what actually
 installs this package.
-
-## Block D — The package in a server-rendered framework

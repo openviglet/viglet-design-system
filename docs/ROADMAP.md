@@ -9,8 +9,6 @@
 
 - 📋 **VDS73** (deps: —) **consumers.json declares three Vite SPAs, so the two Next installs are counted by no guard and no parity digest** — The file's own note makes membership what the guards read, so a consumer absent from it is one every one-look claim skips. → §VDS73
 
-## Block D — The package in a server-rendered framework
-
 ## Done when — VDS5
 
 - **A consumer that re-declares an exported component fails its own build** The export
