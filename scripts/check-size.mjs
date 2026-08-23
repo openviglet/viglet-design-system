@@ -17,6 +17,13 @@
  *   3. both stay within tolerance of a recorded baseline, so a component moved
  *      here without care surfaces as a number rather than as a feeling.
  *
+ * It runs at the end of `pnpm run build`, beside check-dist. That was not
+ * affordable when it was written: bundling 2.25 MB of base64 took about a
+ * minute, so it lived in CI and a regression was first seen in a diff. VDS40
+ * and VDS41 took the pictures and the fonts out, and the same three fixtures
+ * now bundle in 1.6 s against an 11 s build — which is the whole argument for
+ * folding it in, and the reason VDS42 waited on them.
+ *
  * Usage:
  *   node scripts/check-size.mjs             # gate
  *   node scripts/check-size.mjs --update    # re-record the baseline
@@ -216,10 +223,53 @@ async function bundle(name, { source }) {
   }
 }
 
+/**
+ * Everything one bundled fixture has to be true of, as failure messages.
+ *
+ * Exported so the tests can hold each rule without paying for a bundle: what a
+ * fixture must contain is as much a decision as what it must not, and both
+ * halves have been wrong here before.
+ */
+export function assess(name, fixture, chunks) {
+  const failures = []
+  const bento = bentoEvidence(chunks)
+  const faces = fontFaces(chunks)
+
+  if (fixture.bentoExpected && bento.length === 0) {
+    // Without this the opposite assertion is vacuous: a fixture that resolves
+    // nothing also contains no bento module.
+    failures.push(
+      `${name}: no bento artefact in a fixture that imports ./bento — the check is measuring nothing`,
+    )
+  } else if (!fixture.bentoExpected && bento.length > 0) {
+    failures.push(
+      `${name}: the bento layer reached a consumer that never imported it\n    ${bento.join("\n    ")}`,
+    )
+  }
+
+  if (fixture.mustEmbedFonts && faces === 0) {
+    failures.push(
+      `${name}: no @font-face resolved — fonts.css ships verbatim, so its ` +
+        `@fontsource imports have to resolve in the consumer's tree, and here they did not`,
+    )
+  } else if (!fixture.mustEmbedFonts && faces > 0) {
+    failures.push(
+      `${name}: ${faces} @font-face rules — the faces are back in an entry ` +
+        `that is not ./fonts, which is what VDS41 took them out of`,
+    )
+  }
+
+  for (const oversized of oversizedAssets(chunks)) {
+    failures.push(`${name}: ${oversized} — inline it smaller, or move it off this entry`)
+  }
+
+  return failures
+}
+
 async function main() {
-  const args = process.argv.slice(2)
-  const update = args.includes("--update")
-  const asJson = args.includes("--json")
+  const args = new Set(process.argv.slice(2))
+  const update = args.has("--update")
+  const asJson = args.has("--json")
 
   const baseline = update ? {} : JSON.parse(readFileSync(BASELINE, "utf8"))
   const measured = {}
@@ -229,36 +279,7 @@ async function main() {
     const { raw, gzip, chunks } = await bundle(name, fixture)
     measured[name] = { raw, gzip }
 
-    const bento = bentoEvidence(chunks)
-
-    if (fixture.bentoExpected && bento.length === 0) {
-      // Without this the first assertion is vacuous: a fixture that resolves
-      // nothing also contains no bento module.
-      failures.push(
-        `${name}: no bento artefact in a fixture that imports ./bento — the check is measuring nothing`,
-      )
-    } else if (!fixture.bentoExpected && bento.length > 0) {
-      failures.push(
-        `${name}: the bento layer reached a consumer that never imported it\n    ${bento.join("\n    ")}`,
-      )
-    }
-
-    if (fixture.mustEmbedFonts && fontFaces(chunks) === 0) {
-      failures.push(
-        `${name}: no @font-face resolved — fonts.css ships verbatim, so its ` +
-          `@fontsource imports have to resolve in the consumer's tree, and here they did not`,
-      )
-    }
-    if (!fixture.mustEmbedFonts && fontFaces(chunks) > 0) {
-      failures.push(
-        `${name}: ${fontFaces(chunks)} @font-face rules — the faces are back in an entry ` +
-          `that is not ./fonts, which is what VDS41 took them out of`,
-      )
-    }
-
-    for (const oversized of oversizedAssets(chunks)) {
-      failures.push(`${name}: ${oversized} — inline it smaller, or move it off this entry`)
-    }
+    failures.push(...assess(name, fixture, chunks))
 
     if (!update) {
       const d = drift(name, gzip, baseline[name]?.gzip)

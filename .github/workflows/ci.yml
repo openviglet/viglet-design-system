@@ -53,17 +53,11 @@ jobs:
         run: pnpm test
 
       # Runs tsc again, but it is the step that proves the published artefact
-      # builds — the thing a consumer installing from npm actually gets.
+      # builds — the thing a consumer installing from npm actually gets. It ends
+      # with check-dist and check-size, so a size regression fails here rather
+      # than in a reviewer's diff (VDS42).
       - name: Build
         run: pnpm run build
-
-      # `./bento` is a subpath rather than part of the root barrel on the
-      # argument that a console-only consumer should not pay for the layer.
-      # This is where that argument stops being an argument: it bundles two
-      # fixtures through the package's own exports map and asserts a root-only
-      # consumer carries no bento rule and no bento class.
-      - name: Size budget
-        run: pnpm run check:size
 
       - name: Build the component catalogue
         run: pnpm run build-storybook
@@ -74,3 +68,9 @@ jobs:
       # see that, because it has already run by then.
       - name: dist is still publishable after the catalogue build
         run: pnpm run check:dist
+
+      # Same reason, for the other half: the catalogue build rewriting dist
+      # would change what a consumer bundles, and `build` measured it before
+      # that happened.
+      - name: dist still weighs what it did after the catalogue build
+        run: pnpm run check:size

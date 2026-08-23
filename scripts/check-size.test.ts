@@ -2,13 +2,21 @@ import { readFileSync } from "node:fs"
 import { resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 
-import { MAX_INLINE_ASSET, TOLERANCE, bentoEvidence, drift, oversizedAssets } from "./check-size.mjs"
+import {
+  MAX_INLINE_ASSET,
+  TOLERANCE,
+  assess,
+  bentoEvidence,
+  drift,
+  oversizedAssets,
+} from "./check-size.mjs"
 
-// VDS26 — the two bundles themselves take about a minute, so they run as a CI
-// step (`pnpm run check:size`) rather than here. What is asserted here is the
-// judgement the script makes about what it measured: the detector that a first
-// draft got wrong, and the comparison that decides whether a number is a
-// regression.
+// VDS26/VDS42 — the three fixtures actually bundle at the end of
+// `pnpm run build`, in about 1.6 s. What is asserted here is the judgement the
+// script makes about what it measured, which is where it has been wrong: the
+// detector a first draft matched on module paths, the cap, the resolution check
+// that catches fonts degrading silently to system-ui, and the comparison that
+// decides whether a number is a regression.
 
 const chunk = (fileName: string, code: string) => ({ fileName, code, type: "chunk" as const })
 const asset = (fileName: string, source: string) => ({ fileName, source, type: "asset" as const })
@@ -72,6 +80,40 @@ describe("the inlined-asset cap", () => {
     // that reached the root barrel through `productLogos` was 1.24 MB.
     expect(MAX_INLINE_ASSET).toBeGreaterThan(90 * 1024)
     expect(MAX_INLINE_ASSET).toBeLessThan(1_200_000)
+  })
+})
+
+describe("what one fixture is held to", () => {
+  const bentoChunk = chunk("entry.js", 'const t="bento-tone-blue"')
+  const fontCss = asset("entry.css", "@font-face{font-family:Inter Variable}")
+  const plain = chunk("entry.js", "const x=1")
+
+  it("refuses a root-only fixture that carries the layer", () => {
+    const found = assess("root-only", { bentoExpected: false }, [bentoChunk])
+    expect(found.join("\n")).toContain("never imported it")
+  })
+
+  it("refuses a bento fixture that carries nothing — that one is vacuous", () => {
+    const found = assess("bento", { bentoExpected: true }, [plain])
+    expect(found.join("\n")).toContain("measuring nothing")
+  })
+
+  it("refuses a fonts fixture whose faces did not resolve", () => {
+    // The failure worth catching: fonts.css ships verbatim, so a resolution
+    // change degrades silently to system-ui and is first seen in a screenshot.
+    const found = assess("fonts", { bentoExpected: false, mustEmbedFonts: true }, [plain])
+    expect(found.join("\n")).toContain("no @font-face resolved")
+  })
+
+  it("refuses faces returning to an entry that is not ./fonts", () => {
+    const found = assess("root-only", { bentoExpected: false }, [fontCss])
+    expect(found.join("\n")).toContain("back in an entry")
+  })
+
+  it("passes each fixture in the shape it is meant to have", () => {
+    expect(assess("root-only", { bentoExpected: false }, [plain])).toEqual([])
+    expect(assess("bento", { bentoExpected: true }, [bentoChunk])).toEqual([])
+    expect(assess("fonts", { bentoExpected: false, mustEmbedFonts: true }, [fontCss])).toEqual([])
   })
 })
 

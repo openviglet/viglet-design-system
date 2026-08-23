@@ -25,22 +25,6 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
-### §VDS42 Weigh it where it is built
-
-`pnpm run build` ends with `check-dist`, which refuses a `dist` that cannot be
-published. `check:size` is not in that chain - it runs as its own CI step - so a local
-build that doubles an entry point finishes green and the number is first seen by a
-reviewer.
-
-The reason it is separate is real: the two fixtures take about a minute, which is too
-long to sit inside every `build` during development. So the answer is probably not to
-fold it in but to make it cheap enough to fold in - one fixture rather than two when
-nothing under `src/bento` changed, or a fast path that reads `dist` directly and falls
-back to bundling only when the content check needs a module graph.
-
-Worth doing after VDS40 and VDS41, whose fixes will move the baseline by megabytes and
-say more about which measurement is worth taking on every build.
-
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components
