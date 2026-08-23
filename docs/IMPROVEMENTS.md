@@ -25,6 +25,40 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
+### §VDS63 Every racer fetches its own token
+
+```
+async function ensureCsrfToken(): Promise<void> {
+  if (csrfToken) return;
+  const response = await csrfClient.get(CSRF_ENDPOINT);
+  …
+}
+```
+
+The check and the assignment are separated by an await, and nothing holds the fetch in
+between. Every mutating request that starts while the first is still out sees a null
+token and fetches its own. A probe firing two concurrent POSTs measures two `/csrf`
+calls; N concurrent requests make N.
+
+The cost is not only the round trips. A server that rotates its token on each
+issue invalidates the earlier one when it issues the later, so of two racing
+requests the first carries a token the server has already replaced and comes back
+403. The response interceptor retries such a request once — `_csrfRetried` — which
+hides the symptom behind a second round trip, and only once. Three racing
+requests can exhaust that.
+
+Nothing about this is exotic: a page that saves two panels, or a list that deletes two
+rows, issues exactly this shape. It is invisible in every manual test because two
+sequential requests never race.
+
+The fix is the standard one for a shared async initialisation — hold the in-flight
+promise and let every caller await the same one, releasing it when it settles so a later
+failure can retry.
+
+Worth doing here because there is a second gap underneath it: `src/lib/axios.ts` has no
+tests at all. It carries CSRF for three products, a 401 redirect that navigates the
+window, and a retry path, and none of it is held by anything.
+
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components

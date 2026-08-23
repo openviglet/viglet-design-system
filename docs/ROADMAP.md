@@ -4,6 +4,7 @@
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — All three consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS30** (deps: typescript-eslint supporting TS 7) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — It throws on import against ts.versionMajorMinor >= 7, and no side-by-side recipe makes a peer resolve a second TypeScript. → §VDS30
+- 📋 **VDS63** (deps: —) **concurrent mutating requests each fetch their own CSRF token, so a rotating server invalidates all but the last** — ensureCsrfToken checks the token then awaits, with nothing holding the in-flight fetch; two requests measured two fetches. → §VDS63
 
 ## Block B — Bento becomes a design-system layer
 
@@ -20,6 +21,15 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
+
+## Done when — VDS63
+
+- **concurrent mutating requests share one token fetch** the probe that measured two
+  /csrf calls becomes a test, and measures one.
+- **a failed fetch does not poison the next attempt** the held promise is released when
+  it settles, so a later request retries rather than awaiting a rejection.
+- **src/lib/axios.ts is held by tests at all** CSRF, the 403 retry and the 401 redirect
+  are covered, none of which anything asserts today.
 
 ## Non-goals
 
