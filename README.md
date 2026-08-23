@@ -277,7 +277,7 @@ regardless of `assetsInlineLimit`, so anything the root barrel could reach was
 base64 inside the root entry — `productLogos` names all four logos, and one of
 them is 1.24 MB, which put 1.90 MB of PNG in front of every consumer. Nothing
 renders that one: `VigletAppSwitcher` draws the Viglet Cloud entry with an icon.
-Moving the map here left the root entry 56% lighter, and `check:size` now
+Moving the map here left the root entry 56% lighter, and the size gate now
 refuses any single inlined asset over 256 KB.
 
 `VigletAppSwitcher` still imports the three logos it draws, so it needs no
@@ -381,13 +381,15 @@ The stylesheet is a separate import from the components, so a consumer taking
 only the layout maths does not pull CSS it never renders. It reads the preset's
 tokens, so import the preset too.
 
-"Carries none of it" is measured rather than claimed. CI bundles two fixtures
-through this package's own `exports` map and fails if a `.bento-` rule or a
-bento class name reaches a consumer that imported only the root entry —
-`pnpm run check:size` runs the same check locally, and `size-budget.json`
-records what each entry costs. The preset's `--vg-bento-tone-*` tokens are
-deliberately not part of that: they ship with every other token and are about a
-kilobyte of custom properties, not the layer.
+"Carries none of it" is measured rather than claimed. `pnpm run build` ends by
+bundling three fixtures through this package's own `exports` map, and fails if a
+`.bento-` rule or a bento class name reaches a consumer that imported only the
+root entry. `size-budget.json` records what each entry costs — today the whole
+root entry is 87 KB gzipped and `./bento` 22 KB, measured with everything the
+build externalises left out, so the numbers describe this package rather than
+its dependencies. The preset's `--vg-bento-tone-*` tokens are deliberately not
+counted as the layer: they ship with every other token and are about a kilobyte
+of custom properties.
 
 **`./bento` requires `react-router-dom`.** The package declares that peer
 optional because the root entry does not need it — only `./router` and `./bento`

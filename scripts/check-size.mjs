@@ -35,6 +35,8 @@ import { dirname, join, resolve } from "node:path"
 import { tmpdir } from "node:os"
 import { fileURLToPath } from "node:url"
 
+import { EXTERNAL_PATTERNS } from "./lib/externals.mjs"
+
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..")
 const PKG = JSON.parse(readFileSync(join(root, "package.json"), "utf8")).name
 const BASELINE = join(root, "size-budget.json")
@@ -201,9 +203,12 @@ async function bundle(name, { source }) {
         minify: "esbuild",
         rollupOptions: {
           input: join(dir, "entry.js"),
-          // React is a peer, so a product supplies it; counting it here would
-          // measure React, not this package.
-          external: ["react", "react-dom", "react/jsx-runtime", "react-router-dom"],
+          // The library build's own list, not a restatement of it. Everything
+          // here is something a consumer supplies, so counting it would measure
+          // the consumer's dependencies as this package's weight — which is
+          // what an earlier version did, putting 467 KB of xlsx in a number
+          // meant to describe `dist`.
+          external: EXTERNAL_PATTERNS,
         },
       },
     })
