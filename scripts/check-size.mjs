@@ -32,13 +32,14 @@
 import { gzipSync } from "node:zlib"
 import {
   mkdirSync,
+  readdirSync,
   mkdtempSync,
   readFileSync,
   rmSync,
   symlinkSync,
   writeFileSync,
 } from "node:fs"
-import { dirname, join, resolve } from "node:path"
+import { basename, dirname, join, resolve } from "node:path"
 import { tmpdir } from "node:os"
 import { fileURLToPath } from "node:url"
 
@@ -78,9 +79,10 @@ const FIXTURES = {
       "globalThis.__vdsProbe = Object.keys(ds).length;",
     ].join("\n"),
     bentoExpected: false,
-    // And none of the rules of a subpath whose code a root consumer does not
-    // carry — which is `./bento` and, measured, only `./bento`. Asking the
-    // question of every subpath instead is what VDS46 had to undo.
+    // And none of the rules of a subpath whose code this bundle turns out not
+    // to carry. Which subpaths those are is read off the bundle itself rather
+    // than listed: asking it of every subpath is what VDS46 had to undo, and
+    // listing the answer instead is what VDS47 replaced.
     subpathFree: true,
   },
   bento: {
@@ -146,6 +148,43 @@ export function selectorsIn(css) {
   const found = new Set()
   for (const [, name] of css.matchAll(/(?:^|[\s,{}>+~])\.([a-zA-Z][\w-]{4,})/g)) found.add(name)
   return found
+}
+
+/**
+ * Which subpath stylesheets a root consumer must not carry, worked out rather
+ * than declared.
+ *
+ * A stylesheet published at `./x.css` belongs to the code published at `./x`.
+ * If a bundle that imported only the root entry already contains that code,
+ * then its rules belong in `./styles` too — `FloatingFormulasBg` is exported
+ * from the root barrel and rendered by `Login` and `StartupFirst`, so
+ * `floating-formulas-bg.css` is correctly there. If the code is absent, the
+ * rules must be as well; that is `./bento`.
+ *
+ * Declared instead of derived, this was a literal naming one subpath, and it
+ * was the fourth restated list in this block and the third to be wrong (VDS47).
+ * The evidence was always in the bundle the gate already builds: the module ids
+ * name the entry files a root consumer pulled.
+ *
+ * `exportsMap` is the package's `exports`; `modules` the module ids of the
+ * root-only bundle. A CSS subpath with no code twin — `./preset`, `./fonts` —
+ * is not a component's stylesheet and is not asked about.
+ */
+export function unreachableSubpathCss(exportsMap, modules) {
+  const carried = new Set(
+    [...modules].map((id) => id.replaceAll("\\", "/").split("/").pop()),
+  )
+
+  const unreachable = []
+  for (const [subpath, target] of Object.entries(exportsMap)) {
+    if (typeof target !== "string" || !target.endsWith(".css")) continue
+    const twin = exportsMap[subpath.replace(/\.css$/, "")]
+    if (!twin || typeof twin !== "object" || !twin.import) continue
+
+    const entryFile = twin.import.split("/").pop()
+    if (!carried.has(entryFile)) unreachable.push({ subpath, css: target })
+  }
+  return unreachable
 }
 
 /**
@@ -245,9 +284,9 @@ async function bundle(name, { source }) {
     // A real node_modules entry, so Vite resolves through the package's exports
     // map exactly as a product does. A junction is used because it needs no
     // elevation on Windows; symlinkSync falls back to it there.
-    const modules = join(dir, "node_modules", ...PKG.split("/"))
-    mkdirSync(dirname(modules), { recursive: true })
-    symlinkSync(root, modules, "junction")
+    const linked = join(dir, "node_modules", ...PKG.split("/"))
+    mkdirSync(dirname(linked), { recursive: true })
+    symlinkSync(root, linked, "junction")
 
     writeFileSync(join(dir, "entry.js"), source)
 
@@ -280,7 +319,11 @@ async function bundle(name, { source }) {
       gzip += gzipSync(buffer).byteLength
     }
 
-    return { raw, gzip, chunks }
+    // The entry files this bundle pulled. What a root consumer carries is the
+    // evidence VDS47 derives the subpath set from.
+    const modules = chunks.flatMap((c) => Object.keys(c.modules ?? {}))
+
+    return { raw, gzip, chunks, modules }
   } finally {
     rmSync(dir, { recursive: true, force: true })
   }
@@ -348,31 +391,36 @@ async function main() {
   // is never emitted, so there was nothing to compare the bundle against and
   // the leak went unnoticed. The source is there either way.
   //
-  // The stylesheets whose rules a root consumer must NOT carry.
-  //
-  // Not "every subpath stylesheet": `floating-formulas-bg.css` has its own
-  // subpath and its component is in the root barrel, rendered by `Login` and
-  // `StartupFirst`, so its rules belong in `./styles`. Treating the exports map
-  // as the rule took them out and left those two unstyled (VDS46).
-  //
-  // The rule is whether a root consumer carries that subpath's *code*. Only
-  // `./bento` qualifies today, and it qualifies by construction: nothing in the
-  // root barrel imports it, which the bento markers below already assert.
-  //
-  // Read from source rather than from `dist`, so the comparison still works in
-  // the failure it guards — where the per-entry file is never emitted.
-  const ROOT_UNREACHABLE = { "./bento.css": join(root, "src", "bento", "bento.css") }
-  const subpathCss = {}
-  for (const [label, file] of Object.entries(ROOT_UNREACHABLE)) {
-    subpathCss[label] = readFileSync(file, "utf8")
+  const exportsMap = JSON.parse(readFileSync(join(root, "package.json"), "utf8")).exports
+
+  // Every stylesheet in `src`, by basename, so a subpath's rules can be read
+  // from source rather than from `dist` — the comparison has to work in the
+  // failure it guards, where the per-entry file may not be emitted at all.
+  const sources = new Map()
+  const findCss = (dir) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name)
+      if (entry.isDirectory()) findCss(full)
+      else if (entry.name.endsWith(".css")) sources.set(entry.name, full)
+    }
   }
+  findCss(join(root, "src"))
 
   const measured = {}
   const failures = []
 
   for (const [name, fixture] of Object.entries(FIXTURES)) {
-    const { raw, gzip, chunks } = await bundle(name, fixture)
+    const { raw, gzip, chunks, modules } = await bundle(name, fixture)
     measured[name] = { raw, gzip }
+
+    // Which subpaths this consumer skips is read off its own bundle, so the
+    // question asked of it is the one its shape justifies. For the fixtures
+    // that carry everything, that set is empty and nothing is asked.
+    const subpathCss = {}
+    for (const { subpath, css } of unreachableSubpathCss(exportsMap, modules)) {
+      const source = sources.get(basename(css))
+      if (source) subpathCss[subpath] = readFileSync(source, "utf8")
+    }
 
     failures.push(...assess(name, fixture, chunks, subpathCss))
 

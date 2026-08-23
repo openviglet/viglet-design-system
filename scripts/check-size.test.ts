@@ -11,6 +11,7 @@ import {
   oversizedAssets,
   selectorsIn,
   subpathLeakage,
+  unreachableSubpathCss,
 } from "./check-size.mjs"
 
 // VDS26/VDS42 — the three fixtures actually bundle at the end of
@@ -116,6 +117,58 @@ describe("what one fixture is held to", () => {
     expect(assess("root-only", { bentoExpected: false }, [plain])).toEqual([])
     expect(assess("bento", { bentoExpected: true }, [bentoChunk])).toEqual([])
     expect(assess("fonts", { bentoExpected: false, mustEmbedFonts: true }, [fontCss])).toEqual([])
+  })
+})
+
+describe("working out which subpaths a consumer skips", () => {
+  // The shape of the real exports map, trimmed to what the derivation reads.
+  const exportsMap = {
+    ".": { import: "./dist/index.es.js" },
+    "./bento": { import: "./dist/bento.es.js" },
+    "./bento.css": "./dist/bento.css",
+    "./floating-formulas-bg": { import: "./dist/floating-formulas-bg.es.js" },
+    "./floating-formulas-bg.css": "./dist/floating-formulas-bg.css",
+    "./styles": "./dist/viglet-design-system.css",
+    "./preset": "./dist/preset.css",
+    "./fonts": "./dist/fonts.css",
+  }
+  const skipped = (modules: string[]) =>
+    unreachableSubpathCss(exportsMap, modules).map((u) => u.subpath)
+
+  it("asks about the code a consumer did not pull", () => {
+    expect(skipped(["dist/index.es.js", "dist/floating-formulas-bg.es.js"])).toEqual([
+      "./bento.css",
+    ])
+  })
+
+  it("asks nothing of a consumer that pulled everything", () => {
+    expect(
+      skipped(["dist/index.es.js", "dist/floating-formulas-bg.es.js", "dist/bento.es.js"]),
+    ).toEqual([])
+  })
+
+  it("widens on its own when a component leaves the root barrel", () => {
+    // This is the whole point of deriving it. If FloatingFormulasBg stopped
+    // being a root export, a root bundle would stop carrying its entry and the
+    // gate would start requiring its rules out of ./styles — with nobody
+    // editing a list, which is what VDS46 needed and did not have.
+    expect(skipped(["dist/index.es.js"])).toEqual(["./bento.css", "./floating-formulas-bg.css"])
+  })
+
+  it("ignores a stylesheet with no code behind it", () => {
+    // ./preset and ./fonts are not a component's rules, so "did the consumer
+    // pull their code" is not a question about them.
+    expect(skipped(["dist/index.es.js"])).not.toContain("./preset")
+    expect(skipped(["dist/index.es.js"])).not.toContain("./fonts")
+    expect(skipped(["dist/index.es.js"])).not.toContain("./styles")
+  })
+
+  it("reads the entry file, not the path a bundler happened to write", () => {
+    // Module ids come back with the platform's separators and an absolute
+    // prefix; only the file name is the identity.
+    expect(skipped(["C:\\tmp\\x\\node_modules\\@viglet\\vds\\dist\\bento.es.js"])).not.toContain(
+      "./bento.css",
+    )
   })
 })
 
