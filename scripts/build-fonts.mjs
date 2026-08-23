@@ -4,9 +4,11 @@
  *
  * It used to ship verbatim, so its `@import "@fontsource-variable/inter"`
  * reached the consumer as a bare specifier and was resolved by whatever their
- * bundler looked at. That worked because all three products use pnpm's hoisted
- * linker, which happens to put this package's dependencies in their tree. It is
- * an unstated dependency, and its failure is the silent kind: a missing
+ * bundler looked at. That worked because the products it was written against use
+ * pnpm's hoisted linker, which happens to put this package's dependencies in
+ * their tree — and VDS73 found a consumer installing with npm, so the premise
+ * was not even true of the whole set by then. It is an unstated dependency, and
+ * its failure is the silent kind: a missing
  * `@import` is not an error, the type falls back through `--font-sans` to
  * `system-ui`, and nobody sees it until a screenshot.
  *

@@ -24,5 +24,3 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 ^6, and npm treats that as hard, so a plain install failed and the publish workflow with
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
-
-## Block C — One look across products

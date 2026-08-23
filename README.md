@@ -10,11 +10,15 @@ component, its variants and its props, rebuilt on each commit to `2026.3`. Look
 there before writing a component: the catalogue is the answer to "does this
 already exist".
 
-Those three products are the consumers this package holds itself to, declared in
-[`consumers.json`](consumers.json) rather than remembered: the render-parity
-digest carries one accent per consumer, and CI refuses prose that names two of
-them as though it were all three. A fourth console is one entry there, and the
-checks widen with it.
+The six applications that install this package are the consumers it holds itself
+to, declared in [`consumers.json`](consumers.json) rather than remembered: each
+entry names its framework, its chrome, the accent it renders with and the
+subpaths it takes, and CI refuses prose that names a subset as though it were
+the whole set. A seventh is one entry there, and the checks widen with it.
+
+Three are Vite consoles (Turing, Shio, Dumont), one is a Vite platform home
+(the Cloud Home), and two are Next applications (the Cloud Console and Schools).
+The split matters: a Next consumer takes no `./router` and no `./vite`.
 
 ## Installation
 
@@ -274,7 +278,7 @@ before reaching for `PageHeader`, `GridList` or `InternalSidebar`.
 
 ### Two eras, and which one a new page should use
 
-This package exports two complete page vocabularies. The **console era** is what all three products ship on today; the **[bento layer](#the-bento-layer)** is the current one. Every console-era export is marked `@deprecated` in its own types, so an editor strikes it through and offers the swap.
+This package exports two complete page vocabularies. The **console era** is what the consoles ship on today; the **[bento layer](#the-bento-layer)** is the current one, and Turing has cut over to it. Every console-era export is marked `@deprecated` in its own types, so an editor strikes it through and offers the swap.
 
 Nothing is being removed. No product has started cutting over, and a removal will get its own roadmap line rather than arriving as a side effect of this notice — so existing pages keep working and need no rush.
 
@@ -475,7 +479,8 @@ turning into `any` in your editor.
 That last check found a real one. `"type": "module"` makes Node read any `.js`
 as ESM, and the CommonJS entries were named `<entry>.cjs.js`, so every
 `require()` of this package failed. They are `<entry>.cjs` now. No product met
-it, because all three bundle with Vite and take the `import` condition.
+it, because every consumer — the Vite ones through their bundler, the Next ones
+through the App Router — takes the `import` condition.
 
 **`./bento` requires `react-router-dom`.** The package declares that peer
 optional because the root entry does not need it — only `./router` and `./bento`
