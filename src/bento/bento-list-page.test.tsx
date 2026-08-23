@@ -7,6 +7,8 @@ import { I18nextProvider, initReactI18next } from "react-i18next"
 import { MemoryRouter } from "react-router-dom"
 import { beforeAll, describe, expect, it, vi } from "vitest"
 
+import { expectConsoleErrors } from "@/test/console-error-gate"
+
 import { BentoEntityTile, BentoListPage, type BentoListLayout } from "./index"
 
 // Every product has list screens, and a hand-rolled grid is the fastest way for
@@ -176,6 +178,108 @@ describe("the customise affordance", () => {
     const entries = onSave.mock.calls[0][0]
     expect(entries).toHaveLength(items.length)
     expect(entries[0]).toMatchObject({ displayOrder: 0 })
+  })
+
+  // VDS62 — `run` awaited the product's write and withheld the close on failure,
+  // which was half of it. There was no catch, and it is wired to three onClick
+  // handlers where React discards the promise, so a rejecting write left an
+  // unhandledrejection and a panel that just sat there.
+  describe("when the product's write fails", () => {
+    /** Collects rejections where they actually land — the runner, not jsdom. */
+    async function withRejectionWatch(body: () => Promise<void>) {
+      const seen: unknown[] = []
+      const record = (reason: unknown) => seen.push(reason)
+      process.on("unhandledRejection", record)
+      try {
+        await body()
+        await new Promise((resolve) => setTimeout(resolve, 0))
+      } finally {
+        process.off("unhandledRejection", record)
+      }
+      return seen
+    }
+
+    it("keeps the panel open, says so, and lets nothing escape the run", async () => {
+      expectConsoleErrors("Failed to save the bento layout")
+      const user = userEvent.setup()
+      const onSave = vi.fn().mockRejectedValue(new Error("write failed"))
+
+      const escaped = await withRejectionWatch(async () => {
+        list({ listId: "llm", layout: layout({ onSave }) })
+        await user.click(screen.getByRole("button", { name: /customize/i }))
+        await user.click(screen.getByRole("button", { name: /save/i }))
+      })
+
+      expect(onSave).toHaveBeenCalledTimes(1)
+      expect(escaped).toEqual([])
+      expect(screen.getByRole("alert")).toBeInTheDocument()
+      // Still open: the layout was not saved, so the panel is where the user is.
+      expect(screen.getByRole("button", { name: /save/i })).toBeInTheDocument()
+    })
+
+    it("holds each of the three controls to the same rule", async () => {
+      expectConsoleErrors("Failed to save the bento layout")
+      const user = userEvent.setup()
+      const rejects = () => vi.fn().mockRejectedValue(new Error("write failed"))
+      const onSaveGlobal = rejects()
+
+      const escaped = await withRejectionWatch(async () => {
+        list({
+          listId: "llm",
+          layout: layout({
+            data: {
+              listId: "llm",
+              source: "USER",
+              canEditGlobal: true,
+              entries: [{ itemId: "a", displayOrder: 0, emphasis: "MEDIUM" }],
+            },
+            onSave: rejects(),
+            onReset: rejects(),
+            onSaveGlobal,
+          }),
+        })
+        await user.click(screen.getByRole("button", { name: /customize/i }))
+        // By key: this harness renders missing keys literally, and
+        // parseMissingKeyHandler wins over the defaultValue the component gives.
+        await user.click(screen.getByRole("button", { name: /saveGlobal/i }))
+      })
+
+      expect(onSaveGlobal).toHaveBeenCalledTimes(1)
+      expect(escaped).toEqual([])
+      expect(screen.getByRole("alert")).toBeInTheDocument()
+    })
+
+    it("clears the message when the next attempt starts", async () => {
+      expectConsoleErrors("Failed to save the bento layout")
+      const user = userEvent.setup()
+      const onSave = vi
+        .fn()
+        .mockRejectedValueOnce(new Error("write failed"))
+        .mockResolvedValue(undefined)
+
+      list({ listId: "llm", layout: layout({ onSave }) })
+      await user.click(screen.getByRole("button", { name: /customize/i }))
+      await user.click(screen.getByRole("button", { name: /save/i }))
+      expect(screen.getByRole("alert")).toBeInTheDocument()
+
+      await user.click(screen.getByRole("button", { name: /save/i }))
+
+      // Second attempt succeeded, so the panel closed and took the message.
+      expect(screen.queryByRole("alert")).not.toBeInTheDocument()
+    })
+
+    it("says nothing when the product handles the failure itself", async () => {
+      const user = userEvent.setup()
+      // A product that catches inside its own callback resolves, exactly as
+      // BentoEntityShell's persistField does — so this panel has nothing to add.
+      const onSave = vi.fn().mockResolvedValue(undefined)
+
+      list({ listId: "llm", layout: layout({ onSave }) })
+      await user.click(screen.getByRole("button", { name: /customize/i }))
+      await user.click(screen.getByRole("button", { name: /save/i }))
+
+      expect(screen.queryByRole("alert")).not.toBeInTheDocument()
+    })
   })
 
   it("hides the global and reset controls a product did not supply", async () => {

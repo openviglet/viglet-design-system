@@ -377,12 +377,27 @@ function BentoListEditor<T>({
 
   const busy = layout.saving ?? false;
 
+  const [failed, setFailed] = useState(false);
+
   // Each control awaits the product's write before closing, so the panel never
   // shuts on a save that then fails.
+  //
+  // Withholding the close was only half of it. There was no catch, and this is
+  // wired to three onClick handlers, where React discards the promise it
+  // returns — so a rejecting write left the app with an unhandledrejection, and
+  // the panel simply sat there, which reads as an unresponsive button rather
+  // than a refused save. A product that wants to report the failure itself still
+  // can, by catching inside its own callback: this only runs when nothing did.
   const run = (write: (() => Promise<unknown> | void) | undefined) => async () => {
     if (!write) return;
-    await write();
-    onClose();
+    setFailed(false);
+    try {
+      await write();
+      onClose();
+    } catch (err) {
+      console.error("Failed to save the bento layout", err);
+      setFailed(true);
+    }
   };
 
   const sensors = useSensors(
@@ -450,6 +465,17 @@ function BentoListEditor<T>({
           <IconDeviceFloppy size={16} />
           {t("bento.layout.save", { defaultValue: "Save layout" })}
         </Button>
+        {failed && (
+          <p
+            role="alert"
+            className="w-full text-sm text-destructive"
+          >
+            {t("bento.layout.saveFailed", {
+              defaultValue:
+                "The layout could not be saved. Nothing has changed — try again.",
+            })}
+          </p>
+        )}
       </div>
 
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>

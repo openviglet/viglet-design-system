@@ -59,6 +59,7 @@
 - ✅ **VDS38** **the command palette matches an entry's title only, so searching a word from its description finds nothing** — The palette matches descriptions as well as titles, ranks title matches first, and the test that pinned the old behaviour is replaced.
 - ✅ **VDS58** **a failed field save leaves the optimistic value on screen, showing an edit the server rejected** — a rejected save puts the fields it touched back to the entity's values, and the toast names the entity by what was saved.
 - ✅ **VDS59** **a rejecting onSave escapes BentoInlineEdit as an unhandled rejection, because commit awaits it with no catch** — a rejecting onSave returns the field to its persisted value and no longer escapes as an unhandled rejection.
+- ✅ **VDS62** **a rejecting layout save keeps the panel open but drops the rejection, so nothing tells the user** — a rejecting layout write is caught, reported in the panel, and no longer escapes the run.
 
 ## Block C — One look across products
 

@@ -38,7 +38,8 @@
       },
       "save": "Salvar layout",
       "saveGlobal": "Definir como padrão para todos",
-      "reset": "Restaurar padrão"
+      "reset": "Restaurar padrão",
+      "saveFailed": "Não foi possível salvar o layout. Nada foi alterado — tente novamente."
     },
     "tour": {
       "replay": "Fazer o tour"

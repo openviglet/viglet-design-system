@@ -38,7 +38,8 @@
       },
       "save": "Save layout",
       "saveGlobal": "Set as default for everyone",
-      "reset": "Reset to default"
+      "reset": "Reset to default",
+      "saveFailed": "The layout could not be saved. Nothing has changed — try again."
     },
     "tour": {
       "replay": "Take the tour"
