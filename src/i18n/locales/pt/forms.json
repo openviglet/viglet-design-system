@@ -61,7 +61,21 @@
     "formActions": {
       "cancel": "Cancelar",
       "saveChanges": "Salvar Alterações",
-      "delete": "Excluir"
+      "delete": "Excluir",
+      "moreActions": "Mais ações",
+      "edit": "Editar",
+      "new": "Novo"
+    },
+    "iconPicker": {
+      "chooseAnIcon": "Escolha um ícone",
+      "searchIcons": "Buscar ícones",
+      "aiSuggest": "Sugerir",
+      "aiSuggestions": "Sugestões",
+      "searching": "Buscando...",
+      "noIconsFound": "Nenhum ícone encontrado para “{{query}}”",
+      "typeToSearch": "Digite para buscar em {{count}} coleções de ícones",
+      "orClickAi": "...ou deixe o título e a descrição sugerirem alguns",
+      "done": "Concluir"
     }
   }
 }

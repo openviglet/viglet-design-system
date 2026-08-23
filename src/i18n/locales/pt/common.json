@@ -10,7 +10,13 @@
     "tryAgain": "Tentar novamente",
     "errorLoading": "Erro ao carregar dados",
     "openNavigation": "Abrir navegação",
-    "connectionError": "Erro de conexão ou tempo esgotado ao buscar {{resource}}."
+    "connectionError": "Erro de conexão ou tempo esgotado ao buscar {{resource}}.",
+    "active": "Ativo",
+    "idle": "Inativo",
+    "activeToggleHint": "Clique para desativar",
+    "idleToggleHint": "Clique para ativar",
+    "docs": "Documentação",
+    "apps": "Aplicativos"
   },
   "backendStatus": {
     "offline": "Servidor indisponível. Tentando reconectar...",

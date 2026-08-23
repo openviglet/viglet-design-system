@@ -61,7 +61,21 @@
     "formActions": {
       "cancel": "Cancel",
       "saveChanges": "Save Changes",
-      "delete": "Delete"
+      "delete": "Delete",
+      "moreActions": "More actions",
+      "edit": "Edit",
+      "new": "New"
+    },
+    "iconPicker": {
+      "chooseAnIcon": "Choose an icon",
+      "searchIcons": "Search icons",
+      "aiSuggest": "Suggest",
+      "aiSuggestions": "Suggestions",
+      "searching": "Searching...",
+      "noIconsFound": "No icons found for “{{query}}”",
+      "typeToSearch": "Type to search {{count}} icon collections",
+      "orClickAi": "...or let the title and description suggest some",
+      "done": "Done"
     }
   }
 }

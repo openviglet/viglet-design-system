@@ -1,6 +1,8 @@
 {
   "nav": {
     "account": "Account",
-    "logOut": "Log out"
+    "logOut": "Log out",
+    "organizations": "Organizations",
+    "tenantAdmin": "Tenant administration"
   }
 }

@@ -10,7 +10,13 @@
     "tryAgain": "Try again",
     "errorLoading": "Error while loading data",
     "openNavigation": "Open navigation",
-    "connectionError": "Connection error or timeout while fetching {{resource}}."
+    "connectionError": "Connection error or timeout while fetching {{resource}}.",
+    "active": "Active",
+    "idle": "Idle",
+    "activeToggleHint": "Click to make idle",
+    "idleToggleHint": "Click to activate",
+    "docs": "Documentation",
+    "apps": "Apps"
   },
   "backendStatus": {
     "offline": "Server unavailable. Retrying automatically...",

@@ -1,6 +1,8 @@
 {
   "nav": {
     "account": "Conta",
-    "logOut": "Sair"
+    "logOut": "Sair",
+    "organizations": "Organizações",
+    "tenantAdmin": "Administração do tenant"
   }
 }
