@@ -278,6 +278,8 @@ import {
 } from "@viglet/viglet-design-system";
 ```
 
+`exportToXlsx(data, headers, filename, sheetName?)` takes an optional sheet name; without one the sheet is named after `filename` (it used to be `Logging`, whatever you exported). The header row is written from `headers`, so an export with no rows still arrives with its column titles rather than as an empty file.
+
 ### Product logos
 
 ```tsx

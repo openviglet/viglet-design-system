@@ -4,7 +4,6 @@
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — All three consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS30** (deps: typescript-eslint supporting TS 7) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — It throws on import against ts.versionMajorMinor >= 7, and no side-by-side recipe makes a peer resolve a second TypeScript. → §VDS30
-- 📋 **VDS64** (deps: —) **exportToXlsx names every sheet Logging and writes no header row at all when the data is empty** — The sheet name is a product screen's, and json_to_sheet derives columns from rows, so no rows means no columns. → §VDS64
 
 ## Block B — Bento becomes a design-system layer
 
@@ -21,15 +20,6 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
-
-## Done when — VDS64
-
-- **an empty export still carries its header row** a test exports no rows against three
-  headers and reads three column titles back out of the sheet.
-- **the caller names the sheet** Logging leaves the package; existing callers keep
-  working, because three products already call this.
-- **the mapping rules are held** arrays join, dates go ISO, and a header whose key no
-  row carries still becomes a column.
 
 ## Non-goals
 
