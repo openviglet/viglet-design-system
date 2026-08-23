@@ -10,6 +10,18 @@ const meta = {
   title: "App/ErrorBoundary",
   component: ErrorBoundary,
   tags: ["autodocs"],
+  parameters: {
+    // The thrown error is the subject here, not an accident: the component logs
+    // what it caught, and React logs the boundary that caught it. Declared, so
+    // the VDS53 gate can still fail every story that did not mean to log one.
+    expectedConsoleErrors: [
+      // Two logs per throw: React reports the error it handed to the boundary,
+      // and the boundary reports what it caught.
+      "ErrorBoundary caught an error:",
+      "Simulated render error",
+      "Custom fallback received this error",
+    ],
+  },
 } satisfies Meta<typeof ErrorBoundary>;
 
 export default meta;

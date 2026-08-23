@@ -25,31 +25,6 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
-### §VDS53 A React console error is not a test failure
-
-`Accordion` is `AccordionPrimitive.Root` re-exported. Radix reads `collapsible` only
-when `type` is `"single"`; under `type="multiple"` the prop is not part of the
-component's contract, so it falls through to the underlying `div` and React refuses it:
-
-> Received `true` for a non-boolean attribute `collapsible`.
-
-The story supplies it. `meta.args` sets `collapsible: true` for the single-type default,
-and `Multiple` overrides `type` alone, so it spreads the inherited `collapsible` into a
-root that has no use for it. TypeScript does not object: `meta` is typed against the
-union of both variants, and the override is checked against that same union rather than
-against the narrowed one the story actually renders.
-
-Two things are wrong, and the second is why this belongs to the gate block. The story is
-the catalogue a product author reads before writing a fourth accordion, and it currently
-demonstrates a prop the component does not accept in that mode. And `npm test` printed
-the error and exited 0 — 742 passing tests over a component rendering an invalid DOM
-attribute. A React console error is a defect the framework already found for us; letting
-it scroll past means every future prop leak arrives the same way, as noise in a green
-run.
-
-Fixing the story is a line. Making the suite fail on it is the task: the gate should
-treat a React error logged during a test as the test failing.
-
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components

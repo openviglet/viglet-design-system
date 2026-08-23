@@ -18,9 +18,12 @@ const meta = {
     },
     collapsible: { control: "boolean" },
   },
+  // `collapsible` is not set here. Radix reads it only when `type` is "single";
+  // a meta-level default is inherited by `Multiple`, which overrides `type`
+  // alone, and the prop then falls through to the div for React to reject. The
+  // single-type stories carry it themselves.
   args: {
     type: "single",
-    collapsible: true,
   },
 } satisfies Meta<typeof Accordion>;
 
@@ -28,6 +31,9 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  args: {
+    collapsible: true,
+  },
   render: (args) => (
     <Accordion {...args} className="w-[420px]">
       <AccordionItem value="item-1">
@@ -82,6 +88,7 @@ export const Multiple: Story = {
 
 export const DefaultOpen: Story = {
   args: {
+    collapsible: true,
     defaultValue: "item-1",
   },
   render: (args) => (

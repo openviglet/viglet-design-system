@@ -286,9 +286,14 @@ export function FloatingFormulasBg({
             className="ff-bond-line"
             strokeWidth="1.5" strokeLinecap="round"
           />
-          {Array.from(b.path.matchAll(/[ML]\s*(\d+),(\d+)/g)).map((m) => (
+          {/* Keyed by position in the path, not by the coordinate: a bond that
+              revisits a point — every closed shape does — produced two circles
+              with the same `node-x-y` key, which React refuses. The list is
+              parsed from a static string and never reordered, so the index is
+              the stable identity here. */}
+          {Array.from(b.path.matchAll(/[ML]\s*(\d+),(\d+)/g)).map((m, index) => (
             <circle
-              key={`node-${m[1]}-${m[2]}`}
+              key={`node-${index}`}
               cx={m[1]} cy={m[2]}
               r="2.5" className="ff-bond-node"
             />
