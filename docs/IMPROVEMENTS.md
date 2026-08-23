@@ -25,29 +25,6 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
-### §VDS68 A lint that only reports is not a gate
-
-A component file that also exports its cva variants is this package's pattern, and
-consumers import those names, so `react-refresh/only-export-components` is warn-only on
-purpose. That decision is sound and is not what this line reopens. What it costs is the
-gate: 58 accepted warnings are the number CI prints every run, nobody reads a list that
-long, and `eslint .` carries no `--max-warnings`, so a warning of any other kind exits 0
-beside them.
-
-That is not hypothetical. Two `eslint-disable no-console` directives are already dead —
-one in `src/components/error-boundary.tsx`, one in `src/components/ui/form.stories.tsx`
-— and ESLint has been reporting both as unused directives into a floor nobody scans. A
-stale suppression is the worst kind of dead code: it reads as a decision, and the day
-the line beneath it grows a real `no-console` violation, the directive silences it.
-
-The fix is to make the accepted pattern silent rather than tolerated, so that anything
-left is a defect. Turn the rule off for the files where exporting variants beside a
-component is the deliberate pattern — the same scoping the config already does for
-stories and tests — keep it on everywhere else, delete the two dead directives, and then
-run lint as `eslint . --max-warnings 0` in both the script and CI. A count that must
-stay at zero is a gate; a count that only has to stay roughly where it was is a habit,
-and the habit is what let two directives rot.
-
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components

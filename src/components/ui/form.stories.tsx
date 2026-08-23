@@ -25,7 +25,6 @@ function FormDemo() {
   });
 
   const onSubmit = (values: DemoValues) => {
-    // eslint-disable-next-line no-console
     console.log("submit", values);
   };
 

@@ -35,12 +35,17 @@ export default tseslint.config([
       globals: globals.browser,
     },
     rules: {
-      // A component file that also exports its cva variants is the pattern the
-      // whole package uses, and consumers import those. Warn-only elsewhere.
-      "react-refresh/only-export-components": [
-        "warn",
-        { allowConstantExport: true },
-      ],
+      // VDS68 — off, not warn. This rule keeps Fast Refresh working in an app,
+      // and a published component library cannot satisfy it: all three of the
+      // shapes it reports are this package's intended API. A file exporting its
+      // cva variants beside the component (`buttonVariants`), a provider
+      // exporting its hook (`useUser`), and a compound component assembled with
+      // Object.assign (`Login`, `GridList`) are what consumers import. Held at
+      // warn it reported 58 of them every run — a floor that never fell and hid
+      // two dead eslint-disable directives for as long as it stood. A rule that
+      // can only ever be wrong here buys nothing and costs the gate, so lint now
+      // runs at --max-warnings 0 and this one is silent by decision.
+      "react-refresh/only-export-components": "off",
       "@typescript-eslint/no-unused-vars": [
         "error",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
@@ -54,14 +59,6 @@ export default tseslint.config([
       // call; this covers the same defect written behind a name, which is the
       // form a listener forces you into and the one it had always passed.
       "vds/set-state-in-effect-via-call": "error",
-    },
-  },
-  {
-    // Stories and tests are authored, not shipped: they render on purpose and
-    // hold deliberately loose fixtures.
-    files: ["**/*.stories.{ts,tsx}", "**/*.{test,spec}.{ts,tsx}", "src/test/**"],
-    rules: {
-      "react-refresh/only-export-components": "off",
     },
   },
   {
