@@ -25,6 +25,42 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
+### §VDS43 Measure this package, not its neighbours
+
+`check-size` bundles a fixture with `external: ["react", "react-dom",
+"react/jsx-runtime", "react-router-dom"]`, so everything else this package imports is
+counted as its weight. The library build externalises twenty-four - xlsx, axios,
+i18next, sonner, vaul, the Radix tree, the icon trees - precisely so a consumer
+tree-shakes them alongside its own usage. Attributing the fixture's rendered bytes shows
+xlsx at 467 KB of 1.54 MB, three times the next entry, and it is not in `dist` at all.
+
+Two consequences. The number is not what this package costs, so a reader draws the wrong
+conclusion from `size-budget.json`. And with a 2% tolerance now failing `pnpm run
+build`, a Dependabot bump to any of the twenty-four moves the baseline and fails a build
+for a reason that has nothing to do with the change - the exact shape of the react-table
+incident in VDS29.
+
+Derive the fixture's externals from the library build's own list rather than restating
+four of them, so the two cannot disagree.
+
+### §VDS44 A verbatim stylesheet carries an unstated dependency
+
+`preset.css` and `fonts.css` are copied into `dist` rather than built, so their `@import
+"@fontsource-variable/inter"` reaches the consumer as a bare specifier and is resolved
+by whatever their bundler looks at. That works today because all three products use
+pnpm's hoisted linker, which puts this package's dependencies in their tree. It is not
+something this package states, and it is not something it can rely on: a default pnpm
+layout, Yarn PnP, or a consumer that installs with `--production` would fail to resolve
+it.
+
+The failure mode is the bad kind. A missing `@import` is not an error - the rules simply
+are not there, the type falls back through `--font-sans` to `system-ui`, and nobody
+finds out until a screenshot. VDS41's `fonts` fixture catches it, but only under this
+repository's own hoisted layout, which is the layout least likely to break.
+
+Either inline the faces into a built `fonts.css` so it is self-contained, or declare
+what a consumer must install and check it the way `use:local` already checks ranges.
+
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components

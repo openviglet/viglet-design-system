@@ -4,6 +4,8 @@
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — Both consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS30** (deps: typescript-eslint supporting TS 7) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — It throws on import against ts.versionMajorMinor >= 7, and no side-by-side recipe makes a peer resolve a second TypeScript. → §VDS30
+- 📋 **VDS43** (deps: —) **the size baseline counts the consumer's own dependencies, so a dependabot bump to xlsx can fail the build** — The fixture externalises four packages where the library build externalises twenty-four, and xlsx alone is 30% of what it measures. → §VDS43
+- 📋 **VDS44** (deps: —) **the shipped fonts.css and preset.css import @fontsource by bare specifier, resolved in the consumer's tree** — It works because all three consumers hoist; another linker drops the brand type with no error at all. → §VDS44
 
 ## Block B — Bento becomes a design-system layer
 
@@ -20,6 +22,18 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
+
+## Done when — VDS43
+
+- **The baseline moves when this package does, and not when a dependency does** The
+  fixture and the library build share one externals list, so a bump to an externalised
+  package leaves the recorded number alone.
+
+## Done when — VDS44
+
+- **A consumer either resolves the faces or is told it cannot** The fonts import works
+  under a linker that does not hoist, or the build names what is missing instead of
+  silently rendering system-ui.
 
 ## Non-goals
 
