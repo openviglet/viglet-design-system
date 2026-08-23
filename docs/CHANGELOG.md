@@ -41,6 +41,7 @@
 - ✅ **VDS66** **a sub-page breadcrumb whose first level repeats the last crumb loses every level after it** — a repeated level costs only itself, and the hook removes exactly what it inserted.
 - ✅ **VDS67** **the boot-loader plugin takes title, colour and prefix on trust and silently mangles what it cannot honour** — an option the plugin cannot honour now stops the build or warns, instead of half-applying.
 - ✅ **VDS68** **the accepted react-refresh warnings are a floor that hides every other warning lint finds** — Lint fails on any warning: the react-refresh rule a component library cannot satisfy is off by decision, two dead eslint-disable directives are gone, and eslint runs at --max-warnings 0.
+- ✅ **VDS69** **one unit test reads dist/exports.json, so every clean checkout fails it and CI has been red** — The unit suite is hermetic: the case that read dist/exports.json is gone, and check-exports.mjs still proves that coverage against the real declarations inside build.
 
 ## Block B — Bento becomes a design-system layer
 

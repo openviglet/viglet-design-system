@@ -1,10 +1,6 @@
-import { readFileSync } from "node:fs"
-import { join, resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 
 import { importEverything, requireEverything, typeProbe } from "./check-exports.mjs"
-
-const root = resolve(import.meta.dirname, "..")
 
 // VDS49 — the bundling and the tsc run happen at the end of `pnpm run build`,
 // in about a second. What is asserted here is the two generated probes, because
@@ -102,22 +98,11 @@ describe("the module that type-checks every typed subpath", () => {
     expect(() => typeProbe({ entries: {} })).toThrow(/assert nothing/)
   })
 
-  it("covers every typed entry the build catalogued", () => {
-    // Derived from dist/exports.json rather than listed, so a subpath added
-    // tomorrow is covered without anyone editing this file — the lesson of
-    // VDS43, VDS45 and VDS47.
-    const path = join(root, "dist", "exports.json")
-    const built = JSON.parse(readFileSync(path, "utf8")) as {
-      entries: Record<string, { specifier: string; values?: string[] }>
-    }
-    const source = typeProbe(built)
-
-    const entries = Object.values(built.entries).filter((e) => (e.values ?? []).length > 0)
-    expect(entries.length).toBeGreaterThan(4)
-    for (const entry of entries) {
-      expect(source, `${entry.specifier} is not in the probe`).toContain(
-        `from ${JSON.stringify(entry.specifier)}`,
-      )
-    }
-  })
+  // VDS69 — the case that read dist/exports.json to assert the probe covers
+  // every catalogued entry lived here, and made this suite need a build: both
+  // workflows run Test before Build, so a clean checkout threw ENOENT while a
+  // stale local dist kept it green. check-exports.mjs makes that assertion
+  // where the artefact exists — it refuses a missing catalogue outright, then
+  // type-checks the probe against the real declarations, which is stronger
+  // than matching the generated source. Nothing below needs anything built.
 })
