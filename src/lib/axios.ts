@@ -60,6 +60,10 @@ function setRequestHeader(config: { headers?: unknown }, token: string): void {
 
 function clearCsrfToken(): void {
   csrfToken = null;
+  // The 403 path calls this to force a genuinely fresh token, so a fetch already
+  // out — which may be the one that produced the token the server just refused —
+  // must not be what the retry ends up awaiting.
+  csrfFetch = null;
 }
 
 function readCsrfTokenFromCookie(): string | null {
@@ -68,9 +72,24 @@ function readCsrfTokenFromCookie(): string | null {
   return match ? decodeURIComponent(match[1]) : null;
 }
 
-async function ensureCsrfToken(): Promise<void> {
-  if (csrfToken) return;
+/**
+ * The fetch currently out, if any.
+ *
+ * The check and the assignment in `ensureCsrfToken` are separated by an await,
+ * so without this every mutating request that started while the first was still
+ * out saw a null token and fetched its own — two concurrent POSTs measured two
+ * `/csrf` calls, N of them make N. That is not only round trips: a server that
+ * rotates its token on issue invalidates the earlier one when it issues the
+ * later, so the first racer carries a replaced token and comes back 403. The
+ * response interceptor retries such a request once, which hides the symptom at
+ * the cost of another round trip, and only once.
+ *
+ * Cleared when the fetch settles, either way, so a failure does not leave every
+ * later request awaiting a rejection that will never be retried.
+ */
+let csrfFetch: Promise<void> | null = null;
 
+async function fetchCsrfToken(): Promise<void> {
   csrfClient.defaults.baseURL = axios.defaults.baseURL;
   const response = await csrfClient.get(CSRF_ENDPOINT);
   const headerToken = readCsrfTokenFromHeaders(response.headers);
@@ -81,6 +100,22 @@ async function ensureCsrfToken(): Promise<void> {
   const cookieToken = readCsrfTokenFromCookie();
 
   csrfToken = headerToken || bodyToken || cookieToken || null;
+}
+
+async function ensureCsrfToken(): Promise<void> {
+  if (csrfToken) return;
+
+  if (!csrfFetch) {
+    // Compared before clearing: `clearCsrfToken` can drop this one and a newer
+    // fetch take its place while this is still out, and an unconditional reset
+    // in the settle handler would then null the newer one out.
+    const pending: Promise<void> = fetchCsrfToken().finally(() => {
+      if (csrfFetch === pending) csrfFetch = null;
+    });
+    csrfFetch = pending;
+  }
+
+  await csrfFetch;
 }
 
 interface SetupAxiosOptions {

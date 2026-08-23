@@ -35,6 +35,7 @@
 - ✅ **VDS57** **set-state-in-effect fires only when the setState is in the effect body, which is the form nobody writes** — a project rule reports the setState an effect reaches through a named function; both pre-VDS56 components fail it.
 - ✅ **VDS60** **UserProvider drops a failed fetchUser and renders an empty object typed as a user, so consumers cannot tell** — useCurrentUser reports status and error, so a failed fetch is not an empty user; the rejection no longer escapes.
 - ✅ **VDS61** **a slow icon search overwrites a newer one, so the grid shows results for a query already replaced** — a search response that is no longer the current one is dropped, so the grid keeps the results for the query on screen.
+- ✅ **VDS63** **concurrent mutating requests each fetch their own CSRF token, so a rotating server invalidates all but the last** — concurrent mutating requests share one CSRF fetch, and axios.ts is covered by tests for the first time.
 
 ## Block B — Bento becomes a design-system layer
 
