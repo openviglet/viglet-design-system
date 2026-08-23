@@ -28,6 +28,23 @@ export interface BentoIdentity {
   enabled: number;
 }
 
+/**
+ * The fields `patch` touched, taken back to the values `source` holds.
+ *
+ * Keyed off the patch rather than replacing the whole identity, so a field
+ * edited while a failed save was in flight is not reverted along with it.
+ */
+function restoredFrom(
+  patch: Partial<BentoIdentity>,
+  source: BentoIdentity,
+): Partial<BentoIdentity> {
+  const restored: Partial<BentoIdentity> = {};
+  for (const key of Object.keys(patch) as (keyof BentoIdentity)[]) {
+    Object.assign(restored, { [key]: source[key] });
+  }
+  return restored;
+}
+
 /** Form state the render-prop child reports up so the hero can mirror it. */
 export interface BentoShellFormState {
   isDirty: boolean;
@@ -103,6 +120,9 @@ export interface BentoEntityShellProps<TEntity extends BentoEntityLike> {
    * Existing-mode immediate save. Receives the entity already merged with
    * the changed identity patch. Omit in new mode (fields stage locally and
    * the form's Save creates the entity).
+   *
+   * Reject to refuse the edit: the shell shows it optimistically, and puts the
+   * fields the patch touched back to the entity's own values when this rejects.
    */
   onUpdate?: (next: TEntity) => Promise<unknown>;
   /** Delete callback; returns whether the delete succeeded. */
@@ -200,15 +220,32 @@ export function BentoEntityShell<TEntity extends BentoEntityLike>({
   async function persistField(patch: Partial<BentoIdentity>) {
     setStaged((prev) => ({ ...prev, ...patch }));
     if (isNew || !onUpdate) return; // staged-only — the form's Save creates it
+
+    // The name it has once this lands. A rename reported under the name it is
+    // leaving behind reads as the wrong entity having been saved.
+    const savedTitle = patch.title ?? staged.title;
+
     try {
       // Spreading a generic loses the exact TEntity shape for TS; the patch
       // keys are all BentoIdentity fields that exist on the entity, so the
       // merge is safe to assert back to TEntity.
       await onUpdate({ ...entity, ...patch } as TEntity);
-      toast.success(t("forms.common.updated", { name: staged.title, feature }));
+      toast.success(t("forms.common.updated", { name: savedTitle, feature }));
     } catch (err) {
       console.error("Failed to update entity field", err);
-      toast.error(t("forms.common.notUpdated", { name: staged.title, feature }));
+      // Undo the optimistic write, or the screen keeps an edit the server
+      // refused. Only the fields this patch touched, and back to the entity's
+      // own values rather than to a captured copy of `staged`: the save failed,
+      // so the entity is the truth, and another field edited while this was in
+      // flight must not be reverted with it.
+      //
+      // The resync-from-props below cannot do this. It fires on `identity`
+      // changing, and a save that failed leaves `entity` — and so `identity` —
+      // exactly as it was.
+      setStaged((prev) => ({ ...prev, ...restoredFrom(patch, identity) }));
+      toast.error(
+        t("forms.common.notUpdated", { name: identity.title || savedTitle, feature }),
+      );
     }
   }
 

@@ -39,33 +39,3 @@ not, each of those becomes a regression two products discover separately at runt
 Move the suites for the components that moved, leave the ones covering product-specific
 tiles behind, and adapt their mocks - the user context and the i18n passthrough both
 have package-level equivalents.
-
-### §VDS58 An optimistic write with no way back
-
-`persistField` writes the patch into `staged` first, then awaits `onUpdate`:
-
-```
-setStaged((prev) => ({ ...prev, ...patch }));
-try   { await onUpdate(...); toast.success(...) }
-catch { toast.error(...) }
-```
-
-The optimistic write is right. What is missing is the other half of it — on the error
-path nothing puts `staged` back.
-
-Nothing else does it either, and that is worth following, because the component does
-have a path that resyncs from props. It compares the four identity fields against the
-`entity` prop during render and re-stages when they differ. But `identity` is *derived*
-from `entity`, and a save that failed is a save that changed nothing, so `entity` is
-untouched, `identity` is untouched, and the comparison finds nothing to correct. The one
-mechanism that could recover is inert in exactly the case that needs it.
-
-What a user gets: a toast reading "not updated", above a field showing the value they
-typed. Reload and the edit is gone. Worse, the component now disagrees with the entity
-it renders — the next `persistField` builds its patch from `{ ...entity, ...patch }`,
-off the untouched prop, so the failed edit is neither retried nor included, while the
-screen still shows it.
-
-Nothing catches it because nothing exercises the path: no test drives `onUpdate` into a
-rejection, which is also why VDS55 could not use these two `console.error` calls as its
-example.

@@ -45,6 +45,16 @@ if (!Element.prototype.scrollIntoView) {
   Element.prototype.scrollIntoView = vi.fn()
 }
 
+// Radix sets pointer capture when it opens a menu, and jsdom implements none of
+// the three calls. Without them the trigger's own handler throws before the menu
+// mounts, so every dropdown in this package is unopenable in a unit test — which
+// is why the entity shell's delete path had never been driven from one.
+if (!Element.prototype.hasPointerCapture) {
+  Element.prototype.hasPointerCapture = () => false
+  Element.prototype.setPointerCapture = () => {}
+  Element.prototype.releasePointerCapture = () => {}
+}
+
 if (!globalThis.ResizeObserver) {
   globalThis.ResizeObserver = class {
     observe() {}

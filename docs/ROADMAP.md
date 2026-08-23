@@ -8,7 +8,6 @@
 ## Block B — Bento becomes a design-system layer
 
 - ⏳ **VDS18** (deps: VDS1 ✅, VDS11 ✅, a 2026.3.3 release to npm) **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — The product cannot import from here until a release, so its copies stay until that cutover. → §VDS18
-- 📋 **VDS58** (deps: —) **a failed field save leaves the optimistic value on screen, showing an edit the server rejected** — persistField stages the patch before awaiting onUpdate and never rolls back; identity is unchanged, so the props sync cannot. → §VDS58
 
 ## Done when — VDS5
 
@@ -21,15 +20,6 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
-
-## Done when — VDS58
-
-- **a rejected save puts the field back** a test rejects onUpdate and asserts the
-  rendered value is the entity's again, not the one that was typed.
-- **the toast names the entity as it was called when the save was made** success reads
-  staged.title from the render that started it, so renaming reports the old name.
-- **both failure paths are exercised at all** onUpdate rejecting and onDelete rejecting
-  each get a test, which is what nothing had when the rollback went missing.
 
 ## Non-goals
 

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react"
+import { render, screen, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { IconCpu2 } from "@tabler/icons-react"
 import i18next from "i18next"
@@ -6,6 +6,16 @@ import type { ReactElement } from "react"
 import { I18nextProvider, initReactI18next } from "react-i18next"
 import { MemoryRouter } from "react-router-dom"
 import { beforeAll, describe, expect, it, vi } from "vitest"
+
+import { toast } from "sonner"
+
+import { expectConsoleErrors } from "@/test/console-error-gate"
+
+// The shell announces every autosave through sonner, and VDS58 is partly about
+// which name it announces. Mocked so that is assertable at all.
+vi.mock("sonner", () => ({
+  toast: { success: vi.fn(), error: vi.fn() },
+}))
 
 import {
   BentoEntityShell,
@@ -136,6 +146,88 @@ describe("BentoEntityShell", () => {
     const hidden = shell(() => <div />, { hideIcon: true })
     expect(hidden.container.querySelector(".bento-chip")).toBeInTheDocument()
     expect(hidden.container.querySelectorAll("button").length).toBeLessThan(editable)
+  })
+})
+
+// VDS58 — the failure paths, which nothing exercised. persistField stages the
+// patch and then awaits onUpdate; when that rejected, nothing put staged back,
+// and the props resync could not, because a save that failed leaves the entity
+// prop untouched and that comparison is what drives it.
+describe("BentoEntityShell when a save fails", () => {
+  async function renameTo(next: string) {
+    const user = userEvent.setup()
+    await user.click(screen.getByText("GPT"))
+    const title = screen.getByRole("textbox", { name: /title/i })
+    await user.clear(title)
+    await user.type(title, next)
+    await user.tab()
+  }
+
+  it("puts the field back when onUpdate rejects", async () => {
+    expectConsoleErrors("Failed to update entity field")
+    const onUpdate = vi.fn().mockRejectedValue(new Error("nope"))
+    const seen: string[] = []
+    shell((args) => {
+      seen.push(args.staged.title)
+      return <div />
+    }, { onUpdate })
+
+    await renameTo("Claude")
+
+    expect(onUpdate).toHaveBeenCalled()
+    // The entity's own title, not the one that was typed and refused.
+    expect(seen.at(-1)).toBe("GPT")
+    expect(screen.getByText("GPT")).toBeInTheDocument()
+  })
+
+  it("names the entity in the toast by the value just saved", async () => {
+    // This harness renders missing keys literally, which drops interpolation
+    // with them — the one string being asserted gets a real translation.
+    i18next.addResource("en", "translation", "forms.common.updated", "{{name}} updated")
+    const onUpdate = vi.fn().mockResolvedValue(undefined)
+    shell(() => <div />, { onUpdate })
+
+    await renameTo("Claude")
+
+    // Not "GPT updated": staged.title is the value from the render that began
+    // the save, over a field already showing the new one.
+    expect(toast.success).toHaveBeenCalledWith("Claude updated")
+  })
+
+  it("keeps the edit when onUpdate resolves", async () => {
+    const onUpdate = vi.fn().mockResolvedValue(undefined)
+    const seen: string[] = []
+    shell((args) => {
+      seen.push(args.staged.title)
+      return <div />
+    }, { onUpdate })
+
+    await renameTo("Claude")
+
+    expect(seen.at(-1)).toBe("Claude")
+  })
+
+  it("survives onDelete rejecting", async () => {
+    expectConsoleErrors("Failed to delete entity")
+    // Radix guards its trigger with pointer-events, which jsdom does not model.
+    const user = userEvent.setup({ pointerEventsCheck: 0 })
+    const onDelete = vi.fn().mockRejectedValue(new Error("nope"))
+    shell(() => <div />, { onDelete })
+
+    // By its own label: this harness renders missing keys literally, so Save
+    // and Cancel are "forms.formActions.save"/".cancel" and both match /actions/.
+    await user.click(screen.getByRole("button", { name: /moreActions/i }))
+    await user.click(await screen.findByRole("menuitem", { name: /\.delete$/i }))
+
+    // The dialog is type-to-confirm: the entity's name has to be typed before
+    // the destructive button enables.
+    const dialog = await screen.findByRole("dialog")
+    await user.type(within(dialog).getByRole("textbox"), "GPT")
+    await user.click(within(dialog).getByRole("button", { name: /deleteFeature/i }))
+
+    expect(onDelete).toHaveBeenCalled()
+    // Still on the page, with the entity intact.
+    expect(screen.getByText("GPT")).toBeInTheDocument()
   })
 })
 
