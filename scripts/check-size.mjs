@@ -32,14 +32,13 @@
 import { gzipSync } from "node:zlib"
 import {
   mkdirSync,
-  readdirSync,
   mkdtempSync,
   readFileSync,
   rmSync,
   symlinkSync,
   writeFileSync,
 } from "node:fs"
-import { basename, dirname, join, resolve } from "node:path"
+import { dirname, join, resolve } from "node:path"
 import { tmpdir } from "node:os"
 import { fileURLToPath } from "node:url"
 
@@ -79,9 +78,9 @@ const FIXTURES = {
       "globalThis.__vdsProbe = Object.keys(ds).length;",
     ].join("\n"),
     bentoExpected: false,
-    // And no other subpath's rules either. `./bento` had a check of its own;
-    // `./floating-formulas-bg` did not, and shipped inside `./styles` to
-    // everyone for want of one (VDS45).
+    // And none of the rules of a subpath whose code a root consumer does not
+    // carry — which is `./bento` and, measured, only `./bento`. Asking the
+    // question of every subpath instead is what VDS46 had to undo.
     subpathFree: true,
   },
   bento: {
@@ -139,12 +138,9 @@ export function bentoEvidence(chunks) {
 /**
  * Class selectors a stylesheet defines, as a set.
  *
- * Used to ask the general question the bento check asks the specific one: does
- * a consumer of `./styles` carry rules that belong to a subpath? It did —
- * `cssCodeSplit: false` merged every entry's CSS, so `floating-formulas-bg.css`
- * shipped to everyone while its component sat behind its own subpath (VDS45).
- * A bento-shaped check could not see that, which is the argument for asking by
- * selector rather than by name.
+ * Asking by selector rather than by name is what lets the check cover a
+ * stylesheet nobody remembered to name a marker for. Which stylesheets it is
+ * asked about is the harder half — see `subpathLeakage`.
  */
 export function selectorsIn(css) {
   const found = new Set()
@@ -154,8 +150,17 @@ export function selectorsIn(css) {
 
 /**
  * Rules from a subpath stylesheet that turned up in a bundle that never asked
- * for it. `subpathCss` is `{ label: css }` — the stylesheets a consumer imports
- * separately, read from `dist`.
+ * for it. `subpathCss` is `{ label: css }`.
+ *
+ * The set matters more than the check. A first version drove it from the
+ * exports map — every subpath stylesheet must be absent from `./styles` — and
+ * that is wrong: `FloatingFormulasBg` has its own subpath *and* is exported
+ * from the root barrel, where `Login` and `StartupFirst` render it, so its
+ * rules belong in `./styles`. Acting on the wrong rule left those two unstyled
+ * (VDS46).
+ *
+ * A subpath's CSS is only misplaced when a root consumer does not carry that
+ * subpath's **code**, which the caller establishes from the same bundle.
  */
 export function subpathLeakage(chunks, subpathCss) {
   const bundled = new Set()
@@ -343,34 +348,23 @@ async function main() {
   // is never emitted, so there was nothing to compare the bundle against and
   // the leak went unnoticed. The source is there either way.
   //
-  // A stylesheet counts as a subpath's when the `exports` map publishes it as
-  // its own entry — not merely because it exists. `login.css` and
-  // `startup-first.css` belong to components in the root barrel, so their rules
-  // are exactly what `./styles` is for; a first draft swept those up and said
-  // so. Discovered rather than listed, so a fourth entry is covered the day it
-  // is added.
-  const MAIN_CHAIN = new Set(["./styles", "./preset", "./preset.css"])
+  // The stylesheets whose rules a root consumer must NOT carry.
+  //
+  // Not "every subpath stylesheet": `floating-formulas-bg.css` has its own
+  // subpath and its component is in the root barrel, rendered by `Login` and
+  // `StartupFirst`, so its rules belong in `./styles`. Treating the exports map
+  // as the rule took them out and left those two unstyled (VDS46).
+  //
+  // The rule is whether a root consumer carries that subpath's *code*. Only
+  // `./bento` qualifies today, and it qualifies by construction: nothing in the
+  // root barrel imports it, which the bento markers below already assert.
+  //
+  // Read from source rather than from `dist`, so the comparison still works in
+  // the failure it guards — where the per-entry file is never emitted.
+  const ROOT_UNREACHABLE = { "./bento.css": join(root, "src", "bento", "bento.css") }
   const subpathCss = {}
-  const sources = new Map()
-  const findCss = (dir) => {
-    for (const entry of readdirSync(dir, { withFileTypes: true })) {
-      const full = join(dir, entry.name)
-      if (entry.isDirectory()) findCss(full)
-      else if (entry.name.endsWith(".css")) sources.set(entry.name, full)
-    }
-  }
-  findCss(join(root, "src"))
-
-  for (const [subpath, target] of Object.entries(
-    JSON.parse(readFileSync(join(root, "package.json"), "utf8")).exports,
-  )) {
-    if (typeof target !== "string" || !target.endsWith(".css")) continue
-    if (MAIN_CHAIN.has(subpath)) continue
-    // From source, not from dist: with the CSS merged, `dist/…` is never
-    // emitted, so there would be nothing to compare against in exactly the
-    // failure this guards. A first draft read dist and was vacuous for it.
-    const source = sources.get(basename(target))
-    if (source) subpathCss[subpath] = readFileSync(source, "utf8")
+  for (const [label, file] of Object.entries(ROOT_UNREACHABLE)) {
+    subpathCss[label] = readFileSync(file, "utf8")
   }
 
   const measured = {}

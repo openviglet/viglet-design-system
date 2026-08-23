@@ -120,21 +120,23 @@ describe("what one fixture is held to", () => {
 })
 
 describe("a subpath's rules staying behind its subpath", () => {
-  const subpath = { "./floating-formulas-bg.css": ".ff-term{}.ff-bond{}.ff-bond-line{}.ff-atom{}.ff-orbit{}.ff-glow{}.ff-drift{}" }
+  // ./bento.css is the only stylesheet whose code a root consumer does not
+  // carry; asking this of every subpath is what VDS46 undid.
+  const subpath = { "./bento.css": ".bento-tile{}.bento-hero{}.bento-chip{}.bento-fade{}.bento-rail{}.bento-tone-blue{}.bento-section{}" }
 
   it("names the subpath and how much of it arrived", () => {
-    const leaked = asset("entry.css", ".ff-term{}.ff-bond{}.ff-bond-line{}.ff-atom{}.ff-orbit{}.ff-glow{}.ff-drift{}")
+    const leaked = asset("entry.css", ".bento-tile{}.bento-hero{}.bento-chip{}.bento-fade{}.bento-rail{}.bento-tone-blue{}.bento-section{}")
     const found = subpathLeakage([leaked], subpath)
 
     expect(found).toHaveLength(1)
-    expect(found[0]).toContain("./floating-formulas-bg.css")
+    expect(found[0]).toContain("./bento.css")
     expect(found[0]).toContain("7 of its selectors")
   })
 
   it("tolerates a few names in common — that is coincidence, not a layer", () => {
     // Two stylesheets can each define `.sr-only`. A subpath arriving whole
     // looks nothing like that, so the threshold is what separates them.
-    const overlap = asset("entry.css", ".ff-term{}.ff-bond{}")
+    const overlap = asset("entry.css", ".bento-tile{}.bento-hero{}")
     expect(subpathLeakage([overlap], subpath)).toEqual([])
   })
 
@@ -147,6 +149,14 @@ describe("a subpath's rules staying behind its subpath", () => {
     // consumer is supposed to carry. Counting them would fail every build.
     expect([...selectorsIn(":root{--vg-bento-tone-blue-from:red}")]).toEqual([])
     expect([...selectorsIn(".ff-term{color:red}")]).toEqual(["ff-term"])
+  })
+
+  it("says nothing about the formulas background, which is root chrome", () => {
+    // VDS46 — it has its own subpath *and* is exported from the root barrel,
+    // rendered by Login and StartupFirst, so its rules belong in ./styles.
+    // Asking the question of it took them out and left those two unstyled.
+    const rootStyles = asset("entry.css", ".ff-term{}.ff-bond{}.ff-atom{}.ff-orbit{}.ff-glow{}.ff-drift{}")
+    expect(subpathLeakage([rootStyles], subpath)).toEqual([])
   })
 })
 

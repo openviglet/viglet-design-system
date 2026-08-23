@@ -7,17 +7,18 @@ import dts from "vite-plugin-dts"
 
 import { isExternal } from "./scripts/lib/externals.mjs"
 
-// A stylesheet a consumer imports by its own subpath and that no entry pulls.
+// Stylesheets a consumer imports by their own subpath, copied verbatim so the
+// entry in the exports map is the file itself.
 //
-// Only bento's, and for a reason worth keeping: nothing in `src/bento` imports
-// `bento.css`, so a consumer taking the layout maths carries no CSS at all.
-// That also means the build emits nothing for it — there is no module graph to
-// find it through — so it is copied verbatim.
-//
-// `floating-formulas-bg.css` used to be here too and is not: its component
-// imports it, so `cssCodeSplit` emits it per entry. Merged, it was inside
-// `./styles` for every consumer (VDS45).
+// Both are also reachable other ways, and that is fine rather than a leak.
+// `bento.css` is imported by nothing in `src/bento`, on purpose — a consumer
+// taking only the layout maths carries no CSS — so the build emits nothing for
+// it and the copy is the only way it ships. `floating-formulas-bg.css` is
+// imported by its component, which `Login` and `StartupFirst` render, so its
+// rules are inside `./styles` too; the subpath is for a consumer who wants only
+// that background.
 const STANDALONE_CSS: Array<[from: string, to: string]> = [
+  ["src/components/ui/floating-formulas-bg.css", "dist/floating-formulas-bg.css"],
   ["src/bento/bento.css", "dist/bento.css"],
 ]
 
@@ -89,14 +90,18 @@ export default defineConfig({
         },
       },
     },
-    // Split per entry. Merged, every entry's CSS landed in one file, so
-    // floating-formulas-bg.css — a component deliberately behind its own
-    // subpath and absent from the root barrel — shipped inside ./styles to
-    // every consumer (VDS45).
+    // Merged, not split per entry.
+
+    // VDS45 split it, on the premise that floating-formulas-bg.css belonged to
+    // a component behind its own subpath. It does not: FloatingFormulasBg is
+    // exported from src/components/ui/index.ts and rendered by Login and
+    // StartupFirst, both in the root barrel. Splitting moved its rules into a
+    // file a consumer importing Login has no reason to import, and those two
+    // rendered an unstyled background (VDS46).
     //
-    // The main entry's stylesheet is `index.css` under splitting; `lib.cssFileName`
-    // only applies to a single-entry build, so `./styles` names that path instead.
-    // No consumer deep-imports the file, so the subpath is the whole contract.
-    cssCodeSplit: true,
+    // A subpath entry existing is not evidence that a root consumer skips it.
+    // ./bento is the one that is genuinely separate, and check-size proves
+    // that by looking at what the root bundle actually carries.
+    cssCodeSplit: false,
   },
 })

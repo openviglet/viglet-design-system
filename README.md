@@ -387,20 +387,21 @@ only the layout maths does not pull CSS it never renders. It reads the preset's
 tokens, so import the preset too.
 
 "Carries none of it" is measured rather than claimed. `pnpm run build` ends by
-bundling three fixtures through this package's own `exports` map, and fails if
-**any** subpath's rules reach a consumer that imported only the root entry — not
-just bento's. `size-budget.json` records what each entry costs: today the whole
-root entry is 85 KB gzipped and `./bento` 22 KB, measured with everything the
-build externalises left out, so the numbers describe this package rather than
-its dependencies. The preset's `--vg-bento-tone-*` tokens are deliberately not
-counted as a subpath's: they ship with every other token and are about a
-kilobyte of custom properties.
+bundling three fixtures through this package's own `exports` map, and fails if a
+bento module, a bento class name or a run of `bento.css`'s selectors reaches a
+consumer that imported only the root entry. `size-budget.json` records what each
+entry costs: today the whole root entry is 87 KB gzipped and `./bento` 22 KB,
+measured with everything the build externalises left out, so the numbers
+describe this package rather than its dependencies. The preset's
+`--vg-bento-tone-*` tokens are deliberately not counted as the layer: they ship
+with every other token and are about a kilobyte of custom properties.
 
-That check was written bento-shaped and missed one. `floating-formulas-bg.css`
-sits behind its own subpath and its component is not in the root barrel, yet its
-rules were inside `./styles` for every consumer, because the build merged every
-entry's CSS into one file. It now splits per entry, and the check asks by
-selector rather than by name.
+The test is whether a root consumer carries the subpath's **code**, not whether
+the subpath exists. `./floating-formulas-bg` has its own entry *and*
+`FloatingFormulasBg` is exported from the root barrel, where `Login` and
+`StartupFirst` render it — so its rules are in `./styles` too, and that is
+correct rather than a leak. The subpath is for a consumer who wants only that
+background.
 
 **`./bento` requires `react-router-dom`.** The package declares that peer
 optional because the root entry does not need it — only `./router` and `./bento`

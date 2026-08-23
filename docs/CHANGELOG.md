@@ -21,6 +21,7 @@
 - ✅ **VDS43** **the size baseline counts the consumer's own dependencies, so a dependabot bump to xlsx can fail the build** — The library build and the size fixture read one externals module, so the baseline describes this package: root-only fell from 328KB to 87KB gzipped.
 - ✅ **VDS44** **the shipped fonts.css and preset.css import @fontsource by bare specifier, resolved in the consumer's tree** — dist/fonts.css is built, not copied: 5KB of rules pointing at 11 woff2 files beside it, so nothing resolves through the consumer's tree.
 - ✅ **VDS45** **four mechanisms ship CSS, and the newest exists only because cssCodeSplit is false** — The CSS splits per entry, so floating-formulas-bg leaves ./styles, and the gate now refuses any subpath's rules in a root-only bundle.
+- ✅ **VDS46** **splitting the CSS took the formulas rules out of ./styles, and two root components render that background** — The CSS merges again, so Login and StartupFirst are styled, and the gate asks about a subpath only where a root consumer does not carry its code.
 
 ## Block B — Bento becomes a design-system layer
 
