@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs"
+import { gzipSync } from "node:zlib"
 import { resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 
@@ -11,7 +12,9 @@ import {
   oversizedAssets,
   selectorsIn,
   subpathLeakage,
+  unicodeRanges,
   unreachableSubpathCss,
+  wireBytes,
 } from "./check-size.mjs"
 
 // VDS26/VDS42 — the three fixtures actually bundle at the end of
@@ -210,6 +213,89 @@ describe("a subpath's rules staying behind its subpath", () => {
     // Asking the question of it took them out and left those two unstyled.
     const rootStyles = asset("entry.css", ".ff-term{}.ff-bond{}.ff-atom{}.ff-orbit{}.ff-glow{}.ff-drift{}")
     expect(subpathLeakage([rootStyles], subpath)).toEqual([])
+  })
+})
+
+describe("reading a unicode-range", () => {
+  const covers = (range: string, point: number) =>
+    unicodeRanges(range).some(([from, to]) => point >= from && point <= to)
+
+  it("reads a span", () => {
+    expect(covers("U+0000-00FF", 0x41)).toBe(true)
+    expect(covers("U+0000-00FF", 0x4e2d)).toBe(false)
+  })
+
+  it("reads a list, and a single point in it", () => {
+    expect(covers("U+0100-024F, U+0259", 0x259)).toBe(true)
+    expect(covers("U+0100-024F, U+0259", 0x260)).toBe(false)
+  })
+
+  it("reads the wildcard form", () => {
+    // `U+04??` is how @fontsource spells a whole block.
+    expect(covers("U+04??", 0x0410)).toBe(true)
+    expect(covers("U+04??", 0x0500)).toBe(false)
+  })
+
+  it("puts the Portuguese accents in latin, not latin-ext", () => {
+    // Why the probes are what they are: ç is Latin-1, so a Portuguese page
+    // fetches the same subset an English one does.
+    expect(covers("U+0000-00FF", "ç".codePointAt(0)!)).toBe(true)
+    expect(covers("U+0100-024F", "ç".codePointAt(0)!)).toBe(false)
+  })
+})
+
+describe("what a page fetches, against what the entry ships", () => {
+  const face = (file: string, range?: string) =>
+    `@font-face{font-family:X;src:url(./fonts/${file}) format('woff2');${range ? `unicode-range:${range};` : ""}}`
+
+  const bundle = (bodies: string[], files: Record<string, string>) => [
+    asset("entry.css", bodies.join("")),
+    ...Object.entries(files).map(([f, content]) => asset(`fonts/${f}`, content)),
+  ]
+
+  it("counts the subsets a page asks for and skips the rest", () => {
+    const chunks = bundle(
+      [face("latin.woff2", "U+0000-00FF"), face("cyrillic.woff2", "U+0400-04FF")],
+      { "latin.woff2": "L".repeat(4000), "cyrillic.woff2": "C".repeat(4000) },
+    )
+    const whole = chunks.reduce((n, c) => n + String(c.source).length, 0)
+    const wire = wireBytes(chunks)!
+
+    expect(wire).toBeGreaterThan(0)
+    // The cyrillic face is skipped, so the figure is well under the whole.
+    expect(wire).toBeLessThan(whole / 2)
+  })
+
+  it("keeps a face that declares no range — a browser always fetches it", () => {
+    const chunks = bundle([face("all.woff2"), face("greek.woff2", "U+0370-03FF")], {
+      "all.woff2": "A".repeat(4000),
+      "greek.woff2": "G".repeat(4000),
+    })
+    const withAll = wireBytes(chunks)!
+    const withoutAll = wireBytes(bundle([face("greek.woff2", "U+0370-03FF")], {
+      "greek.woff2": "G".repeat(4000),
+    }))!
+    expect(withAll).toBeGreaterThan(withoutAll)
+  })
+
+  it("says nothing where nothing is subsetted", () => {
+    // An entry with no unicode-range has no second number to record, and a
+    // duplicate of the first would read as a measurement.
+    expect(wireBytes([asset("entry.css", ".a{color:red}")])).toBeNull()
+    expect(wireBytes([chunk("entry.js", "const x=1")])).toBeNull()
+  })
+
+  it("counts a face once — it is a chunk in the bundle as well as a url", () => {
+    // A first version added every asset in one pass and the fetched faces in
+    // another, and reported a wire figure larger than the whole.
+    const chunks = bundle([face("latin.woff2", "U+0000-00FF")], {
+      "latin.woff2": "L".repeat(4000),
+    })
+    const whole = chunks.reduce(
+      (n, c) => n + gzipSync(Buffer.from(String(c.source))).byteLength,
+      0,
+    )
+    expect(wireBytes(chunks)).toBe(whole)
   })
 })
 

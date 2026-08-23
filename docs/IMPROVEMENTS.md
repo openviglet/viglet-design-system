@@ -25,24 +25,6 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
-### §VDS48 Say which number the fonts entry is
-
-`./fonts` is recorded at 271 KB, the sum of eleven woff2 subsets. That is what the
-package ships and it is not what a page downloads: every `@font-face` carries a
-`unicode-range`, so a browser fetches only the subsets the text needs. An English or
-Portuguese page takes `inter-latin` and `plus-jakarta-sans-latin` - about 74 KB, since
-the accented characters Portuguese uses live in Latin-1 and not in `latin-ext`. The
-recorded number overstates a real page by roughly three and a half times.
-
-Both numbers are true and the file says which is which nowhere, so a reader draws the
-wrong conclusion - the same defect VDS43 removed when the baseline was counting
-dependencies as this package's weight. It also hides the thing worth knowing: the split
-into files, in VDS44, is what made the browser's subsetting possible at all, and the
-recorded figure gives that no credit.
-
-Record what a page fetches beside what the entry ships, or annotate the entry so the
-number is read as the tarball's and not the wire's.
-
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components

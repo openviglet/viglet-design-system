@@ -124,6 +124,13 @@ and browser cache the faces apart from the rules — so a change to any rule no
 longer re-downloads every font, and a product already serving Inter can drop
 this copy.
 
+**A page fetches about 77 KB of that, not 272 KB.** Each face carries a
+`unicode-range`, so the browser asks only for the subsets your text needs; an
+English or Portuguese page takes `latin` and nothing else, the accented
+characters Portuguese uses being Latin-1 rather than `latin-ext`.
+`size-budget.json` records both numbers, and CI fails if either moves — or if
+the faces stop being subsetted at all.
+
 **Upgrading:** add the second line, or the type falls back through `--font-sans`
 to `system-ui`. That is a real look rather than a broken one, but it is not the
 one the catalogue shows.

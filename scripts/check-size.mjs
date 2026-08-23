@@ -151,6 +151,90 @@ export function selectorsIn(css) {
 }
 
 /**
+ * The characters the recorded "wire" figure is measured for.
+ *
+ * `A` stands for any Latin page and `ç` for the accented characters Portuguese
+ * uses — both live in the `latin` subset, not `latin-ext`, which is Central and
+ * Eastern European. Those are the two languages this package ships translations
+ * for, so they are what a real page of it fetches.
+ */
+export const WIRE_PROBES = ["A", "ç"]
+
+/** Parses a `unicode-range` value into inclusive `[from, to]` pairs. */
+export function unicodeRanges(value) {
+  const ranges = []
+  for (const part of value.split(",")) {
+    const token = part.trim().replace(/^u\+/i, "")
+    if (!token) continue
+    if (token.includes("-")) {
+      const [from, to] = token.split("-")
+      ranges.push([Number.parseInt(from, 16), Number.parseInt(to, 16)])
+    } else if (token.includes("?")) {
+      // `U+04??` is shorthand for the block it wildcards.
+      ranges.push([Number.parseInt(token.replaceAll("?", "0"), 16), Number.parseInt(token.replaceAll("?", "F"), 16)])
+    } else {
+      const point = Number.parseInt(token, 16)
+      ranges.push([point, point])
+    }
+  }
+  return ranges
+}
+
+/**
+ * What a page actually downloads, as opposed to what the entry ships.
+ *
+ * A `@font-face` carries a `unicode-range`, and a browser fetches a face only
+ * when the text needs a character in it. `./fonts` ships eleven subsets and an
+ * English page takes two of them, so the sum overstates a real page by about
+ * three and a half times — two true numbers, and nothing said which was which
+ * (VDS48). The split into files in VDS44 is what made this true at all: inlined
+ * as one blob, every byte arrived whether the page used it or not.
+ *
+ * Returns null where nothing in the bundle is subsetted, so an entry that has
+ * no such distinction records no second number rather than a duplicate one.
+ */
+export function wireBytes(chunks, probes = WIRE_PROBES) {
+  const points = probes.map((c) => c.codePointAt(0))
+  const name = (path) => path.split("/").pop()
+
+  // Every face the stylesheets declare, and which of them a page with these
+  // characters would ask for. Collected before anything is counted: a face is
+  // also a chunk in the bundle, and counting it in both passes is what made a
+  // first version report a "wire" figure larger than the whole.
+  const declared = new Set()
+  const fetched = new Set()
+  let subsetted = false
+
+  for (const chunk of chunks.filter((c) => c.fileName.endsWith(".css"))) {
+    for (const [, body] of String(chunk.source).matchAll(/@font-face\s*\{([^}]*)\}/g)) {
+      const url = /url\(\s*["']?([^"')]+)["']?\s*\)/.exec(body)
+      if (!url) continue
+      const file = name(url[1])
+      declared.add(file)
+
+      const range = /unicode-range:\s*([^;}]+)/.exec(body)
+      if (!range) {
+        fetched.add(file)
+        continue
+      }
+      subsetted = true
+      const ranges = unicodeRanges(range[1])
+      if (points.some((p) => ranges.some(([from, to]) => p >= from && p <= to))) fetched.add(file)
+    }
+  }
+
+  if (!subsetted) return null
+
+  let total = 0
+  for (const chunk of chunks) {
+    const file = name(chunk.fileName)
+    if (declared.has(file) && !fetched.has(file)) continue
+    total += gzipSync(Buffer.from(chunk.type === "asset" ? chunk.source : chunk.code)).byteLength
+  }
+  return total
+}
+
+/**
  * Which subpath stylesheets a root consumer must not carry, worked out rather
  * than declared.
  *
@@ -323,7 +407,10 @@ async function bundle(name, { source }) {
     // evidence VDS47 derives the subpath set from.
     const modules = chunks.flatMap((c) => Object.keys(c.modules ?? {}))
 
-    return { raw, gzip, chunks, modules }
+    // What a Latin page actually fetches, where that differs from the whole.
+    const wire = wireBytes(chunks)
+
+    return { raw, gzip, wire, chunks, modules }
   } finally {
     rmSync(dir, { recursive: true, force: true })
   }
@@ -410,8 +497,8 @@ async function main() {
   const failures = []
 
   for (const [name, fixture] of Object.entries(FIXTURES)) {
-    const { raw, gzip, chunks, modules } = await bundle(name, fixture)
-    measured[name] = { raw, gzip }
+    const { raw, gzip, wire, chunks, modules } = await bundle(name, fixture)
+    measured[name] = wire === null ? { raw, gzip } : { raw, gzip, wire }
 
     // Which subpaths this consumer skips is read off its own bundle, so the
     // question asked of it is the one its shape justifies. For the fixtures
@@ -427,6 +514,20 @@ async function main() {
     if (!update) {
       const d = drift(name, gzip, baseline[name]?.gzip)
       if (d) failures.push(d)
+      // The wire figure is gated too: a change that quietly makes a Latin
+      // page fetch more is exactly what a recorded number is for.
+      if (wire !== null) {
+        const w = drift(`${name} (wire)`, wire, baseline[name]?.wire)
+        if (w) failures.push(w)
+      } else if (baseline[name]?.wire !== undefined) {
+        // Losing the second number is the loudest version of this defect: no
+        // unicode-range means a Latin page downloads every subset, and the
+        // measurement would quietly stop rather than report it.
+        failures.push(
+          `${name}: nothing is subsetted any more, so a page fetches the whole ` +
+            `${gzip} bytes where it fetched ${baseline[name].wire}`,
+        )
+      }
     }
   }
 
@@ -434,7 +535,8 @@ async function main() {
     writeFileSync(BASELINE, JSON.stringify(measured, null, 2) + "\n")
     console.log(`recorded baseline in size-budget.json:`)
     for (const [name, m] of Object.entries(measured)) {
-      console.log(`  ${name.padEnd(10)} ${m.gzip} gzipped, ${m.raw} raw`)
+      const wire = m.wire === undefined ? "" : `, ${m.wire} on the wire`
+      console.log(`  ${name.padEnd(10)} ${m.gzip} gzipped, ${m.raw} raw${wire}`)
     }
     return
   }
@@ -443,7 +545,8 @@ async function main() {
     console.log(JSON.stringify({ measured, baseline, failures }, null, 2))
   } else {
     for (const [name, m] of Object.entries(measured)) {
-      console.log(`  ${name.padEnd(10)} ${m.gzip} gzipped (baseline ${baseline[name]?.gzip ?? "none"}), ${m.raw} raw`)
+      const wire = m.wire === undefined ? "" : `, ${m.wire} on the wire`
+      console.log(`  ${name.padEnd(10)} ${m.gzip} gzipped (baseline ${baseline[name]?.gzip ?? "none"}), ${m.raw} raw${wire}`)
     }
   }
 

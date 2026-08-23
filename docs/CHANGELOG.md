@@ -23,6 +23,7 @@
 - ✅ **VDS45** **four mechanisms ship CSS, and the newest exists only because cssCodeSplit is false** — The CSS splits per entry, so floating-formulas-bg leaves ./styles, and the gate now refuses any subpath's rules in a root-only bundle.
 - ✅ **VDS46** **splitting the CSS took the formulas rules out of ./styles, and two root components render that background** — The CSS merges again, so Login and StartupFirst are styled, and the gate asks about a subpath only where a root consumer does not carry its code.
 - ✅ **VDS47** **the size gate hand-declares which subpath a root consumer skips, and the gate already builds the answer** — The gate reads which subpaths a bundle skipped off its own module ids, so a component leaving the root barrel widens the check with no list to edit.
+- ✅ **VDS48** **size-budget records 271KB for ./fonts where a page fetches about 74KB, and says nothing about the difference** — size-budget records what a Latin page fetches beside what the entry ships — 79KB against 279KB — and CI fails if either moves or subsetting stops.
 
 ## Block B — Bento becomes a design-system layer
 

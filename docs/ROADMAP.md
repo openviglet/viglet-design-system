@@ -4,7 +4,6 @@
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — All three consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS30** (deps: typescript-eslint supporting TS 7) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — It throws on import against ts.versionMajorMinor >= 7, and no side-by-side recipe makes a peer resolve a second TypeScript. → §VDS30
-- 📋 **VDS48** (deps: —) **size-budget records 271KB for ./fonts where a page fetches about 74KB, and says nothing about the difference** — Each face carries a unicode-range, so a browser takes only the subsets a page needs; the fixture counts all eleven. → §VDS48
 
 ## Block B — Bento becomes a design-system layer
 
@@ -21,12 +20,6 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
-
-## Done when — VDS48
-
-- **The fonts figure says whether it is the tarball or the wire** A reader can tell what
-  a page downloads from what the entry ships, and the unicode-range subsetting is
-  visible in the number.
 
 ## Non-goals
 
