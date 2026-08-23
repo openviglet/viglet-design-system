@@ -14,13 +14,3 @@ lint that a consumer runs in its own CI: for each locally declared component, if
 package exports that name, fail and name the import that replaces it. Land it before
 Block B rather than after, because the instrument is what finds the call site nobody
 read.
-
-### §VDS30 Return to TypeScript 7 when the lint can load it
-
-typescript-eslint 8 throws on import against ts.versionMajorMinor >= 7, and the
-documented side-by-side recipe needs the tool to resolve a second TypeScript, which a
-peer dependency cannot be made to do. So this package moved from 7.0.2 to 6.0.3, which
-also removed a real npm install conflict: i18next declares peerOptional typescript ^5 ||
-^6, and npm treats that as hard, so a plain install failed and the publish workflow with
-it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
-issue 10940 and move back when it supports 7.1.
