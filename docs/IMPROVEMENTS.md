@@ -25,37 +25,6 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
-### §VDS66 A dedupe that drops the tail
-
-The insertion path ends with a guard against restating the crumb already there:
-
-```
-if (breadcrumb.length > 0 &&
-    breadcrumb[breadcrumb.length - 1].label === normalized[0]?.label) {
-  return breadcrumb;
-}
-return [...breadcrumb, ...normalized];
-```
-
-It compares `normalized[0]` and then returns the breadcrumb **unchanged** — so when the
-first level matches, every level behind it is discarded with it. Written for a single
-item, applied to an array.
-
-The case is the hook's own documented one. Its doc comment offers
-`useSubPageBreadcrumb([{ label: "Users", href: "/..." }, { label: "admin" }])` as how
-you express multiple levels, and a page under a "Users" crumb is exactly where that
-shape gets written. A probe doing it renders `Users` where `Users / admin` was asked
-for: the sub-page's own level never appears, and nothing reports it.
-
-`ownItemsRef.current = normalized` still runs afterwards, so the hook records ownership
-of items it did not insert. That is inert today — on unmount `indexOf(own[0])` finds
-nothing and removes nothing — but it means the ref is a claim rather than a fact, which
-is the kind of thing the next change here will trust.
-
-What the guard is for is real: two components can legitimately name the same level, and
-the crumb should not double. It just has to skip the levels that are already there
-rather than abandon the insertion.
-
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components

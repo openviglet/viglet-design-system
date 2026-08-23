@@ -47,25 +47,48 @@ export function useSubPageBreadcrumb(
         }
 
         setItems((breadcrumb) => {
-            if (prev.length > 0) {
-                // Find our existing items by reference and replace them in-place
-                const idx = breadcrumb.indexOf(prev[0]);
-                if (idx >= 0) {
-                    return [
-                        ...breadcrumb.slice(0, idx),
-                        ...normalized,
-                        ...breadcrumb.slice(idx + prev.length),
-                    ];
+            // Lift our previous run out, so an update becomes a fresh insertion
+            // at the position we already hold. One path serves both cases: on
+            // mount there is no run to lift and `after` is empty, which appends.
+            const start = prev.length > 0 ? breadcrumb.indexOf(prev[0]) : -1;
+            const before = start >= 0 ? breadcrumb.slice(0, start) : breadcrumb;
+            const after = start >= 0 ? breadcrumb.slice(start + prev.length) : [];
+
+            // Insert only the levels that are not already the crumb just above
+            // us. Two components can legitimately name the same level and it
+            // should not double; this used to compare the first item and then
+            // return the breadcrumb untouched, so a sub-page restating its
+            // parent — the hook's own documented two-level example — lost every
+            // level behind the repeat.
+            //
+            // Longest run first, so ["Users", "admin"] arriving where both are
+            // already present adds nothing rather than repeating one.
+            let skip = 0;
+            for (let k = Math.min(normalized.length, before.length); k > 0; k -= 1) {
+                const tail = before.slice(before.length - k);
+                if (tail.every((crumb, i) => crumb.label === normalized[i].label)) {
+                    skip = k;
+                    break;
                 }
             }
-            // First insertion — append
-            if (breadcrumb.length > 0 && breadcrumb[breadcrumb.length - 1].label === normalized[0]?.label) {
-                return breadcrumb;
-            }
-            return [...breadcrumb, ...normalized];
-        });
 
-        ownItemsRef.current = normalized;
+            // Recorded here, not after setItems returns: the updater runs during
+            // a later render, so anything assigned outside it still holds the
+            // pre-update value when the ref is read. The cleanup finds our items
+            // by reference, so a ref naming levels the dedupe declined to insert
+            // removes nothing at all and leaks them.
+            //
+            // The write is a pure function of `breadcrumb`, so re-invoking this
+            // updater — StrictMode does — lands on the same value. Reading the
+            // live breadcrumb is what forces it inside: sibling levels mounting
+            // in one commit would both see a stale ctx.items from out here, and
+            // that is exactly the parent-and-child case above.
+            const inserted = normalized.slice(skip);
+            ownItemsRef.current = inserted;
+
+            if (start < 0 && inserted.length === 0) return breadcrumb;
+            return [...before, ...inserted, ...after];
+        });
     }, [items, setItems]);
 
     useEffect(() => {
