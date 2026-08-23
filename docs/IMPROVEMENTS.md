@@ -25,6 +25,33 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
+### §VDS60 A provider that models only the happy path
+
+`refreshUser` is `fetchUser().then(setUser)`. There is no `.catch`, and `fetchUser` is a
+required prop whose whole job is a network call — so rejecting is an ordinary outcome,
+not an exotic one. A probe rejecting it gets `unhandledRejection: Error: 401` and a
+rendered user of `{}`.
+
+Those are one defect, not two. The rejection has nowhere to go because the context value
+has no room for a failure: it is `{ user, refreshUser }`, and `user` is
+`useState<VigUser>({} as VigUser)`. A bare `.catch` would only move the silence — the
+provider would still hand every consumer an object that satisfies `VigUser` and contains
+nothing.
+
+That cast is the second half. A consumer reading `user.name` gets `undefined` while the
+type promises a string, and it cannot distinguish "still loading" from "the session
+expired" from "a user with no name". Three products render chrome off this — an avatar,
+a name, a role gate — and each has to invent its own guess at which of the three it is
+looking at, from the same empty object.
+
+`refreshUser` returns `void`, so a caller cannot await a retry or learn that it failed
+either.
+
+The fix is a state a consumer can read, and it has to be additive: three consoles are on
+this provider, and the non-goal about console-era exports says what removing something
+under them costs. Adding to the context value breaks nobody; changing what `user` means
+would.
+
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components
