@@ -49,6 +49,31 @@ leaving elements near where they started — so the pool is not sampled evenly e
 Done right, the seed is derived from something the props carry, and the shuffle is a
 shuffle. Both make the render reproducible, which is what lets a gate hold it.
 
+### §VDS55 The gate covers the catalogue and not the suite
+
+VDS53 made a React console error fail the run, and installed it in
+`.storybook/vitest.setup.ts`. That covers the `stories` project — every story in the
+catalogue, rendered in a real browser. It covers none of the `unit` project, where
+`src/test/setup.ts` patches nothing: a component test can log an invalid prop, a key
+collision or an `act()` warning and still be counted as passing.
+
+The suite is clean today, so this is a hole rather than a live defect — which is the
+only time it is cheap to close. The unit project is where a component's behaviour is
+asserted directly, so it is also where a test is most likely to drive a component into a
+state the catalogue never renders, and `act()` warnings in particular only appear here.
+
+Two things differ from the story side and are the whole of the design. Attribution can
+be finer: jsdom renders synchronously under `act()`, so the deferred-commit problem that
+forced the story gate to assert per **file** may not apply, and a per-test `afterEach`
+would name the test rather than the file. That has to be established the way it was
+established for stories — by making a test fail on purpose and reading who is blamed —
+not assumed.
+
+And the allowance needs a shape. Stories declare theirs in
+`parameters.expectedConsoleErrors`; a unit test has no parameters, so it needs an
+exported helper it calls, and `bento-entity-shell`'s two deliberate `console.error`
+calls in its catch paths are the case that proves it works.
+
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components
