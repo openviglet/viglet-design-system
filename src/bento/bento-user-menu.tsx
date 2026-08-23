@@ -51,7 +51,7 @@ export function BentoUserMenu({
   onOpenShortcuts,
   onReplayTour,
 }: Readonly<BentoUserMenuProps>) {
-  const { user } = useCurrentUser();
+  const { user, status } = useCurrentUser();
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -60,9 +60,13 @@ export function BentoUserMenu({
     user.username ||
     "";
 
-  // While the user is still loading (empty state), keep the slot reserved
-  // so the header doesn't reflow when the avatar lands.
-  if (!user.username) {
+  // Keep the slot reserved while the user is in flight, so the header does not
+  // reflow when the avatar lands. This used to test `!user.username`, which is
+  // the same value whether the request is pending, the session expired, or the
+  // account has no username — so a failed fetch showed this placeholder for
+  // ever. The provider says which it is now (VDS60); a failure falls through to
+  // the menu, where the logout entry is the thing a signed-out user needs.
+  if (status === "loading") {
     return <div className="h-9 w-9 rounded-full bg-muted/40" aria-hidden />;
   }
 

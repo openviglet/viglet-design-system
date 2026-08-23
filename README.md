@@ -329,6 +329,8 @@ Console-era, `@deprecated`, still exported — see [the swap table](#two-eras-an
 
 `BreadcrumbProvider` / `useBreadcrumb`, `UserProvider` / `useCurrentUser`, `ThemeProvider` / `useTheme`
 
+`useCurrentUser()` returns `status` (`"loading" | "ready" | "failed"`) and `error` alongside `user` and `refreshUser`. Read `status` rather than inferring one from an empty `user` — the same empty object means a request that has not settled, a session that expired, and an account with no username. A rejecting `fetchUser` sets `status: "failed"` and is not rethrown.
+
 ### Design Tokens
 
 OKLCH-based color system with light/dark mode, CSS variables for theming, consistent radius scale, chart palette, sidebar theme, animations.

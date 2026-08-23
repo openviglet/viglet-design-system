@@ -4,7 +4,6 @@
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — All three consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS30** (deps: typescript-eslint supporting TS 7) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — It throws on import against ts.versionMajorMinor >= 7, and no side-by-side recipe makes a peer resolve a second TypeScript. → §VDS30
-- 📋 **VDS60** (deps: —) **UserProvider drops a failed fetchUser and renders an empty object typed as a user, so consumers cannot tell** — fetchUser().then(setUser) has no catch, and the context value has nowhere to put a failure or a pending state. → §VDS60
 
 ## Block B — Bento becomes a design-system layer
 
@@ -21,15 +20,6 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
-
-## Done when — VDS60
-
-- **a rejecting fetchUser produces no unhandled rejection** a test rejects it and
-  process.on reports none, the way VDS59 established that half is watched.
-- **a consumer can tell loading from failed from loaded** the context carries that
-  state, so three products stop each guessing it from the same empty object.
-- **nothing already on the provider breaks** the additions are additive: user and
-  refreshUser keep their names and meaning, because three consoles read them.
 
 ## Non-goals
 
