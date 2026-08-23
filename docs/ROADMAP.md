@@ -4,7 +4,6 @@
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — All three consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS30** (deps: typescript-eslint supporting TS 7) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — It throws on import against ts.versionMajorMinor >= 7, and no side-by-side recipe makes a peer resolve a second TypeScript. → §VDS30
-- 📋 **VDS67** (deps: —) **the boot-loader plugin takes title, colour and prefix on trust and silently mangles what it cannot honour** — A title with the dollar-ampersand pair loses text, a named colour renders two accents, and a bad prefix injects CSS. → §VDS67
 
 ## Block B — Bento becomes a design-system layer
 
@@ -21,19 +20,6 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
-
-## Done when — VDS67
-
-- **a title is rendered as text, whatever characters it holds** Cost dollar-ampersand
-  Billing keeps its words, against the truncation a probe measured.
-- **one colour option produces one colour** a named CSS colour either works throughout
-  or is refused, never honoured in the gradients and replaced in the glows.
-- **a prefix that is not an identifier is refused** the doc already states the
-  constraint, so the plugin should hold the caller to it rather than emit broken CSS.
-- **a page it cannot inject into says so** a build that silently ships no loader is the
-  one failure nobody reads a log to find.
-- **the plugin is held by tests** 389 lines called by every product's vite.config.ts,
-  with nothing asserting any of it.
 
 ## Non-goals
 

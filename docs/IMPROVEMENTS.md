@@ -25,34 +25,6 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
-### §VDS67 Options taken on trust
-
-`vigletBootLoader` is a build-time plugin four products configure by hand, and every
-option is interpolated straight into CSS or HTML. Four measured behaviours, all silent.
-
-**A title containing `$` loses text.** `html.replace(placeholder, markup)` passes
-`markup` as a *replacement string*, where `$&` means the matched text. A title of `Cost
-$& Billing` renders as `Cost <!--viglet-boot-loader--> Billing` — the plugin re-emits
-the placeholder it was replacing, and `escapeHtml` does not cover `$`. The `#root`
-fallback below already avoids this by passing a function.
-
-**A named colour renders two accents.** `color` reaches the gradients raw, while
-`hexToRgbTriplet` parses it for the rgba tints and returns `null` for anything outside
-`#rgb` and `#rrggbb`, falling back to a hardcoded `37, 99, 235`. So `color: "royalblue"`
-is honoured in the gradients and silently replaced with blue in the glows: one option,
-two colours. `royalblue` is valid CSS.
-
-**A prefix that is not an identifier injects CSS.** The doc says "letters, digits and
-`-`" and nothing checks. A prefix of `x{} body{display:none} .y` puts `display:none` in
-the stylesheet — a typo landing as broken CSS rather than an attack, but the constraint
-is documented and unenforced.
-
-**Neither the placeholder nor `<div id="root">` means no loader and no warning.** Both
-replacements miss, the markup is dropped, the build succeeds. A product renaming its
-mount point loses the loader with nothing to read.
-
-The file has no tests, and every product's `vite.config.ts` calls it.
-
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components

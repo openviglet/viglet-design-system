@@ -21,15 +21,24 @@ export interface VigletBootLoaderOptions {
   title: string;
   /** Uppercase subtitle under the title, e.g. `"Enterprise Search Intelligence"`. */
   subtitle: string;
-  /** Accent hex color (light mode), e.g. `"#4169E1"`. */
+  /**
+   * Accent hex color (light mode), e.g. `"#4169E1"` or `"#41E"`.
+   *
+   * Hex only, and enforced: the value is used raw in the gradients and parsed
+   * into an `r, g, b` triplet for the rgba tints, so anything the parser cannot
+   * read would render the loader in two different accents. A named colour or an
+   * `rgb()`/`hsl()` string throws rather than half-applying.
+   */
   color: string;
-  /** Accent hex color in dark mode. Defaults to `color`. */
+  /** Accent hex color in dark mode, under the same rule as `color`. Defaults to `color`. */
   colorDark?: string;
   /**
    * CSS class prefix applied to every rule and keyframe to avoid collisions
    * (rings, mark, molecules, gas, progress, etc). Default: `"viglet"`.
    *
-   * Must be a valid CSS identifier fragment — letters, digits and `-`.
+   * Must be a CSS identifier — a letter, then letters, digits, `-` or `_`. It is
+   * interpolated into every selector and keyframe name, so a value outside that
+   * throws instead of emitting rules of its own.
    */
   prefix?: string;
   /** `localStorage` key used to detect the stored theme. Default: `"vite-ui-theme"`. */
@@ -47,7 +56,8 @@ export interface VigletBootLoaderOptions {
    * it inside `<div id="root">` in your `index.html` (or `marketing.html`).
    *
    * Default: `"<!--viglet-boot-loader-->"`. If not found, the plugin falls
-   * back to injecting right after the opening `<div id="root">` tag.
+   * back to injecting right after the opening `<div id="root">` tag, and warns
+   * on the console when the page offers neither.
    */
   placeholder?: string;
 }
@@ -87,8 +97,24 @@ export function vigletBootLoader(options: VigletBootLoaderOptions): Plugin {
     placeholder = "<!--viglet-boot-loader-->",
   } = options;
 
-  const rgb = hexToRgbTriplet(color) ?? "37, 99, 235";
-  const rgbDark = hexToRgbTriplet(colorDark) ?? rgb;
+  // Refused rather than defaulted. `color` reaches the gradients raw while its
+  // rgba tints come from hexToRgbTriplet, so a value that parser rejects used to
+  // fall back to a hardcoded blue and render the loader in two accents at once —
+  // `royalblue` being valid CSS and an honest thing to write. A build-time
+  // config error should stop the build, not ship a two-tone loader.
+  const rgb = requireHex(color, "color");
+  const rgbDark = requireHex(colorDark, "colorDark");
+
+  // The doc has always said "letters, digits and `-`"; nothing held the caller
+  // to it, and the value is interpolated into every selector, keyframe name and
+  // class attribute below. A prefix of `x{} body{display:none} .y` landed
+  // `display: none` in the stylesheet.
+  if (!/^[a-zA-Z][\w-]*$/.test(prefix)) {
+    throw new Error(
+      `vigletBootLoader: prefix must start with a letter and hold only ` +
+        `letters, digits, "-" or "_" — received ${JSON.stringify(prefix)}.`,
+    );
+  }
 
   const ctx = { pfx: prefix, title, subtitle, color, colorDark, rgb, rgbDark, storageKey, testFlag };
   const styleTag = renderStyle(ctx);
@@ -98,12 +124,28 @@ export function vigletBootLoader(options: VigletBootLoaderOptions): Plugin {
   return {
     name: "viglet-boot-loader",
     transformIndexHtml(html): IndexHtmlTransformResult {
-      const withMarkup = html.includes(placeholder)
-        ? html.replace(placeholder, markup)
-        : html.replace(
-            /(<div\b[^>]*\bid=["']root["'][^>]*>)/,
-            (m) => `${m}\n${markup}\n`,
+      // Both arms replace via a function. Passing `markup` as the replacement
+      // *string* made "$&" inside it mean the matched text, so a title of
+      // `Cost $& Billing` re-emitted the placeholder being replaced and lost the
+      // rest — escapeHtml does not cover "$", and it should not have to.
+      let withMarkup: string;
+      if (html.includes(placeholder)) {
+        withMarkup = html.replace(placeholder, () => markup);
+      } else {
+        const rootTag = /(<div\b[^>]*\bid=["']root["'][^>]*>)/;
+        if (rootTag.test(html)) {
+          withMarkup = html.replace(rootTag, (m) => `${m}\n${markup}\n`);
+        } else {
+          // Silently shipping no loader is the failure nobody reads a log to
+          // find, so say it where a build is actually watched.
+          console.warn(
+            `[viglet-boot-loader] no injection point found: the HTML holds ` +
+              `neither the ${placeholder} placeholder nor a <div id="root">, ` +
+              `so no boot loader was injected.`,
           );
+          withMarkup = html;
+        }
+      }
       return {
         html: withMarkup,
         tags: [
@@ -117,6 +159,24 @@ export function vigletBootLoader(options: VigletBootLoaderOptions): Plugin {
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers — kept local so the plugin ships as a single module.
+
+/**
+ * The `r, g, b` triplet for a hex colour, or a thrown error naming the option.
+ *
+ * Both derivations of an accent — the raw value in the gradients and this
+ * triplet in the rgba tints — have to come from the same colour, so a value only
+ * one of them can read is refused here instead of quietly becoming two.
+ */
+function requireHex(value: string, option: string): string {
+  const triplet = hexToRgbTriplet(value);
+  if (triplet) return triplet;
+
+  throw new Error(
+    `vigletBootLoader: ${option} must be a hex colour like "#4169E1" or ` +
+      `"#41E" — received ${JSON.stringify(value)}. Named CSS colours and ` +
+      `rgb()/hsl() cannot be read for the loader's rgba tints.`,
+  );
+}
 
 function hexToRgbTriplet(hex: string | undefined): string | null {
   if (!hex) return null;
