@@ -4,6 +4,7 @@
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — All three consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS30** (deps: typescript-eslint supporting TS 7) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — It throws on import against ts.versionMajorMinor >= 7, and no side-by-side recipe makes a peer resolve a second TypeScript. → §VDS30
+- 📋 **VDS57** (deps: —) **set-state-in-effect fires only when the setState is in the effect body, which is the form nobody writes** — A listener is named so it can be removed, and behind that name the rule sees nothing; VDS56 found two it had always passed. → §VDS57
 
 ## Block B — Bento becomes a design-system layer
 
@@ -20,6 +21,16 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
+
+## Done when — VDS57
+
+- **a setState reached through a named function fails the gate** the probe's three forms
+  become a fixture, and whatever is turned on flags all three rather than one.
+- **the two components VDS56 fixed would have been caught** the check is run against
+  their pre-VDS56 source, so it is held to the case that exposed the hole.
+- **or the ledger records that nothing affordable catches it** a rule this project
+  maintains alone has a cost, and deciding against it is an answer as long as it is
+  written down.
 
 ## Non-goals
 
