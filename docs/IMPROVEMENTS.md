@@ -27,19 +27,6 @@ issue 10940 and move back when it supports 7.1.
 
 ## Block B — Bento becomes a design-system layer
 
-### §VDS18 The suites follow their components
-
-Twelve RTL suites sit in the bento tests directory, covering the entity shell, the list
-page, the form hero, the command palette, the nav rail, the quota banner, the first-run
-tour, the activation card, the empty state, the status marker, the shortcuts dialog and
-the nav config. They assert what types do not: that the morph appears on scroll, that a
-privileged action is hidden from a user without it, that the palette is arrow-key
-navigable, that a tile links where it claims. If the components move and the suites do
-not, each of those becomes a regression two products discover separately at runtime.
-Move the suites for the components that moved, leave the ones covering product-specific
-tiles behind, and adapt their mocks - the user context and the i18n passthrough both
-have package-level equivalents.
-
 ## Block C — One look across products
 
 ### §VDS73 Counting the consumers that are not SPAs

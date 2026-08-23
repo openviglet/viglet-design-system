@@ -7,8 +7,6 @@
 
 ## Block B — Bento becomes a design-system layer
 
-- ⏳ **VDS18** (deps: VDS1 ✅, VDS11 ✅, a 2026.3.3 release to npm) **twelve RTL suites guard the bento scaffold from inside turing-app and cannot follow the components** — The product cannot import from here until a release, so its copies stay until that cutover. → §VDS18
-
 ## Block C — One look across products
 
 - 📋 **VDS73** (deps: —) **consumers.json declares three Vite SPAs, so the two Next installs are counted by no guard and no parity digest** — The file's own note makes membership what the guards read, so a consumer absent from it is one every one-look claim skips. → §VDS73
@@ -23,12 +21,6 @@
 - **A consumer that re-declares an exported component fails its own build** The export
   list ships as a build artefact, and the lint names the import that replaces the local
   copy rather than only reporting that a duplicate exists.
-
-## Done when — VDS18
-
-- **Every moved component's suite runs here and passes** The suites for the shared
-  components live beside them, the product-specific ones stayed behind, and no suite in
-  either repository asserts a re-export.
 
 ## Done when — VDS71
 
