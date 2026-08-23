@@ -1,0 +1,29 @@
+/* =============================================================
+   Viglet Design System — the brand faces, opt-in
+   ---------------------------------------------------------------
+   Inter for UI and Plus Jakarta Sans for display, as `--font-sans`
+   and `--font-brand` in the preset name them.
+
+   These used to be inside `./styles`, which made them 741 KB of the
+   stylesheet's 964 KB: Vite's library mode inlines every asset
+   regardless of `assetsInlineLimit`, so each of the 22 subsets was
+   base64 in the CSS. Base64 of an already-compressed woff2 does not
+   compress again, which is why 2,276 rules gzipped to 594 KB.
+
+   Inlined, the faces could not be cached apart from the rules — any
+   change to any rule re-downloaded every font — could not be
+   preloaded ahead of the stylesheet carrying them, and could not be
+   dropped by a product already serving Inter.
+
+   So they are their own import now:
+
+     @import "@viglet/viglet-design-system/styles";
+     @import "@viglet/viglet-design-system/fonts";   <- add this
+
+   Skip it and the type falls back through `--font-sans` to
+   `system-ui`, which is a real look rather than a broken one — and
+   the right one for a product supplying its own copy of Inter.
+   ============================================================= */
+
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/plus-jakarta-sans";

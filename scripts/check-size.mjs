@@ -71,6 +71,16 @@ const FIXTURES = {
     ].join("\n"),
     bentoExpected: true,
   },
+  // VDS41 — the brand faces, which left `./styles` and became opt-in. This
+  // fixture measures what opting in costs, and, more importantly, proves it
+  // resolves: `fonts.css` ships verbatim, so its `@fontsource-variable/*`
+  // imports are resolved from wherever the consumer's bundler looks. Bundling
+  // it here is the only way to find out before a product does.
+  fonts: {
+    source: [`import "${PKG}/fonts";`, "globalThis.__vdsProbe = 1;"].join("\n"),
+    bentoExpected: false,
+    mustEmbedFonts: true,
+  },
 }
 
 /**
@@ -133,6 +143,22 @@ export function oversizedAssets(chunks) {
     }
   }
   return found
+}
+
+/**
+ * How many `@font-face` rules a bundle carries.
+ *
+ * The point is resolution, not weight: `fonts.css` ships verbatim, so its
+ * `@fontsource-variable/*` imports resolve in the consumer's tree. If that ever
+ * stops working the import fails silently to nothing, the type falls back to
+ * `system-ui`, and nobody finds out until they look at a screenshot.
+ */
+export function fontFaces(chunks) {
+  let n = 0
+  for (const chunk of chunks) {
+    if (chunk.fileName.endsWith(".css")) n += (String(chunk.source).match(/@font-face/g) ?? []).length
+  }
+  return n
 }
 
 /** Compares one measurement with its baseline, returning null when it is fine. */
@@ -214,6 +240,19 @@ async function main() {
     } else if (!fixture.bentoExpected && bento.length > 0) {
       failures.push(
         `${name}: the bento layer reached a consumer that never imported it\n    ${bento.join("\n    ")}`,
+      )
+    }
+
+    if (fixture.mustEmbedFonts && fontFaces(chunks) === 0) {
+      failures.push(
+        `${name}: no @font-face resolved — fonts.css ships verbatim, so its ` +
+          `@fontsource imports have to resolve in the consumer's tree, and here they did not`,
+      )
+    }
+    if (!fixture.mustEmbedFonts && fontFaces(chunks) > 0) {
+      failures.push(
+        `${name}: ${fontFaces(chunks)} @font-face rules — the faces are back in an entry ` +
+          `that is not ./fonts, which is what VDS41 took them out of`,
       )
     }
 

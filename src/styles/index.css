@@ -1,5 +1,5 @@
-@import "@fontsource-variable/inter";
-@import "@fontsource-variable/plus-jakarta-sans";
+/* The brand faces are `./fonts`, a separate import: inlined here they were
+   741KB of this file's 964KB. See src/styles/fonts.css. */
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "sonner/dist/styles.css";

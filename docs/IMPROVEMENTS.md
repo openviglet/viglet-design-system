@@ -25,23 +25,6 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
-### §VDS41 The fonts are the stylesheet
-
-`dist/viglet-design-system.css` is 964 KB, and 741 KB of it is 22 `url(data:...)` font
-files - the Inter and Plus Jakarta Sans variable faces the preset imports. Base64 of an
-already-compressed woff2 does not compress again, which is why the stylesheet gzips to
-594 KB where a stylesheet of 2,276 rules would gzip to a few tens of kilobytes.
-
-The cost is not only the bytes. Inlined into the CSS the faces cannot be cached apart
-from it, so every change to any rule re-downloads every font; they cannot be preloaded
-ahead of the stylesheet that carries them; and a product that already serves Inter has
-no way to drop this copy.
-
-Emit the faces as files, or move the `@fontsource` imports out of the shipped stylesheet
-and into something a consumer opts into - the preset already separates tokens from
-rules, and fonts are closer to tokens. Whichever way, `--vg-font-*` should keep working
-for a consumer that supplies its own faces.
-
 ### §VDS42 Weigh it where it is built
 
 `pnpm run build` ends with `check-dist`, which refuses a `dist` that cannot be

@@ -16,6 +16,7 @@
 - 🗑 **VDS34** **thirty deps are externalised at build but declared as dependencies, so their major version is an unstated contract** — abandoned: Measured wrong: pnpm gives the package its own copy under both the default and the shamefully-hoist layout, so the major is not a shared contract.
 - ✅ **VDS35** **use:local copies dist over an installed package without reconciling its deps, so a changed range keeps the old one** — use:local compares the ranges it is about to copy against what the target resolves, names the packages that do not satisfy them, and refuses.
 - ✅ **VDS40** **the root entry is 96% four inlined PNG logos, one of them 1.27MB, shipped to every consumer** — The logos are 256px, nine times what the switcher renders, and a test holds the ceiling; root-only fell from 2.25MB to 891KB gzipped in all.
+- ✅ **VDS41** **the shipped stylesheet is 77% base64 fonts: 741KB of its 964KB is 22 inlined font files** — The faces are a ./fonts import a product opts into, taking ./styles from 594KB to 31KB gzipped, and a fixture proves they still resolve.
 
 ## Block B — Bento becomes a design-system layer
 

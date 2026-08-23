@@ -17,9 +17,8 @@
    `--border`, etc.
    ============================================================= */
 
-/* Fonts referenced by `--font-sans` / `--font-brand` below. */
-@import "@fontsource-variable/inter";
-@import "@fontsource-variable/plus-jakarta-sans";
+/* The faces `--font-sans` / `--font-brand` name are `./fonts`, imported
+   separately so a preset consumer carries tokens and not 741KB of woff2. */
 
 @custom-variant dark (&:is(.dark *, [data-theme="dark"] *));
 

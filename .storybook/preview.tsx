@@ -7,6 +7,10 @@ import { initReactI18next } from "react-i18next";
 
 import { vigDesignSystemTranslations } from "../src/i18n";
 import "../src/styles/index.css";
+// The brand faces are a separate import since VDS41 — 741KB of woff2 that a
+// product opts into. The catalogue opts in, because a type specimen rendered in
+// system-ui is not what the components look like.
+import "../src/styles/fonts.css";
 // The bento layer ships its own stylesheet on a separate subpath, so a consumer
 // only carries it when it renders one. The catalogue renders both eras, so it
 // takes both.
