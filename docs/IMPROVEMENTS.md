@@ -25,6 +25,32 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
+### §VDS64 An exporter that ignores its own headers
+
+`exportToXlsx(data, headers, filename)` is generic in every parameter and then ignores
+two of them.
+
+`XLSX.utils.book_append_sheet(wb, ws, "Logging")` names every sheet a product screen
+produced this for. A model list, an audit trail and a billing export all arrive called
+Logging. The non-goal about product data in the package is about routes and entity
+names, but this is the same thing one layer down: a word only one screen justifies,
+hard-coded into a shared export.
+
+The second is worse because it looks like it worked. `json_to_sheet` derives columns
+from the rows it is given, not from `headers`, so an empty `data` produces a sheet with
+no header row at all — a probe exporting `[]` against three headers gets back a single
+empty row. Filter a table to nothing, press Export, and the file that downloads has no
+columns and no titles: indistinguishable from a broken export, and there is nothing to
+tell the two apart.
+
+A rejected hypothesis worth recording, since the fix should not chase it: `!cols` does
+**not** misalign when a header's key is absent from every row. The mapping writes
+`row[label] = undefined`, `json_to_sheet` keeps the key, and the column survives — three
+headers gave three columns and three widths. The widths line up.
+
+So what this needs is the sheet name coming from the caller, and the header row written
+from `headers` whether or not there are rows under it.
+
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components
