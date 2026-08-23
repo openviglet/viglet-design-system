@@ -4,6 +4,7 @@
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — All three consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS30** (deps: typescript-eslint supporting TS 7) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — It throws on import against ts.versionMajorMinor >= 7, and no side-by-side recipe makes a peer resolve a second TypeScript. → §VDS30
+- 📋 **VDS65** (deps: —) **getFlagEmoji returns the globe for pt-BR, the form every browser produces, and truncateMiddle overruns its own limit** — It splits on underscore alone, while badge-locale already normalises both forms; nothing in this file has a test. → §VDS65
 
 ## Block B — Bento becomes a design-system layer
 
@@ -20,6 +21,17 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
+
+## Done when — VDS65
+
+- **both spellings of a locale give the same flag** pt-BR and pt_BR both reach the
+  region, measured against the globe they used to return.
+- **one normalisation, shared with badge-locale** the two answers to this question
+  become one, so the next locale format lands in a single place.
+- **truncateMiddle never returns more than it was asked for** a maxLength of 2, 1 or 0
+  stops yielding three characters of ellipsis.
+- **src/lib/utils.ts is held by tests** four functions sit on the root barrel with
+  nothing asserting any of them.
 
 ## Non-goals
 

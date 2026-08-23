@@ -25,6 +25,32 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
+### §VDS65 Two forms of a locale, one of them handled
+
+`getFlagEmoji` reads the region as `locale.split("_")[1]`. That is the Java and POSIX
+spelling, `pt_BR`. It is not the one anything in a browser produces:
+`navigator.language`, `Intl`, i18next and BCP 47 all say `pt-BR`, and this package's own
+`i18n.language` is hyphenated. Given one, the region is `undefined` and the caller
+silently gets 🌐 — measured: `pt_BR` → 🇧🇷, `pt-BR` → 🌐, `en-us` → 🌐.
+
+The package already knows better. `getLocaleCountryCode`, in `badge-locale.tsx`, opens
+with `locale.trim().replaceAll("-", "_").toUpperCase()` and handles both, with a
+language-code fallback underneath. So there are two answers to one question in one
+package, the wrong one is the one on the public barrel, and a consumer reaching for the
+obvious name gets it.
+
+`truncateMiddle` in the same file has a smaller version of the same shape: it promises a
+string no longer than `maxLength` and returns `"..."` — three characters — for
+`maxLength` of 2, 1 or 0. The arithmetic goes negative and `substring` quietly clamps,
+so nothing complains.
+
+Neither is caught because `src/lib/utils.ts` has no tests at all, and it is four
+exported functions on the root barrel: `cn`, `truncateMiddle`, `getFlagEmoji`,
+`getHashedColor`.
+
+The fix worth making is not two patches. It is one normalisation both callers share, so
+the next locale format lands in one place rather than two.
+
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components
