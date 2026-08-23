@@ -4,6 +4,7 @@
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — All three consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS30** (deps: typescript-eslint supporting TS 7) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — It throws on import against ts.versionMajorMinor >= 7, and no side-by-side recipe makes a peer resolve a second TypeScript. → §VDS30
+- 📋 **VDS66** (deps: —) **a sub-page breadcrumb whose first level repeats the last crumb loses every level after it** — The dedupe compares only the first item and then returns the breadcrumb unchanged, dropping the rest of the array. → §VDS66
 
 ## Block B — Bento becomes a design-system layer
 
@@ -20,6 +21,15 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
+
+## Done when — VDS66
+
+- **a repeated first level costs only that level** the documented two-item example
+  renders Users / admin, against the Users a probe measured.
+- **the ref records what was actually inserted** ownItemsRef is what unmount removes by,
+  so claiming items that never went in makes it a lie.
+- **the hook is held by tests at all** insert, update, unmount and the no-provider case,
+  none of which anything asserts today.
 
 ## Non-goals
 
