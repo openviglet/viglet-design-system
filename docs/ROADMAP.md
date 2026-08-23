@@ -4,7 +4,6 @@
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — All three consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS30** (deps: typescript-eslint supporting TS 7) **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — It throws on import against ts.versionMajorMinor >= 7, and no side-by-side recipe makes a peer resolve a second TypeScript. → §VDS30
-- 📋 **VDS61** (deps: —) **a slow icon search overwrites a newer one, so the grid shows results for a query already replaced** — Debouncing delays starting a request, not landing one, and nothing marks which response is still current. → §VDS61
 
 ## Block B — Bento becomes a design-system layer
 
@@ -21,16 +20,6 @@
 - **Every moved component's suite runs here and passes** The suites for the shared
   components live beside them, the product-specific ones stayed behind, and no suite in
   either repository asserts a re-export.
-
-## Done when — VDS61
-
-- **the newer search wins whatever order the responses arrive in** a test holds two
-  searches open and releases them newest-first, asserting the grid keeps the newer
-  results.
-- **a response for a closed dialog writes nothing** the same guard covers unmount, which
-  React stopped warning about and nothing else checks.
-- **the suggestion path is held to the same rule** handleSuggest awaits a product
-  promise then several searches, and is reachable twice the same way.
 
 ## Non-goals
 

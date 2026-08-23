@@ -25,31 +25,6 @@ also removed a real npm install conflict: i18next declares peerOptional typescri
 it. Nothing is lost today — 6.0.3 type-checks the same code. Watch typescript-eslint
 issue 10940 and move back when it supports 7.1.
 
-### §VDS61 The last response wins, not the latest
-
-`searchIcons` writes whatever it gets: `setResults(await searchIconify(q, 60))`. Nothing
-records which query that response belongs to, so of two searches in flight the one that
-arrives last wins — whichever was asked for first.
-
-The 350ms debounce reads like the guard against this and is not. It delays *starting* a
-request; once started, a request is in flight for as long as the network takes, and the
-next keystroke after the debounce window starts a second one alongside it. Iconify is a
-third-party API over the open internet, so responses arriving out of order is ordinary
-rather than exotic.
-
-A probe holds both requests open and releases them newest-first: the grid ends up
-showing `archive` for a box reading `arrow`, with the newer results discarded. That is
-the exact failure, and it is invisible in every fast-network test.
-
-The same shape was just closed one layer over in `UserProvider` (VDS60), where
-`refreshUser` is public and two calls could overlap. A request number decided it there:
-increment on the way out, compare on the way back, drop anything that is not the current
-one. Nothing about that is specific to a user.
-
-Worth doing together with it: the effect clears its pending timeout on unmount but
-nothing stands between an in-flight response and a `setResults` on a dialog that has
-closed. React no longer warns about that, which is why it reads as fine.
-
 ## Block B — Bento becomes a design-system layer
 
 ### §VDS18 The suites follow their components

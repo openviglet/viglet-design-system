@@ -83,20 +83,40 @@ export function IconPickerDialog({
 
   const [suggesting, setSuggesting] = useState(false);
   const [groups, setGroups] = useState<KeywordGroup[]>([]);
+  /**
+   * Which search is the current one.
+   *
+   * The debounce is not this guard: it delays *starting* a search, and once one
+   * is in flight the next keystroke starts a second alongside it. Iconify is a
+   * third-party API over the open internet, so the slower request finishing last
+   * is ordinary — and it used to win, leaving `archive` on screen for a box
+   * reading `arrow`. Incremented on the way out, compared on the way back.
+   *
+   * The suggestion path needs none of this: `suggesting` gates a second run, and
+   * this component stays mounted while the dialog closes — only `DialogContent`
+   * goes — so that flag holds and two runs cannot overlap.
+   */
+  const latestSearch = useRef(0);
   const [activeKeyword, setActiveKeyword] = useState<string | null>(null);
 
   const searchIcons = useCallback(async (q: string) => {
+    const request = ++latestSearch.current;
+    const current = () => request === latestSearch.current;
+
     if (!q.trim()) {
       setResults([]);
       return;
     }
     setLoading(true);
     try {
-      setResults(await searchIconify(q, 60));
+      const icons = await searchIconify(q, 60);
+      if (current()) setResults(icons);
     } catch {
-      setResults([]);
+      if (current()) setResults([]);
     } finally {
-      setLoading(false);
+      // The spinner belongs to the newest request too: an older one finishing
+      // must not clear it while the current search is still running.
+      if (current()) setLoading(false);
     }
   }, []);
 

@@ -34,6 +34,7 @@
 - ✅ **VDS56** **two components read the viewport into state an effect catches up, so the first paint is wrong** — both read the viewport through useSyncExternalStore, so the first painted frame is already thinned and the button already shown.
 - ✅ **VDS57** **set-state-in-effect fires only when the setState is in the effect body, which is the form nobody writes** — a project rule reports the setState an effect reaches through a named function; both pre-VDS56 components fail it.
 - ✅ **VDS60** **UserProvider drops a failed fetchUser and renders an empty object typed as a user, so consumers cannot tell** — useCurrentUser reports status and error, so a failed fetch is not an empty user; the rejection no longer escapes.
+- ✅ **VDS61** **a slow icon search overwrites a newer one, so the grid shows results for a query already replaced** — a search response that is no longer the current one is dropped, so the grid keeps the results for the query on screen.
 
 ## Block B — Bento becomes a design-system layer
 
