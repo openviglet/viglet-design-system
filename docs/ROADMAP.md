@@ -3,6 +3,7 @@
 ## Block A — The gate the design system never had
 
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — All three consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
+- 📋 **VDS74** (deps: —) **check-duplicates exempts a whole file for having any re-export, so a local copy beside one is never reported** — Turing's chrome adapter declared a SectionCard this package exports and passed the gate for weeks. → §VDS74
 
 ## Done when — VDS5
 
