@@ -45,8 +45,19 @@ const asJson = args.includes("--json")
 const warnOnly = args.includes("--warn")
 const manifestFlag = args.indexOf("--manifest")
 const manifestPath = manifestFlag === -1 ? null : args[manifestFlag + 1]
+// VDS78 — the index to skip is the manifest's VALUE, and only when the flag is
+// actually present. `indexOf` answers -1 when it is not, and `-1 + 1` is 0, which
+// silently discarded the first positional root on every invocation without
+// `--manifest`: `check-duplicates src app` scanned only `app`, and
+// `check-duplicates no-such-dir` scanned ./src and exited 0.
+//
+// It hid twice over. The documented call is `check-duplicates src`, where the
+// dropped argument is the same directory the default then falls back to; and every
+// test in check-duplicates.test.ts passes `--manifest`, which puts the flag at index
+// 1 so the arithmetic lands correctly. The suite only ever took the branch that works.
+const manifestValueAt = manifestFlag === -1 ? -1 : manifestFlag + 1
 const roots = args.filter(
-  (a, i) => !a.startsWith("--") && i !== manifestFlag + 1,
+  (a, i) => !a.startsWith("--") && i !== manifestValueAt,
 )
 
 function loadManifest() {

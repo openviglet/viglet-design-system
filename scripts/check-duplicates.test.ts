@@ -61,6 +61,28 @@ function run(...args: string[]) {
   }
 }
 
+/**
+ * VDS78 — run with an argument list this test controls completely, `--manifest` included or not.
+ *
+ * `run` above always passes `--manifest`, and that is the whole reason the root-argument bug
+ * survived: with the flag at index 1, `manifestFlag + 1` lands on the manifest path exactly as
+ * intended. Without it `indexOf` answers -1, `-1 + 1` is 0, and the filter discarded argument
+ * zero — the first positional root. Every test took the branch that works.
+ */
+function runRaw(args: string[], cwd = workdir) {
+  try {
+    const stdout = execFileSync(process.execPath, [cli, ...args], {
+      cwd,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    })
+    return { status: 0, stdout }
+  } catch (error) {
+    const failure = error as { status: number; stdout: string; stderr: string }
+    return { status: failure.status, stdout: failure.stdout, stderr: failure.stderr }
+  }
+}
+
 function findings(...args: string[]) {
   const { stdout } = run("--json", ...args)
   return JSON.parse(stdout).findings as {
@@ -164,6 +186,36 @@ describe("viglet-ds-check-duplicates", () => {
     )
 
     expect(findings().some((f) => f.file.endsWith("barrel.ts"))).toBe(true)
+  })
+
+  it("scans the root it is given, with no --manifest to make the arithmetic work (VDS78)", () => {
+    // The documented invocation, and the one no test used to make: a positional root and
+    // nothing else. It resolves the manifest from the installed package, which is this
+    // repository's own dist when run from here.
+    write("elsewhere/Planted.tsx", "export function Button() { return null }\n")
+    write("src/Clean.tsx", "export function NotOurs() { return null }\n")
+
+    const named = runRaw(["elsewhere"])
+    expect(named.status, "a duplicate in the named root must fail the gate").not.toBe(0)
+    expect(`${named.stdout}${named.stderr}`).toContain("Button")
+
+    // And the other direction: naming a clean root must NOT report the duplicate that is
+    // sitting in ./src. Before VDS78 the root was dropped and ./src was scanned instead, so
+    // this pair is what tells "reads the argument" from "reads the default".
+    write("src/AlsoPlanted.tsx", "export function AppFooter() { return null }\n")
+    const other = runRaw(["elsewhere"])
+    expect(`${other.stdout}${other.stderr}`, "a root outside ./src must not pick up ./src")
+      .not.toContain("AppFooter")
+  })
+
+  it("a root that does not exist is an error, not a silent fall back to ./src (VDS78)", () => {
+    // `check-duplicates no-such-dir` used to scan ./src and exit 0 — a gate reporting a clean
+    // tree because it never read the tree it was told to.
+    const missing = runRaw(["no-such-directory-anywhere"])
+    expect(
+      `${missing.stdout}${missing.stderr}`,
+      "naming a directory that is not there must say so rather than scanning something else",
+    ).toMatch(/no-such-directory-anywhere/)
   })
 
   it("refuses a manifest path that is not there rather than passing vacuously", () => {
