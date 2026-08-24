@@ -44,6 +44,7 @@
 - ✅ **VDS69** **one unit test reads dist/exports.json, so every clean checkout fails it and CI has been red** — The unit suite is hermetic: the case that read dist/exports.json is gone, and check-exports.mjs still proves that coverage against the real declarations inside build.
 - ✅ **VDS70** **publish runs the suite without installing Chromium, so its browser project fails on a cold runner** — The publish job installs Chromium before it lints, so the release runs the same gate CI does instead of depending on a warm playwright cache.
 - 🗑 **VDS30** **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — abandoned: 6.0.3 type-checks the same code, nothing in the tree asks for 7, and the side-by-side workaround needs a node_modules layout that dist forbids.
+- ✅ **VDS76** **SubPage and InternalSidebar are each narrower than the copies Turing still declares, so its shim is refused** — The gaps close as outletContext, an optional url with showOnNew, segment-boundary active state, and a density prop (design §VDS76 superseded: one padding difference was three, plus a defect).
 
 ## Block B — Bento becomes a design-system layer
 

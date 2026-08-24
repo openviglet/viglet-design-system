@@ -5,7 +5,6 @@
 - ⏳ **VDS5** (deps: VDS2 ✅, a 2026.3.3 release to npm) **the package states nowhere what it exports, so a duplicate in a consumer is found only by reading** — All three consumers pin ^2026.3.2, the newest on npm, and the CLI exists only in an unpublished build. → §VDS5
 - 📋 **VDS74** (deps: —) **check-duplicates exempts a whole file for having any re-export, so a local copy beside one is never reported** — Turing's chrome adapter declared a SectionCard this package exports and passed the gate for weeks. → §VDS74
 - 📋 **VDS75** (deps: —) **the back-link eyebrow's arrow rule is about two components here and still lives in Turing's file** — It is the last thing that file says this contract does not state, so section 6 stays maintained rather than deleted. → §VDS75
-- 📋 **VDS76** (deps: —) **SubPage and InternalSidebar are each narrower than the copies Turing still declares, so its shim is refused** — Three gaps are additive and one is a padding difference that would reflow a console page from inside a shim. → §VDS76
 - 📋 **VDS77** (deps: —) **react-hook-form is a dependency, so a consumer can get a second copy of the one library here carrying a context** — Two consumers declare no react-hook-form and get it from here, so the peer change is theirs first. → §VDS77
 
 ## Done when — VDS5

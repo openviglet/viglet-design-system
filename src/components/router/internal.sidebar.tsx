@@ -21,10 +21,44 @@ import {
 /** One entry in the sidebar's main navigation, optionally with sub-entries. */
 export interface NavMainItem {
   title: string;
-  url: string;
+  /**
+   * Navigable URL fragment. VDS76 — optional: an item with `children` and no
+   * `url` renders as a `SidebarGroupLabel` heading them, which is how a product
+   * groups related sub-pages without inventing a clickable parent.
+   */
+  url?: string;
   icon?: React.ElementType;
   children?: NavMainItem[];
+  /**
+   * VDS76 — keeps the item visible while an entity is being created (`isNew`).
+   * Omitted, it falls back to the legacy `url === "/detail"` heuristic, so
+   * every existing caller behaves as before.
+   */
+  showOnNew?: boolean;
 }
+
+/** An item with children and no url is a heading, not a destination. */
+const isGroupLabel = (item: NavMainItem): boolean =>
+  !item.url && (item.children?.length ?? 0) > 0;
+
+/**
+ * VDS76 — active on segment boundaries only.
+ *
+ * A plain `startsWith` lights `/field` up when the path is `/field-coverage`,
+ * because one is a string prefix of the other. A parent is also active when any
+ * of its children is, which is what makes a group label highlight.
+ */
+const isItemActive = (
+  item: NavMainItem,
+  urlBase: string | undefined,
+  pathname: string,
+): boolean => {
+  if (item.url) {
+    const target = (urlBase ?? "") + item.url;
+    if (pathname === target || pathname.startsWith(target + "/")) return true;
+  }
+  return item.children?.some((c) => isItemActive(c, urlBase, pathname)) ?? false;
+};
 
 /**
  * One row of the indexing group: a labelled, formatted count with an optional
@@ -67,10 +101,10 @@ const renderNavItems = (
     <SidebarMenuItem key={item.title}>
       <SidebarMenuButton
         tooltip={item.title}
-        isActive={pathname.startsWith((urlBase ?? "") + item.url)}
+        isActive={isItemActive(item, urlBase, pathname)}
         asChild
       >
-        <NavLink to={(urlBase ?? "") + item.url} onClick={onNavigate}>
+        <NavLink to={(urlBase ?? "") + (item.url ?? "")} onClick={onNavigate}>
           {item.icon && <item.icon className="size-5!" />}
           <span>{item.title}</span>
         </NavLink>
@@ -184,18 +218,45 @@ export const InternalSidebar: React.FC<InternalSidebarProps> = ({
             </SidebarGroupContent>
           </SidebarGroup>
         )}
-        <SidebarGroup>
-          <SidebarGroupLabel>{feature}</SidebarGroupLabel>
-          <SidebarGroupContent className="flex flex-col gap-2">
-            <SidebarMenu>
-              {data?.navMain &&
-                renderNavItems(
-                  isNew ? data.navMain.filter((item) => item.url === "/detail") : data.navMain,
-                  urlBase, pathname, isCollapsed, onNavigate
-                )}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {(() => {
+          // VDS76 — items with a url stay in the feature group; items without
+          // one are headings and become a group of their own, so a product can
+          // section its sub-pages without a clickable parent.
+          const allItems = data?.navMain ?? [];
+          const visibleItems = isNew
+            ? allItems.filter((item) => item.showOnNew ?? item.url === "/detail")
+            : allItems;
+          const flatItems = visibleItems.filter((item) => !isGroupLabel(item));
+          const groupItems = visibleItems.filter(isGroupLabel);
+          return (
+            <>
+              <SidebarGroup>
+                <SidebarGroupLabel>{feature}</SidebarGroupLabel>
+                <SidebarGroupContent className="flex flex-col gap-2">
+                  <SidebarMenu>
+                    {renderNavItems(flatItems, urlBase, pathname, isCollapsed, onNavigate)}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+              {groupItems.map((group) => (
+                <SidebarGroup key={group.title}>
+                  <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
+                  <SidebarGroupContent className="flex flex-col gap-2">
+                    <SidebarMenu>
+                      {renderNavItems(
+                        group.children ?? [],
+                        urlBase,
+                        pathname,
+                        isCollapsed,
+                        onNavigate,
+                      )}
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              ))}
+            </>
+          );
+        })()}
       </SidebarContent>
     </Sidebar>
   );
