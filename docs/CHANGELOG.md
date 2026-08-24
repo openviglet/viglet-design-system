@@ -45,6 +45,7 @@
 - ✅ **VDS70** **publish runs the suite without installing Chromium, so its browser project fails on a cold runner** — The publish job installs Chromium before it lints, so the release runs the same gate CI does instead of depending on a warm playwright cache.
 - 🗑 **VDS30** **TypeScript is held at 6 because typescript-eslint refuses to load against 7, so lint and compiler cannot both be current** — abandoned: 6.0.3 type-checks the same code, nothing in the tree asks for 7, and the side-by-side workaround needs a node_modules layout that dist forbids.
 - ✅ **VDS76** **SubPage and InternalSidebar are each narrower than the copies Turing still declares, so its shim is refused** — The gaps close as outletContext, an optional url with showOnNew, segment-boundary active state, and a density prop (design §VDS76 superseded: one padding difference was three, plus a defect).
+- ✅ **VDS74** **check-duplicates exempts a whole file for having any re-export, so a local copy beside one is never reported** — The exemption is a name's now, not a file's, and it found two real declarations behind a shim in Turing.
 
 ## Block B — Bento becomes a design-system layer
 

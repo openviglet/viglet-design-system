@@ -2,25 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-### §VDS74 The shim skip is keyed on shape, not on names
-
-The skip exists for a good reason: a one-line re-export is the sanctioned way to keep a
-path stable while an implementation moves, and reporting it as a duplicate would make
-the gate fight its own migration. But it is written as two shape tests -- the file
-imports from this package, and the file contains an export brace -- and a file
-satisfying both is skipped whole.
-
-Turing's components/ui/section-card.tsx satisfied both while declaring SectionCard, a
-name this package exports, and wrapping ours under it. It was a deliberate wrapper
-rather than a fork, so nothing was wrong with that code; what is wrong is that the gate
-could not have told the difference. Any real local copy sitting beside a stray re-export
-gets the same pass, which is the case the gate exists to catch.
-
-The narrower rule is to skip a name, not a file: a name appearing in an export-from
-clause is re-exported and exempt, while a name the file declares is reported whatever
-else that file also does. The script already collects those two sets separately, so the
-change is in which one the skip consults rather than in how either is read.
-
 ### §VDS75 The rule that stayed behind
 
 VDS20 brought the bento authoring contract here and Turing's T999 reduced its copy to a

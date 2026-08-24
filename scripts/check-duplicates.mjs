@@ -16,8 +16,12 @@
 // manifest records the specifier per entry point rather than just a list of
 // names.
 //
-// A one-line re-export shim is the sanctioned pattern and is not a duplicate:
-// files that re-export from this package are skipped.
+// A one-line re-export shim is the sanctioned pattern and is not a duplicate.
+// VDS74 — the exemption is a name's, not a file's: `declaredNames` already
+// ignores an `export { … } from` clause, so a shim reports nothing without a
+// skip, while a name the file *declares* is reported whatever else that file
+// also re-exports. Skipping the file instead let any real copy sitting beside a
+// stray re-export through, which is the case this gate exists to catch.
 //
 // Some collisions are deliberate — Shio's AppFooter renders Shio's own build
 // version and merely shares a name. Keep those by writing, anywhere in the file:
@@ -152,10 +156,6 @@ for (const root of scanRoots) {
   for (const file of collect(root)) {
     const source = readFileSync(file, "utf8")
     scanned++
-    // A re-export shim is the sanctioned pattern, not a duplicate.
-    if (source.includes(`from "${PACKAGE_NAME}`) || source.includes(`from '${PACKAGE_NAME}`)) {
-      if (/^\s*export\s+(?:\*|\{)/m.test(source)) continue
-    }
     const allowed = new Set(
       [...source.matchAll(/viglet-ds-allow-duplicate\s+([A-Za-z_$][\w$]*)/g)].map((m) => m[1]),
     )
