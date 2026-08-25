@@ -1,0 +1,15 @@
+{
+"window.title": "Viglet DS ${separator} ${dirty}${activeEditorShort} ${separator} ${appName}",
+
+  // Status bar in orange so this worktree is easy to spot
+  "workbench.colorCustomizations": {
+    "statusBar.background": "#c2410c",
+    "statusBar.foreground": "#ffedd5",
+    "statusBar.border": "#9a3412",
+    "statusBar.noFolderBackground": "#c2410c",
+    "statusBar.debuggingBackground": "#c2410c",
+    "statusBarItem.hoverBackground": "#9a3412",
+    "statusBarItem.remoteBackground": "#9a3412",
+    "statusBarItem.remoteForeground": "#ffedd5"
+  }
+}

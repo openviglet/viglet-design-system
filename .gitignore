@@ -28,7 +28,6 @@ storybook-static/
 .sb-test/
 
 # IDE
-.vscode/
 .idea/
 *.swp
 *.swo
