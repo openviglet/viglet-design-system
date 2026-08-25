@@ -84,6 +84,7 @@
 - ✅ **VDS31** **Dumont consumes this package and appears nowhere in the plan, so one-look claims are checked against two of three** — consumers.json declares the three consumers, a guard refuses prose naming a subset without a reason, and the render digest carries one token set each.
 - ✅ **VDS73** **consumers.json declares three Vite SPAs, so the two Next installs are counted by no guard and no parity digest** — All six installs are entries: three were missing, not two, and each declares its framework, chrome, accent and the entries it takes.
 - ✅ **VDS80** **the dark theme runs ~17:1 and flattens four surfaces onto one value, so states vanish and glyphs halate** — The dark ramp lands text at ~13.5:1 with background, card and accent one step apart, so a hover and a selected item are visible and the focus ring meets 3:1.
+- ✅ **VDS81** **an autofilled field renders a pale box with near-invisible text in dark mode** — Autofilled fields keep the foreground token and their own translucent fill, by parking the background transition instead of guessing which surface the input sits on.
 
 ## Block D — The package in a server-rendered framework
 
