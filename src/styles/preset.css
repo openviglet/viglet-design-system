@@ -167,39 +167,61 @@
   --sidebar-ring: var(--vg-sidebar-ring);
 }
 
+/* Dark surfaces sit one step above pure black on purpose. Near-black (0.145)
+   under near-white text runs ~17:1 — far past AAA, and that overshoot is what
+   produces halation: the glyphs bloom at the edges, worst for astigmatic eyes.
+   The ramp below lands text at ~13.5:1, still comfortably AAA, and follows the
+   dark-theme elevation rule that higher surfaces are LIGHTER, not shadowed:
+
+     background 0.205  <  card/sidebar 0.269  <  muted/accent/popover 0.320
+
+   Each step must stay distinct — accent and card sharing a value is what makes
+   hovers and the selected sidebar item vanish. */
 .dark,
 [data-theme="dark"] {
-  --vg-background: oklch(0.145 0 0);
-  --vg-foreground: oklch(0.985 0 0);
-  --vg-card: oklch(0.205 0 0);
-  --vg-card-foreground: oklch(0.985 0 0);
-  --vg-popover: oklch(0.205 0 0);
-  --vg-popover-foreground: oklch(0.985 0 0);
+  --vg-background: oklch(0.205 0 0);
+  --vg-foreground: oklch(0.96 0 0);
+  --vg-card: oklch(0.269 0 0);
+  --vg-card-foreground: oklch(0.96 0 0);
+  /* Elevated above card, so a dropdown over a card reads as lifted. */
+  --vg-popover: oklch(0.32 0 0);
+  --vg-popover-foreground: oklch(0.96 0 0);
   --vg-primary: oklch(0.922 0 0);
   --vg-primary-foreground: oklch(0.205 0 0);
-  --vg-secondary: oklch(0.269 0 0);
-  --vg-secondary-foreground: oklch(0.985 0 0);
-  --vg-muted: oklch(0.269 0 0);
-  --vg-muted-foreground: oklch(0.708 0 0);
-  --vg-accent: oklch(0.269 0 0);
-  --vg-accent-foreground: oklch(0.985 0 0);
+  --vg-secondary: oklch(0.32 0 0);
+  --vg-secondary-foreground: oklch(0.96 0 0);
+  --vg-muted: oklch(0.32 0 0);
+  /* 0.708 -> 0.75 recovers the ~6.9:1 that the lighter card would have cost. */
+  --vg-muted-foreground: oklch(0.75 0 0);
+  --vg-accent: oklch(0.32 0 0);
+  --vg-accent-foreground: oklch(0.96 0 0);
   --vg-destructive: oklch(0.704 0.191 22.216);
-  --vg-border: oklch(1 0 0 / 10%);
-  --vg-input: oklch(1 0 0 / 15%);
-  --vg-ring: oklch(0.556 0 0);
+  /* A white-alpha line composites over its own surface, so its ratio barely
+     moves when the surface lightens — 15% was 1.67:1 on the old card and would
+     have been 1.73:1 on the new one. Interactive control outlines need 3:1
+     (WCAG 1.4.11), which lands at 34% regardless of which dark you pick.
+     --vg-border stays decorative (card/divider), so it only gets a nudge. */
+  --vg-border: oklch(1 0 0 / 14%);
+  --vg-input: oklch(1 0 0 / 34%);
+  /* 0.556 was 1.9:1 against the old card — below the 3:1 that WCAG 2.4.11
+     wants for a focus indicator. Kept neutral rather than keyed to a brand
+     hue: this line has no themeable accent token, so a hardcoded color would
+     impose one product's identity on every consumer. Now ~6.7:1. */
+  --vg-ring: oklch(0.75 0 0);
   --vg-chart-1: oklch(0.488 0.243 264.376);
   --vg-chart-2: oklch(0.696 0.17 162.48);
   --vg-chart-3: oklch(0.769 0.188 70.08);
   --vg-chart-4: oklch(0.627 0.265 303.9);
   --vg-chart-5: oklch(0.645 0.246 16.439);
-  --vg-sidebar: oklch(0.205 0 0);
-  --vg-sidebar-foreground: oklch(0.985 0 0);
+  --vg-sidebar: oklch(0.269 0 0);
+  --vg-sidebar-foreground: oklch(0.96 0 0);
   --vg-sidebar-primary: oklch(0.488 0.243 264.376);
-  --vg-sidebar-primary-foreground: oklch(0.985 0 0);
-  --vg-sidebar-accent: oklch(0.269 0 0);
-  --vg-sidebar-accent-foreground: oklch(0.985 0 0);
-  --vg-sidebar-border: oklch(1 0 0 / 10%);
-  --vg-sidebar-ring: oklch(0.556 0 0);
+  --vg-sidebar-primary-foreground: oklch(0.96 0 0);
+  /* Must stay one step above --vg-sidebar or the selected item disappears. */
+  --vg-sidebar-accent: oklch(0.32 0 0);
+  --vg-sidebar-accent-foreground: oklch(0.96 0 0);
+  --vg-sidebar-border: oklch(1 0 0 / 14%);
+  --vg-sidebar-ring: oklch(0.75 0 0);
 
   /* Brand (dark) */
   --vg-brand: #f97316;
