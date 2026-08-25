@@ -25,6 +25,16 @@ hand-roll a tile only when the entity genuinely needs a different layout.
 **A form screen with its own hero** is `BentoFormHero` as the first child inside
 the `<form>` it submits. It renders both halves of the morph itself.
 
+**A frosted box with arbitrary content** — a stats strip, a toolbar, a listing,
+a message — is `BentoPanel`. It is the one container in this layer with **no
+heading**, which is the point rather than an omission: those surfaces sit under a
+hero that already names the page, and a heading on them is noise that also puts a
+section in the document outline the page does not have. Two class slots,
+`className` on the frosted container and `contentClassName` on the inner wrapper,
+and no padding of its own — a table wants `p-0` and a toolbar wants `py-2`.
+Never hand-roll `bento-glass rounded-2xl border`: the moment two call sites pick
+different radii the product is inconsistent for a reason no diff shows.
+
 Two rules that outrank convenience:
 
 - **Identity lives in the hero, never in the form.** Title, description, icon

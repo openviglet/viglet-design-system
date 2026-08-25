@@ -56,6 +56,7 @@ export { BentoHeroIconPicker, type BentoHeroIconPickerProps } from "./bento-hero
 export { BentoInlineEdit, type BentoInlineEditProps } from "./bento-inline-edit";
 export { BentoFormHero, type BentoFormHeroProps } from "./bento-form-hero";
 export { BentoFormSection, type BentoFormSectionProps } from "./bento-form-section";
+export { BentoPanel, type BentoPanelProps } from "./bento-panel";
 export { BentoBackToTop } from "./bento-back-to-top";
 export { BentoCommandPalette, type BentoCommandPaletteProps } from "./bento-command-palette";
 export { BentoShortcutsDialog, type BentoShortcutsDialogProps } from "./bento-shortcuts-dialog";
