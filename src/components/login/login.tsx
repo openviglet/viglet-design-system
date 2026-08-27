@@ -74,7 +74,14 @@ function LoginRoot({
   return (
     <LoginThemeContext.Provider value={{ color, colorDark }}>
       <div
-        className={`vig-login relative min-h-svh flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-950 ${className ?? ""}`}
+        // dark ground is slate-900, not slate-950, on purpose: it is a navy at
+        // essentially the same luminance as --vg-background, so the login sheet
+        // sits on the same step of the dark ramp as the rest of the product
+        // while keeping its blue identity. Under slate-950 the GlassCard
+        // composited to #101729 and put body text at 13.2:1 against the 11.2:1
+        // the console cards were tuned to - the login read brighter than
+        // everything else precisely because it bypassed the tokens.
+        className={`vig-login relative min-h-svh flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-900 ${className ?? ""}`}
         style={{ ...(style ?? {}), ...themeStyle } as CSSProperties}
         {...rest}
       >

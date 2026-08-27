@@ -259,8 +259,12 @@
 /* Dark surfaces sit one step above pure black on purpose. Near-black (0.145)
    under near-white text runs ~17:1 — far past AAA, and that overshoot is what
    produces halation: the glyphs bloom at the edges, worst for astigmatic eyes.
-   The ramp below lands text at ~13.5:1, still comfortably AAA, and follows the
-   dark-theme elevation rule that higher surfaces are LIGHTER, not shadowed:
+   The ramp below lands text at ~11.2:1 — still well past AAA (7:1), and inside
+   the band Material recommends for high-emphasis dark-theme text (white at
+   ~87%). Going further starts closing on --vg-muted-foreground (6.7:1) and
+   flattens the title/supporting-text hierarchy, which is the same problem from
+   the other side. It also follows the dark-theme elevation rule that higher
+   surfaces are LIGHTER, not shadowed:
 
      background 0.205  <  card/sidebar 0.269  <  muted/accent/popover 0.320
 
@@ -269,21 +273,21 @@
 .dark,
 [data-theme="dark"] {
   --vg-background: oklch(0.205 0 0);
-  --vg-foreground: oklch(0.96 0 0);
+  --vg-foreground: oklch(0.90 0 0);
   --vg-card: oklch(0.269 0 0);
-  --vg-card-foreground: oklch(0.96 0 0);
+  --vg-card-foreground: oklch(0.90 0 0);
   /* Elevated above card, so a dropdown over a card reads as lifted. */
   --vg-popover: oklch(0.32 0 0);
-  --vg-popover-foreground: oklch(0.96 0 0);
+  --vg-popover-foreground: oklch(0.90 0 0);
   --vg-primary: oklch(0.922 0 0);
   --vg-primary-foreground: oklch(0.205 0 0);
   --vg-secondary: oklch(0.32 0 0);
-  --vg-secondary-foreground: oklch(0.96 0 0);
+  --vg-secondary-foreground: oklch(0.90 0 0);
   --vg-muted: oklch(0.32 0 0);
   /* 0.708 -> 0.75 recovers the ~6.9:1 that the lighter card would have cost. */
   --vg-muted-foreground: oklch(0.75 0 0);
   --vg-accent: oklch(0.32 0 0);
-  --vg-accent-foreground: oklch(0.96 0 0);
+  --vg-accent-foreground: oklch(0.90 0 0);
   /* The brand accent's dark twin. The tint surfaces are color-mix over the same
      stop and read correctly on either ground, so only the foreground and the
      interactive fill re-point here. */
@@ -312,12 +316,15 @@
   --vg-chart-4: oklch(0.627 0.265 303.9);
   --vg-chart-5: oklch(0.645 0.246 16.439);
   --vg-sidebar: oklch(0.269 0 0);
-  --vg-sidebar-foreground: oklch(0.96 0 0);
+  --vg-sidebar-foreground: oklch(0.90 0 0);
   --vg-sidebar-primary: oklch(0.488 0.243 264.376);
+  /* Stays brighter than the other foregrounds: this one sits on a saturated
+     blue fill, not on a dark neutral, so the halation argument does not apply
+     and contrast is the only thing to optimise. */
   --vg-sidebar-primary-foreground: oklch(0.96 0 0);
   /* Must stay one step above --vg-sidebar or the selected item disappears. */
   --vg-sidebar-accent: oklch(0.32 0 0);
-  --vg-sidebar-accent-foreground: oklch(0.96 0 0);
+  --vg-sidebar-accent-foreground: oklch(0.90 0 0);
   --vg-sidebar-border: oklch(1 0 0 / 14%);
   --vg-sidebar-ring: var(--vg-accent-text-dark);
 
