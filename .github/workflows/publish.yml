@@ -64,21 +64,40 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Bump to next available version
+      # The registry is asked BEFORE anything moves, which is the order publish-ds.cmd
+      # has always used. Bumping first and failing later burns the number it moved to:
+      # 2026.3.6 and 2026.3.7 do not exist for that reason, and neither does 2026.2.56.
+      #
+      # The guard under the old bump asked `npm view` about
+      # `${{ github.event.repository.name }}` — `viglet-design-system`, not
+      # `@viglet/viglet-design-system`. A different package, so the read failed, the
+      # failure was swallowed by `2>/dev/null`, `grep` matched nothing and the loop never
+      # ran once. The unconditional bump above it was the whole of the behaviour.
+      - name: Bump only while the version is taken
         run: |
-          pnpm version patch --no-git-tag-version
+          PKG=$(node -p "require('./package.json').name")
           VERSION=$(node -p "require('./package.json').version")
-          while npm view "${{ github.event.repository.name }}" versions --json 2>/dev/null | grep -q "\"$VERSION\""; do
-            echo "Version $VERSION already exists on npm, bumping again..."
-            pnpm version patch --no-git-tag-version
+          while npm view "$PKG@$VERSION" version >/dev/null 2>&1; do
+            echo "$VERSION is already on npm, bumping ..."
+            pnpm version patch --no-git-tag-version >/dev/null
             VERSION=$(node -p "require('./package.json').version")
           done
-          echo "Will publish version: $VERSION"
+          echo "Will publish $VERSION"
+          {
+            echo "PKG=$PKG"
+            echo "VERSION=$VERSION"
+          } >> "$GITHUB_ENV"
 
-      - name: Commit and push version bump
+      # A version the branch already carried needs no commit, and `git commit` with
+      # nothing staged is an error rather than a no-op.
+      - name: Commit and push the bump, where there was one
         run: |
+          if git diff --quiet -- package.json pnpm-lock.yaml; then
+            echo "Nothing to commit: publishing the version this branch already carries."
+            exit 0
+          fi
           git add package.json pnpm-lock.yaml
-          git commit -m "chore: bump version to $(node -p "require('./package.json').version")"
+          git commit -m "chore: bump version to $VERSION"
           git push
 
       # `pnpm publish` runs prepublishOnly, which rebuilds — the bump above only
@@ -94,5 +113,26 @@ jobs:
       # against the package with three fields: the organisation `openviglet`, the
       # repository `viglet-design-system`, and this file's name, `publish.yml`.
       # Rename this file and the registry stops recognising the publisher.
+      #
+      # `--tag` is decided here and never left to default. A publish with no tag means
+      # `--tag latest`, and npm moves `latest` to whatever was just published EVEN WHEN
+      # IT IS OLDER — so a dispatch on the 2026.2 branch would drag `latest` off the
+      # current line, and every `npm add` with no version would start resolving to
+      # legacy. A publish that is not the highest goes out under its own line tag.
+      #
+      # What CI cannot do is the other half: moving `latest` afterwards, and keeping the
+      # line tag pointing at the current line, are both `npm dist-tag add`, and OIDC does
+      # not cover it — trusted publishing authenticates `npm publish` and
+      # `npm stage publish` and nothing else. So one publish sets one tag here, and
+      # publish-ds.cmd, which carries a token, is what keeps both in step.
       - name: Publish
-        run: pnpm publish --access public --no-git-checks
+        run: |
+          LINE="line-$(echo "$VERSION" | cut -d. -f1,2)"
+          HIGHEST=$(npm view "$PKG" dist-tags.latest 2>/dev/null || true)
+          if [ -z "$HIGHEST" ] || [ "$(printf '%s\n%s\n' "$HIGHEST" "$VERSION" | sort -V | tail -1)" = "$VERSION" ]; then
+            echo "$VERSION is the highest — publishing under latest"
+            pnpm publish --access public --no-git-checks
+          else
+            echo "latest stays at $HIGHEST — publishing under $LINE"
+            pnpm publish --access public --no-git-checks --tag "$LINE"
+          fi
