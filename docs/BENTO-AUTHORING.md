@@ -8,7 +8,46 @@ is that file, addressed to anyone importing
 The first mistake is a page that looks bento inside a console that does not.
 Adopt the shell before the pages.
 
-## 1. Structure — thin config, not bespoke pages
+## 1. The shell, and the page's regions
+
+The shell is these regions, and every one of them is owned once — by the shell, by a page,
+or by the product passing a prop. Almost all of the divergence between two products built
+from this layer is an argument about that ownership rather than about a component.
+[docs/reference/page-anatomy.dc.html](reference/page-anatomy.dc.html) draws it.
+
+**The nav is the rail** — fixed, one width, desktop only, with its gutter reserved by
+`bento-rail-gutter` on whatever wraps the routed page (§7).
+
+**The header carries a set, in this order:** the mark and wordmark; a back control where
+the route has a parent; the palette trigger, with the platform's own keyboard hint. On the
+trailing edge: the locale where a second one ships, the ground, and the signed-in user.
+`BentoBackToTop` sits at the corner.
+
+Two things the header is not. It is not a second always-visible nav — the rail is the nav
+and the palette is the mobile one, and a second eats the width the content needs. And it is
+not a home for one surface's controls: a switcher or a pending count belongs to the surface
+that owns it, not to every page that renders beneath it.
+
+**The shell owns the reading column.** `main` sets the max width, the gutters and the
+vertical rhythm once, so every page begins and ends on the same line; a page sets none of
+the three. A narrower column for a single-question form is a variant the shell offers by
+name, not a class each page repeats. The moment pages set their own they disagree, and the
+defect exists only *between* screens — which is why nobody reviewing one of them sees it.
+
+**A page may own an aside**, inside that column and scrolling with it: filters, a contents
+list, a conversation. That is not the console era's sidebar, which collapses, remembers its
+width and pushes content — the reason that era needs a provider and this one does not.
+
+**The footer is the one region this chrome has not settled.** `AppFooter` is exported — a
+hairline, then the product name, its version and a few links — and it is written `mt-auto`,
+so it expects a shell that is a flex column with the main growing. No bento shell mounts
+one. Either the shell carries a footer for every page or the chrome has none; what must not
+happen is one page growing its own.
+
+**The signed-in user is two routes**, and `BentoUserMenu` has a default for neither (§3).
+Anything past them — a tenant, a review count — belongs to the surface that owns it.
+
+## 2. Structure — thin config, not bespoke pages
 
 There are three page shapes. Almost every screen is one of them plus data.
 
@@ -54,7 +93,7 @@ Two rules that outrank convenience:
     dialog rendered twice opens two modals at once, and an action inside the
     fade-out group vanishes as the reader scrolls.
 
-## 2. What the package will not hold
+## 3. What the package will not hold
 
 The layer is chrome; the map of your product is yours. Four things arrive as
 props, and the package has no default for any of them:
@@ -73,7 +112,7 @@ pass the filtered result.
 An entry appears when its route does. That is how you say a reader may see
 something — the package cannot read your feature model, and should not try.
 
-## 3. Colour — a tone is a token
+## 4. Colour — a tone is a token
 
 No component in the layer names a colour. A tone is
 `--vg-bento-tone-<name>-from` / `-to` in the preset, and the chip reads them, so
@@ -109,14 +148,14 @@ after the preset's dark block at the same specificity and in no layer. One value
 set there wins on *both* grounds, and the dark ground silently gets the light
 value. The inputs are read per ground, so you never write a dark block.
 
-The solid fill carries text, so that pair holds 4.5:1 on both grounds (§5). An
+The solid fill carries text, so that pair holds 4.5:1 on both grounds (§6). An
 accent stop at full chroma usually does not, so this value is often a deeper step
 than the one the chip is drawn with.
 
 If you need a one-off tint, set `--bento-tone-from` / `--bento-tone-to` on a
 subtree instead of touching the tokens.
 
-## 4. i18n
+## 5. i18n
 
 - Reuse the keys you already have. Do not mint a parallel namespace for a
   surface that already has one: the same entity rendered in two chromes is the
@@ -125,7 +164,7 @@ subtree instead of touching the tokens.
   The string form is ambiguous and test mocks generally do not honour it.
 - Add every new key to every locale you ship.
 
-## 5. Accessibility
+## 6. Accessibility
 
 This is a gate, not advice — the catalogue's stories run under axe on every
 push, and a violation fails the build.
@@ -150,7 +189,7 @@ push, and a violation fails the build.
   animating selector is named in that guard. A new keyframe that is not is a
   failing build, not a review comment.
 
-## 6. Responsive
+## 7. Responsive
 
 - The grid is `grid-cols-2 md:grid-cols-4 lg:grid-cols-6` with `col-span-2`
   tiles and `row-span-2` for a featured one. **Keep spans in multiples of two**
@@ -162,9 +201,10 @@ push, and a violation fails the build.
   eats mobile width.
 - There is **no sidebar provider**, and no context between the shell's pieces.
   The console era needs one because its sidebar collapses, remembers and pushes
-  content; the rail is fixed, one width, and hidden below `md`.
+  content; the rail is fixed, one width, and hidden below `md`. That is about the
+  shell — a page's own aside is §1, and it needs no provider either.
 
-## 7. Tests
+## 8. Tests
 
 - Every shared component here carries vitest and Testing Library coverage, so a
   regression surfaces once rather than in each console.

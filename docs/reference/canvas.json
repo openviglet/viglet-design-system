@@ -5,8 +5,17 @@
   ],
   "artboards": [
     {
-      "file": "shell.dc.html",
+      "file": "page-anatomy.dc.html",
       "x": 0,
+      "y": 0,
+      "w": 1400,
+      "h": 980,
+      "title": "The page's regions",
+      "page": "vds-shell"
+    },
+    {
+      "file": "shell.dc.html",
+      "x": 1520,
       "y": 0,
       "w": 1280,
       "h": 760,
@@ -15,7 +24,7 @@
     },
     {
       "file": "reading-column.dc.html",
-      "x": 1400,
+      "x": 2920,
       "y": 0,
       "w": 1280,
       "h": 720,
@@ -24,7 +33,7 @@
     },
     {
       "file": "primary.dc.html",
-      "x": 2800,
+      "x": 4320,
       "y": 0,
       "w": 1080,
       "h": 640,

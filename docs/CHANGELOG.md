@@ -87,6 +87,7 @@
 - ✅ **VDS81** **an autofilled field renders a pale box with near-invisible text in dark mode** — Autofilled fields keep the foreground token and their own translucent fill, by parking the background transition instead of guessing which surface the input sits on.
 - ✅ **VDS82** **a product re-keys the four accent tokens and the rail still marks where you are in the package's neutral** — A product sets --vg-primary-base and its dark twin at :root; the preset re-points the output per ground, so the rail, the tile glow and the solid Button follow with no dark block.
 - ✅ **VDS83** **no artefact anywhere in the package shows a whole page, so one look is a sentence and never something to look at** — docs/reference/ is eight artboards, one per decision, role-labelled and drawn from the resolved tokens; the contract and the README both point at it.
+- ✅ **VDS84** **the contract says adopt the shell before the pages and never says what the shell is** — Section 1 is the shell: the header's ordered set, the reading column, a page's aside, the footer named as undecided, and the signed-in user's two routes.
 
 ## Block D — The package in a server-rendered framework
 

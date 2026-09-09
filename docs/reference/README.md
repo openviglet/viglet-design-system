@@ -1,6 +1,6 @@
 # The page reference
 
-Eight artboards, one per decision that makes two products built from this package stop
+Nine artboards, one per decision that makes two products built from this package stop
 looking like one. They are the composition half of the catalogue: a story proves a component
 in isolation, and these prove the arrangement.
 
@@ -11,6 +11,7 @@ prose. Where the two disagree, the contract is right and an artboard is stale.
 
 | Page       | Artboard                | The decision                                                              |
 | ---------- | ----------------------- | ------------------------------------------------------------------------- |
+| The shell  | `page-anatomy.dc.html`  | every region of a page and who owns it, the signed-in user included       |
 | The shell  | `shell.dc.html`         | what the header carries, in what order, and what it is not                |
 | The shell  | `reading-column.dc.html`| the shell sets the measure once, or every page repeats one and they differ |
 | The shell  | `primary.dc.html`       | the four surfaces `--primary` reaches, unclaimed beside claimed           |
