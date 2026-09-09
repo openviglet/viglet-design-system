@@ -88,6 +88,7 @@
 - ✅ **VDS82** **a product re-keys the four accent tokens and the rail still marks where you are in the package's neutral** — A product sets --vg-primary-base and its dark twin at :root; the preset re-points the output per ground, so the rail, the tile glow and the solid Button follow with no dark block.
 - ✅ **VDS83** **no artefact anywhere in the package shows a whole page, so one look is a sentence and never something to look at** — docs/reference/ is eight artboards, one per decision, role-labelled and drawn from the resolved tokens; the contract and the README both point at it.
 - ✅ **VDS84** **the contract says adopt the shell before the pages and never says what the shell is** — Section 1 is the shell: the header's ordered set, the reading column, a page's aside, the footer named as undecided, and the signed-in user's two routes.
+- ✅ **VDS85** **an artboard opened from the file tree lays out inline and prints its helmet as text** — Each artboard's own helmet sets x-dc to block and hides helmet, so opening one from the file tree renders it; the canvas path is untouched.
 
 ## Block D — The package in a server-rendered framework
 
