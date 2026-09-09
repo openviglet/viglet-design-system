@@ -104,6 +104,15 @@
       "chrome": "front-door",
       "accent": "cool",
       "entries": [".", "./fonts", "./preset", "./styles"]
+    },
+    {
+      "id": "roadkeep-gui",
+      "name": "Roadkeep GUI",
+      "package": "@rk/ui",
+      "framework": "vite",
+      "chrome": "bento",
+      "accent": "amber",
+      "entries": [".", "./fonts", "./styles"]
     }
   ]
 }

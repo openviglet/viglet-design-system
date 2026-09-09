@@ -112,7 +112,15 @@ describe("the locale bundles hold no product's strings", () => {
     // VDS73 — every consumer's name, not the three the strings were extracted
 // from. A shared string naming any product is the defect; widening the list
 // only strengthens it.
-for (const product of ["Turing", "Shio", "Dumont", "Cloud Console", "Cloud Home", "Schools"]) {
+for (const product of [
+      "Turing",
+      "Shio",
+      "Dumont",
+      "Cloud Console",
+      "Cloud Home",
+      "Schools",
+      "Roadkeep GUI",
+    ]) {
       expect(text, `the ${lang} bento strings name ${product}`).not.toContain(product)
     }
   })

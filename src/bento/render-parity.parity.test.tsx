@@ -41,12 +41,16 @@ import {
  */
 
 /**
- * One accent per declared consumer, far enough apart that a hardcoded hue
- * cannot hide between any two of them. They are not named for products: the
- * package holds the schema, and the property under test holds for any set.
- * `consumers.test.ts` asserts there are at least as many of these as there
- * are consumers, so a fourth console arrives here rather than being noticed
- * later, which is the whole of VDS31.
+ * One set per accent a consumer declares, far enough apart that a hardcoded hue
+ * cannot hide between any two of them. They are named for hues and never for
+ * products: the package holds the schema, and the property under test holds for
+ * any set.
+ *
+ * `consumers.test.ts` asserts that every accent named in `consumers.json` has a
+ * set here, so the first product to re-key arrives in this file rather than
+ * being noticed later — which is what VDS73 replaced the old count with, after
+ * counting sets against consumers turned out to be a category error. The floor
+ * of three keeps the mechanism proven across hues while consumers share one.
  */
 const TOKEN_SETS = {
   cool: {
@@ -66,6 +70,16 @@ const TOKEN_SETS = {
     "--vg-accent-to": "oklch(60% 0.118 184.704)",
     "--vg-accent-text": "oklch(50.8% 0.118 165.612)",
     "--vg-accent-text-dark": "oklch(76.5% 0.177 163.223)",
+  },
+  // The first set here that a consumer actually renders with, rather than a hue
+  // chosen to be far from the others. It is lighter and less saturated at the
+  // stops than `warm` is, and its readable pair is a deeper step — which is what
+  // a real re-key looks like once contrast has been made to hold on both grounds.
+  amber: {
+    "--vg-accent-from": "oklch(82.8% 0.189 84.429)",
+    "--vg-accent-to": "oklch(76.9% 0.188 70.08)",
+    "--vg-accent-text": "oklch(55.5% 0.163 48.998)",
+    "--vg-accent-text-dark": "oklch(82.8% 0.189 84.429)",
   },
 } as const
 
@@ -255,7 +269,7 @@ describe("every token set renders the same layer", () => {
   const [first, ...rest] = digests
 
   it("digests something substantial — the composition actually mounted", () => {
-    expect(digests.length, "fewer token sets than consumers").toBeGreaterThanOrEqual(3)
+    expect(digests.length, "fewer token sets than the mechanism needs").toBeGreaterThanOrEqual(3)
     expect(first.structure.length).toBeGreaterThan(40)
     expect(first.text).toContain("Parity")
     expect(first.text).toContain("Settings")

@@ -89,6 +89,7 @@
 - ✅ **VDS83** **no artefact anywhere in the package shows a whole page, so one look is a sentence and never something to look at** — docs/reference/ is eight artboards, one per decision, role-labelled and drawn from the resolved tokens; the contract and the README both point at it.
 - ✅ **VDS84** **the contract says adopt the shell before the pages and never says what the shell is** — Section 1 is the shell: the header's ordered set, the reading column, a page's aside, the footer named as undecided, and the signed-in user's two routes.
 - ✅ **VDS85** **an artboard opened from the file tree lays out inline and prints its helmet as text** — Each artboard's own helmet sets x-dc to block and hides helmet, so opening one from the file tree renders it; the canvas path is untouched.
+- ✅ **VDS86** **a seventh consumer renders its own accent and appears nowhere in the register the guards read** — consumers.json declares the Roadkeep GUI and the digest carries its amber, the first set a consumer ships; five claims that had stopped being true were widened or corrected.
 
 ## Block D — The package in a server-rendered framework
 
