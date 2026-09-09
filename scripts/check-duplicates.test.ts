@@ -99,6 +99,27 @@ beforeAll(() => {
   manifest = join(workdir, "manifest.json")
   writeFileSync(manifest, JSON.stringify(MANIFEST))
   writeFileSync(join(workdir, "package.json"), '{"name":"fixture","version":"1.0.0"}')
+
+  // VDS78's two tests run the CLI with no `--manifest`, which is the invocation a consumer
+  // types and the one the root-argument bug hid in. The resolver looks in the consumer's
+  // node_modules first and falls back to this repository's own `dist/exports.json` — and
+  // both `ci.yml` and `publish.yml` run the test job *before* the build job, so that
+  // fallback is not there and the two tests asserted on "could not read" instead of on a
+  // finding. They passed only where somebody had already built.
+  //
+  // Planting the manifest where a consumer would have it exercises the branch a consumer
+  // takes, and it holds whatever order the jobs run in.
+  const installed = join(workdir, "node_modules", "@viglet", "viglet-design-system")
+  mkdirSync(join(installed, "dist"), { recursive: true })
+  writeFileSync(
+    join(installed, "package.json"),
+    JSON.stringify({
+      name: "@viglet/viglet-design-system",
+      version: "0.0.0-fixture",
+      exports: { "./exports.json": "./dist/exports.json" },
+    }),
+  )
+  writeFileSync(join(installed, "dist", "exports.json"), JSON.stringify(MANIFEST))
 })
 
 afterAll(() => {

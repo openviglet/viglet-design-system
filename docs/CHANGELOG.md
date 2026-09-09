@@ -48,6 +48,7 @@
 - ✅ **VDS74** **check-duplicates exempts a whole file for having any re-export, so a local copy beside one is never reported** — The exemption is a name's now, not a file's, and it found two real declarations behind a shim in Turing.
 - ✅ **VDS78** **the duplicate gate drops its first positional root, so a consumer naming a directory scans another** — The filter skips the manifest's value only when --manifest is present, and two tests now run without it — the branch every existing test avoided.
 - ✅ **VDS87** **use:local copies dist and package.json, so nothing else in files has ever reached a local consumer** — use:local reads the files list and copies every entry, so anything published reaches a local consumer; a glob or a missing entry is refused rather than skipped.
+- ✅ **VDS89** **two gate tests read this repository's built dist and the test job runs before the build job, so CI has been red** — The two tests plant the manifest in the workdir's own node_modules, taking the branch a consumer takes, so they hold whichever order the jobs run in.
 
 ## Block B — Bento becomes a design-system layer
 
