@@ -4,7 +4,14 @@ on:
   workflow_dispatch:
 
 permissions:
+  # The version bump is committed and pushed from inside this job.
   contents: write
+  # Trusted publishing. pnpm asks GitHub for an OIDC id-token and hands that to
+  # npm instead of a secret, and without this permission the request is refused
+  # — `ERR_PNPM_ID_TOKEN_GITHUB_WORKFLOW_INCORRECT_PERMISSIONS`, which pnpm
+  # reports as `[WARN] Skipped OIDC` and then falls back, so the dispatch fails
+  # on the token rather than on the thing that was actually missing.
+  id-token: write
 
 jobs:
   publish:
@@ -76,7 +83,16 @@ jobs:
 
       # `pnpm publish` runs prepublishOnly, which rebuilds — the bump above only
       # changed the version, and dist must carry it.
+      #
+      # No `NODE_AUTH_TOKEN`, and that is the point: with `id-token: write` above
+      # this publishes as a trusted publisher, so the registry trusts *this
+      # workflow in this repository* rather than a long-lived secret somebody has
+      # to rotate. It also means npm attaches a provenance attestation on its
+      # own; `--provenance` is not passed because it is not needed.
+      #
+      # It requires a matching trusted publisher on the npm side, registered
+      # against the package with three fields: the organisation `openviglet`, the
+      # repository `viglet-design-system`, and this file's name, `publish.yml`.
+      # Rename this file and the registry stops recognising the publisher.
       - name: Publish
         run: pnpm publish --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
