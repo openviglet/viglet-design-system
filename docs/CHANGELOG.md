@@ -91,6 +91,7 @@
 - ✅ **VDS84** **the contract says adopt the shell before the pages and never says what the shell is** — Section 1 is the shell: the header's ordered set, the reading column, a page's aside, the footer named as undecided, and the signed-in user's two routes.
 - ✅ **VDS85** **an artboard opened from the file tree lays out inline and prints its helmet as text** — Each artboard's own helmet sets x-dc to block and hides helmet, so opening one from the file tree renders it; the canvas path is untouched.
 - ✅ **VDS86** **a seventh consumer renders its own accent and appears nowhere in the register the guards read** — consumers.json declares the Roadkeep GUI and the digest carries its amber, the first set a consumer ships; five claims that had stopped being true were widened or corrected.
+- ✅ **VDS88** **the contract and the artboards are in docs, which reaches no consumer, so they are read by whoever goes looking** — viglet-ds-page-reference writes the contract, the boundary and the artboards into a consumer, merges its canvas rather than replacing it, and --check reports absent apart from stale.
 
 ## Block D — The package in a server-rendered framework
 

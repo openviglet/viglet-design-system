@@ -61,11 +61,16 @@
     }
   },
   "bin": {
-    "viglet-ds-check-duplicates": "./scripts/check-duplicates.mjs"
+    "viglet-ds-check-duplicates": "./scripts/check-duplicates.mjs",
+    "viglet-ds-page-reference": "./scripts/page-reference.mjs"
   },
   "files": [
     "dist",
-    "scripts/check-duplicates.mjs"
+    "scripts/check-duplicates.mjs",
+    "scripts/page-reference.mjs",
+    "docs/BENTO-AUTHORING.md",
+    "docs/BENTO-BOUNDARY.md",
+    "docs/reference"
   ],
   "sideEffects": [
     "**/*.css"
