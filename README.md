@@ -511,6 +511,12 @@ of this package and which stay in the product, and why. Four of them are one
 product's commercial offer rendered as cards, and shipping those as chrome would
 put that offer in every console.
 
+[docs/reference/](docs/reference/) is the same contract drawn: eight artboards,
+one per decision that makes two products built from this package stop looking
+like one — the header's set, who owns the reading column, what `--primary`
+reaches, the three page shapes, the panel, and both grounds with their ratios.
+The catalogue proves a component; these prove the arrangement.
+
 ## Contributing
 
 The package manager here is pnpm, matching the Shio, Turing, Dumont, Cloud Home

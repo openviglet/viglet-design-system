@@ -86,6 +86,7 @@
 - ✅ **VDS80** **the dark theme runs ~17:1 and flattens four surfaces onto one value, so states vanish and glyphs halate** — The dark ramp lands text at ~13.5:1 with background, card and accent one step apart, so a hover and a selected item are visible and the focus ring meets 3:1.
 - ✅ **VDS81** **an autofilled field renders a pale box with near-invisible text in dark mode** — Autofilled fields keep the foreground token and their own translucent fill, by parking the background transition instead of guessing which surface the input sits on.
 - ✅ **VDS82** **a product re-keys the four accent tokens and the rail still marks where you are in the package's neutral** — A product sets --vg-primary-base and its dark twin at :root; the preset re-points the output per ground, so the rail, the tile glow and the solid Button follow with no dark block.
+- ✅ **VDS83** **no artefact anywhere in the package shows a whole page, so one look is a sentence and never something to look at** — docs/reference/ is eight artboards, one per decision, role-labelled and drawn from the resolved tokens; the contract and the README both point at it.
 
 ## Block D — The package in a server-rendered framework
 
