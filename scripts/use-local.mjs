@@ -23,7 +23,16 @@
 // `pnpm install` in the product puts the published build back.
 
 import { spawnSync } from "node:child_process"
-import { cpSync, existsSync, readdirSync, readFileSync, realpathSync, rmSync, statSync } from "node:fs"
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  realpathSync,
+  rmSync,
+  statSync,
+} from "node:fs"
 import { dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 
@@ -195,16 +204,49 @@ if (!existsSync(dist) || !statSync(dist).isDirectory()) {
   process.exit(1)
 }
 
+/**
+ * What a publish would carry, read rather than assumed.
+ *
+ * `dist` used to be the whole of this copy, which quietly made the loop a
+ * different thing from a publish: `scripts/check-duplicates.mjs` has been in
+ * `files` since VDS5 and never once arrived in a consumer this way, so a change
+ * to that gate could only be tried through a real tarball — which is the thing
+ * this script exists to avoid. Reading the list keeps the two the same shape by
+ * construction, and anything added to `files` later arrives here for free.
+ *
+ * `package.json` is copied beside them because npm always includes it and never
+ * asks `files` about it.
+ */
+const manifest = JSON.parse(readFileSync(join(repoRoot, "package.json"), "utf8"))
+const carried = manifest.files ?? []
+
+const patterned = carried.filter((entry) => /[*?[\]{}!]/.test(entry))
+if (patterned.length > 0) {
+  console.error(`\n\`files\` uses a pattern this script does not expand: ${patterned.join(", ")}`)
+  console.error(`Name it outright, or teach this script the pattern — guessing would ship a subset`)
+  console.error(`and a subset is what this whole script is here to stop.`)
+  process.exit(1)
+}
+
+const absent = carried.filter((entry) => !existsSync(join(repoRoot, entry)))
+if (absent.length > 0) {
+  console.error(`\n\`files\` names something this checkout does not have: ${absent.join(", ")}`)
+  process.exit(1)
+}
+
 for (const { installed } of targets) {
   console.log(`\nWriting ${installed}...`)
-  // Unlink before copying, never write through. pnpm hardlinks package files
-  // from its global content-addressable store, so truncating one in place would
-  // rewrite the copy every other project on this machine shares. Removing the
-  // directory entry first drops this tree's link and leaves the store alone.
-  rmSync(join(installed, "dist"), { recursive: true, force: true })
-  rmSync(join(installed, "package.json"), { force: true })
-  cpSync(dist, join(installed, "dist"), { recursive: true })
-  cpSync(join(repoRoot, "package.json"), join(installed, "package.json"))
+  for (const entry of [...carried, "package.json"]) {
+    const to = join(installed, entry)
+    // Unlink before copying, never write through. pnpm hardlinks package files
+    // from its global content-addressable store, so truncating one in place would
+    // rewrite the copy every other project on this machine shares. Removing the
+    // directory entry first drops this tree's link and leaves the store alone.
+    rmSync(to, { recursive: true, force: true })
+    mkdirSync(dirname(to), { recursive: true })
+    cpSync(join(repoRoot, entry), to, { recursive: true })
+  }
+  console.log(`  ${[...carried, "package.json"].join(", ")}`)
 }
 
 console.log(

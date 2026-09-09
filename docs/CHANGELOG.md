@@ -47,6 +47,7 @@
 - ✅ **VDS76** **SubPage and InternalSidebar are each narrower than the copies Turing still declares, so its shim is refused** — The gaps close as outletContext, an optional url with showOnNew, segment-boundary active state, and a density prop (design §VDS76 superseded: one padding difference was three, plus a defect).
 - ✅ **VDS74** **check-duplicates exempts a whole file for having any re-export, so a local copy beside one is never reported** — The exemption is a name's now, not a file's, and it found two real declarations behind a shim in Turing.
 - ✅ **VDS78** **the duplicate gate drops its first positional root, so a consumer naming a directory scans another** — The filter skips the manifest's value only when --manifest is present, and two tests now run without it — the branch every existing test avoided.
+- ✅ **VDS87** **use:local copies dist and package.json, so nothing else in files has ever reached a local consumer** — use:local reads the files list and copies every entry, so anything published reaches a local consumer; a glob or a missing entry is refused rather than skipped.
 
 ## Block B — Bento becomes a design-system layer
 
