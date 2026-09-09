@@ -78,8 +78,24 @@
   --vg-card-foreground: oklch(0.145 0 0);
   --vg-popover: oklch(1 0 0);
   --vg-popover-foreground: oklch(0.145 0 0);
-  --vg-primary: oklch(0.205 0 0);
-  --vg-primary-foreground: oklch(0.985 0 0);
+  /* The mark for where a product is. The bento layer reads this for the rail's
+     active item, the tile's hover glow and an inline edit's border, and the
+     default Button variant is `bg-primary text-primary-foreground` -- so a
+     product that keys only the accent has all four in a neutral.
+
+     Claimed through the four inputs below rather than by setting --vg-primary
+     directly, for the reason the accent has -text-dark: a consumer stylesheet
+     imports this file and then declares its own :root, which lands after the
+     dark block at the same specificity and in no layer. A bare --vg-primary set
+     there wins on BOTH grounds and keys the dark one to the light value. The
+     inputs are read per ground, so a product never writes a dark block. */
+  --vg-primary-base: oklch(0.205 0 0);
+  --vg-primary-base-dark: oklch(0.922 0 0);
+  --vg-primary-foreground-base: oklch(0.985 0 0);
+  --vg-primary-foreground-base-dark: oklch(0.205 0 0);
+
+  --vg-primary: var(--vg-primary-base);
+  --vg-primary-foreground: var(--vg-primary-foreground-base);
   --vg-secondary: oklch(0.97 0 0);
   --vg-secondary-foreground: oklch(0.205 0 0);
   --vg-muted: oklch(0.97 0 0);
@@ -279,8 +295,10 @@
   /* Elevated above card, so a dropdown over a card reads as lifted. */
   --vg-popover: oklch(0.32 0 0);
   --vg-popover-foreground: oklch(0.90 0 0);
-  --vg-primary: oklch(0.922 0 0);
-  --vg-primary-foreground: oklch(0.205 0 0);
+  /* The other half of the pair above: this block re-points the output, and the
+     value it points at is the product's, so re-keying stays a :root edit. */
+  --vg-primary: var(--vg-primary-base-dark);
+  --vg-primary-foreground: var(--vg-primary-foreground-base-dark);
   --vg-secondary: oklch(0.32 0 0);
   --vg-secondary-foreground: oklch(0.90 0 0);
   --vg-muted: oklch(0.32 0 0);

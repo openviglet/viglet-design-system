@@ -84,6 +84,35 @@ Accents — a focus border, the rail's active marker, a hover ring — take your
 `--primary`. A shared component marking "you are here" in a colour of its own is
 the clearest way to make one product look wrong.
 
+**Claim `--primary`, or four surfaces stay neutral.** The rail's active marker is
+not the only thing reading it: `.bento-tile:hover` takes its glow from
+`--primary`, `.bento-editing` and `.bento-new-tile` take their borders, and the
+default `Button` variant is `bg-primary text-primary-foreground`. The preset's
+value is a neutral rather than a brand, so keying only the accent leaves all four
+near-black on light and near-white on dark — which is what "you are here" looks
+like in a product that thinks it has re-keyed.
+
+Claim it at `:root`, through the inputs, the way the accent is claimed:
+
+```css
+:root {
+  --vg-primary-base: …;                 /* the mark, on light */
+  --vg-primary-base-dark: …;            /* and on dark */
+  --vg-primary-foreground-base: …;      /* what the solid fill carries */
+  --vg-primary-foreground-base-dark: …;
+}
+```
+
+**Setting `--vg-primary` itself is the mistake the inputs exist to prevent.** Your
+stylesheet imports this package and then declares its own `:root`, so it lands
+after the preset's dark block at the same specificity and in no layer. One value
+set there wins on *both* grounds, and the dark ground silently gets the light
+value. The inputs are read per ground, so you never write a dark block.
+
+The solid fill carries text, so that pair holds 4.5:1 on both grounds (§5). An
+accent stop at full chroma usually does not, so this value is often a deeper step
+than the one the chip is drawn with.
+
 If you need a one-off tint, set `--bento-tone-from` / `--bento-tone-to` on a
 subtree instead of touching the tokens.
 

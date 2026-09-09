@@ -397,6 +397,19 @@ The tint, the strong tint and the hairline (`--vg-accent-surface`, `--vg-accent-
 
 **Declare them on `:root`, not on a wrapper.** A custom property substitutes its `var()` references where it is *declared*, so the derived tokens above are mixed against the `--vg-accent-from` declared in the preset's `:root`. Re-keying a subtree moves what a utility class mixes on the element — the chip, the solid fill — and leaves the tint, the hairline and the button fill at the root's value. The result looks like a component that half-ignores the theme.
 
+**The accent is not the whole re-key.** `--primary` is the other half, and it is a separate set of properties because it takes one value per ground rather than one value plus a readable pair. It is what the bento rail's active marker, the tile's hover glow, an inline edit's border and the default `Button` fill all read, so a product that sets only the four above leaves those in the preset's neutral:
+
+```css
+:root {
+  --vg-primary-base: oklch(55.3% 0.195 38.402);
+  --vg-primary-base-dark: oklch(75% 0.183 55.934);
+  --vg-primary-foreground-base: oklch(0.985 0 0);
+  --vg-primary-foreground-base-dark: oklch(0.205 0 0);
+}
+```
+
+Set the inputs, never `--vg-primary` itself. Your stylesheet is declared after this package's dark block, at the same specificity and in no layer, so a single `--vg-primary` there wins on both grounds and keys the dark one to the light value. The preset reads the inputs per ground, which is why re-keying stays a `:root` edit. The fill carries text, so keep that pair at 4.5:1 on both grounds — usually a deeper step than the gradient stops.
+
 Three utility classes cover the common shapes: `vg-accent-chip` (the tinted gradient chip — pair it with Tailwind's `ring-1`), `vg-accent-text` (an accented label or icon), and `vg-accent-solid` (a solid gradient fill).
 
 `GradientButton` and `GradientSwitch` follow the accent in their primary variants (`default`, `outline`, `ghost`), so a re-key reaches the buttons too; their `secondary`, `destructive` and `success` variants keep fixed semantic hues, because "destructive" does not change colour with the brand.
