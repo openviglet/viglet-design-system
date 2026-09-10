@@ -99,7 +99,9 @@
   --vg-secondary: oklch(0.97 0 0);
   --vg-secondary-foreground: oklch(0.205 0 0);
   --vg-muted: oklch(0.97 0 0);
-  --vg-muted-foreground: oklch(0.556 0 0);
+  /* 0.52 and not 0.556 (VDS92): the old value was 4.34:1 on --vg-muted, under AA, and
+     break-even is 0.547. contrast.test.ts holds every named pair to 4.5:1. */
+  --vg-muted-foreground: oklch(0.52 0 0);
   --vg-accent: oklch(0.97 0 0);
   --vg-accent-foreground: oklch(0.205 0 0);
   --vg-destructive: oklch(0.577 0.245 27.325);

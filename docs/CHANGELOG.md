@@ -51,6 +51,9 @@
 - ✅ **VDS89** **two gate tests read this repository's built dist and the test job runs before the build job, so CI has been red** — The two tests plant the manifest in the workdir's own node_modules, taking the branch a consumer takes, so they hold whichever order the jobs run in.
 - ✅ **VDS90** **the release authenticates with a long-lived secret, and the one the repository holds cannot write to this scope** — The publish job declares id-token: write and carries no NODE_AUTH_TOKEN, so it publishes as a trusted publisher with provenance; the npm-side publisher is still to register.
 - ✅ **VDS91** **the release workflow bumps the version before asking npm, and publishes without choosing a dist-tag** — The registry is asked before the bump, the guard names the package rather than the repository, and the publish chooses latest or its line tag (design recorded in `.github/workflows/publish.yml`).
+- ✅ **VDS92** **the muted pair is 4.34 to 1 on the light ground, and no gate reads a token pair, so every product ships it** — Muted text clears AA on the light ground at 5.05 to 1, and a test holds every pair the preset names to 4.5 in both grounds.
+  checked **Every token pair the preset names clears 4.5 to 1 in both grounds** A pair is a promise that its foreground is legible on its surface, and muted broke it on the light ground.
+  checked **A test measures those pairs from preset.css and fails naming the first under AA** Only arithmetic catches a pale label, so the gate is the arithmetic, and an unreadable value fails rather than skips.
 
 ## Block B — Bento becomes a design-system layer
 
