@@ -1,5 +1,6 @@
 import { IconArrowUp } from "@tabler/icons-react";
 import { useSyncExternalStore } from "react";
+import { useTranslation } from "react-i18next";
 
 const REVEAL_THRESHOLD_PX = 480;
 
@@ -22,6 +23,7 @@ function scrolledPastThreshold(): boolean {
  * the long way back when content is heavy.
  */
 export function BentoBackToTop() {
+  const { t } = useTranslation();
   // The scroll position is external state, so it is read through
   // `useSyncExternalStore` rather than copied into a `useState` an effect then
   // catches up. That form rendered hidden whatever the position was, so a page
@@ -38,7 +40,7 @@ export function BentoBackToTop() {
   return (
     <button
       type="button"
-      aria-label="Back to top"
+      aria-label={t("bento.backToTop", { defaultValue: "Back to top" })}
       tabIndex={visible ? 0 : -1}
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       className={`fixed bottom-6 right-6 z-40 grid h-11 w-11 place-items-center rounded-full border border-border/60 bg-card/80 text-foreground shadow-lg backdrop-blur-xl transition-all duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:shadow-xl active:scale-95 ${

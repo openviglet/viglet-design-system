@@ -62,6 +62,7 @@ const Title: React.FC<TitleProps> = ({ icon: Icon, feature, description, urlBase
   const sidebar = useSidebarOptional();
   const isMobile = sidebar?.isMobile ?? false;
   const toggleSidebar = sidebar?.toggleSidebar ?? (() => {});
+  const { t } = useTranslation();
 
   const iconElement = (
     <div
@@ -70,7 +71,7 @@ const Title: React.FC<TitleProps> = ({ icon: Icon, feature, description, urlBase
       onKeyDown={isMobile ? (e) => { if (e.key === "Enter" || e.key === " ") toggleSidebar(); } : undefined}
       tabIndex={isMobile ? 0 : undefined}
       role={isMobile ? "button" : undefined}
-      title={isMobile ? "Open navigation" : undefined}
+      title={isMobile ? t("common.openNavigation", { defaultValue: "Open navigation" }) : undefined}
     >
       <Icon className="size-5! vg-accent-text" />
     </div>

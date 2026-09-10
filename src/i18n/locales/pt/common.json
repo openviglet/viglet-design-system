@@ -16,7 +16,16 @@
     "activeToggleHint": "Clique para desativar",
     "idleToggleHint": "Clique para ativar",
     "docs": "Documentação",
-    "apps": "Aplicativos"
+    "apps": "Aplicativos",
+    "more": "Mais",
+    "morePages": "Mais páginas",
+    "breadcrumb": "Trilha de navegação",
+    "pagination": "Paginação",
+    "previous": "Anterior",
+    "next": "Próxima",
+    "goToPreviousPage": "Ir para a página anterior",
+    "goToNextPage": "Ir para a próxima página",
+    "stepOf": "Etapa {{index}} de {{count}}"
   },
   "backendStatus": {
     "offline": "Servidor indisponível. Tentando reconectar...",

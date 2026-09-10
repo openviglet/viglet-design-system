@@ -8,6 +8,7 @@
     "deleteFeature": "Excluir {{feature}}",
     "permanentDelete": "Isso excluirá permanentemente {{name}}. Esta ação não pode ser desfeita.",
     "typeToConfirm": "Digite",
-    "toConfirm": "para confirmar"
+    "toConfirm": "para confirmar",
+    "close": "Fechar"
   }
 }

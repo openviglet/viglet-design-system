@@ -1,5 +1,6 @@
 import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 import { createContext, useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { FloatingFormulasBg, type FloatingFormulasBgProps } from "../ui/floating-formulas-bg";
 import { GlassCard } from "../ui/glass-card";
 import { PulseRing } from "../ui/pulse-ring";
@@ -116,6 +117,7 @@ export interface StartupFirstStepsProps extends HTMLAttributes<HTMLDivElement> {
 }
 /** Step pagination dots shown at the top of the wizard. */
 function StartupFirstSteps({ current, total, className, ...rest }: Readonly<StartupFirstStepsProps>) {
+  const { t } = useTranslation();
   return (
     <div
       className={`vig-sf__fade-in flex items-center gap-2 mb-4 ${className ?? ""}`}
@@ -123,7 +125,7 @@ function StartupFirstSteps({ current, total, className, ...rest }: Readonly<Star
       // for the name to name, so screen readers drop it and the step count is
       // announced nowhere. `group` is the role a set of related dots has.
       role="group"
-      aria-label={`Step ${current} of ${total}`}
+      aria-label={t("common.stepOf", { index: current, count: total, defaultValue: "Step {{index}} of {{count}}" })}
       {...rest}
     >
       {Array.from({ length: total }, (_, i) => (

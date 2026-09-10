@@ -48,3 +48,59 @@ Acceptance:
 - cloud-frontend and cloud-console declare `react-hook-form` themselves.
 - It is then a peerDependency and a devDependency here, not a dependency.
 - A consumer resolving a different minor still gets exactly one copy.
+
+### §VDS94 The package's strings merged a namespace at a time
+
+Both ways into i18next merge the package's strings one namespace at a time, whole.
+
+- `initVigI18n(app)` spreads `{ ...ours, ...theirs }` per language, so a product that ships
+  its own `common` replaces the package's `common` outright.
+- `registerVigTranslations(i18n)` adds a namespace only where the host has none, so a host
+  with a `common` of its own gets none of the package's.
+
+Either way every key the package asks for under that namespace falls back to its English
+`defaultValue`, and VDS51 and VDS93 cannot see it: they read the package's bundles,
+which are complete. The consoles grew their own `common` before this package existed, so
+the namespaces most likely to collide are exactly the ones VDS93 just added to.
+
+**The fix is a deep merge with the product winning.** `initVigI18n` merges leaf by leaf,
+the product's leaf over the package's; `registerVigTranslations` calls
+`addResourceBundle` with `deep` on and `overwrite` off, so a host key is never replaced
+and a missing one is filled. A test hands each entry a product bundle that owns
+`common.save` and asserts both that its value wins and that `common.next` still resolves
+to the package's word.
+
+### §VDS95 The switcher's own name
+
+`LanguageSwitcher` names its button `t("language.toggle", "Change language")`, and no
+locale here ships a `language` namespace. VDS51 reads the namespace list off the
+bundles, so it files `language.toggle` beside `llm.title` and `home.title` as a word the
+product must supply, and passes.
+
+That test's rule is right for those two: a component asking for the product's own noun.
+It is wrong here. The switcher is this package's component naming itself, and nothing
+about a product changes what the button does. roadkeep-gui found it from the consumer
+side (its RG116) and ships `language.toggle` in its own bundle to stop the English;
+every other product still reads "Change language" in Portuguese.
+
+**The fix** ships `language.toggle` in `en` and `pt`, which moves `language` into the
+owned namespaces VDS51 reads, so the test then holds both locales to it. A consumer that
+already supplies the key keeps its own word once the merge is deep, which is why this
+follows the merge line rather than preceding it.
+
+### §VDS96 The word the boot loader says first
+
+The boot loader is HTML the Vite plugin writes into `index.html`: it runs before any
+bundle, so it cannot ask i18next for anything. Its status region is named
+`aria-label="Loading ${title}"`, and the options take a title, a subtitle and colours
+but no word for loading. A screen reader opening a Portuguese product hears English
+first, before the app it is waiting for can say a word.
+
+VDS93's gate reads JSX and never sees it: this is a template string in a `.ts` file.
+
+**Two ways out, and the plugin should take both.** A `loadingLabel` option lets a
+product that ships one language say it at build time. For one that ships several, the
+inline script already runs before paint and can read `navigator.language`, so the plugin
+can take a small per-language map and set the label from it, falling back to the option.
+Either way the words come from the product's config and not from this file, and a test
+over the emitted HTML asserts no English is left in it when a label is given.

@@ -137,7 +137,7 @@ const GridListComponent: React.FC<Props> = ({ gridItemList, children }) => {
                 render: () => (
                     <DropdownMenuItem onClick={() => navigate(to)}>
                         <IconPlus className="size-4 mr-2" />
-                        New {label}
+                        {t("sidebar.new", { feature: label, defaultValue: "New {{feature}}" })}
                     </DropdownMenuItem>
                 ),
             });
@@ -338,6 +338,7 @@ const GridListComponent: React.FC<Props> = ({ gridItemList, children }) => {
                             onClick={() => table.previousPage()}
                             disabled={!table.getCanPreviousPage()}
                             className="h-8 w-8 p-0"
+                            aria-label={t("common.goToPreviousPage", { defaultValue: "Go to previous page" })}
                         >
                             <span>&lt;</span>
                         </GradientButton>
@@ -347,6 +348,7 @@ const GridListComponent: React.FC<Props> = ({ gridItemList, children }) => {
                             onClick={() => table.nextPage()}
                             disabled={!table.getCanNextPage()}
                             className="h-8 w-8 p-0"
+                            aria-label={t("common.goToNextPage", { defaultValue: "Go to next page" })}
                         >
                             <span>&gt;</span>
                         </GradientButton>

@@ -1,6 +1,9 @@
 {
   "sidebar": {
     "indexing": "Indexação",
-    "new": "Novo(a) {{feature}}"
+    "new": "Novo(a) {{feature}}",
+    "toggle": "Alternar barra lateral",
+    "title": "Barra lateral",
+    "description": "Exibe a barra lateral em telas pequenas."
   }
 }

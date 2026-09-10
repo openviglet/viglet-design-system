@@ -8,6 +8,7 @@
     "deleteFeature": "Delete {{feature}}",
     "permanentDelete": "This will permanently delete {{name}}. This action cannot be undone.",
     "typeToConfirm": "Type",
-    "toConfirm": "to confirm"
+    "toConfirm": "to confirm",
+    "close": "Close"
   }
 }

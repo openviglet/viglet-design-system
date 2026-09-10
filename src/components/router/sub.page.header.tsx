@@ -1,5 +1,6 @@
 import { IconDotsVertical, IconPlus } from "@tabler/icons-react";
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { NavLink, useNavigate } from "react-router-dom";
 import { markerName } from "@/lib/react-markers";
 import { DialogDelete } from "./dialog.delete";
@@ -43,6 +44,7 @@ const SubPageHeaderComponent: React.FC<Props> = ({ icon: Icon, feature, name, de
   const isMobile = sidebar?.isMobile ?? false;
   const toggleSidebar = sidebar?.toggleSidebar ?? (() => {});
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // Extract actions from marker children
   const actions: ActionProps[] = [];
@@ -58,7 +60,7 @@ const SubPageHeaderComponent: React.FC<Props> = ({ icon: Icon, feature, name, de
       onClick={isMobile ? toggleSidebar : undefined}
       onKeyDown={isMobile ? (e) => { if (e.key === "Enter" || e.key === " ") toggleSidebar() } : undefined}
       tabIndex={isMobile ? 0 : undefined}
-      title={isMobile ? "Open navigation" : undefined}
+      title={isMobile ? t("common.openNavigation", { defaultValue: "Open navigation" }) : undefined}
     >
       <Icon className="size-5! vg-accent-text" />
     </div>
@@ -99,7 +101,7 @@ const SubPageHeaderComponent: React.FC<Props> = ({ icon: Icon, feature, name, de
               <DropdownMenuTrigger asChild>
                 <GradientButton variant="outline" size="sm" className="gap-1.5">
                   <IconDotsVertical className="size-4" />
-                  <span className="hidden sm:inline">Actions</span>
+                  <span className="hidden sm:inline">{t("common.actions", { defaultValue: "Actions" })}</span>
                 </GradientButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">

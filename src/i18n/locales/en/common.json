@@ -16,7 +16,16 @@
     "activeToggleHint": "Click to make idle",
     "idleToggleHint": "Click to activate",
     "docs": "Documentation",
-    "apps": "Apps"
+    "apps": "Apps",
+    "more": "More",
+    "morePages": "More pages",
+    "breadcrumb": "Breadcrumb",
+    "pagination": "Pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "goToPreviousPage": "Go to previous page",
+    "goToNextPage": "Go to next page",
+    "stepOf": "Step {{index}} of {{count}}"
   },
   "backendStatus": {
     "offline": "Server unavailable. Retrying automatically...",

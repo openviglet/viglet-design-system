@@ -4,6 +4,7 @@ import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { MenuIcon, PanelLeftIcon } from "lucide-react"
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
@@ -175,6 +176,7 @@ function Sidebar({
   position?: "fixed" | "absolute"
 }) {
   const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+  const { t } = useTranslation()
 
   if (collapsible === "none") {
     return (
@@ -207,8 +209,10 @@ function Sidebar({
           side={side}
         >
           <SheetHeader className="sr-only">
-            <SheetTitle>Sidebar</SheetTitle>
-            <SheetDescription>Displays the mobile sidebar.</SheetDescription>
+            <SheetTitle>{t("sidebar.title", { defaultValue: "Sidebar" })}</SheetTitle>
+            <SheetDescription>
+              {t("sidebar.description", { defaultValue: "Displays the mobile sidebar." })}
+            </SheetDescription>
           </SheetHeader>
           <div className="flex h-full w-full flex-col">{children}</div>
         </SheetContent>
@@ -275,6 +279,7 @@ function SidebarTrigger({
   ...props
 }: React.ComponentProps<typeof GradientButton>) {
   const ctx = useSidebarOptional()
+  const { t } = useTranslation()
   // If there is no SidebarProvider above (e.g. when rendered inside a Module
   // Federation remote that doesn't own the sidebar), render nothing instead of
   // crashing.
@@ -295,22 +300,24 @@ function SidebarTrigger({
       {...props}
     >
       {isMobile ? <MenuIcon /> : <PanelLeftIcon />}
-      <span className="sr-only">Toggle Sidebar</span>
+      <span className="sr-only">{t("sidebar.toggle", { defaultValue: "Toggle Sidebar" })}</span>
     </GradientButton>
   )
 }
 
 function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
   const { toggleSidebar } = useSidebar()
+  const { t } = useTranslation()
+  const label = t("sidebar.toggle", { defaultValue: "Toggle Sidebar" })
 
   return (
     <button
       data-sidebar="rail"
       data-slot="sidebar-rail"
-      aria-label="Toggle Sidebar"
+      aria-label={label}
       tabIndex={-1}
       onClick={toggleSidebar}
-      title="Toggle Sidebar"
+      title={label}
       className={cn(
         "hover:after:bg-sidebar-border absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] sm:flex",
         "in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize",

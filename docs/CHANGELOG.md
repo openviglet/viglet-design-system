@@ -54,6 +54,9 @@
 - ✅ **VDS92** **the muted pair is 4.34 to 1 on the light ground, and no gate reads a token pair, so every product ships it** — Muted text clears AA on the light ground at 5.05 to 1, and a test holds every pair the preset names to 4.5 in both grounds.
   checked **Every token pair the preset names clears 4.5 to 1 in both grounds** A pair is a promise that its foreground is legible on its surface, and muted broke it on the light ground.
   checked **A test measures those pairs from preset.css and fails naming the first under AA** Only arithmetic catches a pale label, so the gate is the arithmetic, and an unreadable value fails rather than skips.
+- ✅ **VDS93** **fourteen strings are typed into shipped components as English, and a screen reader announces most of them unseen** — Every word a shipped component says now comes from the en and pt bundles, and a test that parses the source fails on any literal; it found twenty-one, not the fourteen filed.
+  checked **No shipped component draws or announces a string outside the bundle** A literal asks for no key, so VDS51 passes over it and a Portuguese product speaks English exactly where nobody looks.
+  checked **A test fails on an sr-only, aria-label or lone element-text literal** The three shapes the fourteen took, read off the source so the next one fails on the line being written.
 
 ## Block B — Bento becomes a design-system layer
 
