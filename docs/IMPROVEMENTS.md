@@ -104,3 +104,25 @@ inline script already runs before paint and can read `navigator.language`, so th
 can take a small per-language map and set the label from it, falling back to the option.
 Either way the words come from the product's config and not from this file, and a test
 over the emitted HTML asserts no English is left in it when a label is given.
+
+### §VDS97 The name sonner gives the notice region
+
+The package's `Toaster` wraps sonner and passes it no `containerAriaLabel`, so the
+region every notice lands in keeps sonner's own default: `Notifications`, followed by
+its hotkey, `alt+T`. A screen reader says it whenever that region is reached — English,
+in every product, in every language.
+
+VDS93's gate cannot see it and should not: there is no literal in this package's source.
+The English is a dependency's default, and the omission is the defect. roadkeep-gui
+found it from the consumer side when its pseudo-locale run began reading names (its
+RG140), and fixed it there by passing a label out of its own catalogue. Every other
+product still announces English.
+
+**The fix is the package's own word as the default.** `Toaster` calls `useTranslation`
+and passes `containerAriaLabel={t("common.notifications", { defaultValue:
+"Notifications" })}` unless the caller passed one, with the key in both locales. The
+hotkey sonner appends is a key name and stays as the platform spells it. A unit test
+renders the `Toaster` under `pt` and reads the region's name.
+
+The same question is worth one pass over the other wrapped primitives — a default a
+dependency supplies in English is invisible to every gate that reads this package.

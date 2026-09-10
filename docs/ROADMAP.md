@@ -7,6 +7,7 @@
 - 📋 **VDS94** (deps: —) **a product with its own common namespace loses every string the package ships under it, and reads English** — initVigI18n spreads the product's bundle over the package's one namespace at a time, and registerVigTranslations skips any namespace the host already has. → §VDS94
 - 📋 **VDS95** (deps: VDS94) **the LanguageSwitcher names itself with a key no locale ships, so its button says Change language in every product** — VDS51 files language.toggle beside the product nouns it leaves to consumers, though here the package's own switcher is naming itself. → §VDS95
 - 📋 **VDS96** (deps: —) **the boot loader names its status region Loading in English, before any bundle can say otherwise** — It is HTML the plugin writes at build time, its options take no word for loading, and the VDS93 gate reads JSX and never sees it. → §VDS96
+- 📋 **VDS97** (deps: —) **the Toaster region keeps sonner's English name, Notifications, because the package passes it no label** — The English is a dependency default rather than a literal here, so VDS93 cannot see it, and a screen reader says it in every product. → §VDS97
 
 ## Non-goals
 
