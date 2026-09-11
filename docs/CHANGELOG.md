@@ -119,3 +119,7 @@
   checked **chat off renders no composer at all** without onSend the panel is a status surface, asserted by a test that queries for the textbox and finds none.
   checked **every word it says comes from the bundles** the VDS93 literals gate reads it like any shipped component, and the state names and button labels land in en and pt.
   checked **the caption is announced, not just drawn** it is an aria-live region that holds the full sentence for a screen reader while the typing animation runs for everyone else.
+- ✅ **VDS102** **the mascot only moves when a caller sets its state, while the same outcomes already go through the package's Toaster** — A product reports through toast as it already did, and the mascot follows: working, success, error, attention, and idle when the last one goes.
+  checked **nothing wraps toast** the bridge reads useSonner, so a product calling sonner from a module that never imported this hook still moves the mascot.
+  checked **every toast type maps to a state, and an empty list is idle** a test drives each of sonner's types through the hook and asserts the state, including the return to idle on dismissal.
+  checked **the bridge is opt-in and the state prop still wins** a product that sets state by hand keeps that behaviour; the hook is a separate export a caller chooses.

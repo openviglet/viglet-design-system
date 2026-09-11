@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useRef, useState } from "react";
 
+import { useAssistantNotifications } from "../../hooks/use-assistant-notifications";
 import { Badge } from "./badge";
 import { Button } from "./button";
 import { Input } from "./input";
 import { Separator } from "./separator";
+import { Toaster, toast } from "./sonner";
 import { Textarea } from "./textarea";
 import { VigletAssistant, type VigletAssistantMessage } from "./viglet-assistant";
 import type { VigletAvatarState } from "./viglet-avatar";
@@ -332,4 +334,66 @@ function CmsDemo() {
  */
 export const ContentEditor: Story = {
   render: () => <CmsDemo />,
+};
+
+/* --------------------------- driven by the toasts -------------------------- */
+
+function NotificationDemo() {
+  const { state, caption, activity } = useAssistantNotifications();
+
+  return (
+    <Stage>
+      <Toaster />
+      <div className="max-w-xl">
+        <p className="mb-1 text-sm font-semibold">Driven by the toasts</p>
+        <p className="mb-5 max-w-md text-sm text-muted-foreground">
+          Nothing below sets the mascot's state. Each button raises an ordinary{" "}
+          <code>toast</code>, and <code>useAssistantNotifications</code> reads the
+          Toaster back. Dismiss them all and it returns to idle on its own.
+        </p>
+
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" size="sm" onClick={() => toast.success("/q3-results published at 14:02.")}>
+            success
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => toast.error("Could not reach the publishing service.")}>
+            error
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => toast.warning("Two pages have no meta description.")}>
+            warning
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => toast.info("Mariana Lopes, Lumen Arquitetura.")}>
+            info
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => toast.loading("Reindexing 1,284 documents.")}>
+            loading
+          </Button>
+          <Button variant="ghost" size="sm" onClick={() => toast.dismiss()}>
+            dismiss all
+          </Button>
+        </div>
+
+        <p className="mt-5 text-xs text-muted-foreground">
+          state: <code>{state}</code> · activity: <code>{activity}</code>
+        </p>
+      </div>
+
+      <Dock state={state} caption={caption} />
+    </Stage>
+  );
+}
+
+/**
+ * The mascot moved by `toast` alone.
+ *
+ * `useAssistantNotifications` reads sonner's live list rather than wrapping
+ * `toast`, so a product calling sonner from a module that never imported the
+ * hook still moves the mascot — which is the point. Work in progress outranks an
+ * outcome, a failure outranks a success, and an empty list is idle.
+ *
+ * The caption is the toast's own title when it is a string, so a product that
+ * already writes good toast copy gets the mascot's voice for free.
+ */
+export const FromNotifications: Story = {
+  render: () => <NotificationDemo />,
 };

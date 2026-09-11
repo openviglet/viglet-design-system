@@ -13,18 +13,7 @@
 
 ## Block E — The assistant every product shares
 
-- 📋 **VDS102** (deps: VDS100 ✅, VDS101 ✅) **the mascot only moves when a caller sets its state, while the same outcomes already go through the package's Toaster** — A signal needing a second call beside every toast gets one in some places and not others, and an idle mascot beside a red toast reads as broken. → §VDS102
 - 📋 **VDS103** (deps: VDS100 ✅) **nothing compares the mascot with the design it was drawn from, so it shipped the wrong colour and over-faceted** — Three defects passed types, lint, 1029 tests, the size budget and axe, and a person holding a screenshot beside the reference is what found all of them. → §VDS103
-
-## Done when — VDS102
-
-- **nothing wraps toast** the bridge reads useSonner, so a product calling sonner from a
-  module that never imported this hook still moves the mascot.
-- **every toast type maps to a state, and an empty list is idle** a test drives each of
-  sonner's types through the hook and asserts the state, including the return to idle on
-  dismissal.
-- **the bridge is opt-in and the state prop still wins** a product that sets state by
-  hand keeps that behaviour; the hook is a separate export a caller chooses.
 
 ## Done when — VDS103
 

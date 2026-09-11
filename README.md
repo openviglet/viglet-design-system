@@ -377,6 +377,46 @@ Its own words — the state names, the two buttons, the placeholder — come fro
 the `assistant.*` keys this package ships in `en` and `pt`. See
 [Initialize i18n](#2-initialize-i18n); everything else it says is your copy.
 
+#### Letting notifications drive it
+
+You already report outcomes through `toast`. `useAssistantNotifications` reads
+the Toaster back, so the mascot moves without a second call beside each one:
+
+```tsx
+import {
+  Toaster,
+  VigletAssistant,
+  useAssistantNotifications,
+} from "@viglet/viglet-design-system";
+
+function Chrome() {
+  const { state, caption, activity } = useAssistantNotifications();
+
+  return (
+    <>
+      <Toaster />
+      <VigletAssistant state={state} caption={caption} activity={activity} />
+    </>
+  );
+}
+```
+
+It **wraps nothing**. Call sonner from anywhere in your app — from a module that
+has never heard of this hook — and the mascot still moves.
+
+| Toast | State |
+|---|---|
+| `toast.loading` | `working` |
+| `toast.success` | `success` |
+| `toast.error` | `error` |
+| `toast.warning`, `toast.info` | `attention` |
+| nothing on screen | `idle` |
+
+With several up, work in progress outranks an outcome and a failure outranks a
+success. `caption` is the toast's own title when it is a string — a toast
+rendered as JSX has no sentence to lift, so you get `null` rather than a guess.
+The hook is opt-in: pass `state` yourself and nothing here interferes.
+
 ### Hooks
 
 ```tsx
@@ -385,6 +425,7 @@ import {
   useDateLocale,
   useGridAdapter,
   useSubPageBreadcrumb,
+  useAssistantNotifications,
   useTheme,
   useBreadcrumb,
   useCurrentUser,
@@ -448,7 +489,7 @@ Console-era, `@deprecated`, still exported — see [the swap table](#two-eras-an
 
 ### Hooks
 
-`useIsMobile`, `useDateLocale`, `useGridAdapter`, `useSubPageBreadcrumb`
+`useIsMobile`, `useDateLocale`, `useGridAdapter`, `useSubPageBreadcrumb`, `useAssistantNotifications`
 
 `useGridAdapter(data, config)` tracks each extractor in `config`, not the object holding them, so a `url` builder that closes over a route param or a locale re-maps the rows when it changes. Pass the config inline if you like — keep the extractors themselves stable (a field name, a module-level function, a `useCallback`) and the memo holds.
 

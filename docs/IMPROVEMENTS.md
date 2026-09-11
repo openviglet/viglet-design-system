@@ -159,28 +159,6 @@ test computes.
 
 ## Block E — The assistant every product shares
 
-### §VDS102 Read the toasts, do not wrap them
-
-VDS100 gives the avatar a state prop, and a state prop is something a caller has to
-remember. Every consumer already reports its outcomes through this package's `Toaster` —
-that is the one channel they all share. If the mascot needs a second call beside each
-`toast.success`, it will get one in the places somebody remembered and nowhere else, and
-the mascot will sit at idle while a red rectangle slides past it. The bug would not look
-like a bug; it would look like a mascot that does not react.
-
-So the state is read from the toasts rather than set beside them. sonner exports
-`useSonner()`, which returns the live toast list, and its `type` field already carries
-the vocabulary VDS100 was named for: `loading` is working, `success` is success, `error`
-is error, `warning` and `info` are attention, and an empty list is idle. Nothing wraps
-`toast`, so a product calling sonner directly — or calling it from a module that never
-imported this hook — still moves the mascot.
-
-Two things fall out of reading rather than wrapping. A toast that outlives its own
-dismissal cannot strand the avatar, because the list is the truth and an empty list is
-idle. And the caption has a source: the toast's title is the sentence the collapsed orb
-types, so a product that already writes good toast copy gets the mascot's voice for free
-and translates it once.
-
 ### §VDS103 A gate with a picture on both sides
 
 VDS100 shipped a mascot that was the wrong colour and carried 320 facets where the
