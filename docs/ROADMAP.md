@@ -8,6 +8,8 @@
 - 📋 **VDS95** (deps: VDS94) **the LanguageSwitcher names itself with a key no locale ships, so its button says Change language in every product** — VDS51 files language.toggle beside the product nouns it leaves to consumers, though here the package's own switcher is naming itself. → §VDS95
 - 📋 **VDS96** (deps: —) **the boot loader names its status region Loading in English, before any bundle can say otherwise** — It is HTML the plugin writes at build time, its options take no word for loading, and the VDS93 gate reads JSX and never sees it. → §VDS96
 - 📋 **VDS97** (deps: —) **the Toaster region keeps sonner's English name, Notifications, because the package passes it no label** — The English is a dependency default rather than a literal here, so VDS93 cannot see it, and a screen reader says it in every product. → §VDS97
+- 📋 **VDS98** (deps: VDS93 ✅) **Stepper.Completion and AppSwitcher still speak English through prop defaults, which the literals gate never reads** — The gate reads JSX text and spoken attributes and follows no identifier back to its parameter default, so VDS93's claim is false in two components. → §VDS98
+- 📋 **VDS99** (deps: VDS92 ✅) **the contrast gate passes on an unreadable ground and never measures foreground on background** — A null ground is measured as white and the body-text pair is filtered out, and the grounds canvas still draws the muted value VDS92 replaced. → §VDS99
 
 ## Non-goals
 
