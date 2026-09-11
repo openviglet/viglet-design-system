@@ -11,6 +11,46 @@
 - 📋 **VDS98** (deps: VDS93 ✅) **Stepper.Completion and AppSwitcher still speak English through prop defaults, which the literals gate never reads** — The gate reads JSX text and spoken attributes and follows no identifier back to its parameter default, so VDS93's claim is false in two components. → §VDS98
 - 📋 **VDS99** (deps: VDS92 ✅) **the contrast gate passes on an unreadable ground and never measures foreground on background** — A null ground is measured as white and the body-text pair is filtered out, and the grounds canvas still draws the muted value VDS92 replaced. → §VDS99
 
+## Block E — The assistant every product shares
+
+- 📋 **VDS100** (deps: —) **the mascot every Viglet product is meant to show has no component here, so each product would draw it again** — The mockup renders it in three.js, which is twice the root entry's whole gzip budget, and a mascot the notifications depend on has to be there by default. → §VDS100
+- 📋 **VDS101** (deps: VDS100) **a product wanting the assistant has to build the dock, the caption, the transcript and the composer itself** — The mockup wires those to an Anthropic endpoint in the browser, and the shape a shared package can ship is the controlled one that knows no backend at all. → §VDS101
+- 📋 **VDS102** (deps: VDS100, VDS101) **the mascot only moves when a caller sets its state, while the same outcomes already go through the package's Toaster** — A signal needing a second call beside every toast gets one in some places and not others, and an idle mascot beside a red toast reads as broken. → §VDS102
+
+## Done when — VDS100
+
+- **the root entry stays inside its size budget** npm run build runs check-size against
+  size-budget.json, so an avatar that pulled in a renderer fails the build.
+- **it renders with no WebGL context and no three** package.json gains no dependency,
+  and the component draws through a 2D context a jsdom test can assert was asked for.
+- **a reader who asked for less motion gets a still frame** prefers-reduced-motion draws
+  one frame and starts no loop, asserted in a test rather than left to the stylesheet
+  gate, which reads CSS and this draws none.
+- **it mounts in a server-rendered framework** two consumers are Next apps, so first
+  render touches no window and no canvas, the way theme-provider.ssr.test.tsx holds its
+  own.
+
+## Done when — VDS101
+
+- **the package holds no endpoint, model id or key** the dock takes messages, busy and
+  onSend and nothing else; a grep for anthropic or api key over src is empty.
+- **chat off renders no composer at all** without onSend the panel is a status surface,
+  asserted by a test that queries for the textbox and finds none.
+- **every word it says comes from the bundles** the VDS93 literals gate reads it like
+  any shipped component, and the state names and button labels land in en and pt.
+- **the caption is announced, not just drawn** it is an aria-live region that holds the
+  full sentence for a screen reader while the typing animation runs for everyone else.
+
+## Done when — VDS102
+
+- **nothing wraps toast** the bridge reads useSonner, so a product calling sonner from a
+  module that never imported this hook still moves the mascot.
+- **every toast type maps to a state, and an empty list is idle** a test drives each of
+  sonner's types through the hook and asserts the state, including the return to idle on
+  dismissal.
+- **the bridge is opt-in and the state prop still wins** a product that sets state by
+  hand keeps that behaviour; the hook is a separate export a caller chooses.
+
 ## Non-goals
 
 - **Do not fork a shared component inside a product** The one-line re-export shim is the
