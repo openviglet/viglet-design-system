@@ -298,6 +298,41 @@ Nothing is being removed. No product has started cutting over, and a removal wil
 
 `DialogDelete`, `LoadProvider` and `GradientButtonLink` are **not** console-era — the bento layer uses them itself, and they are not deprecated.
 
+### The mascot
+
+`VigletAvatar` is the Viglet mascot: a small sun that shows what the system is
+doing. It is one `<canvas>` and no new dependency — the faceted core is drawn
+directly, so a product gets the mascot by installing this package and nothing
+else.
+
+```tsx
+import { VigletAvatar } from "@viglet/viglet-design-system";
+
+<VigletAvatar state="working" size={128} />;
+```
+
+The five states are named for the toast kinds, so a product that already reports
+through `toast` has nothing to translate:
+
+| `state` | When | What it does |
+|---|---|---|
+| `idle` | nothing is happening | a slow, low glow |
+| `working` | a request is in flight | an orbit with a travelling arc |
+| `success` | it finished | a swell, then a pulse outward |
+| `error` | it failed | the light goes out — it does not turn red |
+| `attention` | something arrived | a ring rises from below |
+
+Three further props shape it rather than drive it: `compact` pulls the camera in
+and drops the pool of light, for a collapsed dock; `unread` holds a slow orbit
+while an answer waits; `activity` is a counter you bump to make the mascot react
+to something smaller than a state change, like a keystroke.
+
+The mascot is decorative (`aria-hidden`) and says nothing a screen reader can
+use — give the surface that wraps it the accessible name. It draws one frame and
+starts no animation loop for a reader whose system asks for reduced motion, and
+`paused` does the same for a product with its own motion switch. When nothing is
+happening it stops drawing altogether rather than holding a loop open.
+
 ### Hooks
 
 ```tsx
@@ -357,9 +392,9 @@ import type {
 
 ## What's Included
 
-### UI Primitives (39 components)
+### UI Primitives (40 components)
 
-Accordion, Avatar, Badge, Breadcrumb, Button, Card, Checkbox, Dialog, Drawer, DropdownMenu, Form, FormActions, FormItemTwoColumns, GradientButton, GradientSwitch, HoverCard, Input, Label, NavigationMenu, Pagination, Popover, Progress, Resizable, SectionCard, Select, Separator, Sheet, Sidebar, Skeleton, Slider, Sonner (Toaster), Stepper, Switch, Table, Tabs, Textarea, Toggle, ToggleGroup, Tooltip
+Accordion, Avatar, Badge, Breadcrumb, Button, Card, Checkbox, Dialog, Drawer, DropdownMenu, Form, FormActions, FormItemTwoColumns, GradientButton, GradientSwitch, HoverCard, Input, Label, NavigationMenu, Pagination, Popover, Progress, Resizable, SectionCard, Select, Separator, Sheet, Sidebar, Skeleton, Slider, Sonner (Toaster), Stepper, Switch, Table, Tabs, Textarea, Toggle, ToggleGroup, Tooltip, VigletAvatar ([the mascot](#the-mascot))
 
 ### App Components (23 components)
 

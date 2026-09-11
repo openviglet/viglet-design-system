@@ -13,22 +13,8 @@
 
 ## Block E — The assistant every product shares
 
-- 📋 **VDS100** (deps: —) **the mascot every Viglet product is meant to show has no component here, so each product would draw it again** — The mockup renders it in three.js, which is twice the root entry's whole gzip budget, and a mascot the notifications depend on has to be there by default. → §VDS100
-- 📋 **VDS101** (deps: VDS100) **a product wanting the assistant has to build the dock, the caption, the transcript and the composer itself** — The mockup wires those to an Anthropic endpoint in the browser, and the shape a shared package can ship is the controlled one that knows no backend at all. → §VDS101
-- 📋 **VDS102** (deps: VDS100, VDS101) **the mascot only moves when a caller sets its state, while the same outcomes already go through the package's Toaster** — A signal needing a second call beside every toast gets one in some places and not others, and an idle mascot beside a red toast reads as broken. → §VDS102
-
-## Done when — VDS100
-
-- **the root entry stays inside its size budget** npm run build runs check-size against
-  size-budget.json, so an avatar that pulled in a renderer fails the build.
-- **it renders with no WebGL context and no three** package.json gains no dependency,
-  and the component draws through a 2D context a jsdom test can assert was asked for.
-- **a reader who asked for less motion gets a still frame** prefers-reduced-motion draws
-  one frame and starts no loop, asserted in a test rather than left to the stylesheet
-  gate, which reads CSS and this draws none.
-- **it mounts in a server-rendered framework** two consumers are Next apps, so first
-  render touches no window and no canvas, the way theme-provider.ssr.test.tsx holds its
-  own.
+- 📋 **VDS101** (deps: VDS100 ✅) **a product wanting the assistant has to build the dock, the caption, the transcript and the composer itself** — The mockup wires those to an Anthropic endpoint in the browser, and the shape a shared package can ship is the controlled one that knows no backend at all. → §VDS101
+- 📋 **VDS102** (deps: VDS100 ✅, VDS101) **the mascot only moves when a caller sets its state, while the same outcomes already go through the package's Toaster** — A signal needing a second call beside every toast gets one in some places and not others, and an idle mascot beside a red toast reads as broken. → §VDS102
 
 ## Done when — VDS101
 

@@ -109,3 +109,8 @@
 
 ## Block E — The assistant every product shares
 
+- ✅ **VDS100** **the mascot every Viglet product is meant to show has no component here, so each product would draw it again** — Every product gets the mascot from the package itself: five states flat-shaded into a 2D canvas, 5.2 KB gzipped and no new dependency.
+  checked **the root entry stays inside its size budget** npm run build runs check-size against size-budget.json, so an avatar that pulled in a renderer fails the build.
+  checked **it renders with no WebGL context and no three** package.json gains no dependency, and the component draws through a 2D context a jsdom test can assert was asked for.
+  checked **a reader who asked for less motion gets a still frame** prefers-reduced-motion draws one frame and starts no loop, asserted in a test rather than left to the stylesheet gate, which reads CSS and this draws none.
+  checked **it mounts in a server-rendered framework** two consumers are Next apps, so first render touches no window and no canvas, the way theme-provider.ssr.test.tsx holds its own.

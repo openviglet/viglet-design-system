@@ -159,30 +159,6 @@ test computes.
 
 ## Block E — The assistant every product shares
 
-### §VDS100 The mascot, drawn rather than imported
-
-The mascot is a brand asset, and a brand asset with no component is one each product
-draws again — the failure the non-goals already forbid. The login backdrop lives on
-`./floating-formulas-bg` for that reason, and three consumers render it from there
-rather than from a copy.
-
-The mockup builds the mascot in three.js, which cannot come from the root entry: three
-is around 170 KB gzipped against a whole root budget of 86 KB. Moving it to its own
-subpath behind an optional peer would leave the mascot absent from any product that had
-not opted in, and its first job is notification feedback — a signal every product gets
-by default or gets from nobody.
-
-So the geometry is drawn rather than imported. The shape is an icosahedron subdivided
-twice: 320 triangles, flat-shaded, which is the faceted look the mockup gets from
-non-indexed normals. At the 104-130 px the dock renders it at, a 2D canvas compositing
-radial gradients for the halo, the glass limb and the embers is the same picture, for
-about 6 KB and no dependency.
-
-Five states carry the vocabulary — idle, working, success, error, attention — because
-those are the outcomes a console already reports through `toast`. They are named for the
-toast kinds and not for the mascot's moods, so that the line which later drives one from
-the other has nothing to translate.
-
 ### §VDS101 The dock, and the backend it must not know
 
 The avatar is a picture. The dock is the surface a person uses, and the mockup carries

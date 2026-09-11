@@ -44,6 +44,7 @@ export { Toggle, toggleVariants } from "./toggle";
 export { ToggleGroup, ToggleGroupItem } from "./toggle-group";
 export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tooltip";
 export { UserAvatar, getUserInitials } from "./user-avatar";
+export { VigletAvatar, type VigletAvatarProps, type VigletAvatarState } from "./viglet-avatar";
 export type { UserAvatarProps } from "./user-avatar";
 export { UserMenu } from "./user-menu";
 export type { UserMenuProps, UserMenuUser } from "./user-menu";
