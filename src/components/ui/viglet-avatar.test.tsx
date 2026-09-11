@@ -96,15 +96,20 @@ describe("VigletAvatar", () => {
     expect(kinds.every((kind: string) => kind === "2d")).toBe(true)
   })
 
-  it("fills the 320 facets of a twice-subdivided icosahedron", () => {
+  it("draws the 180 facets of an icosahedron at three's detail 2, not 320", () => {
     render(<VigletAvatar />)
 
-    // Every facet is one closePath, and the cull drops the far hemisphere, so
-    // this is a count the geometry pins rather than a round number: fewer than
-    // half of 320 would mean the subdivision stopped a level short.
+    // Every facet is one closePath and the cull drops the far hemisphere, so a
+    // convex sphere puts about half of them on screen.
+    //
+    // The band is what this test is for. `IcosahedronGeometry(r, 2)` cuts each
+    // edge into three, giving 9 triangles per base face and 180 in total;
+    // subdividing recursively twice gives 16 per face and 320, which drew a
+    // visibly finer ball than the design. 160 is above anything 180 can produce
+    // and below half of 320, so either mistake fails here.
     const closed = recorder.calls.filter((call) => call.startsWith("closePath")).length
-    expect(closed).toBeGreaterThan(120)
-    expect(closed).toBeLessThan(200)
+    expect(closed).toBeGreaterThan(60)
+    expect(closed).toBeLessThan(160)
   })
 
   it("draws one frame and starts no loop when the reader asked for less motion", () => {

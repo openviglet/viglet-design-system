@@ -29,10 +29,28 @@ interface Tone {
   glow: number;
 }
 
+/**
+ * sRGB to linear light. Every value below is a colour as a designer picked it,
+ * which is a display-encoded number, and the shading further down is physics:
+ * mixing, scaling and adding have to happen in linear light or the result is
+ * not the colour anybody chose.
+ *
+ * Skipping this was the whole difference between a washed-out tan ball and the
+ * design. The tone curve compresses highlights, so feeding it display-encoded
+ * values — which are already lifted — pushed every lit facet toward white and
+ * flattened the rim's saturation out of existence.
+ */
+const toLinear = (c: number) =>
+  c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+
+/** Linear light back to sRGB, for the byte that actually goes into the canvas. */
+const toSrgb = (c: number) =>
+  c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055;
+
 const rgb = (hex: number): readonly [number, number, number] => [
-  ((hex >> 16) & 255) / 255,
-  ((hex >> 8) & 255) / 255,
-  (hex & 255) / 255,
+  toLinear(((hex >> 16) & 255) / 255),
+  toLinear(((hex >> 8) & 255) / 255),
+  toLinear((hex & 255) / 255),
 ];
 
 /**
@@ -54,92 +72,104 @@ const PALETTE: Record<VigletAvatarState, Tone> = {
  * The sphere, built once for the module and shared by every mounted avatar: the
  * vertices never change, only the matrix they are read through.
  *
- * Subdivided twice — 20 faces to 80 to 320 — which is what `IcosahedronGeometry(r, 2)`
- * produces, and the count the facets in the original are sized by.
+ * `detail` is three's, and it is not a count of subdivision passes — that was
+ * the first thing this got wrong. `IcosahedronGeometry(r, detail)` cuts every
+ * edge of the base solid into `detail + 1` segments, so a face becomes
+ * `(detail + 1)²` triangles: 9 at detail 2, and 180 for the whole solid.
+ * Halving recursively instead gives 4 per face per pass — 320 after two — and
+ * the ball came out visibly finer-grained than the design, which is a mascot
+ * with the wrong face.
  */
-const SUBDIVISIONS = 2;
+const DETAIL = 2;
+
+type Point = readonly [number, number, number];
 
 interface Sphere {
-  /** Unit-sphere positions, three numbers per vertex. */
+  /** A triangle soup on the unit sphere: nine numbers per facet, no shared vertices. */
   points: Float64Array;
-  /** Vertex indices, three per triangle. */
-  faces: Uint16Array;
-  /** A fixed value per facet, so each one keeps its own brightness and breathes in its own rhythm. */
+  /** A fixed value per facet, so each keeps its own brightness and breathes in its own rhythm. */
   grain: Float64Array;
+  /** Facets. */
+  count: number;
 }
 
-function buildSphere(subdivisions: number): Sphere {
+function buildSphere(detail: number): Sphere {
   const t = (1 + Math.sqrt(5)) / 2;
-  const points: number[] = [
+  const base: number[] = [
     -1, t, 0, 1, t, 0, -1, -t, 0, 1, -t, 0,
     0, -1, t, 0, 1, t, 0, -1, -t, 0, 1, -t,
     t, 0, -1, t, 0, 1, -t, 0, -1, -t, 0, 1,
   ];
-  let faces: number[] = [
+  const faces: number[] = [
     0, 11, 5, 0, 5, 1, 0, 1, 7, 0, 7, 10, 0, 10, 11,
     1, 5, 9, 5, 11, 4, 11, 10, 2, 10, 7, 6, 7, 1, 8,
     3, 9, 4, 3, 4, 2, 3, 2, 6, 3, 6, 8, 3, 8, 9,
     4, 9, 5, 2, 4, 11, 6, 2, 10, 8, 6, 7, 9, 8, 1,
   ];
 
-  const place = (index: number) => {
-    const i = index * 3;
-    const x = points[i], y = points[i + 1], z = points[i + 2];
-    const length = Math.hypot(x, y, z);
-    points[i] = x / length;
-    points[i + 1] = y / length;
-    points[i + 2] = z / length;
-  };
-  for (let i = 0; i < points.length / 3; i += 1) place(i);
+  const corner = (i: number): Point => [base[i * 3], base[i * 3 + 1], base[i * 3 + 2]];
+  const between = (a: Point, b: Point, s: number): Point => [
+    a[0] + (b[0] - a[0]) * s,
+    a[1] + (b[1] - a[1]) * s,
+    a[2] + (b[2] - a[2]) * s,
+  ];
 
-  // An edge is shared by two triangles, so the midpoint is cached: splitting it
-  // twice would leave two vertices at one position and a crack between the faces.
-  for (let pass = 0; pass < subdivisions; pass += 1) {
-    const midpoints = new Map<number, number>();
-    const next: number[] = [];
-
-    const midpoint = (a: number, b: number) => {
-      const key = a < b ? a * 65536 + b : b * 65536 + a;
-      const cached = midpoints.get(key);
-      if (cached !== undefined) return cached;
-
-      const ai = a * 3, bi = b * 3;
-      points.push(
-        (points[ai] + points[bi]) / 2,
-        (points[ai + 1] + points[bi + 1]) / 2,
-        (points[ai + 2] + points[bi + 2]) / 2,
-      );
-      const index = points.length / 3 - 1;
-      place(index);
-      midpoints.set(key, index);
-      return index;
-    };
-
-    for (let f = 0; f < faces.length; f += 3) {
-      const a = faces[f], b = faces[f + 1], c = faces[f + 2];
-      const ab = midpoint(a, b), bc = midpoint(b, c), ca = midpoint(c, a);
-      next.push(a, ab, ca, b, bc, ab, c, ca, bc, ab, bc, ca);
+  const soup: number[] = [];
+  const emit = (...corners: Point[]) => {
+    for (const [x, y, z] of corners) {
+      // Onto the sphere as it is written out: the grid above is built by
+      // interpolating across a flat face, so every interior point lands short.
+      const length = Math.hypot(x, y, z);
+      soup.push(x / length, y / length, z / length);
     }
-    faces = next;
+  };
+
+  const cols = detail + 1;
+  for (let f = 0; f < faces.length; f += 3) {
+    const a = corner(faces[f]), b = corner(faces[f + 1]), c = corner(faces[f + 2]);
+
+    // A triangular lattice over the face: row `i` runs from the a-c edge to the
+    // b-c edge and is one point shorter than the row before it.
+    const grid: Point[][] = [];
+    for (let i = 0; i <= cols; i += 1) {
+      const from = between(a, c, i / cols);
+      const to = between(b, c, i / cols);
+      const rows = cols - i;
+      grid[i] = [];
+      for (let j = 0; j <= rows; j += 1) {
+        // The apex: one point, and `j / rows` there is 0/0.
+        grid[i][j] = rows === 0 ? from : between(from, to, j / rows);
+      }
+    }
+
+    for (let i = 0; i < cols; i += 1) {
+      for (let j = 0; j < 2 * (cols - i) - 1; j += 1) {
+        const k = Math.floor(j / 2);
+        if (j % 2 === 0) emit(grid[i][k + 1], grid[i + 1][k], grid[i][k]);
+        else emit(grid[i][k + 1], grid[i + 1][k + 1], grid[i + 1][k]);
+      }
+    }
   }
+
+  const points = Float64Array.from(soup);
+  const count = points.length / 9;
 
   // Hashed from the facet's own centroid rather than drawn from a generator, so
   // the grain belongs to the geometry and is the same on every mount.
-  const grain = new Float64Array(faces.length / 3);
-  for (let f = 0; f < faces.length; f += 3) {
-    let x = 0, y = 0, z = 0;
-    for (let v = 0; v < 3; v += 1) {
-      const i = faces[f + v] * 3;
-      x += points[i]; y += points[i + 1]; z += points[i + 2];
-    }
+  const grain = new Float64Array(count);
+  for (let f = 0; f < count; f += 1) {
+    const base3 = f * 9;
+    const x = points[base3] + points[base3 + 3] + points[base3 + 6];
+    const y = points[base3 + 1] + points[base3 + 4] + points[base3 + 7];
+    const z = points[base3 + 2] + points[base3 + 5] + points[base3 + 8];
     const seed = Math.sin(x * 12.9898 + y * 78.233 + z * 37.719) * 43758.5453;
-    grain[f / 3] = seed - Math.floor(seed);
+    grain[f] = seed - Math.floor(seed);
   }
 
-  return { points: Float64Array.from(points), faces: Uint16Array.from(faces), grain };
+  return { points, grain, count };
 }
 
-const SPHERE = buildSphere(SUBDIVISIONS);
+const SPHERE = buildSphere(DETAIL);
 
 /* -------------------------------- shading -------------------------------- */
 
@@ -153,18 +183,51 @@ function smoothstep(edge0: number, edge1: number, value: number) {
 }
 
 /**
- * The filmic curve the original renders through (`ACESFilmicToneMapping` at
- * exposure 0.78). Without it the same palette reads as flat poster paint: the
- * highlight never rolls off, so the lit centre clips to a single orange instead
- * of running up to near-white the way the design does.
+ * The filmic curve the original renders through: three's `ACESFilmicToneMapping`
+ * at `toneMappingExposure = 0.78`, ported whole rather than approximated.
+ *
+ * The scalar approximation that usually stands in for this (Narkowicz) is a
+ * per-channel curve, and per-channel is the problem: it desaturates as it rolls
+ * off, so a lit orange facet slid toward cream and the ball came out the colour
+ * of milky tea. The real fit rotates into ACEScg first, shapes there, and
+ * rotates back — which is what keeps the hue while compressing the highlight.
  */
 const EXPOSURE = 0.78;
-function tonemap(value: number) {
-  const x = value * EXPOSURE;
-  return clamp01((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14));
+
+// GLSL declares these column-major; written out here as rows.
+const ACES_IN = [
+  [0.59719, 0.35458, 0.04823],
+  [0.076, 0.90834, 0.01566],
+  [0.0284, 0.13383, 0.83777],
+] as const;
+const ACES_OUT = [
+  [1.60475, -0.53108, -0.07367],
+  [-0.10208, 1.10813, -0.00605],
+  [-0.00327, -0.07276, 1.07602],
+] as const;
+
+const fit = (v: number) =>
+  (v * (v + 0.0245786) - 0.000090537) / (v * (0.983729 * v + 0.432951) + 0.238081);
+
+/** Linear light in, sRGB bytes out, written into `out` to keep the loop allocation-free. */
+function tonemapRgb(out: [number, number, number], r: number, g: number, b: number) {
+  const x = r * EXPOSURE, y = g * EXPOSURE, z = b * EXPOSURE;
+  for (let i = 0; i < 3; i += 1) {
+    const [ar, ag, ab] = ACES_IN[i];
+    out[i] = fit(ar * x + ag * y + ab * z);
+  }
+  const [a, c, d] = out;
+  for (let i = 0; i < 3; i += 1) {
+    const [br, bg, bb] = ACES_OUT[i];
+    out[i] = Math.round(toSrgb(clamp01(br * a + bg * c + bb * d)) * 255);
+  }
 }
 
-const channel = (value: number) => Math.round(tonemap(value) * 255);
+/** The same curve for a lone value — the halo and the embers, which have no hue to hold. */
+function channel(value: number) {
+  const x = value * EXPOSURE;
+  return Math.round(toSrgb(clamp01(fit(x))) * 255);
+}
 
 /* ------------------------------- the canvas ------------------------------- */
 
@@ -175,6 +238,9 @@ const channel = (value: number) => Math.round(tonemap(value) * 255);
  * and the last frame stays on screen until something wakes it.
  */
 const COOLDOWN_FRAMES = 60;
+
+/** The light along a facet edge. Warm, and faint enough to read as a crease. */
+const SEAM = "rgba(255,214,150,0.34)";
 
 interface Ember {
   x: number;
@@ -315,8 +381,12 @@ export function VigletAvatar({
       if (!frame) frame = requestAnimationFrame(draw);
     };
 
-    /** Sphere space to screen. `unit` is one sphere radius in CSS pixels. */
-    const unit = size * (compact ? 0.335 : 0.3);
+    // One sphere radius in CSS pixels. The ball is deliberately well short of
+    // filling the frame: the halo, the orbit and the embers all live outside it,
+    // and a sphere drawn edge to edge leaves them nowhere to be.
+    const unit = size * (compact ? 0.27 : 0.24);
+
+    /** Sphere space to screen. */
     const project = (x: number, y: number, z: number, scale: number) => {
       const perspective = camera / (camera - z * scale);
       return [cx + x * scale * perspective * unit, cy - y * scale * perspective * unit];
@@ -328,8 +398,20 @@ export function VigletAvatar({
       return gradient;
     }
 
-    /** The ring, split at the horizon so the sphere passes through it. */
-    function ring(radius: number, width: number, color: string, alpha: number, arc?: [number, number]) {
+    /**
+     * One half of the orbit, split at the horizon. The caller draws the far half
+     * before the core and the near half after it, which is the whole reason the
+     * ring reads as going around the sphere rather than as a circle painted on
+     * top of it.
+     */
+    function ring(
+      half: -1 | 1,
+      radius: number,
+      width: number,
+      color: string,
+      alpha: number,
+      arc?: [number, number],
+    ) {
       if (alpha <= 0.002) return;
       const STEPS = 96;
       ctx.save();
@@ -338,40 +420,40 @@ export function VigletAvatar({
       ctx.lineWidth = width;
       ctx.lineCap = "round";
 
-      for (const half of [-1, 1]) {
-        ctx.beginPath();
-        let drawing = false;
-        for (let i = 0; i <= STEPS; i += 1) {
-          const angle = (i / STEPS) * Math.PI * 2;
-          const x = Math.cos(angle) * radius;
-          const flat = Math.sin(angle) * radius;
-          const y = flat * Math.cos(tiltX);
-          const z = flat * Math.sin(tiltX);
-          const front = z >= 0 ? 1 : -1;
-          const inArc = !arc || (angle >= arc[0] && angle <= arc[1]);
+      ctx.beginPath();
+      let drawing = false;
+      for (let i = 0; i <= STEPS; i += 1) {
+        const angle = (i / STEPS) * Math.PI * 2;
+        const x = Math.cos(angle) * radius;
+        const flat = Math.sin(angle) * radius;
+        const y = flat * Math.cos(tiltX);
+        const z = flat * Math.sin(tiltX);
+        const front = z >= 0 ? 1 : -1;
+        const inArc = !arc || (angle >= arc[0] && angle <= arc[1]);
 
-          if (front !== half || !inArc) {
-            drawing = false;
-            continue;
-          }
-          const [px, py] = project(x, y, z, 1);
-          if (drawing) ctx.lineTo(px, py);
-          else {
-            ctx.moveTo(px, py);
-            drawing = true;
-          }
+        if (front !== half || !inArc) {
+          drawing = false;
+          continue;
         }
-        // Behind the sphere the ring is occluded, so the back half is dimmer
-        // rather than hidden: a ring that vanishes reads as two arcs.
-        ctx.globalAlpha = half === -1 ? alpha * 0.32 : alpha;
-        ctx.stroke();
+        const [px, py] = project(x, y, z, 1);
+        if (drawing) ctx.lineTo(px, py);
+        else {
+          ctx.moveTo(px, py);
+          drawing = true;
+        }
       }
+      // The far half is dimmed rather than hidden: light bending round a body is
+      // what the design draws, and a half that vanishes reads as two arcs.
+      ctx.globalAlpha = half === -1 ? alpha * 0.32 : alpha;
+      ctx.stroke();
       ctx.restore();
     }
 
     // The rotated copy of the sphere, written over once per frame rather than
     // reallocated: 252 vertices at 60 fps is a lot of short-lived arrays.
     const screen = new Float64Array(SPHERE.points.length);
+    /** Scratch for one facet's tone-mapped colour, for the same reason. */
+    const shade: [number, number, number] = [0, 0, 0];
 
     function draw(now: number) {
       frame = 0;
@@ -450,19 +532,24 @@ export function VigletAvatar({
 
       // Gas: a dark, soft cloud behind the sun. Everything above it is drawn
       // additively, and additive light needs something to be added to — without
-      // this the mascot washes out on a pale ground.
-      context.fillStyle = radial(cx, cy, unit * 2.5, [
+      // this the mascot washes out on a pale ground. Kept tight and dark: spread
+      // wide and pale it reads as a grey smudge rather than as depth.
+      context.fillStyle = radial(cx, cy, unit * 1.95, [
         [0, "rgba(9,11,15,0.5)"],
-        [0.45, "rgba(9,11,15,0.34)"],
-        [0.72, "rgba(9,11,15,0.12)"],
+        [0.52, "rgba(9,11,15,0.3)"],
+        [0.8, "rgba(9,11,15,0.08)"],
         [1, "rgba(9,11,15,0)"],
       ]);
       context.fillRect(0, 0, size, size);
 
+      // The halo is a rumour of light, not a second sun. The design sets the ball
+      // against the dark cloud above and lets that carry the contrast; an orange
+      // glow wide enough to see competes with the ball and greys the ground
+      // between them.
       context.save();
       context.globalCompositeOperation = "lighter";
-      const haloR = unit * (1.75 + lit * 0.7) * scale;
-      const haloA = 0.16 + lit * 0.55;
+      const haloR = unit * (1.5 + lit * 0.5) * scale;
+      const haloA = 0.06 + lit * 0.24;
       context.fillStyle = radial(cx, cy, haloR, [
         [0, `rgba(${channel(tone.center[0])},${channel(tone.center[1])},${channel(tone.center[2])},${haloA * 0.5})`],
         [0.34, `rgba(${channel(tone.rim[0] * 1.4)},${channel(tone.rim[1] * 1.4)},${channel(tone.rim[2] * 1.4)},${haloA * 0.2})`],
@@ -474,16 +561,47 @@ export function VigletAvatar({
       // The orbit: steady while working, a slow low hold while an answer waits.
       const orbitA = current === "working" ? 0.55 : unreadRef.current ? 0.26 + Math.sin((now / 1000) * 0.8) * 0.07 : 0;
       const travel = ((now / 1000) * 1.6) % (Math.PI * 2);
-      ring(1.4 * scale, Math.max(1, size * 0.008), "rgba(255,224,160,1)", orbitA * 0.45);
-      if (current === "working") {
-        ring(1.4 * scale, Math.max(1, size * 0.012), "rgba(255,236,190,1)", 0.75, [travel, travel + 1.1]);
+      const orbitR = 1.5 * scale;
+      const orbitW = Math.max(1, size * 0.007);
+      const arcW = Math.max(1, size * 0.011);
+      const drawOrbit = (half: -1 | 1) => {
+        ring(half, orbitR, orbitW, "rgba(255,224,160,1)", orbitA * 0.45);
+        if (current === "working") {
+          ring(half, orbitR, arcW, "rgba(255,236,190,1)", 0.75, [travel, travel + 1.1]);
+        }
+      };
+
+      drawOrbit(-1);
+
+      // Embers, rising and recycling, drawn before the core so the sphere
+      // occludes them. Over the top they were white specks sitting on the ball —
+      // the one thing a sun's sparks must not look like. What survives is the
+      // few that clear the silhouette, which is all the design ever showed.
+      context.save();
+      context.globalCompositeOperation = "lighter";
+      const drift = frozen ? 0 : current === "success" || current === "attention" ? 1 : Math.max(energy, 0.12);
+      const emberA = 0.08 + lit * 0.4;
+      context.fillStyle = `rgba(${channel(tone.center[0])},${channel(tone.center[1])},${channel(tone.center[2])},${emberA})`;
+      for (const ember of embers) {
+        ember.y += ember.speed * delta * (0.4 + lit) * drift;
+        if (ember.y > 2.4) {
+          ember.y = -0.4;
+          ember.x = (Math.random() - 0.5) * 1.9;
+          ember.z = (Math.random() - 0.5) * 1.9;
+        }
+        const [px, py] = project(ember.x, ember.y, ember.z, 1);
+        const r = Math.max(size * 0.005, 1) * (ember.z > 0 ? 1 : 0.7);
+        context.beginPath();
+        context.arc(px, py, r, 0, Math.PI * 2);
+        context.fill();
       }
+      context.restore();
 
       /* ---- the core ---- */
 
       const cosY = Math.cos(spinY + leanY), sinY = Math.sin(spinY + leanY);
       const cosX = Math.cos(0.32 + leanX), sinX = Math.sin(0.32 + leanX);
-      const { points, faces, grain } = SPHERE;
+      const { points, grain, count } = SPHERE;
 
       for (let i = 0; i < points.length; i += 3) {
         const x0 = points[i], y0 = points[i + 1], z0 = points[i + 2];
@@ -499,8 +617,8 @@ export function VigletAvatar({
 
       // No depth sort: the sphere is convex, so the front-facing triangles that
       // survive the cull below never overlap one another on screen.
-      for (let f = 0; f < faces.length; f += 3) {
-        const a = faces[f] * 3, b = faces[f + 1] * 3, c = faces[f + 2] * 3;
+      for (let f = 0; f < count; f += 1) {
+        const a = f * 9, b = a + 3, c = a + 6;
 
         const ux = screen[b] - screen[a];
         const uy = screen[b + 1] - screen[a + 1];
@@ -517,16 +635,30 @@ export function VigletAvatar({
         const facing = nz / Math.hypot(nx, ny, nz);
         // 0 head-on, 1 at the limb — the shader's `1 - dot(N, V)`.
         const turn = 1 - facing;
-        const g = grain[f / 3];
+        const g = grain[f];
         const breath = 0.9 + 0.14 * g + 0.06 * Math.sin(clock * 0.8 + g * 6.28);
-        const toRim = smoothstep(0.1, 0.92, turn);
-        const centreLight = smoothstep(0.7, 0, turn) * lit * 0.6;
-        const limb = 1 - 0.25 * smoothstep(0.85, 1, turn);
+        // Close to the original shader's `smoothstep(0.1, 0.92)`, pulled in a
+        // little because the core there sits inside a glass shell whose Fresnel
+        // darkens the silhouette and nothing here refracts. Only a little: run
+        // in as far as 0.62 and most of the ball reaches the full rim value,
+        // which is a dark brick, and the mascot turns to burnt umber. The
+        // washed-out ball this was first blamed for was the white core light
+        // below, not the ramp.
+        const toRim = smoothstep(0.08, 0.82, turn);
+        const centreLight = smoothstep(0.66, 0, turn) * lit * 0.62;
+        const limb = 1 - 0.18 * smoothstep(0.82, 1, turn);
 
-        const r = (lerp(tone.center[0], tone.rim[0], toRim) * breath + centreLight) * limb;
-        const g2 = (lerp(tone.center[1], tone.rim[1], toRim) * breath + centreLight * 0.9) * limb;
-        const b2 = (lerp(tone.center[2], tone.rim[2], toRim) * breath + centreLight * 0.7) * limb;
-        const fill = `rgb(${channel(r)},${channel(g2)},${channel(b2)})`;
+        // The core's own light is warm, not white. The original adds
+        // `vec3(1.0, 0.9, 0.7)`, which looks warm as a hex triplet and is not:
+        // in linear light those weights lift blue by more than half again what
+        // they lift red, and the lit middle of the ball went the colour of sand.
+        tonemapRgb(
+          shade,
+          (lerp(tone.center[0], tone.rim[0], toRim) * breath + centreLight) * limb,
+          (lerp(tone.center[1], tone.rim[1], toRim) * breath + centreLight * 0.72) * limb,
+          (lerp(tone.center[2], tone.rim[2], toRim) * breath + centreLight * 0.3) * limb,
+        );
+        const fill = `rgb(${shade[0]},${shade[1]},${shade[2]})`;
 
         const [ax, ay] = project(screen[a], screen[a + 1], screen[a + 2], scale);
         const [bx, by] = project(screen[b], screen[b + 1], screen[b + 2], scale);
@@ -539,54 +671,47 @@ export function VigletAvatar({
         context.closePath();
         context.fillStyle = fill;
         context.fill();
-        // Stroked in its own colour at hairline width. Canvas antialiases each
-        // fill independently, so abutting triangles leave a lattice of hairline
-        // gaps without this — the facets read as cracked rather than joined.
-        context.strokeStyle = fill;
+        // The seam, which is also the join. Canvas antialiases each fill
+        // independently, so abutting triangles leave a lattice of hairline gaps
+        // without a stroke over them; drawing that stroke in warm light rather
+        // than in the facet's own colour is what makes the facets read as facets
+        // instead of as a smooth ball. Faint, and constant, so it shows on the
+        // saturated limb without bleaching the lit centre.
+        context.strokeStyle = SEAM;
         context.lineWidth = 1;
         context.stroke();
       }
 
       /* ---- what sits over the core ---- */
 
+      drawOrbit(1);
+
       context.save();
       context.globalCompositeOperation = "lighter";
 
       // The glass shell, as the one thing it actually contributes at this size:
-      // a specular highlight up and to the left, where the key light is.
-      const specR = unit * 0.62 * scale;
-      const specX = cx - unit * 0.34 * scale;
-      const specY = cy - unit * 0.42 * scale;
+      // a specular highlight up and to the left, where the key light is. Small
+      // and weak on purpose — spread across the ball it is additive white over
+      // every facet, which is desaturation by another name.
+      const specR = unit * 0.34 * scale;
+      const specX = cx - unit * 0.38 * scale;
+      const specY = cy - unit * 0.44 * scale;
       context.fillStyle = radial(specX, specY, specR, [
-        [0, `rgba(255,246,228,${0.1 + lit * 0.16})`],
-        [0.55, `rgba(255,240,214,${0.03 + lit * 0.05})`],
+        [0, `rgba(255,246,228,${0.05 + lit * 0.09})`],
+        [0.5, `rgba(255,240,214,${0.015 + lit * 0.03})`],
         [1, "rgba(255,240,214,0)"],
       ]);
       context.fillRect(0, 0, size, size);
 
-      // Embers, rising and recycling. They carry the core's colour, so the state
-      // reaches the edges of the frame and not just the ball.
-      const drift = frozen ? 0 : current === "success" || current === "attention" ? 1 : Math.max(energy, 0.12);
-      const emberA = 0.08 + lit * 0.4;
-      context.fillStyle = `rgba(${channel(tone.center[0])},${channel(tone.center[1])},${channel(tone.center[2])},${emberA})`;
-      for (const ember of embers) {
-        ember.y += ember.speed * delta * (0.4 + lit) * drift;
-        if (ember.y > 2.4) {
-          ember.y = -0.4;
-          ember.x = (Math.random() - 0.5) * 1.9;
-          ember.z = (Math.random() - 0.5) * 1.9;
-        }
-        const [px, py] = project(ember.x, ember.y, ember.z, 1);
-        const r = Math.max(size * 0.006, 1) * (ember.z > 0 ? 1 : 0.7);
-        context.beginPath();
-        context.arc(px, py, r, 0, Math.PI * 2);
-        context.fill();
-      }
-
-      // Published: one ring that expands out of the core and fades.
+      // Published: one ring that expands out of the core and fades. Both halves
+      // over the top — a shockwave has already left the sphere behind.
       if (current === "success" && elapsed < 2.6) {
         const k = elapsed / 2.6;
-        ring(1.05 + k * 1.5, Math.max(1, size * 0.009), "rgba(255,241,192,1)", 0.65 * (1 - k));
+        const radius = 1.05 + k * 1.5;
+        const width = Math.max(1, size * 0.009);
+        const alpha = 0.65 * (1 - k);
+        ring(-1, radius, width, "rgba(255,241,192,1)", alpha);
+        ring(1, radius, width, "rgba(255,241,192,1)", alpha);
       }
 
       context.restore();

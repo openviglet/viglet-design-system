@@ -204,3 +204,32 @@ dismissal cannot strand the avatar, because the list is the truth and an empty l
 idle. And the caption has a source: the toast's title is the sentence the collapsed orb
 types, so a product that already writes good toast copy gets the mascot's voice for free
 and translates it once.
+
+### §VDS103 A gate with a picture on both sides
+
+VDS100 shipped a mascot that was the wrong colour and carried 320 facets where the
+design has 180, with every gate green: types, lint, 1029 tests, the size budget, and axe
+over the story in a real browser. Nothing in the suite looks at the picture, so nothing
+could have failed.
+
+Three defects went through, and each was invisible to a check that reads source rather
+than pixels:
+
+- the palette reached the tone curve without the sRGB-to-linear round trip, so
+  every lit facet drifted toward cream;
+- `IcosahedronGeometry(r, 2)` was read as two subdivision passes; three's
+  `detail` cuts each edge into `detail + 1`, which is 180 triangles, not 320;
+- the embers drew over the core rather than behind it.
+
+A person holding a screenshot beside the reference found all three.
+
+The machinery for the check mostly exists: there is already a browser project that
+renders every story, and a parity digest that reads computed styles. What has never
+existed is an image on the other side of the comparison, and `docs/design/` now holds
+the original this was derived from.
+
+One thing has to change in the component before any of this can be a gate. The embers
+seed themselves from `Math.random`, so no two frames agree and a pixel comparison would
+be flake by construction — the avatar needs the treatment VDS54 gave the formulas
+backdrop, where the arrangement is derived and a caller that wants novelty passes a
+seed.

@@ -13,8 +13,9 @@
 
 ## Block E — The assistant every product shares
 
-- 📋 **VDS101** (deps: VDS100 ✅) **a product wanting the assistant has to build the dock, the caption, the transcript and the composer itself** — The mockup wires those to an Anthropic endpoint in the browser, and the shape a shared package can ship is the controlled one that knows no backend at all. → §VDS101
+- 🛠 **VDS101** (deps: VDS100 ✅) **a product wanting the assistant has to build the dock, the caption, the transcript and the composer itself** — The mockup wires those to an Anthropic endpoint in the browser, and the shape a shared package can ship is the controlled one that knows no backend at all. → §VDS101
 - 📋 **VDS102** (deps: VDS100 ✅, VDS101) **the mascot only moves when a caller sets its state, while the same outcomes already go through the package's Toaster** — A signal needing a second call beside every toast gets one in some places and not others, and an idle mascot beside a red toast reads as broken. → §VDS102
+- 📋 **VDS103** (deps: VDS100 ✅) **nothing compares the mascot with the design it was drawn from, so it shipped the wrong colour and over-faceted** — Three defects passed types, lint, 1029 tests, the size budget and axe, and a person holding a screenshot beside the reference is what found all of them. → §VDS103
 
 ## Done when — VDS101
 
@@ -36,6 +37,15 @@
   dismissal.
 - **the bridge is opt-in and the state prop still wins** a product that sets state by
   hand keeps that behaviour; the hook is a separate export a caller chooses.
+
+## Done when — VDS103
+
+- **the avatar draws the same frame twice for the same inputs** the embers derive their
+  arrangement instead of seeding from Math.random, the way VDS54 fixed the formulas
+  backdrop.
+- **a reference image is committed and the test compares against it** the browser
+  project renders the avatar at a fixed state with motion frozen and diffs it, so a
+  colour or facet-count regression fails the run.
 
 ## Non-goals
 
