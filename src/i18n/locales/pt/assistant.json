@@ -1,0 +1,19 @@
+{
+  "assistant": {
+    "open": "Abrir o assistente Viglet",
+    "collapse": "Recolher o assistente Viglet",
+    "collapseAction": "Recolher",
+    "state": "Estado do sistema",
+    "idle": "Estável",
+    "working": "Processando",
+    "success": "Concluído",
+    "error": "Ação necessária",
+    "attention": "Nova entrada",
+    "transcript": "Conversa com o assistente",
+    "empty": "Faça uma pergunta sobre o que você está editando.",
+    "placeholder": "Fale com o Viglet",
+    "send": "Enviar",
+    "thinking": "Pensando",
+    "unread": "Uma resposta está esperando"
+  }
+}

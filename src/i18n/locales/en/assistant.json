@@ -1,0 +1,19 @@
+{
+  "assistant": {
+    "open": "Open the Viglet assistant",
+    "collapse": "Collapse the Viglet assistant",
+    "collapseAction": "Collapse",
+    "state": "System state",
+    "idle": "Idle",
+    "working": "Working",
+    "success": "Done",
+    "error": "Action needed",
+    "attention": "New activity",
+    "transcript": "Conversation with the assistant",
+    "empty": "Ask a question about what you are working on.",
+    "placeholder": "Talk to Viglet",
+    "send": "Send",
+    "thinking": "Thinking",
+    "unread": "An answer is waiting"
+  }
+}

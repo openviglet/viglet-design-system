@@ -13,20 +13,8 @@
 
 ## Block E — The assistant every product shares
 
-- 🛠 **VDS101** (deps: VDS100 ✅) **a product wanting the assistant has to build the dock, the caption, the transcript and the composer itself** — The mockup wires those to an Anthropic endpoint in the browser, and the shape a shared package can ship is the controlled one that knows no backend at all. → §VDS101
-- 📋 **VDS102** (deps: VDS100 ✅, VDS101) **the mascot only moves when a caller sets its state, while the same outcomes already go through the package's Toaster** — A signal needing a second call beside every toast gets one in some places and not others, and an idle mascot beside a red toast reads as broken. → §VDS102
+- 📋 **VDS102** (deps: VDS100 ✅, VDS101 ✅) **the mascot only moves when a caller sets its state, while the same outcomes already go through the package's Toaster** — A signal needing a second call beside every toast gets one in some places and not others, and an idle mascot beside a red toast reads as broken. → §VDS102
 - 📋 **VDS103** (deps: VDS100 ✅) **nothing compares the mascot with the design it was drawn from, so it shipped the wrong colour and over-faceted** — Three defects passed types, lint, 1029 tests, the size budget and axe, and a person holding a screenshot beside the reference is what found all of them. → §VDS103
-
-## Done when — VDS101
-
-- **the package holds no endpoint, model id or key** the dock takes messages, busy and
-  onSend and nothing else; a grep for anthropic or api key over src is empty.
-- **chat off renders no composer at all** without onSend the panel is a status surface,
-  asserted by a test that queries for the textbox and finds none.
-- **every word it says comes from the bundles** the VDS93 literals gate reads it like
-  any shipped component, and the state names and button labels land in en and pt.
-- **the caption is announced, not just drawn** it is an aria-live region that holds the
-  full sentence for a screen reader while the typing animation runs for everyone else.
 
 ## Done when — VDS102
 

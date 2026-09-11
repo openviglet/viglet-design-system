@@ -114,3 +114,8 @@
   checked **it renders with no WebGL context and no three** package.json gains no dependency, and the component draws through a 2D context a jsdom test can assert was asked for.
   checked **a reader who asked for less motion gets a still frame** prefers-reduced-motion draws one frame and starts no loop, asserted in a test rather than left to the stylesheet gate, which reads CSS and this draws none.
   checked **it mounts in a server-rendered framework** two consumers are Next apps, so first render touches no window and no canvas, the way theme-provider.ssr.test.tsx holds its own.
+- ✅ **VDS101** **a product wanting the assistant has to build the dock, the caption, the transcript and the composer itself** — A product mounts one dock: status light and typed caption collapsed, transcript and composer open, and it learns nothing about where answers come from.
+  checked **the package holds no endpoint, model id or key** the dock takes messages, busy and onSend and nothing else; a grep for anthropic or api key over src is empty.
+  checked **chat off renders no composer at all** without onSend the panel is a status surface, asserted by a test that queries for the textbox and finds none.
+  checked **every word it says comes from the bundles** the VDS93 literals gate reads it like any shipped component, and the state names and button labels land in en and pt.
+  checked **the caption is announced, not just drawn** it is an aria-live region that holds the full sentence for a screen reader while the typing animation runs for everyone else.

@@ -159,30 +159,6 @@ test computes.
 
 ## Block E — The assistant every product shares
 
-### §VDS101 The dock, and the backend it must not know
-
-The avatar is a picture. The dock is the surface a person uses, and the mockup carries
-three things around the mascot that are not the mascot: a caption that types the
-system's last sentence beside the collapsed orb, a transcript, and a composer.
-
-Two of those three are optional, which is why they are one component and not four. A
-product that wants only notification feedback mounts the dock and gets a status light
-with a caption; a product with an assistant endpoint passes `onSend` and gets the panel.
-Chat off is not a disabled button — the composer is not rendered at all, and the orb
-stops being a control.
-
-What the package must not hold is the backend. The mockup posts to `api.anthropic.com`
-from the browser with a model id inline; shipping that shape from here would put one
-product's endpoint, and in time a key, inside a package six products install. So the
-dock takes `messages`, `busy` and `onSend` and knows nothing else — the controlled shape
-the rest of this package already uses.
-
-The caption is the part that needs care rather than code. It is the only place the
-system speaks unprompted, so it is an `aria-live` region, it types nothing when the
-reader asked for less motion, and every word it frames comes from the bundles. VDS93
-gates that last one; the state names and the two button labels are what it will read
-here.
-
 ### §VDS102 Read the toasts, do not wrap them
 
 VDS100 gives the avatar a state prop, and a state prop is something a caller has to

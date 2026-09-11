@@ -333,6 +333,50 @@ starts no animation loop for a reader whose system asks for reduced motion, and
 `paused` does the same for a product with its own motion switch. When nothing is
 happening it stops drawing altogether rather than holding a loop open.
 
+### The assistant dock
+
+`VigletAssistant` is the surface the mascot lives in. Collapsed it is a status
+light with the system's last sentence typed beside it; open it is a panel with a
+transcript and a composer.
+
+```tsx
+import { VigletAssistant } from "@viglet/viglet-design-system";
+
+<VigletAssistant
+  state={state}
+  caption="/q3-results published at 14:02."
+  messages={messages}
+  busy={busy}
+  onSend={(text) => ask(text)}
+/>;
+```
+
+**The dock knows no backend.** `messages`, `busy` and `onSend` are the whole
+contract — the endpoint, the prompt and the key stay in your product. Leaving
+`onSend` off is how you turn the chat off: the composer is not rendered at all
+and the dock becomes a place the system reports from, which is what a product
+that only wants notification feedback should mount.
+
+A message may carry one `action`, so an answer can offer something to do with
+it — the label is your copy, already translated:
+
+```tsx
+messages={[{
+  role: "assistant",
+  text: "Lead with the number.",
+  action: { label: "Use this title", onSelect: () => setTitle(suggested) },
+}]}
+```
+
+It pins itself to the bottom-right of the viewport; pass `inline` to render it
+in flow and place it yourself. `open` / `onOpenChange` make it controlled,
+Escape collapses it, and the caption is typed for everyone while a screen reader
+is handed the whole sentence at once.
+
+Its own words — the state names, the two buttons, the placeholder — come from
+the `assistant.*` keys this package ships in `en` and `pt`. See
+[Initialize i18n](#2-initialize-i18n); everything else it says is your copy.
+
 ### Hooks
 
 ```tsx
@@ -392,9 +436,9 @@ import type {
 
 ## What's Included
 
-### UI Primitives (40 components)
+### UI Primitives (41 components)
 
-Accordion, Avatar, Badge, Breadcrumb, Button, Card, Checkbox, Dialog, Drawer, DropdownMenu, Form, FormActions, FormItemTwoColumns, GradientButton, GradientSwitch, HoverCard, Input, Label, NavigationMenu, Pagination, Popover, Progress, Resizable, SectionCard, Select, Separator, Sheet, Sidebar, Skeleton, Slider, Sonner (Toaster), Stepper, Switch, Table, Tabs, Textarea, Toggle, ToggleGroup, Tooltip, VigletAvatar ([the mascot](#the-mascot))
+Accordion, Avatar, Badge, Breadcrumb, Button, Card, Checkbox, Dialog, Drawer, DropdownMenu, Form, FormActions, FormItemTwoColumns, GradientButton, GradientSwitch, HoverCard, Input, Label, NavigationMenu, Pagination, Popover, Progress, Resizable, SectionCard, Select, Separator, Sheet, Sidebar, Skeleton, Slider, Sonner (Toaster), Stepper, Switch, Table, Tabs, Textarea, Toggle, ToggleGroup, Tooltip, VigletAssistant ([the dock](#the-assistant-dock)), VigletAvatar ([the mascot](#the-mascot))
 
 ### App Components (23 components)
 
@@ -454,7 +498,7 @@ This is separate from a component's **colour palette**. `SectionCard` (`blue | v
 
 ### i18n
 
-Base translations (EN/PT) for common UI strings: buttons, form labels, dialog text, navigation, theme.
+Base translations (EN/PT) for common UI strings: buttons, form labels, dialog text, navigation, theme, and the assistant dock.
 
 ## Tech Stack
 
