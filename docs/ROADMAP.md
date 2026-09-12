@@ -4,7 +4,7 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS129** (deps: —) **consumers.json declares three of Shio's six entries and still records its chrome as console** — The only guard asserts that a declared entry exists, never that a consumer's imports are declared, and the register ships in neither files nor exports. → §VDS129
+- 🛠 **VDS129** (deps: —) **consumers.json declares three of Shio's six entries and still records its chrome as console** — The only guard asserts that a declared entry exists, never that a consumer's imports are declared, and the register ships in neither files nor exports. → §VDS129
 - 📋 **VDS130** (deps: VDS129) **use:local finds no consumer, because the walk up from this checkout now reaches a worktree container** — Deriving the products root from the package's position on disk has now broken twice, so trying a change inside a consumer without publishing is impossible. → §VDS130
 - 📋 **VDS131** (deps: —) **the contract gives the reading column to the shell, and the package exports no shell to own it** — bento-shell.stories.tsx and bento-shell.test.tsx describe a component that was never written, so every consumer composes its own main and sets its own width. → §VDS131
 - 📋 **VDS132** (deps: VDS131) **the two rules the contract calls easy to get wrong have no instrument in any repository** — A page setting its own column and a product setting --vg-primary directly both pass every gate, since neither shipped bin reads a consumer's pages. → §VDS132
