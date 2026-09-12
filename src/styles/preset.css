@@ -200,10 +200,9 @@
   --vg-accent-line: color-mix(in oklab, var(--vg-accent-from) 35%, transparent);
 
   /* The accent as an interactive surface — the primary button, the checked
-     switch. On light the fill sits a step darker than the stops so white text
-     clears contrast; on dark the stops themselves are the fill and the hover
-     darkens instead. That asymmetry is why these are stated per theme rather
-     than mixed at the call site. */
+     switch. The fill sits a step darker than the stops so its white label clears
+     contrast, on both grounds: the dark ground once used the stops themselves,
+     which put that label at 3.76:1. */
   --vg-accent-fill-from: color-mix(in oklab, var(--vg-accent-from) 88%, black);
   --vg-accent-fill-to: color-mix(in oklab, var(--vg-accent-to) 88%, black);
   --vg-accent-fill-from-hover: color-mix(in oklab, var(--vg-accent-from) 76%, black);
@@ -309,13 +308,11 @@
   --vg-accent: oklch(0.32 0 0);
   --vg-accent-foreground: oklch(0.90 0 0);
   /* The brand accent's dark twin. The tint surfaces are color-mix over the same
-     stop and read correctly on either ground, so only the foreground and the
-     interactive fill re-point here. */
+     stop and read correctly on either ground, so only the foreground re-points
+     here. The interactive fill does not: it carries a white label, and the stop
+     itself left that label at 3.76:1 on this ground (VDS151), so the dark ground
+     keeps the light ground's darker step and its hover. */
   --vg-accent-fg: var(--vg-accent-text-dark);
-  --vg-accent-fill-from: var(--vg-accent-from);
-  --vg-accent-fill-to: var(--vg-accent-to);
-  --vg-accent-fill-from-hover: color-mix(in oklab, var(--vg-accent-from) 88%, black);
-  --vg-accent-fill-to-hover: color-mix(in oklab, var(--vg-accent-to) 88%, black);
   --vg-accent-ring: color-mix(in oklab, var(--vg-accent-text-dark) 50%, transparent);
   --vg-accent-shadow: color-mix(in oklab, var(--vg-accent-from) 20%, transparent);
   --vg-accent-shadow-hover: color-mix(in oklab, var(--vg-accent-from) 25%, transparent);

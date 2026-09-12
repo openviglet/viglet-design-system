@@ -184,6 +184,7 @@
 - ✅ **VDS134** **the dock's transcript knows a user and an assistant, so a system report reads as the assistant talking** — The dock lists reports apart from chat, with a tone, a time, a read flag and up to three actions, counts the unread and announces each once.
 - ✅ **VDS135** **the design system reaches an agent only as files a bin copies, with no plugin a consumer can enable** — The viglet-ds plugin carries the page skill, a check command over the package's bins and a duplicate-guard hook, and page-reference leaves the skill to it.
 - ✅ **VDS136** **nothing machine-readable answers which component does a job, so an agent greps the type declarations** — viglet-ds-mcp serves a catalogue generated from the declarations by job and by name, the plugin skill points at it, and the build holds its token budget.
+- ✅ **VDS151** **the dark ground puts the gradient button's white label on the bright accent stop, at 3.76:1** — The accent fill keeps its darker step on the dark ground, so the white label clears AA on both, and the contrast gate measures white on each fill.
 
 ## Block G — The package knows one chrome
 

@@ -131,6 +131,25 @@ describe.each([
     expect(measured, `${foreground} on ${surface} is ${measured.toFixed(2)}:1`).toBeGreaterThanOrEqual(AA_TEXT)
   })
 
+  // VDS151 — the accent fill carries a white label (GradientButton, the checked
+  // GradientSwitch), a pair the -foreground rule cannot find. The dark ground put
+  // that label on the bright stop itself, at 3.76:1.
+  it.each(["--vg-accent-fill-from", "--vg-accent-fill-to"])("keeps a white label legible on %s", (fill) => {
+    const value = resolveToken(tokens, tokens.get(fill) ?? "")
+    // The one mix the preset writes for a fill: a stop stepped towards black.
+    const mix = /^color-mix\(in oklab, (var\(--[\w-]+\)) ([\d.]+)%, black\)$/.exec(value)
+    const stop = /^oklch\(\s*([\d.]+)(%?)\s+([\d.]+)\s+([\d.]+)\s*\)$/.exec(resolveToken(tokens, mix?.[1] ?? value))
+    expect(stop, `${fill} does not resolve to an oklch() stop`).not.toBeNull()
+
+    const keep = mix ? Number(mix[2]) / 100 : 1
+    const lightness = (Number(stop![1]) / (stop![2] === "%" ? 100 : 1)) * keep
+    const behind = luminance(`oklch(${lightness} ${Number(stop![3]) * keep} ${stop![4]})`)
+    expect(behind).not.toBeNull()
+
+    const measured = ratio(1, behind!)
+    expect(measured, `white on ${fill} is ${measured.toFixed(2)}:1`).toBeGreaterThanOrEqual(AA_TEXT)
+  })
+
   it("keeps muted text legible on the page, which is where it most often sits", () => {
     // Not a named pair, and the placement a muted label is usually in: a caption
     // on the ground, not on a muted panel.
