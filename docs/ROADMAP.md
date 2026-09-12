@@ -2,7 +2,7 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS77** (deps: cloud-frontend and cloud-console declaring react-hook-form) **react-hook-form is a dependency, so a consumer can get a second copy of the one library here carrying a context** — Two consumers declare no react-hook-form and get it from here, so the peer change is theirs first. → §VDS77
+- 📋 **VDS77** (deps: —) **react-hook-form is a dependency, so a consumer can get a second copy of the one library here carrying a context** — Both consumers now declare it themselves, so the demotion here is the remaining half and no install grows a second copy. → §VDS77
 
 ## Non-goals
 

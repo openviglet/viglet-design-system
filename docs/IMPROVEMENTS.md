@@ -19,12 +19,13 @@ the install grows a second copy and a form silently stops seeing its provider. N
 error, no type error, and `check-duplicates` cannot see it because that gate weighs
 source, not the tree.
 
-The move is not simply "declare it a peer". Two of the six consumers — cloud-frontend
-and cloud-console — declare no `react-hook-form` at all and get it because this package
-brings it. Making it a peer without them is how a packaging fix becomes their broken
-install, so the order is theirs first, then here.
+The move was not simply "declare it a peer": cloud-frontend and cloud-console declared
+none of their own and got it because this package brings it, so demoting it first would
+have broken their install. **That half has landed.** Both now declare `^7.72.1`, the
+version they already resolved, and `npm ls` reports one copy in each tree. Only this
+side is left.
 
 Acceptance:
-- cloud-frontend and cloud-console declare `react-hook-form` themselves.
+- ~~cloud-frontend and cloud-console declare `react-hook-form` themselves.~~ done
 - It is then a peerDependency and a devDependency here, not a dependency.
 - A consumer resolving a different minor still gets exactly one copy.
