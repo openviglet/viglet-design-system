@@ -100,6 +100,7 @@
 - ✅ **VDS119** **No tsc project type-checks the stories, and 49 errors sit in the catalogue with every gate green** — pnpm run typecheck reads the catalogue, and the 54 errors in it are gone, including two props the components never had (design recorded in `.storybook/tsconfig.json`).
 - ✅ **VDS120** **The list of entries needing a use client banner is restated in the gate that checks it** — The build and check-dist read one entry module, so an entry cannot exist unclassified and the banner check covers every one (design recorded in `scripts/lib/entries.mjs`).
 - ✅ **VDS122** **Two packages install this by caret range and are named in no consumer list, so no guard here reads them** — consumers.json names nine, so the Openviglet Website and Viglet Docs are inside every guard that reads it (design recorded in `consumers.json`).
+- ✅ **VDS124** **Nothing in the lint config forbids dangerouslySetInnerHTML, so the next one ships with no gate** — A dangerouslySetInnerHTML anywhere under src fails lint, and the message names the fix rather than the rule (design recorded in `eslint.config.js`).
 
 ## Block B — Bento becomes a design-system layer
 

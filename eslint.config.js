@@ -73,6 +73,37 @@ export default tseslint.config([
     },
   },
   {
+    // VDS124 — the one React prop that turns a string into markup, refused where
+    // this package renders strings it did not author.
+    //
+    // VDS107 is what the combination costs: `DialogDelete` passes `usage.name`,
+    // an entity name out of the consumer's own content, and a delete dialog ran
+    // a name carrying an `onerror` attribute in three products at once. That one
+    // reached `main` with no eslint-disable, no comment and no test — nothing
+    // refused it and nothing asked, and it was found by reading the file.
+    //
+    // A selector rather than `react/no-danger`, because eslint-plugin-react is
+    // not installed here and this is the whole of what that rule would bring.
+    //
+    // Scoped to `src/`: `scripts/` renders nothing, and a story is source like
+    // any other file here. A spread can still carry the prop, which no syntactic
+    // rule sees; what this closes is the door somebody walks through.
+    files: ["src/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "JSXAttribute[name.name='dangerouslySetInnerHTML']",
+          message:
+            "dangerouslySetInnerHTML renders a string as markup, and this package " +
+            "renders strings a consumer's content supplied (VDS107). Render it as a " +
+            "text node. If the markup really is yours, disable this line and write " +
+            "down where the string comes from.",
+        },
+      ],
+    },
+  },
+  {
     files: ["*.config.{ts,js}", ".storybook/**/*.{ts,tsx}"],
     languageOptions: {
       globals: globals.node,

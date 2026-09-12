@@ -30,33 +30,6 @@ together, so each one is true when it lands.
 Until then schools is the consumer that does not declare it, and this line is what says
 so rather than leaving it to be rediscovered.
 
-### §VDS124 The prop that has to stay at zero
-
-`dangerouslySetInnerHTML` is the one React prop that turns a string into markup, and
-this package renders strings it did not author: `DialogDelete` passes `usage.name`, an
-entity name out of the consumer's own content. VDS107 is what that combination costs — a
-delete dialog that ran a name carrying an `onerror` attribute, in three products at
-once.
-
-That one is gone, and the package now has none. What it does not have is anything that
-keeps the count at zero. The prop reached `main` with no `eslint-disable`, no comment
-and no test, so nothing refused it and nothing asked; it was found by reading the file.
-The next one arrives the same way.
-
-`eslint.config.js` is where the refusal belongs, and it needs no new plugin —
-`eslint-plugin-react` is not installed here and the rule it would bring
-(`react/no-danger`) is one `no-restricted-syntax` selector on a JSX attribute name. The
-message is the argument, not the ban: the prop is allowed where a human wrote down why,
-which is what an `eslint-disable-next-line` with a reason already is.
-
-Scope it to `src/`. The scripts under `scripts/` render nothing, and a story is source
-like any other file here.
-
-Acceptance:
-- A `dangerouslySetInnerHTML` anywhere under `src/` fails `npm run lint`.
-- The failure names what to do instead, not just the rule.
-- An author who means it can still write one, with a disable line that states why.
-
 ### §VDS126 The attribute the handle still asks for
 
 `ResizableHandle` rotates its grip with
