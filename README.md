@@ -45,28 +45,29 @@ install to one copy — `npm ls react-hook-form` should say `deduped`.
 A change here is a change to shared chrome, so the question is always what it
 does to Shio, Turing, Dumont, the Cloud Console, the Cloud Home, Schools,
 the Roadkeep GUI, the Openviglet Website and Viglet Docs — and the answer should
-not require a publish. `use:local` walks a products root, so it reaches the first
-three; the other six are checked out elsewhere and `npm pack` into them is the
-loop until that changes (VDS73). The last two take the package by caret range
-rather than pinning it, so they also receive each release the moment they
-install one. From this checkout:
+not require a publish. The last two take the package by caret range rather than
+pinning it, so they also receive each release the moment they install one. From
+this checkout:
 
 ```bash
-pnpm use:local           # build, then push dist into every 2026.3 product on disk
+pnpm use:local           # build, then push dist into every consumer checked out here
 pnpm use:local --list    # show what it would write to, and stop
 ```
 
-It finds the consumers by reading their `package.json`, and finds where each one
-keeps the installed copy by following the link its own package manager made, so
-neither a version bump nor a switch of package manager breaks the loop. Nothing
-in the product's manifest or lockfile changes: `pnpm install` in the product puts
-the published build back.
+It finds each consumer at the `checkout` its entry in `consumers.json` declares,
+relative to this repository, with `{line}` standing for this checkout's version
+line, so a 2026.2 worktree pushes into the 2026.2 products. A declared checkout
+that is not there is named, not skipped in silence, and finding none at all is an
+error. It finds where each consumer keeps the installed copy by following the
+link its own package manager made, so neither a version bump nor a switch of
+package manager breaks the loop. Nothing in the product's manifest or lockfile
+changes: `pnpm install` in the product puts the published build back.
 
-Pass directories to narrow it, and `--no-build` to reuse the `dist` already on
-disk:
+Pass consumer ids or directories to narrow it, and `--no-build` to reuse the
+`dist` already on disk:
 
 ```bash
-pnpm use:local ../shio/2026.3/shio-react --no-build
+pnpm use:local shio --no-build
 ```
 
 One thing it refuses to do: push over a tree whose dependencies are behind. It

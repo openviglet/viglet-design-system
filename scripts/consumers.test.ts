@@ -2,6 +2,8 @@ import { readFileSync, readdirSync } from "node:fs"
 import { join, relative, resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 
+import { resolveCheckouts } from "./lib/checkouts.mjs"
+
 const root = resolve(import.meta.dirname, "..")
 const manifest = JSON.parse(readFileSync(join(root, "consumers.json"), "utf8")) as {
   consumers: {
@@ -17,10 +19,15 @@ const manifest = JSON.parse(readFileSync(join(root, "consumers.json"), "utf8")) 
     // VDS129 — where the product's own source is, so its entries are measured
     // by `viglet-ds-consumer-entries` rather than typed in and left to drift.
     sourceRoots: string[]
+    // VDS130 — where `use:local` finds it, relative to this repository, or a
+    // declaration that it is not checked out beside this one.
+    checkout?: string
+    offMachine?: boolean
     entries: string[]
   }[]
 }
 const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8")) as {
+  version: string
   exports: Record<string, unknown>
   files: string[]
   bin: Record<string, string>
@@ -108,6 +115,37 @@ describe("the consumer set is declared, not remembered", () => {
         ).toBe(false)
       }
     }
+  })
+
+  it("says where each consumer is checked out, or that it is not beside this one", () => {
+    for (const c of manifest.consumers) {
+      const declared = typeof c.checkout === "string" && c.checkout !== ""
+      expect(
+        declared !== (c.offMachine === true),
+        `${c.id} needs exactly one of checkout and offMachine: true`,
+      ).toBe(true)
+      if (declared) {
+        // Relative, so the register reads the same from every worktree of this
+        // repository and never names one person's drive.
+        expect(
+          /^(?:[a-zA-Z]:)?[\\/]/.test(c.checkout!),
+          `${c.id} declares an absolute checkout, ${c.checkout}`,
+        ).toBe(false)
+      }
+    }
+  })
+
+  // CI checks out this repository alone, so no consumer is beside it there. On a
+  // developer's machine every declared checkout has to resolve: the walk this
+  // replaced failed by finding nothing and saying so in a sentence, and a path
+  // left behind by the next layout change would fail the same way.
+  it.skipIf(Boolean(process.env.CI))("finds every declared checkout on this machine", () => {
+    const line = pkg.version.split(".").slice(0, 2).join(".")
+    const { missing } = resolveCheckouts(manifest, root, line)
+    expect(
+      missing.map((m: { consumer: { id: string }; path: string | null }) => `${m.consumer.id} -> ${m.path}`),
+      "check the consumer out there, correct its checkout in consumers.json, or mark it offMachine",
+    ).toEqual([])
   })
 
   it("ships the register and the bin that measures a consumer against it", () => {

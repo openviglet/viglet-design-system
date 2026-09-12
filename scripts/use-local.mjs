@@ -3,18 +3,18 @@
 //
 // This replaces the two copy-ds.cmd scripts, which each hardcoded a version
 // directory (shio/shio-react, turing/2026.1/frontend) and so pointed at nothing
-// after the checkouts moved to 2026.3. Two things are resolved rather than
-// assumed: which checkouts consume this package, read from their package.json,
-// and where each one keeps the installed copy, read by following the link its
-// own package manager created. The products are pnpm workspaces today and npm
-// yesterday; neither is named here.
+// after the checkouts moved to 2026.3. Where each consumer is checked out is
+// read from consumers.json (VDS130), and where each one keeps the installed copy
+// is read by following the link its own package manager created. The products
+// are pnpm workspaces today and npm yesterday; neither is named here.
 //
-//   pnpm use:local              # discover consumers, build, push
+//   pnpm use:local              # every consumer in consumers.json on this machine
 //   pnpm use:local --list       # show what would be written to
-//   pnpm use:local <dir> [dir]  # push to these consumers only
+//   pnpm use:local <id|dir> …   # push to these consumers only
 //   pnpm use:local --no-build   # reuse the dist already on disk
-//   pnpm use:local --all        # include checkouts off the current line
+//   pnpm use:local --all        # let the fallback walk include checkouts off the current line
 //   pnpm use:local --skip-dep-check   # push over a tree whose deps are behind
+//   pnpm use:local --register p # read the consumers from p instead
 //
 // dist and package.json are copied over the installed copy in place. Nothing is
 // linked: a link makes the product resolve this checkout's node_modules too,
@@ -36,6 +36,7 @@ import {
 import { dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 
+import { resolveCheckouts } from "./lib/checkouts.mjs"
 import { describeFindings, unsatisfiedDependencies } from "./lib/dependency-check.mjs"
 
 const PACKAGE_NAME = "@viglet/viglet-design-system"
@@ -67,7 +68,21 @@ const listOnly = args.includes("--list")
 const skipBuild = args.includes("--no-build")
 const includeAll = args.includes("--all")
 const skipDepCheck = args.includes("--skip-dep-check")
-const explicit = args.filter((a) => !a.startsWith("--"))
+// The flag's value is not a consumer. Skipped by its index, and only when the
+// flag is there: VDS78 is what `indexOf(...) + 1` does when it is not.
+const registerFlag = args.indexOf("--register")
+const registerValueAt = registerFlag === -1 ? -1 : registerFlag + 1
+const registerPath = resolve(
+  registerFlag === -1 ? join(repoRoot, "consumers.json") : (args[registerValueAt] ?? ""),
+)
+const explicit = args.filter((a, i) => !a.startsWith("--") && i !== registerValueAt)
+
+if (!existsSync(registerPath)) {
+  console.error(`No consumer register at ${registerPath}.`)
+  process.exit(1)
+}
+const register = JSON.parse(readFileSync(registerPath, "utf8"))
+const declaredPackages = new Set(register.consumers.map((c) => c.package))
 
 function dependsOnUs(packageJsonPath) {
   try {
@@ -118,24 +133,69 @@ function installedPathFor(consumer) {
   }
 }
 
-const productsRoot = resolve(repoRoot, "..")
+const checkouts = resolveCheckouts(register, repoRoot, currentLine)
+
+function packageName(dir) {
+  try {
+    return JSON.parse(readFileSync(join(dir, "package.json"), "utf8")).name
+  } catch {
+    return null
+  }
+}
+
 let consumers
 if (explicit.length) {
-  consumers = explicit.map((p) => resolve(p))
+  // An argument naming a declared consumer means its checkout; anything else is
+  // a directory, as it always was.
+  consumers = explicit.map((arg) => {
+    const consumer = register.consumers.find((c) => c.id === arg)
+    if (!consumer) return resolve(arg)
+    const hit = checkouts.found.find((f) => f.consumer.id === arg)
+    if (!hit) {
+      console.error(
+        `${arg} is declared in ${registerPath}, and its checkout is not on this machine` +
+          (consumer.offMachine ? " (offMachine)." : `: ${consumer.checkout}.`),
+      )
+      process.exit(1)
+    }
+    return hit.path
+  })
 } else {
-  const discovered = discover(productsRoot)
-  const onLine = discovered.filter((p) => p.split(/[\\/]/).includes(currentLine))
-  consumers = includeAll ? discovered : onLine
-  const skipped = discovered.length - consumers.length
-  if (skipped > 0) {
-    console.log(`Ignoring ${skipped} checkout(s) off the ${currentLine} line (--all includes them).\n`)
+  for (const { consumer, path } of checkouts.missing) {
+    console.error(
+      `  ${consumer.id} declares checkout ${consumer.checkout ?? "(none)"}, which resolves to ` +
+        `${path ?? "nothing"} and holds no package.json.\n` +
+        "    Check it out there, correct the path in consumers.json, or mark it offMachine.",
+    )
   }
+  if (checkouts.missing.length > 0) console.error("")
+  consumers = checkouts.found.map((f) => f.path)
+
+  // The walk survives only for a consumer the register does not name yet, and
+  // says so when it finds one: a consumer reached this way is a line missing
+  // from consumers.json, which every guard reads.
+  const productsRoot = resolve(repoRoot, "..")
+  const reached = new Set(consumers.map((p) => realpathSync(p)))
+  const discovered = discover(productsRoot).filter(
+    (p) => !reached.has(realpathSync(p)) && !declaredPackages.has(packageName(p)),
+  )
+  const onLine = discovered.filter((p) => p.split(/[\\/]/).includes(currentLine))
+  const undeclared = includeAll ? discovered : onLine
+  const skipped = discovered.length - undeclared.length
+  if (skipped > 0) {
+    console.log(`Ignoring ${skipped} undeclared checkout(s) off the ${currentLine} line (--all includes them).\n`)
+  }
+  for (const p of undeclared) {
+    console.log(`  ${packageName(p)} at ${p} depends on ${PACKAGE_NAME} and is not in consumers.json.`)
+  }
+  consumers.push(...undeclared)
 }
 
 if (consumers.length === 0) {
   console.error(
-    `No ${currentLine} checkout depending on ${PACKAGE_NAME} was found under ${productsRoot}.\n` +
-      "Pass the consumer directories explicitly: node scripts/use-local.mjs <dir> [dir]",
+    `No consumer declared in ${registerPath} is checked out on this machine.\n` +
+      "Each consumer's checkout is declared there, relative to this repository; correct the\n" +
+      "paths it names, or pass the consumers explicitly: node scripts/use-local.mjs <id|dir> [...]",
   )
   process.exit(1)
 }

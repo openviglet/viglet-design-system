@@ -32,26 +32,6 @@ so rather than leaving it to be rediscovered.
 
 ## Block F — What a consuming CMS needs from the package next
 
-### §VDS130 A dev loop that reaches nothing and says so in a sentence
-
-use-local.mjs --list prints that no 2026.3 checkout depending on the package was found,
-because the walk resolves .. from the repository root and .. is now the worktree
-container holding only this package. Shio's copy-ds.cmd, which forwards here, fails with
-could not find the design system checkout. The script's own header records the same
-failure one directory level down, where it silently did nothing useful for two version
-bumps.
-
-The assumption is the defect, not the depth: a products root derived from where this
-checkout happens to sit breaks every time the layout moves. So the register becomes the
-source. Each consumer gains a checkout field, resolved first, with the walk kept only as
-a fallback for a consumer not yet declared. Zero consumers found stops being a sentence
-and becomes a non-zero exit that names the register.
-
-The guard is a test asserting every declared checkout either exists on this machine or
-is marked offMachine, so the register cannot rot back into the same silence. It depends
-on DSF1 because the checkout field lives in the register that task publishes, and it
-unblocks every consumer-side trial of the tasks below.
-
 ### §VDS131 The shell the contract describes and the barrel does not export
 
 BENTO-AUTHORING section 1 is explicit: main sets the max width, the gutters and the

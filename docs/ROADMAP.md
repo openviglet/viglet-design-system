@@ -4,7 +4,6 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS130** (deps: VDS129 ✅) **use:local finds no consumer, because the walk up from this checkout now reaches a worktree container** — Deriving the products root from the package's position on disk has now broken twice, so trying a change inside a consumer without publishing is impossible. → §VDS130
 - 📋 **VDS131** (deps: —) **the contract gives the reading column to the shell, and the package exports no shell to own it** — bento-shell.stories.tsx and bento-shell.test.tsx describe a component that was never written, so every consumer composes its own main and sets its own width. → §VDS131
 - 📋 **VDS132** (deps: VDS131) **the two rules the contract calls easy to get wrong have no instrument in any repository** — A page setting its own column and a product setting --vg-primary directly both pass every gate, since neither shipped bin reads a consumer's pages. → §VDS132
 - 📋 **VDS133** (deps: VDS131) **the assistant dock and the back-to-top button are pinned to the same corner, and the dock covers it** — VigletAssistant is fixed bottom-5 right-5 at z-50 and BentoBackToTop fixed bottom-6 right-6 at z-40, so mounting the dock in a shell hides the button. → §VDS133
@@ -21,7 +20,7 @@
 
 ## Block G — The package knows one chrome
 
-- 📋 **VDS144** (deps: VDS129 ✅, VDS130) **nothing measures which consumers still render console chrome, so the cutover a non-goal waits on is unobservable** — The register marks three consumers console while Shio renders none of it and Dumont still imports console-era components over two hundred times. → §VDS144
+- 📋 **VDS144** (deps: VDS129 ✅, VDS130 ✅) **nothing measures which consumers still render console chrome, so the cutover a non-goal waits on is unobservable** — The register marks three consumers console while Shio renders none of it and Dumont still imports console-era components over two hundred times. → §VDS144
 - 📋 **VDS145** (deps: VDS144) **the section-chrome context defaults to console, so a bento consumer wraps every route in a provider to escape it** — Shio wraps about twenty-five routes in a bento provider, and any component rendered outside those wrappers silently takes the console look. → §VDS145
 - 📋 **VDS146** (deps: VDS145) **SectionChrome, its provider and hook, and AdaptiveSectionCard's console branch outlive the era they serve** — Once no declared consumer renders console chrome, every chrome branch is dead code a new component can still copy, guarded by a non-goal whose reason is spent. → §VDS146
 - 📋 **VDS147** (deps: VDS146) **the console-era router components are still exported after being deprecated** — PageHeader, SubPage, GridList, InternalSidebar and their siblings still ship, so a new screen can still be built on the chrome every consumer is leaving. → §VDS147
