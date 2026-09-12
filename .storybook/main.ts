@@ -31,20 +31,31 @@ const config: StorybookConfig = {
   // to `<shim>.js/index.js` and fails. Storybook compiles in dev mode where the
   // real package resolves fine, so we strip those aliases here.
   async viteFinal(cfg) {
-    // The builder loads the library's vite.config.ts, which carries
-    // vite-plugin-dts pointed at dist. Left in, the catalogue build re-runs the
-    // declaration emit under Storybook's own resolution and overwrites what
-    // `pnpm run build` just wrote — turning every `from "react"` into
-    // `from "../../node_modules/react"`, a path no consumer can resolve, so
-    // React's types vanish in the product. The catalogue needs no declarations
-    // at all, so the plugin comes out. Guarded by scripts/dist-stability.test.ts.
+    // The builder loads the library's vite.config.ts, and two of its plugins
+    // write into dist. Neither belongs in a catalogue build, and the rule is one
+    // rule: the catalogue does not touch dist. Guarded by
+    // scripts/dist-stability.test.ts.
+    //
+    // `unplugin-dts` (VDS33) re-ran the declaration emit under Storybook's own
+    // resolution and overwrote what `pnpm run build` had just written — every
+    // `from "react"` became `from "../../node_modules/react"`, a path no
+    // consumer can resolve, so React's types vanished in the product.
+    //
+    // `copy-standalone-css` (VDS127) copies two stylesheets into dist from
+    // `writeBundle`. On a checkout that has never run the library build there is
+    // no dist, so `copyFileSync` raises ENOENT and the build stops. It cost the
+    // Pages deploy 35 consecutive runs and three weeks of a stale catalogue, and
+    // it is invisible locally: a developer has run the build, so the directory
+    // is there. Creating it here would be the wrong fix — that keeps a Storybook
+    // build writing into dist, which is what the rule above forbids.
+    const WRITES_TO_DIST = new Set(["unplugin-dts", "copy-standalone-css"]);
     if (Array.isArray(cfg.plugins)) {
       cfg.plugins = cfg.plugins.filter((plugin) => {
         const name =
           plugin && typeof plugin === "object" && "name" in plugin
             ? (plugin as { name?: string }).name
             : undefined;
-        return name !== "unplugin-dts";
+        return name === undefined || !WRITES_TO_DIST.has(name);
       });
     }
 

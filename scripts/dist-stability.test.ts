@@ -42,14 +42,38 @@ describe("the catalogue build leaves dist alone", () => {
     expect(names).not.toContain("unplugin-dts")
   })
 
+  // VDS127 — the same rule, the plugin next to it. `copy-standalone-css` copies
+  // two stylesheets into dist from writeBundle, and on a checkout that has never
+  // run the library build there is no dist, so copyFileSync raises ENOENT and
+  // the catalogue build stops. That cost the Pages deploy 35 consecutive runs
+  // and three weeks of a stale catalogue, and it is invisible locally: a
+  // developer has run the build, so the directory is there.
+  it("strips the stylesheet copier", async () => {
+    const names = await pluginsAfterViteFinal([
+      { name: "copy-standalone-css" },
+      { name: "vite:react-babel" },
+    ])
+
+    expect(names).not.toContain("copy-standalone-css")
+  })
+
   it("keeps every other plugin, so the catalogue still builds", async () => {
     const names = await pluginsAfterViteFinal([
       { name: "vite:react-babel" },
       { name: "unplugin-dts" },
+      { name: "copy-standalone-css" },
       { name: "@tailwindcss/vite:generate:build" },
     ])
 
     expect(names).toEqual(["vite:react-babel", "@tailwindcss/vite:generate:build"])
+  })
+
+  it("keeps a plugin that has no name rather than dropping it", async () => {
+    // The filter reads a name off each plugin and some carry none; dropping
+    // those would take the catalogue apart to fix a dist write.
+    const names = await pluginsAfterViteFinal([{} as { name: string }, { name: "vite:react-babel" }])
+
+    expect(names).toHaveLength(2)
   })
 
   it("survives a config that carries no plugins at all", async () => {
