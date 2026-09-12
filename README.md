@@ -115,10 +115,41 @@ worked through, and drop it once the count is zero. `--json` prints the findings
 for a bot to read; `--manifest <path>` checks against an export list other than
 the installed one.
 
+## Linting a page against the shell
+
+Two rules in [docs/BENTO-AUTHORING.md](docs/BENTO-AUTHORING.md) pass every other
+gate when broken: a page that sets its own width, gutter or vertical rhythm, and a
+stylesheet that sets `--vg-primary` directly instead of through its
+`--vg-primary-*-base` inputs. `viglet-ds-page-lint` checks both. Point it at the
+directories whose pages render inside `BentoShell`:
+
+```bash
+viglet-ds-page-lint src
+```
+
+```
+src/app/home.page.tsx:125  page.column  the page's outermost element sets max-w-7xl px-6 pb-12
+    remove them: BentoShell sets the column, and column="narrow" or "wide" names the other widths
+src/index.css:14  primary.direct  sets --vg-primary
+    claim it through the --vg-primary-base and --vg-primary-foreground-base inputs, light and -dark, at :root
+```
+
+A page is a file ending in `.page.tsx` or `.page.jsx`, and the lint checks the
+outermost element its default export returns. `--page-pattern <regex>` names your
+own convention. It reads pages with the TypeScript compiler, so `typescript` must
+be installed in the product. A deliberate exception takes a reason, in the file:
+
+```ts
+// viglet-ds-allow-page-column -- a kiosk rendered outside the shell
+```
+
+`viglet-ds-allow-primary -- <reason>` does the same for the second rule.
+`--warn` and `--json` work as they do for `viglet-ds-check-duplicates`.
+
 ## Keeping your entry in the register true
 
 `consumers.json` records the subpaths each product takes, and this package's
-guards read it. A second CLI measures what your source actually imports and
+guards read it. `viglet-ds-consumer-entries` measures what your source actually imports and
 compares it with your entry there, in both directions. Run it from the product's
 package root, in its own test step:
 

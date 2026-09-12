@@ -102,10 +102,14 @@ An artboard opens in a browser straight from the file tree.
 - A product claims \`--primary\` through the four \`--vg-primary-*-base\` inputs at \`:root\`,
   never by setting \`--vg-primary\` itself, which would key the dark ground to the light value.
 
+\`viglet-ds-page-lint <dir>\` fails on either one, naming the file and line. Point it at the
+directories whose pages render inside \`BentoShell\`.
+
 ## Checking it is current
 
 \`\`\`bash
 viglet-ds-page-reference --check
+viglet-ds-page-lint src
 \`\`\`
 `
 }

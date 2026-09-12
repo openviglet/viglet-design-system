@@ -52,6 +52,7 @@ form, `wide` for a table or a board, and `full` for a tool that owns the viewpor
 a chat, which fills the width and height and scrolls inside itself. The route decides the
 variant and passes it to the shell; the page never does. Each width is a custom property
 (`--bento-column-default`, `-narrow`, `-wide`), so a product re-keys one once.
+`viglet-ds-page-lint` reports a page whose outermost element sets any of the three.
 
 **A page may own an aside**, inside that column and scrolling with it: filters, a contents
 list, a conversation. That is not the console era's sidebar, which collapses, remembers its
@@ -184,6 +185,7 @@ stylesheet imports this package and then declares its own `:root`, so it lands
 after the preset's dark block at the same specificity and in no layer. One value
 set there wins on *both* grounds, and the dark ground silently gets the light
 value. The inputs are read per ground, so you never write a dark block.
+`viglet-ds-page-lint` reports a stylesheet or a style object that sets it.
 
 The solid fill carries text, so that pair holds 4.5:1 on both grounds (§6). An
 accent stop at full chroma usually does not, so this value is often a deeper step

@@ -64,6 +64,7 @@
   "bin": {
     "viglet-ds-check-duplicates": "./scripts/check-duplicates.mjs",
     "viglet-ds-consumer-entries": "./scripts/consumer-entries.mjs",
+    "viglet-ds-page-lint": "./scripts/page-lint.mjs",
     "viglet-ds-page-reference": "./scripts/page-reference.mjs"
   },
   "files": [
@@ -71,6 +72,7 @@
     "consumers.json",
     "scripts/check-duplicates.mjs",
     "scripts/consumer-entries.mjs",
+    "scripts/page-lint.mjs",
     "scripts/page-reference.mjs",
     "docs/BENTO-AUTHORING.md",
     "docs/BENTO-BOUNDARY.md",

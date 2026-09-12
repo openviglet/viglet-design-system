@@ -32,25 +32,6 @@ so rather than leaving it to be rediscovered.
 
 ## Block F — What a consuming CMS needs from the package next
 
-### §VDS132 A page lint for the two rules the skill names
-
-The vendored SKILL.md closes on two rules: a page sets no max width, gutters or vertical
-rhythm, and a product claims --primary through the four --vg-primary-*-base inputs
-rather than by setting --vg-primary, which would key the dark ground to the light value.
-Both are stated as prose. The package's two bins check duplicates and vendoring, and
-neither reads a consumer's pages or stylesheets.
-
-Ship viglet-ds-page-lint as the third bin, with the flag vocabulary the other two use
-and the viglet-ds-allow exemption-with-a-reason shape the duplicate gate already has,
-since a gate with no way to say this one is mine is a gate somebody deletes. It reports
-a width, gutter or rhythm utility on a routed page's outermost element, and any write to
---vg-primary or --vg-primary-foreground outside the preset.
-
-It depends on DSF3 because the first rule has no correct alternative until a shell owns
-the column. The non-vacuity case is required: plant each violation in a fixture consumer
-and assert the bin names file and line, because a lint wired wrong reports success for
-the same reason a clean tree does.
-
 ### §VDS133 One corner, two tenants
 
 Measured in source: the dock's collapsed wrapper is fixed bottom-5 right-5 z-50 and the
