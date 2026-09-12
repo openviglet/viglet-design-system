@@ -12,6 +12,7 @@ import type { BentoNavGroup, BentoNavItem } from "./bento-nav";
 import { BentoNavRail } from "./bento-nav-rail";
 import { BentoShortcutsDialog } from "./bento-shortcuts-dialog";
 import { BentoUserMenu } from "./bento-user-menu";
+import { VigletAssistant } from "@/components/ui/viglet-assistant";
 import { UserProvider } from "@/contexts/user.context";
 
 /**
@@ -93,6 +94,27 @@ export const Shell: Story = {
 /** The narrower column a single-question form asks for by name. */
 export const ShellNarrowColumn: Story = {
   render: () => <ShellPage column="narrow" />,
+};
+
+/**
+ * The corner, with the assistant dock in it. The dock takes the corner and the
+ * back-to-top control stacks above it once the page has scrolled, so neither
+ * covers the other.
+ */
+export const ShellWithDock: Story = {
+  render: () => (
+    <BentoShell
+      rail={<BentoNavRail groups={groups} homeRoute="/" homeLabel="Home" />}
+      headerStart={<span className="text-sm font-medium tracking-tight">Product</span>}
+      dock={<VigletAssistant caption="Three drafts are waiting for review." />}
+    >
+      <h1 className="text-2xl font-semibold tracking-tight">A long page</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Scroll down: the back-to-top control appears above the dock.
+      </p>
+      <div className="mt-6 min-h-[150vh]" />
+    </BentoShell>
+  ),
 };
 
 export const NavRail: Story = {

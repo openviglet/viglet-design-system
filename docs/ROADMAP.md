@@ -4,7 +4,6 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS133** (deps: VDS131 ✅) **the assistant dock and the back-to-top button are pinned to the same corner, and the dock covers it** — VigletAssistant is fixed bottom-5 right-5 at z-50 and BentoBackToTop fixed bottom-6 right-6 at z-40, so mounting the dock in a shell hides the button. → §VDS133
 - 📋 **VDS134** (deps: —) **the dock's transcript knows a user and an assistant, so a system report reads as the assistant talking** — A product reporting publishes, failures and arrivals through the dock has no row kind, time or read state, and a message offers one action where review needs two. → §VDS134
 - 📋 **VDS135** (deps: —) **the design system reaches an agent only as files a bin copies, with no plugin a consumer can enable** — There is no .claude-plugin directory, so each consumer vendors the contract by hand, and Shio's own claude-plugin is a working template nobody has applied here. → §VDS135
 - 📋 **VDS136** (deps: VDS135) **nothing machine-readable answers which component does a job, so an agent greps the type declarations** — exports.json lists names only, so choosing between two components costs a session a read of the type files that one catalogue call would answer. → §VDS136

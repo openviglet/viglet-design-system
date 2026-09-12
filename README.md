@@ -477,7 +477,9 @@ messages={[{
 ```
 
 It pins itself to the bottom-right of the viewport; pass `inline` to render it
-in flow and place it yourself. `open` / `onOpenChange` make it controlled,
+in flow and place it yourself. In a bento product, pass it to `BentoShell` as
+`dock` instead: the shell holds the corner, stacks `BentoBackToTop` above the
+dock, and keeps either from covering the other. `open` / `onOpenChange` make it controlled,
 Escape collapses it, and the caption is typed for everyone while a screen reader
 is handed the whole sentence at once.
 
@@ -698,8 +700,10 @@ only the layout maths does not pull CSS it never renders. It reads the preset's
 tokens, so import the preset too.
 
 `BentoShell` is the page frame. It reserves the gutter for the rail you pass,
-lays out the header's leading and trailing edges, puts `BentoBackToTop` at the
-corner, and owns `main`: the width, the gutters and the vertical rhythm. A page
+lays out the header's leading and trailing edges, holds the corner (the
+`VigletAssistant` you pass as `dock`, with `BentoBackToTop` stacked above it;
+`backToTop={false}` drops the button), and owns `main`: the width, the gutters
+and the vertical rhythm. A page
 inside it sets none of those. Choose the width by name with `column`: `default`,
 `narrow` for a single-question form, `wide` for a table, or `full` for a tool
 that fills the viewport. Each width is a custom property
@@ -740,7 +744,7 @@ says so rather than showing an empty list that is not empty yet.
 bundling three fixtures through this package's own `exports` map, and fails if a
 bento module, a bento class name or a run of `bento.css`'s selectors reaches a
 consumer that imported only the root entry. `size-budget.json` records what each
-entry costs: today the whole root entry is 87 KB gzipped and `./bento` 22 KB,
+entry costs: today the whole root entry is 91 KB gzipped and `./bento` 23 KB,
 measured with everything the build externalises left out, so the numbers
 describe this package rather than its dependencies. The preset's
 `--vg-bento-tone-*` tokens are deliberately not counted as the layer: they ship

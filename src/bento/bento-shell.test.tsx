@@ -9,6 +9,7 @@ import { I18nextProvider, initReactI18next } from "react-i18next"
 import { MemoryRouter } from "react-router-dom"
 import { beforeAll, describe, expect, it, vi } from "vitest"
 
+import { VigletAssistant } from "@/components/ui/viglet-assistant"
 import { UserProvider } from "@/contexts/user.context"
 
 import {
@@ -272,13 +273,44 @@ describe("BentoShell", () => {
     expect(screen.getByRole("button", { name: /back ?to ?top/i })).toBeInTheDocument()
     withDefault.unmount()
 
-    const empty = draw(<BentoShell corner={null}>page</BentoShell>)
+    const { container } = draw(<BentoShell backToTop={false}>page</BentoShell>)
     expect(screen.queryByRole("button", { name: /back ?to ?top/i })).not.toBeInTheDocument()
-    empty.unmount()
+    // Nothing in the corner, so no stack either.
+    expect(container.querySelector("[data-slot='bento-shell-corner']")).toBeNull()
+  })
 
-    draw(<BentoShell corner={<span>dock</span>}>page</BentoShell>)
-    expect(screen.getByText("dock")).toBeInTheDocument()
-    expect(screen.getByRole("main")).not.toContainElement(screen.getByText("dock"))
+  // VDS133 — one corner, two tenants. Where their boxes land is measured in
+  // bento-shell.parity.test.tsx; this is who holds the corner.
+  it("stacks the back-to-top control above the dock, both in flow", () => {
+    const { container } = draw(
+      <BentoShell dock={<VigletAssistant caption="Ready" />}>page</BentoShell>,
+    )
+    const corner = container.querySelector<HTMLElement>("[data-slot='bento-shell-corner']")!
+    const backToTop = screen.getByRole("button", { name: /back ?to ?top/i })
+    const dock = screen.getByRole("button", { name: /assistant\.open|open/i }).parentElement!.parentElement!
+
+    expect(corner).toHaveClass("fixed", "pointer-events-none")
+    expect(corner.firstElementChild).toBe(backToTop)
+    expect(corner.lastElementChild).toBe(dock)
+    // Neither fixes itself to the viewport while the shell holds the corner.
+    expect(backToTop).not.toHaveClass("fixed")
+    expect(dock).not.toHaveClass("fixed")
+    expect(dock).toHaveClass("pointer-events-auto")
+    expect(screen.getByRole("main")).not.toContainElement(dock)
+  })
+
+  it("leaves both in their own corner outside a shell", () => {
+    draw(
+      <>
+        <BentoBackToTop />
+        <VigletAssistant caption="Ready" />
+      </>,
+    )
+
+    expect(screen.getByRole("button", { name: /back ?to ?top/i })).toHaveClass("fixed")
+    expect(
+      screen.getByRole("button", { name: /assistant\.open|open/i }).parentElement!.parentElement!,
+    ).toHaveClass("fixed")
   })
 })
 

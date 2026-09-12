@@ -34,12 +34,16 @@ when it is given one (§7).
 **The header carries a set, in this order:** the mark and wordmark; a back control where
 the route has a parent; the palette trigger, with the platform's own keyboard hint. On the
 trailing edge: the locale where a second one ships, the ground, and the signed-in user.
-`BentoBackToTop` sits at the corner.
 
 Two things the header is not. It is not a second always-visible nav — the rail is the nav
 and the palette is the mobile one, and a second eats the width the content needs. And it is
 not a home for one surface's controls: a switcher or a pending count belongs to the surface
 that owns it, not to every page that renders beneath it.
+
+**The corner is the shell's.** The assistant dock, passed as `dock`, takes it, and
+`BentoBackToTop` stacks above the dock. Neither is fixed to the viewport inside the shell:
+two components each pinning themselves to one corner is how the dock came to cover the
+button.
 
 **The shell owns the reading column.** `main` sets the max width, the gutters and the
 vertical rhythm once, so every page begins and ends on the same line; a page sets none of

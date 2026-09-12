@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useInCornerSlot } from "@/lib/corner-slot";
+
 import { Button } from "./button";
 import { Input } from "./input";
 import { VigletAvatar, type VigletAvatarState } from "./viglet-avatar";
@@ -56,7 +58,8 @@ export interface VigletAssistantProps {
   activity?: number;
   /**
    * Render in flow instead of pinned to the viewport corner. For a story, a
-   * settings preview, or a product that docks it somewhere of its own.
+   * settings preview, or a product that docks it somewhere of its own. Inside
+   * `BentoShell`'s `dock` slot it is in flow already: the shell owns the corner.
    */
   inline?: boolean;
   className?: string;
@@ -155,6 +158,9 @@ export function VigletAssistant({
   className,
 }: Readonly<VigletAssistantProps>) {
   const { t } = useTranslation();
+  // In the shell's corner stack the shell holds the corner, so the dock is in
+  // flow there and takes pointer events back from the stack that positions it.
+  const slotted = useInCornerSlot();
   const [ownOpen, setOwnOpen] = useState(defaultOpen);
   const [draft, setDraft] = useState("");
   const transcriptRef = useRef<HTMLDivElement>(null);
@@ -186,9 +192,10 @@ export function VigletAssistant({
   return (
     <div
       className={[
-        inline
+        inline || slotted
           ? "relative"
           : "fixed bottom-5 right-5 z-50",
+        slotted ? "pointer-events-auto" : "",
         "flex flex-col",
         isOpen
           ? "w-[min(22.5rem,calc(100vw-2.5rem))] rounded-2xl border border-border bg-popover p-4 text-popover-foreground shadow-2xl"

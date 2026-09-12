@@ -180,6 +180,7 @@
 - ✅ **VDS130** **use:local finds no consumer, because the walk up from this checkout now reaches a worktree container** — use:local finds each consumer at the checkout consumers.json declares, and names a missing one instead of finding nothing (design recorded in `scripts/lib/checkouts.mjs`).
 - ✅ **VDS131** **the contract gives the reading column to the shell, and the package exports no shell to own it** — BentoShell owns the rail gutter, the header edges, main and the corner, and its named columns are properties in bento.css (design recorded in `docs/BENTO-AUTHORING.md`).
 - ✅ **VDS132** **the two rules the contract calls easy to get wrong have no instrument in any repository** — viglet-ds-page-lint names the file and line of a page that sets its own column and of a direct write to --vg-primary, each with a reasoned exemption.
+- ✅ **VDS133** **the assistant dock and the back-to-top button are pinned to the same corner, and the dock covers it** — BentoShell holds the corner: the dock takes it and back-to-top stacks above, both in flow, and a browser test keeps their boxes apart on mobile and desktop.
 
 ## Block G — The package knows one chrome
 

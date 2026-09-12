@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { CornerSlotContext } from "@/lib/corner-slot";
 import { cn } from "@/lib/utils";
 
 import { BentoBackToTop } from "./bento-back-to-top";
@@ -33,9 +34,12 @@ export interface BentoShellProps {
   /** The reading column. A page inside it sets no width, gutter or rhythm of its own. */
   column?: BentoShellColumn;
   /**
-   * The corner. `BentoBackToTop` when omitted; `null` leaves it empty.
+   * The assistant dock, usually a `VigletAssistant`. It takes the corner, and
+   * renders in flow there without being told to.
    */
-  corner?: ReactNode;
+  dock?: ReactNode;
+  /** Whether the back-to-top control sits in the corner, above the dock. On by default. */
+  backToTop?: boolean;
   /** The routed page. */
   children?: ReactNode;
 }
@@ -58,11 +62,13 @@ export function BentoShell({
   headerStart,
   headerEnd,
   column = "default",
-  corner = <BentoBackToTop />,
+  dock,
+  backToTop = true,
   children,
 }: Readonly<BentoShellProps>) {
   const full = column === "full";
   const header = headerStart != null || headerEnd != null;
+  const corner = backToTop || dock != null;
 
   return (
     <div
@@ -89,7 +95,24 @@ export function BentoShell({
         {children}
       </main>
 
-      {corner}
+      {/*
+        VDS133 — the corner is a region, so it has one owner. The dock and the
+        back-to-top control each used to fix themselves to it, and the dock
+        covered the button. Here they stack: the dock takes the corner and the
+        button sits above it. The stack takes no pointer events of its own, so
+        the empty part of its box never swallows a click meant for the page.
+      */}
+      {corner && (
+        <div
+          data-slot="bento-shell-corner"
+          className="pointer-events-none fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3"
+        >
+          <CornerSlotContext.Provider value={true}>
+            {backToTop && <BentoBackToTop />}
+            {dock}
+          </CornerSlotContext.Provider>
+        </div>
+      )}
     </div>
   );
 }

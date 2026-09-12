@@ -32,24 +32,6 @@ so rather than leaving it to be rediscovered.
 
 ## Block F — What a consuming CMS needs from the package next
 
-### §VDS133 One corner, two tenants
-
-Measured in source: the dock's collapsed wrapper is fixed bottom-5 right-5 z-50 and the
-back-to-top control is fixed bottom-6 right-6 z-40. Neither knows the other exists. No
-product mounts the dock yet, which is the only reason nobody has seen the button
-disappear; Shio mounting it is the first time both are on one screen, and on every long
-page the scroll control goes under the mascot.
-
-The contract already has the answer in principle: BENTO-AUTHORING gives each region one
-owner, and the corner is a region. So the shell owns it. BentoShell lays out a corner
-stack in which the dock takes the corner and back-to-top sits above it, and both
-components gain an inline or slotted mode the shell uses instead of their own fixed
-positioning. A product that mounts either outside a shell keeps today's behaviour.
-
-The test renders both inside the shell and asserts their bounding boxes do not intersect
-at mobile and desktop widths, and that the caption, which extends left of the orb, does
-not cover the back-to-top control either.
-
 ### §VDS134 Reports are not chat
 
 VigletAssistantMessage has role user or assistant, a text and one optional action. The
