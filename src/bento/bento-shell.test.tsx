@@ -70,6 +70,32 @@ describe("BentoNavRail", () => {
     expect(screen.queryByRole("link", { name: /Search/ })).not.toBeInTheDocument()
   })
 
+  // VDS110 — `icon` and `labelKey` are optional on `BentoNavSection` and the
+  // rail read both through a non-null assertion. Neither case is reachable from
+  // a story, because the product supplies the array and both fixtures above set
+  // every field; these two are what the assertions were standing in for.
+  it("keeps a hub on the rail when its section has no icon", () => {
+    const iconless: BentoNavGroup[] = [
+      { section: { id: "search", labelKey: "Search", areaRoute: "/search" }, items: [] },
+    ]
+
+    draw(<BentoNavRail groups={iconless} homeRoute="/bento" homeLabel="Home" />)
+
+    expect(screen.getByRole("link", { name: /Search/ })).toHaveAttribute("href", "/search")
+  })
+
+  it("names a hub by its id when its section has no label key", () => {
+    const unlabelled: BentoNavGroup[] = [
+      { section: { id: "generativeAi", icon: IconCpu2, areaRoute: "/ai" }, items: [] },
+    ]
+
+    draw(<BentoNavRail groups={unlabelled} homeRoute="/bento" homeLabel="Home" />)
+
+    // A rail link is an icon and nothing else, so the accessible name is the
+    // only thing that names it.
+    expect(screen.getByRole("link", { name: "generativeAi" })).toHaveAttribute("href", "/ai")
+  })
+
   it("marks Home active at the home route", () => {
     const { container } = draw(
       <BentoNavRail groups={groups} homeRoute="/bento" homeLabel="Home" />,

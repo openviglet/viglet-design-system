@@ -2,27 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-### §VDS110 Two assertions against an optional field
-
-`BentoNavSection` declares both `icon` and `labelKey` optional, and the type's own doc
-comment says a section with no label "renders unlabelled". `bento-nav-rail.tsx` builds
-its hub links from a list filtered on `areaRoute` alone, then reads
-`icon={group.section.icon!}` and `label={t(group.section.labelKey!)}`.
-
-The non-null assertions are what stop the compiler from reporting the mismatch. A hub
-section supplied without an icon throws on render; one without a label key feeds
-`t(undefined)` into the `aria-label` of an icon-only navigation link, which is the one
-control with nothing else to name it.
-
-Both fields are consumer-supplied — the package exports the schema and the product
-supplies the array, which is what the non-goals require — so neither case is reachable
-from a story, and both fixtures in `bento-shell.test.tsx` set every field.
-
-Acceptance:
-- Neither field is read through a non-null assertion.
-- A section without an icon is either filtered out of the rail or given a documented fallback.
-- A section without a label key still produces a named link, asserted by a test on the accessible name.
-
 ### §VDS111 The class the chrome switch swallows
 
 `AdaptiveSectionCard` exists so a shared form does not have to know which chrome is

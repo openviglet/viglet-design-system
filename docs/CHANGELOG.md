@@ -86,6 +86,7 @@
 - ✅ **VDS107** **BadgeColorful renders a consumer's entity name as raw HTML and splices it into a style selector** — BadgeColorful renders an entity name as text and hashes its palette onto custom properties, so the name is neither markup nor a selector (design recorded in `src/styles/index.css`).
 - ✅ **VDS108** **Sidebar drops id, data attributes and className on mobile, where its props land on a node that renders nothing** — Sidebar's mobile branch forwards rest props and className to SheetContent, so an id or a label survives the breakpoint (design recorded in `src/components/ui/sidebar.tsx`).
 - ✅ **VDS109** **A bento dialog's inline translation fallback still names Turing, where the locale bundle no longer does** — The bento shortcuts default matches its de-branded bundle, and a src-wide sweep fails any inline defaultValue naming a consumer (design recorded in `src/i18n/literals.test.ts`).
+- ✅ **VDS110** **The bento nav rail asserts an icon and a label key its own type declares optional** — A hub with no icon keeps its place on the rail behind a grid, one with no label key is named by its id, and neither is read through an assertion (design recorded in `src/bento/bento-nav.ts`).
 
 ## Block B — Bento becomes a design-system layer
 

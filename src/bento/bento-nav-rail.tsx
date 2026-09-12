@@ -1,10 +1,28 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import type { Icon as TablerIcon } from "@tabler/icons-react";
-import { IconHome } from "@tabler/icons-react";
+import { IconHome, IconLayoutGrid } from "@tabler/icons-react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation } from "react-router-dom";
-import type { BentoNavGroup } from "./bento-nav";
+import type { BentoNavGroup, BentoNavSection } from "./bento-nav";
+
+/**
+ * VDS110 — a section that reaches the rail. `areaRoute` is what the filter below
+ * tests, and saying so in the type is what lets the rail read it without a
+ * non-null assertion; `icon` and `labelKey` stay optional, because the product
+ * supplies the array and both are documented as omittable.
+ */
+type BentoNavHub = BentoNavGroup & {
+  section: BentoNavSection & { areaRoute: string };
+};
+
+/**
+ * What a hub with no icon of its own shows. A hub is a mosaic of its section's
+ * surfaces, so the grid is what the link actually leads to — and dropping the
+ * section from the rail instead would make a route the product asked for
+ * unreachable because a decoration was missing.
+ */
+const FALLBACK_HUB_ICON = IconLayoutGrid;
 
 /** A route is active when it (or a descendant of it) is the current path. */
 function isWithin(pathname: string, route: string): boolean {
@@ -61,7 +79,10 @@ export function BentoNavRail({
   const { pathname } = useLocation();
 
   // Only sections that expose a hub route appear as area icons on the rail.
-  const hubs = useMemo(() => groups.filter((g) => g.section.areaRoute), [groups]);
+  const hubs = useMemo(
+    () => groups.filter((g): g is BentoNavHub => Boolean(g.section.areaRoute)),
+    [groups],
+  );
 
   const homeActive =
     pathname === homeRoute || (homeAliases?.includes(pathname) ?? false);
@@ -84,9 +105,13 @@ export function BentoNavRail({
         {hubs.map((group) => (
           <RailLink
             key={group.section.id}
-            to={group.section.areaRoute!}
-            icon={group.section.icon!}
-            label={t(group.section.labelKey!)}
+            to={group.section.areaRoute}
+            icon={group.section.icon ?? FALLBACK_HUB_ICON}
+            // A rail link is an icon and nothing else, so its label is the only
+            // thing naming it. A section that supplied no key falls back to its
+            // own id rather than to an empty string: the link stays reachable by
+            // name, and the name says which section wants labelling.
+            label={group.section.labelKey ? t(group.section.labelKey) : group.section.id}
             active={isSectionActive(pathname, group)}
           />
         ))}

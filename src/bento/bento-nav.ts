@@ -29,11 +29,19 @@ export type BentoNavSectionId = string;
 
 export interface BentoNavSection {
   id: BentoNavSectionId;
-  /** i18n key for the section label. A section with none renders unlabelled. */
+  /**
+   * i18n key for the section label. A section with none is named by its
+   * {@link BentoNavSection.id} on the nav rail, where the link is an icon and
+   * has nothing else to announce.
+   */
   labelKey?: string;
   /** i18n key for the section description, shown on a hub. */
   descriptionKey?: string;
-  /** Icon shown for this section on the nav rail. */
+  /**
+   * Icon shown for this section on the nav rail. A section with none still
+   * appears there — the rail draws a grid, for the mosaic its hub renders —
+   * because the route is what the rail exists to reach.
+   */
   icon?: TablerIcon;
   /**
    * The section's hub page. The rail links here and the hub renders every
