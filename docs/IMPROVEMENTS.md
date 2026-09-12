@@ -32,24 +32,6 @@ so rather than leaving it to be rediscovered.
 
 ## Block F — What a consuming CMS needs from the package next
 
-### §VDS143 Busy is not disabled
-
-The package's buttons and the entity shell's save controls mark a pending action by
-setting disabled. A disabled element leaves the tab order, so focus falls back to the
-document body the instant a keyboard user presses Save, and the outcome, now reported
-through a toast or the assistant's caption, is announced to someone whose place on the
-page is gone.
-
-The fix belongs here rather than in each product: while loading, a control sets
-aria-busy and aria-disabled, stays focusable, ignores activation, and shows its spinner.
-Only a control that is genuinely unavailable uses disabled. BentoFormHero,
-BentoScrollSaveBar, BentoEntityShell and the base Button take a loading prop that
-applies this, so no consumer has to know the distinction.
-
-The test tabs to Save, activates it, and asserts that document.activeElement is still
-the button while the promise is pending and after it settles, and that a second
-activation during loading does not call the handler twice.
-
 ### §VDS149 One binding set for the palette and the guide that lists it
 
 BENTO-AUTHORING puts the palette trigger, with the platform's own key hint, in the
@@ -101,6 +83,22 @@ through, and delete warnWithoutId and its test. The change note in the ledger na
 release that warned. Before shipping, run viglet-ds-check-duplicates and a type-check in
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
+
+### §VDS153 The layout editor keeps its place too
+
+VDS143 gave Button and GradientButton a loading state that keeps focus, and moved the
+save controls of BentoFormHero, BentoSaveBar and BentoEntityShell onto it. The layout
+editor in BentoListPage still marks its own save in flight with disabled={busy} on all
+four of its buttons: reset, set as default for everyone, cancel and save layout. A
+reader who presses Save layout from the keyboard loses focus as the layout persists, the
+defect VDS143 fixed one component over, and bento-list-page.test.tsx asserts the
+disabled attribute that causes it.
+
+Pass loading={busy} to the button that was pressed and aria-disabled to the other three
+while it runs, so none leaves the tab order, and change the test to assert aria-busy,
+focus kept, and a second press ignored. BentoInlineEdit disables its display button
+while a commit is saving; since focus has already left the field by then, give it
+aria-disabled with the same treatment rather than the attribute.
 
 ## Block G — The package knows one chrome
 

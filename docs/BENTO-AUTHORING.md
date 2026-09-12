@@ -240,6 +240,11 @@ push, and a violation fails the build.
   — which is what `BentoFormSection` renders by default. A repeated label, like
   the sticky bar's title, is not a heading at all. `BentoEmptyState`'s title is an
   `h2` too; pass `titleLevel={3}` when it sits inside a section.
+- **Busy is not disabled.** A control whose action is running takes `loading`:
+  it says so with `aria-busy`, ignores a second press and keeps focus, where
+  `disabled` would drop the focus of the button just pressed as the result is
+  announced. A Save with nothing to save is `aria-disabled`, focusable and inert,
+  for the same reason. `disabled` is for a control that is genuinely unavailable.
 - **Landmarks and focus are the shell's.** `BentoShell` renders the one `main`,
   labelled, and a skip link as the first thing a keyboard reaches. On a route
   change it moves focus to the new page's `h1` and announces it, so give every

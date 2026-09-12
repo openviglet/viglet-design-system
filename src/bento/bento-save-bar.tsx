@@ -63,7 +63,7 @@ function BentoSaveBar({
       <div className="flex shrink-0 gap-2">
         {actions ?? (
           <>
-            <GradientButton type="submit" size="sm" loading={loading} disabled={disabled}>
+            <GradientButton type="submit" size="sm" loading={loading} aria-disabled={disabled ? "true" : undefined}>
               <IconDeviceFloppy className="size-4" />
               {t("forms.formActions.saveChanges")}
             </GradientButton>

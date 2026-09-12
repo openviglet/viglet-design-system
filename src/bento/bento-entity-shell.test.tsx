@@ -369,12 +369,12 @@ describe("BentoEntityShell modes", () => {
 
     const before = screen.getAllByRole("button", { name: /save/i })
     expect(before.length).toBeGreaterThan(0)
-    for (const button of before) expect(button).toBeDisabled()
+    for (const button of before) expect(button).toHaveAttribute("aria-disabled", "true")
 
     await user.click(screen.getByText("make-dirty"))
 
     for (const button of screen.getAllByRole("button", { name: /save/i })) {
-      expect(button).toBeEnabled()
+      expect(button).not.toHaveAttribute("aria-disabled")
     }
   })
 

@@ -2,6 +2,7 @@ import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import * as React from "react"
 
+import { BusyGlyph, busyControl } from "@/lib/busy"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
@@ -41,19 +42,36 @@ function Button({
   variant,
   size,
   asChild = false,
+  loading = false,
+  onClick,
+  children,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
+    /**
+     * The action is running: the button says so, ignores a second press, and
+     * stays focusable, where `disabled` would drop the focus of the control just
+     * pressed (VDS143).
+     */
+    loading?: boolean
   }) {
   const Comp = asChild ? Slot : "button"
+  const busy = busyControl<HTMLButtonElement>(loading, props["aria-disabled"], onClick)
 
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        busy.inert && (loading ? "cursor-progress" : "cursor-not-allowed opacity-50"),
+      )}
       {...props}
-    />
+      {...busy.props}
+    >
+      {/* A Slot takes one child, so the spinner is the rendered element's to show. */}
+      {asChild ? children : <>{loading && <BusyGlyph />}{children}</>}
+    </Comp>
   )
 }
 

@@ -415,6 +415,14 @@ import {
 } from "@viglet/viglet-design-system";
 ```
 
+`Button` and `GradientButton` take `loading` for an action in flight. The button
+shows a spinner, sets `aria-busy`, ignores a second press (including a form's
+submit) and keeps keyboard focus. Do not pass `disabled` for that: a disabled
+button drops the focus of the control just pressed, just as the result is
+announced. For a control that is unavailable for now, such as a Save with nothing
+to save, pass `aria-disabled="true"`. It stays focusable and ignores activation.
+Keep `disabled` for a control that is genuinely unavailable.
+
 ### App Components
 
 ```tsx

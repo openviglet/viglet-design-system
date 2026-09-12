@@ -1,10 +1,12 @@
-import { render, screen } from "@testing-library/react"
+import { act, render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import i18next from "i18next"
-import type { ReactElement } from "react"
+import { type ReactElement, useState } from "react"
 import { I18nextProvider, initReactI18next } from "react-i18next"
 import { MemoryRouter } from "react-router-dom"
 import { beforeAll, describe, expect, it, vi } from "vitest"
+
+import { Button } from "@/components/ui/button"
 
 import { BentoFormHero } from "./index"
 
@@ -94,19 +96,19 @@ describe("BentoFormHero", () => {
     expect(onCancel).toHaveBeenCalledTimes(2)
   })
 
-  it("disables Save while there is nothing to save", () => {
+  it("marks Save unavailable, and still focusable, while there is nothing to save", () => {
     draw(<BentoFormHero title="Settings" onCancel={vi.fn()} />)
 
     for (const button of screen.getAllByRole("button", { name: /save/i })) {
-      expect(button).toBeDisabled()
+      expect(button).toHaveAttribute("aria-disabled", "true")
     }
   })
 
-  it("disables Save while the title is missing, even when dirty", () => {
+  it("marks Save unavailable while the title is missing, even when dirty", () => {
     draw(<BentoFormHero title="Settings" onCancel={vi.fn()} dirty titleMissing />)
 
     for (const button of screen.getAllByRole("button", { name: /save/i })) {
-      expect(button).toBeDisabled()
+      expect(button).toHaveAttribute("aria-disabled", "true")
     }
   })
 
@@ -133,6 +135,83 @@ describe("BentoFormHero", () => {
   })
 })
 
+// VDS143 — busy is not disabled. A button that sets `disabled` while it saves
+// leaves the tab order the instant it is pressed, so focus falls to the body
+// just as the result is announced.
+describe("a save in flight keeps the reader's place", () => {
+  let settle: () => void = () => {}
+
+  function SaveForm({ onSave }: Readonly<{ onSave: () => void }>) {
+    const [loading, setLoading] = useState(false)
+    const [dirty, setDirty] = useState(true)
+    return (
+      <form
+        onSubmit={(event) => {
+          event.preventDefault()
+          onSave()
+          setLoading(true)
+          new Promise<void>((resolve) => {
+            settle = resolve
+          }).then(() => {
+            setLoading(false)
+            // Saved, so there is nothing left to save: the state that used to
+            // disable the button and drop focus a second time.
+            setDirty(false)
+          })
+        }}
+      >
+        <BentoFormHero title="Settings" onCancel={() => {}} dirty={dirty} loading={loading} />
+      </form>
+    )
+  }
+
+  it("keeps focus on Save while it is pending and after it settles, and ignores a second press", async () => {
+    const user = userEvent.setup()
+    const onSave = vi.fn()
+    draw(<SaveForm onSave={onSave} />)
+
+    // Tab to the first Save, the way a keyboard reader gets there.
+    const save = screen.getAllByRole("button", { name: /save/i })[0]
+    for (let i = 0; i < 10 && document.activeElement !== save; i++) await user.tab()
+    expect(save).toHaveFocus()
+
+    await user.keyboard("{Enter}")
+    expect(onSave).toHaveBeenCalledTimes(1)
+    expect(save).toHaveAttribute("aria-busy", "true")
+    // jsdom keeps focus on a disabled element where a browser does not, so the
+    // attribute is what this can assert; the browser test measures the focus.
+    expect(save).not.toBeDisabled()
+    expect(save).toHaveFocus()
+
+    await user.keyboard("{Enter}")
+    await user.keyboard(" ")
+    expect(onSave).toHaveBeenCalledTimes(1)
+
+    await act(async () => settle())
+    expect(save).not.toHaveAttribute("aria-busy")
+    expect(save).toHaveAttribute("aria-disabled", "true")
+    expect(save).toHaveFocus()
+  })
+
+  it("gives the base Button the same loading behaviour", async () => {
+    const user = userEvent.setup()
+    const onClick = vi.fn()
+    const { rerender } = render(<Button onClick={onClick}>Publish</Button>)
+
+    const button = screen.getByRole("button", { name: "Publish" })
+    await user.click(button)
+    expect(onClick).toHaveBeenCalledTimes(1)
+
+    rerender(<Button onClick={onClick} loading>Publish</Button>)
+    expect(button).toHaveFocus()
+    expect(button).not.toBeDisabled()
+    expect(button).toHaveAttribute("aria-busy", "true")
+    await user.click(button)
+    await user.keyboard("{Enter}")
+    expect(onClick).toHaveBeenCalledTimes(1)
+  })
+})
+
 // Ported from the product's suite. Both are properties a hand-wired version
 // lost: an explicit disable that the dirty flag would otherwise override, and a
 // destructive action that must not fade away with the Save/Cancel pair.
@@ -141,7 +220,7 @@ describe("BentoFormHero, ported cases", () => {
     draw(<BentoFormHero title="Settings" onCancel={vi.fn()} dirty saveDisabled />)
 
     for (const button of screen.getAllByRole("button", { name: /save/i })) {
-      expect(button).toBeDisabled()
+      expect(button).toHaveAttribute("aria-disabled", "true")
     }
   })
 

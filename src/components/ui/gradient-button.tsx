@@ -2,6 +2,7 @@ import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import * as React from "react"
 
+import { BusyGlyph, busyControl } from "@/lib/busy"
 import { cn } from "@/lib/utils"
 
 const gradientButtonVariants = cva(
@@ -94,33 +95,31 @@ function GradientButton({
     size,
     asChild = false,
     loading = false,
+    onClick,
+    children,
     ...props
 }: React.ComponentProps<"button"> &
     VariantProps<typeof gradientButtonVariants> & {
         asChild?: boolean
+        /**
+         * The action is running. The button says so and ignores a second press,
+         * and stays focusable: `disabled` would drop the focus of the control
+         * just pressed (VDS143). Pass `aria-disabled` for a button unavailable
+         * for now, and `disabled` only for one genuinely unavailable.
+         */
         loading?: boolean
     }) {
-    const classes = cn(gradientButtonVariants({ variant, size, className }))
+    const busy = busyControl<HTMLButtonElement>(loading, props["aria-disabled"], onClick)
+    const classes = cn(
+        gradientButtonVariants({ variant, size, className }),
+        busy.inert && (loading ? "cursor-progress" : "cursor-not-allowed opacity-50"),
+    )
     const Comp = asChild ? Slot : "button"
 
     return (
-        <Comp
-            data-slot="gradient-button"
-            className={classes}
-            disabled={loading || props.disabled}
-            {...props}
-        >
-            {loading ? (
-                <>
-                    <svg className="size-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
-                    {props.children}
-                </>
-            ) : (
-                props.children
-            )}
+        <Comp data-slot="gradient-button" className={classes} {...props} {...busy.props}>
+            {/* A Slot takes one child, so the spinner is the rendered element's to show. */}
+            {asChild ? children : <>{loading && <BusyGlyph />}{children}</>}
         </Comp>
     )
 }

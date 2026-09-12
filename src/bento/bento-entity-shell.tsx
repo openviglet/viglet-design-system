@@ -366,7 +366,7 @@ export function BentoEntityShell<TEntity extends BentoEntityLike>({
                */
               <div className="bento-fade-out flex shrink-0 items-center gap-2">
                 {showSaveSubmit && (
-                  <GradientButton type="submit" form={formId} size="sm" loading={formState.isSubmitting} disabled={saveDisabled}>
+                  <GradientButton type="submit" form={formId} size="sm" loading={formState.isSubmitting} aria-disabled={saveDisabled ? "true" : undefined}>
                     <IconDeviceFloppy className="size-4" />
                     {t("forms.formActions.saveChanges")}
                   </GradientButton>

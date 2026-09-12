@@ -191,6 +191,7 @@
 - ✅ **VDS140** **three planned console surfaces need the same diff and version rail, and the layer offers neither** — The diff and the version rail compare two versions field by field, render a created side as additions, name each change in words, and pick by keyboard.
 - ✅ **VDS141** **no component in the layer owns a main landmark or a skip link** — BentoShell renders one labelled main and a skip link, moves focus to the new page's h1 and announces it on navigation, and the empty state's title is a heading.
 - ✅ **VDS142** **an actions-menu item takes no id, so no lint can match a console verb to an agent verb** — Every actions-menu item takes an id rendered as data-action-id, the package's own menus pass one, and an item without one warns outside production.
+- ✅ **VDS143** **a button that is loading sets disabled and drops the focus of the control just pressed** — Loading buttons keep focus and ignore a second press with aria-busy, and the hero, save bar and entity shell keep Save focusable while it saves.
 
 ## Block G — The package knows one chrome
 
