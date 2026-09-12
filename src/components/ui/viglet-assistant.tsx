@@ -1,3 +1,4 @@
+import { IconX } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -21,28 +22,65 @@ import { VigletAvatar, type VigletAvatarState } from "./viglet-avatar";
  * leaves all of that to the product.
  */
 
-export interface VigletAssistantMessage {
+/**
+ * Something the product can offer from a row — "use this title", "open the
+ * record". The label is the product's copy, so it arrives translated rather than
+ * being translated here.
+ */
+export interface VigletAssistantAction {
+  label: string;
+  onSelect: () => void;
+}
+
+/** A turn of the conversation: what a person asked, or what the assistant said. */
+export interface VigletAssistantChatMessage {
   /** Stable identity for the row. Falls back to the index when absent. */
   id?: string;
   role: "user" | "assistant";
   text: string;
-  /**
-   * One thing the product can offer from inside an answer — "use this title",
-   * "open the record". The label is the product's copy, so it arrives
-   * translated rather than being translated here.
-   */
-  action?: { label: string; onSelect: () => void };
+  /** One thing the product can offer from inside an answer. */
+  action?: VigletAssistantAction;
 }
 
+/**
+ * VDS134 — something the system reports: a publish, a failure, an arrival.
+ *
+ * Not a chat role. A product that reports through the dock used to have to
+ * invent an assistant message for it, which put the system's words in the
+ * mascot's mouth and made an agent's reply indistinguishable from a publish
+ * receipt. A report has a tone, a time, a read state and its own actions, and it
+ * never opens the composer.
+ */
+export interface VigletAssistantReport {
+  /** Required: the product persists read and dismissed state against it. */
+  id: string;
+  role: "report";
+  /** What the report is about, in the mascot's five states. */
+  tone: VigletAvatarState;
+  /** What happened. Product copy, already translated. */
+  text: string;
+  /** When it happened. */
+  at: Date | number | string;
+  read?: boolean;
+  /** Up to three; a fourth is not rendered, since a report is not a menu. */
+  actions?: readonly VigletAssistantAction[];
+}
+
+export type VigletAssistantMessage = VigletAssistantChatMessage | VigletAssistantReport;
+
 export interface VigletAssistantProps {
-  /** What the system is doing. Drives the mascot. */
+  /**
+   * What the system is doing. Drives the mascot. Omitted, it follows the newest
+   * unread report's tone, and is idle when there is none.
+   */
   state?: VigletAvatarState;
   /**
    * The sentence the dock says. Typed out beside the collapsed orb and shown in
-   * the header when open. Product copy, already translated.
+   * the header when open. Product copy, already translated. Omitted, it is the
+   * newest unread report's text; `null` says nothing.
    */
   caption?: string | null;
-  /** The conversation so far. Omitted along with `onSend`, there is no chat. */
+  /** The conversation and the reports, oldest first. */
   messages?: readonly VigletAssistantMessage[];
   /** An answer is in flight: the composer locks and the transcript shows it. */
   busy?: boolean;
@@ -52,8 +90,18 @@ export interface VigletAssistantProps {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
-  /** An answer is waiting behind a collapsed dock. */
-  unread?: boolean;
+  /**
+   * How many things are waiting behind a collapsed dock. `true` marks that
+   * something is without a number. Omitted, it counts the unread reports.
+   */
+  unread?: boolean | number;
+  /**
+   * A report was on screen in the open dock. Called for each unread one when the
+   * dock opens or closes, so the product flips `read` and persists it.
+   */
+  onRead?: (id: string) => void;
+  /** Given, each report offers to be dismissed, and this is told which. */
+  onDismiss?: (id: string) => void;
   /** Bump to make the mascot react to something smaller than a state change. */
   activity?: number;
   /**
@@ -81,6 +129,13 @@ const STATE_TONE: Record<VigletAvatarState, string> = {
   attention: "text-amber-700 dark:text-amber-300",
 };
 
+/** How many actions a report renders. */
+const REPORT_ACTIONS = 3;
+
+function isReport(message: VigletAssistantMessage): message is VigletAssistantReport {
+  return message.role === "report";
+}
+
 function prefersReducedMotion() {
   return (
     typeof window !== "undefined" &&
@@ -92,10 +147,9 @@ function prefersReducedMotion() {
 /**
  * The caption, typed out the way a film subtitle arrives.
  *
- * The typing is decoration and the sentence is the content, so they are two
- * elements: a reader sees characters appear, and a screen reader is handed the
- * whole sentence at once in a live region. Announcing the animation instead
- * would read the line out one letter at a time.
+ * The typing is decoration and the sentence is the content. A screen reader is
+ * handed the sentence by the dock's one live region, not by this, so the typing
+ * is hidden from it rather than read out a letter at a time.
  *
  * Mount this with `key={text}` — a new sentence is a new caption, which is what
  * resets the reveal without an effect writing state on the way past.
@@ -138,13 +192,28 @@ function Caption({ text, className }: Readonly<{ text: string; className?: strin
           <span className="ml-px inline-block h-[0.95em] w-px translate-y-[0.15em] bg-current align-baseline motion-safe:animate-pulse" />
         )}
       </span>
-      <span className="sr-only">{text}</span>
     </span>
   );
 }
 
+/** A report's time, as the reader's locale writes it: the time today, a date before. */
+function ReportTime({ at, locale }: Readonly<{ at: VigletAssistantReport["at"]; locale?: string }>) {
+  const date = new Date(at);
+  if (Number.isNaN(date.getTime())) return null;
+  const today = date.toDateString() === new Date().toDateString();
+  const label = new Intl.DateTimeFormat(
+    locale,
+    today ? { timeStyle: "short" } : { dateStyle: "short", timeStyle: "short" },
+  ).format(date);
+  return (
+    <time dateTime={date.toISOString()} className="text-muted-foreground">
+      {label}
+    </time>
+  );
+}
+
 export function VigletAssistant({
-  state = "idle",
+  state,
   caption,
   messages,
   busy = false,
@@ -152,12 +221,14 @@ export function VigletAssistant({
   open,
   defaultOpen = false,
   onOpenChange,
-  unread = false,
+  unread,
+  onRead,
+  onDismiss,
   activity = 0,
   inline = false,
   className,
 }: Readonly<VigletAssistantProps>) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   // In the shell's corner stack the shell holds the corner, so the dock is in
   // flow there and takes pointer events back from the stack that positions it.
   const slotted = useInCornerSlot();
@@ -165,10 +236,36 @@ export function VigletAssistant({
   const [draft, setDraft] = useState("");
   const transcriptRef = useRef<HTMLDivElement>(null);
 
+  const rows = messages ?? [];
+  const reports = rows.filter(isReport);
+  const waiting = reports.filter((report) => !report.read);
+  const newest = waiting[waiting.length - 1];
+
   const isOpen = open ?? ownOpen;
   const canChat = typeof onSend === "function";
+  const mood = state ?? newest?.tone ?? "idle";
+  const said = caption === undefined ? (newest?.text ?? null) : caption;
+  const count = typeof unread === "number" ? unread : waiting.length;
+  const pending = unread === true || count > 0;
+
+  /**
+   * The one live region, and what it last said.
+   *
+   * It changes only when the sentence does, so a re-render, or opening and
+   * closing the dock, never says a report twice. While the dock is open it stays
+   * quiet: the transcript is a log, which announces a new row itself.
+   */
+  const [spoken, setSpoken] = useState({ source: said, text: isOpen ? "" : (said ?? "") });
+  if (spoken.source !== said) {
+    setSpoken({ source: said, text: isOpen ? "" : (said ?? "") });
+  }
 
   const setOpen = (next: boolean) => {
+    // Whatever was listed while the dock was open has been seen: on opening, the
+    // reports waiting now; on closing, any that arrived while it was open.
+    if (next !== isOpen) {
+      for (const report of waiting) onRead?.(report.id);
+    }
     if (open === undefined) setOwnOpen(next);
     onOpenChange?.(next);
   };
@@ -187,7 +284,11 @@ export function VigletAssistant({
     setDraft("");
   };
 
-  const rows = messages ?? [];
+  const orbLabel = isOpen
+    ? t("assistant.collapse")
+    : [t("assistant.open"), count > 0 ? t("assistant.unreadCount", { count }) : null]
+        .filter(Boolean)
+        .join(", ");
 
   return (
     <div
@@ -206,12 +307,16 @@ export function VigletAssistant({
         if (event.key === "Escape" && isOpen) setOpen(false);
       }}
     >
+      <span role="status" aria-live="polite" className="sr-only">
+        {spoken.text}
+      </span>
+
       {/* Collapsed, the caption sits beside the orb rather than under it: the
           dock is in a corner, and a line of text below it would run off. */}
-      {!isOpen && caption && (
+      {!isOpen && said && (
         <Caption
-          key={caption}
-          text={caption}
+          key={said}
+          text={said}
           className="pointer-events-none absolute bottom-11 right-[7.75rem] w-max max-w-[min(23rem,calc(100vw-9rem))] text-right text-sm font-semibold leading-snug text-foreground drop-shadow-sm"
         />
       )}
@@ -219,30 +324,38 @@ export function VigletAssistant({
       <div className="flex flex-none items-center gap-3">
         <button
           type="button"
-          aria-label={isOpen ? t("assistant.collapse") : t("assistant.open")}
+          aria-label={orbLabel}
           aria-expanded={isOpen}
           onClick={() => setOpen(!isOpen)}
-          className="flex-none rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          className="relative flex-none rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
         >
           <VigletAvatar
-            state={state}
+            state={mood}
             compact={!isOpen}
-            unread={unread}
+            unread={pending}
             activity={activity}
             size={isOpen ? 76 : 132}
           />
+          {!isOpen && count > 0 && (
+            <span
+              aria-hidden="true"
+              className="absolute right-5 top-5 grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[0.6875rem] font-semibold leading-none text-primary-foreground"
+            >
+              {count}
+            </span>
+          )}
         </button>
 
         {isOpen && (
           <div className="flex min-w-0 flex-1 flex-col gap-0.5">
             <span className="text-xs text-muted-foreground">{t("assistant.state")}</span>
-            <span className={`text-sm font-semibold ${STATE_TONE[state]}`}>
-              {t(STATE_KEY[state])}
+            <span className={`text-sm font-semibold ${STATE_TONE[mood]}`}>
+              {t(STATE_KEY[mood])}
             </span>
-            {caption && (
+            {said && (
               <Caption
-                key={caption}
-                text={caption}
+                key={said}
+                text={said}
                 className="text-xs leading-snug text-muted-foreground"
               />
             )}
@@ -261,26 +374,68 @@ export function VigletAssistant({
         )}
       </div>
 
-      {/* No `onSend`, no conversation. Chat off is the composer absent, not a
-          disabled box a person keeps trying to type in. */}
-      {isOpen && canChat && (
-        <>
-          <div
-            ref={transcriptRef}
-            role="log"
-            aria-label={t("assistant.transcript")}
-            aria-busy={busy}
-            className="mt-3 flex max-h-96 min-h-32 flex-1 flex-col gap-2.5 overflow-y-auto pr-1"
-          >
-            {rows.length === 0 && !busy && (
-              <p className="m-auto max-w-52 text-center text-xs leading-relaxed text-muted-foreground">
-                {t("assistant.empty")}
-              </p>
-            )}
+      {/* No `onSend` and no reports, nothing to list. Chat off is the composer
+          absent, not a disabled box a person keeps trying to type in; a report
+          is read here and never opens a composer of its own. */}
+      {isOpen && (canChat || reports.length > 0) && (
+        <div
+          ref={transcriptRef}
+          role="log"
+          aria-label={t("assistant.transcript")}
+          aria-busy={busy}
+          className="mt-3 flex max-h-96 min-h-32 flex-1 flex-col gap-2.5 overflow-y-auto pr-1"
+        >
+          {rows.length === 0 && !busy && (
+            <p className="m-auto max-w-52 text-center text-xs leading-relaxed text-muted-foreground">
+              {t("assistant.empty")}
+            </p>
+          )}
 
-            {rows.map((message, index) => (
+          {rows.map((message, index) =>
+            isReport(message) ? (
+              <div
+                key={message.id}
+                data-kind="report"
+                className={`w-full rounded-lg border px-3 py-2 text-sm ${
+                  message.read ? "border-border/60" : "border-border bg-muted/50"
+                }`}
+              >
+                <div className="flex items-center gap-2 text-xs">
+                  <span aria-hidden="true" className={`size-2 flex-none rounded-full bg-current ${STATE_TONE[message.tone]}`} />
+                  <span className="font-semibold">{t(STATE_KEY[message.tone])}</span>
+                  <ReportTime at={message.at} locale={i18n?.resolvedLanguage} />
+                  {!message.read && (
+                    <span className="rounded-full border border-border px-1.5 leading-4">
+                      {t("assistant.new")}
+                    </span>
+                  )}
+                  {onDismiss && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="ml-auto size-6"
+                      aria-label={t("assistant.dismiss")}
+                      onClick={() => onDismiss(message.id)}
+                    >
+                      <IconX aria-hidden="true" size={14} />
+                    </Button>
+                  )}
+                </div>
+                <p className="m-0 mt-1 whitespace-pre-wrap leading-snug">{message.text}</p>
+                {message.actions && message.actions.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {message.actions.slice(0, REPORT_ACTIONS).map((action) => (
+                      <Button key={action.label} variant="outline" size="sm" onClick={action.onSelect}>
+                        {action.label}
+                      </Button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
               <div
                 key={message.id ?? index}
+                data-kind={message.role}
                 className={
                   message.role === "user"
                     ? "max-w-[92%] self-end rounded-xl rounded-br-sm bg-accent px-3 py-2 text-sm text-accent-foreground"
@@ -299,38 +454,40 @@ export function VigletAssistant({
                   </Button>
                 )}
               </div>
-            ))}
+            ),
+          )}
 
-            {busy && (
-              <p className="m-0 self-start px-3 py-2 text-sm text-muted-foreground">
-                {t("assistant.thinking")}
-              </p>
-            )}
-          </div>
+          {busy && (
+            <p className="m-0 self-start px-3 py-2 text-sm text-muted-foreground">
+              {t("assistant.thinking")}
+            </p>
+          )}
+        </div>
+      )}
 
-          <div className="mt-3 flex flex-none gap-2">
-            <Input
-              value={draft}
-              disabled={busy}
-              placeholder={t("assistant.placeholder")}
-              aria-label={t("assistant.placeholder")}
-              onChange={(event) => setDraft(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  event.preventDefault();
-                  send();
-                }
-              }}
-            />
-            <Button
-              variant="outline"
-              disabled={busy || draft.trim().length === 0}
-              onClick={send}
-            >
-              {t("assistant.send")}
-            </Button>
-          </div>
-        </>
+      {isOpen && canChat && (
+        <div className="mt-3 flex flex-none gap-2">
+          <Input
+            value={draft}
+            disabled={busy}
+            placeholder={t("assistant.placeholder")}
+            aria-label={t("assistant.placeholder")}
+            onChange={(event) => setDraft(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                send();
+              }
+            }}
+          />
+          <Button
+            variant="outline"
+            disabled={busy || draft.trim().length === 0}
+            onClick={send}
+          >
+            {t("assistant.send")}
+          </Button>
+        </div>
       )}
     </div>
   );

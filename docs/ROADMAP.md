@@ -4,7 +4,6 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS134** (deps: —) **the dock's transcript knows a user and an assistant, so a system report reads as the assistant talking** — A product reporting publishes, failures and arrivals through the dock has no row kind, time or read state, and a message offers one action where review needs two. → §VDS134
 - 📋 **VDS135** (deps: —) **the design system reaches an agent only as files a bin copies, with no plugin a consumer can enable** — There is no .claude-plugin directory, so each consumer vendors the contract by hand, and Shio's own claude-plugin is a working template nobody has applied here. → §VDS135
 - 📋 **VDS136** (deps: VDS135) **nothing machine-readable answers which component does a job, so an agent greps the type declarations** — exports.json lists names only, so choosing between two components costs a session a read of the type files that one catalogue call would answer. → §VDS136
 - 📋 **VDS137** (deps: —) **no gate measures a consumer's own accent or primary override, only the preset's values** — The contrast test reads the preset and pairs by a naming rule the accent family does not follow, so a product's re-keyed orange can ship below AA with every gate green. → §VDS137

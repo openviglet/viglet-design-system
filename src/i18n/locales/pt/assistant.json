@@ -14,6 +14,9 @@
     "placeholder": "Fale com o Viglet",
     "send": "Enviar",
     "thinking": "Pensando",
-    "unread": "Uma resposta está esperando"
+    "unread": "Uma resposta está esperando",
+    "unreadCount": "Não lidas: {{count}}",
+    "new": "Nova",
+    "dismiss": "Dispensar"
   }
 }

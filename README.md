@@ -476,6 +476,40 @@ messages={[{
 }]}
 ```
 
+**What the system reports is a `report`, not an assistant message.** A publish,
+a failure or an arrival has a `tone` (one of the mascot's five states), a time,
+a `read` flag and up to three `actions`, and it renders apart from the
+conversation. It never opens a composer, so a dock with no `onSend` lists reports
+on their own. You own the list, as you own the messages:
+
+```tsx
+<VigletAssistant
+  messages={reports}
+  onRead={(id) => markRead(id)}
+  onDismiss={(id) => dismiss(id)}
+/>
+
+const reports = [{
+  id: "publish-q3",
+  role: "report",
+  tone: "error",
+  text: "Could not publish /q3-results.",
+  at: failedAt,
+  actions: [
+    { label: "Retry", onSelect: retry },
+    { label: "Open the page", onSelect: openPage },
+  ],
+}];
+```
+
+Collapsed, the orb counts the unread reports, and the caption is the newest one
+unless you pass `caption`. The mascot's state follows that report's tone unless
+you pass `state`. Pass `unread` a number to count something else. `onRead` fires
+for each unread report when the dock opens or closes, since it was on screen,
+and a dismiss button appears on each report once you pass `onDismiss`. A report
+is announced once, when it arrives, and not again when the dock opens or
+re-renders.
+
 It pins itself to the bottom-right of the viewport; pass `inline` to render it
 in flow and place it yourself. In a bento product, pass it to `BentoShell` as
 `dock` instead: the shell holds the corner, stacks `BentoBackToTop` above the

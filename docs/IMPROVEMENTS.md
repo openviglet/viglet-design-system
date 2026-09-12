@@ -32,26 +32,6 @@ so rather than leaving it to be rediscovered.
 
 ## Block F — What a consuming CMS needs from the package next
 
-### §VDS134 Reports are not chat
-
-VigletAssistantMessage has role user or assistant, a text and one optional action. The
-dock's own design says it is also a place the system reports from, and
-useAssistantNotifications lifts toast titles into the caption. But once a product
-reports through the dock rather than beside it, which is what replacing notifications
-means, every report needs to survive the caption: a list of what happened, when, whether
-it was read, and what to do about it.
-
-Today a product can only fake that by inventing assistant messages, which puts the
-system's words in the mascot's mouth and makes an agent's reply indistinguishable from a
-publish receipt.
-
-Add a report kind beside the two chat roles, carrying a tone that maps onto the avatar's
-five states, a timestamp, a read flag, and an actions array of up to three. Add onRead
-and onDismiss callbacks, so the product owns persistence the way it owns messages. A
-report never opens the composer. unread becomes a count. The tests assert that a report
-renders distinctly from both chat roles, that each action is a named button, and that
-the aria-live caption announces a report once.
-
 ### §VDS135 The package as a Claude Code plugin
 
 page-reference.mjs argues for copying: a contract kept in another repository is read

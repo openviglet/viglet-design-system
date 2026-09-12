@@ -181,6 +181,7 @@
 - ✅ **VDS131** **the contract gives the reading column to the shell, and the package exports no shell to own it** — BentoShell owns the rail gutter, the header edges, main and the corner, and its named columns are properties in bento.css (design recorded in `docs/BENTO-AUTHORING.md`).
 - ✅ **VDS132** **the two rules the contract calls easy to get wrong have no instrument in any repository** — viglet-ds-page-lint names the file and line of a page that sets its own column and of a direct write to --vg-primary, each with a reasoned exemption.
 - ✅ **VDS133** **the assistant dock and the back-to-top button are pinned to the same corner, and the dock covers it** — BentoShell holds the corner: the dock takes it and back-to-top stacks above, both in flow, and a browser test keeps their boxes apart on mobile and desktop.
+- ✅ **VDS134** **the dock's transcript knows a user and an assistant, so a system report reads as the assistant talking** — The dock lists reports apart from chat, with a tone, a time, a read flag and up to three actions, counts the unread and announces each once.
 
 ## Block G — The package knows one chrome
 

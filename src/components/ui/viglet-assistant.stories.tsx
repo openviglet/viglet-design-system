@@ -8,7 +8,11 @@ import { Input } from "./input";
 import { Separator } from "./separator";
 import { Toaster, toast } from "./sonner";
 import { Textarea } from "./textarea";
-import { VigletAssistant, type VigletAssistantMessage } from "./viglet-assistant";
+import {
+  VigletAssistant,
+  type VigletAssistantMessage,
+  type VigletAssistantReport,
+} from "./viglet-assistant";
 import type { VigletAvatarState } from "./viglet-avatar";
 
 /**
@@ -92,6 +96,66 @@ export const Unread: Story = {
       <Dock {...args} />
     </Stage>
   ),
+};
+
+/* --------------------------------- reports --------------------------------- */
+
+const MINUTE = 60_000;
+
+function ReportsDemo() {
+  const [reports, setReports] = useState<VigletAssistantReport[]>(() => [
+    {
+      id: "publish",
+      role: "report",
+      tone: "success",
+      text: "/q3-results published.",
+      at: Date.now() - 42 * MINUTE,
+      read: true,
+    },
+    {
+      id: "lead",
+      role: "report",
+      tone: "attention",
+      text: "Mariana Lopes, Lumen Arquitetura, arrived from the site form.",
+      at: Date.now() - 9 * MINUTE,
+      actions: [{ label: "Open the lead", onSelect: () => {} }],
+    },
+    {
+      id: "failure",
+      role: "report",
+      tone: "error",
+      text: "Could not reach the publishing service for /announcement.",
+      at: Date.now() - 2 * MINUTE,
+      actions: [
+        { label: "Retry", onSelect: () => {} },
+        { label: "Open the page", onSelect: () => {} },
+      ],
+    },
+  ]);
+
+  return (
+    <Stage>
+      <Dock
+        defaultOpen
+        messages={reports}
+        onRead={(id) => setReports((all) => all.map((r) => (r.id === id ? { ...r, read: true } : r)))}
+        onDismiss={(id) => setReports((all) => all.filter((r) => r.id !== id))}
+      />
+    </Stage>
+  );
+}
+
+/**
+ * The dock as the place the system reports from.
+ *
+ * A report is not a chat message: it has a state, a time, a read flag and up to
+ * three actions of its own, and it never opens a composer. Collapsed, the orb
+ * counts what is unread and the caption says the newest one. The product owns the
+ * list: `onRead` fires for what was on screen when the dock opens or closes, and
+ * `onDismiss` for the row a person put away.
+ */
+export const Reports: Story = {
+  render: () => <ReportsDemo />,
 };
 
 /* ------------------------------ the CMS demo ------------------------------ */

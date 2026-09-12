@@ -4,7 +4,7 @@ import { readFileSync, readdirSync } from "node:fs"
 import { join, resolve } from "node:path"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
-import { VigletAssistant } from "./viglet-assistant"
+import { VigletAssistant, type VigletAssistantReport } from "./viglet-assistant"
 
 // VDS101 — the dock, and the backend it must not know.
 //
@@ -131,8 +131,7 @@ describe("VigletAssistant", () => {
     const caption = "governanca published at 14:02."
     const { container } = render(<VigletAssistant caption={caption} />)
 
-    const live = container.querySelector(".sr-only")
-    expect(live).toHaveTextContent(caption)
+    expect(screen.getByRole("status")).toHaveTextContent(caption)
     expect(container.querySelector("[aria-hidden='true']")).toBeTruthy()
   })
 
@@ -186,5 +185,154 @@ describe("VigletAssistant", () => {
         expect(bundle.assistant[leaf], `${locale} is missing ${key}`).toBeTruthy()
       }
     }
+  })
+})
+
+// VDS134 — reports are not chat. A product reporting publishes, failures and
+// arrivals through the dock used to fake them as assistant messages.
+describe("VigletAssistant reports", () => {
+  const AT = new Date("2026-09-12T14:02:00Z")
+
+  function report(overrides: Partial<VigletAssistantReport> = {}): VigletAssistantReport {
+    return { id: "r1", role: "report", tone: "error", text: "Could not publish /q3-results.", at: AT, ...overrides }
+  }
+
+  it("renders a report apart from both chat roles, with its state and its time", () => {
+    const { container } = render(
+      <VigletAssistant
+        defaultOpen
+        onSend={() => {}}
+        messages={[
+          { id: "u", role: "user", text: "publish it" },
+          { id: "a", role: "assistant", text: "Publishing now." },
+          report(),
+        ]}
+      />,
+    )
+
+    const rows = Array.from(screen.getByRole("log").children)
+    expect(rows.map((row) => row.getAttribute("data-kind"))).toEqual(["user", "assistant", "report"])
+
+    const [user, assistant, reported] = rows
+    // What a report says about itself, which neither chat bubble does.
+    expect(reported).toHaveTextContent("assistant.error")
+    expect(reported.querySelector("time")).toHaveAttribute("dateTime", AT.toISOString())
+    expect(reported).toHaveTextContent("assistant.new")
+    for (const bubble of [user, assistant]) {
+      expect(bubble.querySelector("time")).toBeNull()
+      expect(bubble).not.toHaveTextContent("assistant.error")
+    }
+    expect(container.querySelectorAll("[data-kind='report']")).toHaveLength(1)
+  })
+
+  it("offers each action as a named button, and no more than three", async () => {
+    const user = userEvent.setup()
+    const retry = vi.fn()
+    const actions = ["Retry", "Open the page", "Show the log", "A fourth"].map((label) => ({
+      label,
+      onSelect: label === "Retry" ? retry : () => {},
+    }))
+    render(<VigletAssistant defaultOpen messages={[report({ actions })]} />)
+
+    for (const label of ["Retry", "Open the page", "Show the log"]) {
+      expect(screen.getByRole("button", { name: label })).toBeInTheDocument()
+    }
+    expect(screen.queryByRole("button", { name: "A fourth" })).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole("button", { name: "Retry" }))
+    expect(retry).toHaveBeenCalledOnce()
+  })
+
+  it("lists reports in a dock with no chat, and never opens a composer for one", () => {
+    const { rerender } = render(<VigletAssistant messages={[]} />)
+    rerender(<VigletAssistant messages={[report()]} />)
+
+    // A report arriving does not open the dock.
+    expect(screen.getByRole("button", { name: /assistant\.open/ })).toHaveAttribute("aria-expanded", "false")
+
+    rerender(<VigletAssistant defaultOpen open messages={[report()]} />)
+    expect(screen.getByRole("log")).toHaveTextContent("Could not publish /q3-results.")
+    expect(screen.queryByRole("textbox")).not.toBeInTheDocument()
+  })
+
+  it("counts what is unread on the orb, and takes a count from the product", () => {
+    const { rerender, container } = render(
+      <VigletAssistant messages={[report(), report({ id: "r2", read: true }), report({ id: "r3" })]} />,
+    )
+    const orb = screen.getByRole("button", { name: /assistant\.open/ })
+    expect(orb).toHaveAccessibleName("assistant.open, assistant.unreadCount")
+    expect(orb.querySelector("span[aria-hidden='true']")).toHaveTextContent("2")
+
+    rerender(<VigletAssistant unread={7} messages={[report()]} />)
+    expect(container.querySelector("button span[aria-hidden='true']")).toHaveTextContent("7")
+
+    rerender(<VigletAssistant messages={[report({ read: true })]} />)
+    expect(screen.getByRole("button", { name: "assistant.open" })).toBeInTheDocument()
+  })
+
+  it("tells the product what was read when the dock opens, and what was dismissed", async () => {
+    const user = userEvent.setup()
+    const onRead = vi.fn()
+    const onDismiss = vi.fn()
+    render(
+      <VigletAssistant
+        onRead={onRead}
+        onDismiss={onDismiss}
+        messages={[report(), report({ id: "r2", read: true }), report({ id: "r3", tone: "success" })]}
+      />,
+    )
+
+    expect(onRead).not.toHaveBeenCalled()
+    await user.click(screen.getByRole("button", { name: /assistant\.open/ }))
+    expect(onRead.mock.calls).toEqual([["r1"], ["r3"]])
+
+    await user.click(screen.getAllByRole("button", { name: "assistant.dismiss" })[1])
+    expect(onDismiss).toHaveBeenCalledExactlyOnceWith("r2")
+  })
+
+  it("follows the newest unread report's tone and text when the product sets neither", () => {
+    const messages = [
+      report({ tone: "error" }),
+      report({ id: "r2", tone: "success", text: "Published." }),
+      report({ id: "r3", tone: "attention", text: "Already seen.", read: true }),
+    ]
+    const { rerender } = render(<VigletAssistant open={false} messages={messages} />)
+    expect(screen.getByRole("status")).toHaveTextContent("Published.")
+
+    rerender(<VigletAssistant open messages={messages} />)
+    // The header's state label sits under "System state".
+    expect(screen.getByText("assistant.state").nextElementSibling).toHaveTextContent("assistant.success")
+
+    // Set by the product, both win.
+    rerender(<VigletAssistant open state="working" caption={null} messages={messages} />)
+    expect(screen.getByText("assistant.state").nextElementSibling).toHaveTextContent("assistant.working")
+  })
+
+  it("announces a report once: not again on a re-render, and not on opening or closing", async () => {
+    const user = userEvent.setup()
+    const first = report({ text: "Could not publish /q3-results." })
+    const { rerender } = render(<VigletAssistant messages={[first]} />)
+
+    // One live region in the dock, saying the report.
+    expect(document.querySelectorAll("[aria-live]")).toHaveLength(1)
+    const live = screen.getByRole("status")
+    const said = live.firstChild
+    expect(live).toHaveTextContent(first.text)
+
+    // The same report again changes nothing a screen reader would hear.
+    rerender(<VigletAssistant messages={[{ ...first }]} activity={3} />)
+    expect(screen.getByRole("status")).toBe(live)
+    expect(live.firstChild).toBe(said)
+
+    // Opening and closing is not news either.
+    await user.click(screen.getByRole("button", { name: /assistant\.open/ }))
+    await user.click(screen.getByRole("button", { name: "assistant.collapse" }))
+    expect(live).toHaveTextContent(first.text)
+    expect(live.firstChild).toBe(said)
+
+    // A second report is.
+    const second = report({ id: "r2", tone: "success", text: "Published /q3-results." })
+    rerender(<VigletAssistant messages={[first, second]} />)
+    expect(live).toHaveTextContent(second.text)
   })
 })
