@@ -92,7 +92,14 @@ const meta = {
 } satisfies Meta<typeof Form>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+/**
+ * Not `StoryObj<typeof meta>`. `Form` is react-hook-form's `FormProvider`, so
+ * its props are the whole form API — a story cannot supply those as args and
+ * should not: what it shows is a form composed around a real `useForm`. Binding
+ * the stories to the component's props would only demand eighteen fields nobody
+ * reads (VDS119).
+ */
+type Story = StoryObj;
 
 export const Default: Story = {
   render: () => <FormDemo />,

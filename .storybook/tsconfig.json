@@ -1,7 +1,26 @@
 {
+  // VDS119 — the project that type-checks the catalogue.
+  //
+  // `tsconfig.app.json` excludes `src/**/*.stories.*`, `tsconfig.node.json`
+  // covers the configs and `scripts/`, and the stories project runs its files
+  // through Vite, which strips types rather than checking them. So until this
+  // was wired into `pnpm run typecheck` nothing in the repository read the
+  // catalogue, and 49 errors sat in it with every gate green — among them a
+  // `direction` prop `resizable` has not had since v4 and a `description` prop
+  // `BentoTile` never had, both of which simply did nothing on screen.
+  //
+  // `exclude: []` is what undoes the app project's exclusion; the rest of the
+  // settings come from it.
   "extends": "../tsconfig.app.json",
   "compilerOptions": {
     "noEmit": true,
+    // Inherited as `true`, and wrong here: nothing emits a `.d.ts` for a story,
+    // and with them on every `meta` whose component declares its props inline
+    // fails TS4023 for a name a declaration could not have written anyway.
+    "declaration": false,
+    "declarationMap": false,
+    // A story names its args after the props it is demonstrating, and a render
+    // that ignores one is a story about the default. Neither is a defect here.
     "noUnusedLocals": false,
     "noUnusedParameters": false
   },

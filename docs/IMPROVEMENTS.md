@@ -2,30 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-### §VDS119 The catalogue no compiler reads
-
-`tsconfig.app.json` excludes `src/**/*.stories.ts` and `.tsx`. `tsconfig.node.json`
-covers the Vite and Vitest configs and `scripts/`. The root `tsconfig.json` references
-those two. `.storybook/tsconfig.json` exists but no script mentions it.
-`eslint.config.js` sets no `parserOptions.project`, so the lint is not type-aware
-either. The stories project runs the files through Vite, which strips types rather than
-checking them.
-
-So no gate in this repository type-checks the catalogue, and the result is measurable
-rather than theoretical: `tsc -p .storybook/tsconfig.json --noEmit` reports 49 errors
-across 12 story files — a `direction` prop that does not exist on `resizable`, and more
-of the same in `section-card`, `stepper`, `toggle-group`, `drawer`, `form`,
-`form-actions`, `error-boundary` and four bento stories — while `pnpm run typecheck` is
-green.
-
-The catalogue is this package's own first consumer, and it is the one consumer the
-compiler never reads.
-
-Acceptance:
-- A tsc project type-checks the stories and `pnpm run typecheck` includes it.
-- The existing errors are fixed, so the gate starts green.
-- A story passing a prop a component does not declare fails that gate.
-
 ### §VDS120 Two lists free to disagree, again
 
 VDS43 moved `PEER_EXTERNALS` and `EXACT_EXTERNALS` into `scripts/lib/externals.mjs`
@@ -127,3 +103,27 @@ Acceptance:
 - A `dangerouslySetInnerHTML` anywhere under `src/` fails `npm run lint`.
 - The failure names what to do instead, not just the rule.
 - An author who means it can still write one, with a disable line that states why.
+
+### §VDS126 The attribute the handle still asks for
+
+`ResizableHandle` rotates its grip with
+`[&[data-panel-group-direction=vertical]>div]:rotate-90`. Every other orientation rule
+on the same class list reads `data-[panel-group-orientation=vertical]`, which is the
+attribute react-resizable-panels 4 writes. `direction` is what version 3 wrote.
+
+So in a vertical group the handle is the right shape — one pixel tall, full width,
+because those rules use the current attribute — and the grip inside it is still upright,
+pointing the way a horizontal handle drags. It is the one part of the component that
+says which way this thing moves, and it says the wrong thing.
+
+Nobody met it because nothing rendered a vertical group. The catalogue's own `Vertical`
+story passed `direction="vertical"` — the same renamed prop, one layer up — so it
+rendered horizontally, and VDS119 is what made it vertical and made this visible.
+
+`withHandle` is what draws the grip, so a consumer only sees it when it asked for one.
+Turing's editor is the caller that does.
+
+Acceptance:
+- The grip rotates in a vertical group.
+- No selector in `resizable.tsx` names an attribute this version of the library
+  does not write.

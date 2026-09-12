@@ -23,6 +23,9 @@ const meta = {
   args: {
     variant: "blue",
     defaultOpen: true,
+    // Required by the component, and every story below composes its own through
+    // `render`. Declared here so each of them does not have to restate it.
+    children: null,
   },
 } satisfies Meta<typeof SectionCard>;
 

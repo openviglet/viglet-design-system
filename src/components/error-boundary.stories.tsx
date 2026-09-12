@@ -2,7 +2,10 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { ErrorBoundary } from "./error-boundary";
 
-function Exploder({ message = "Something exploded" }: { readonly message?: string }) {
+// `: never` is the point, not decoration — a function whose body only throws
+// infers `void`, which is not a JSX element type, so this could not be rendered
+// as a component under a compiler. Nothing was reading these files (VDS119).
+function Exploder({ message = "Something exploded" }: { readonly message?: string }): never {
   throw new Error(message);
 }
 
@@ -22,6 +25,9 @@ const meta = {
       "Custom fallback received this error",
     ],
   },
+  // Every story below renders its own tree; this is what the type asks for and
+  // what the controls panel shows.
+  args: { children: <p>Nothing has gone wrong.</p> },
 } satisfies Meta<typeof ErrorBoundary>;
 
 export default meta;

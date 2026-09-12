@@ -30,7 +30,12 @@ const meta = {
 } satisfies Meta<typeof BentoEntityShell>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+/**
+ * Not `StoryObj<typeof meta>`. `BentoEntityShell` is generic over the entity and
+ * every story goes through the `shell()` helper below, whose props are checked
+ * as JSX. The bound type would only demand an `args` nothing reads (VDS119).
+ */
+type Story = StoryObj;
 
 const atRest = { "--bento-fade": 0 } as React.CSSProperties;
 

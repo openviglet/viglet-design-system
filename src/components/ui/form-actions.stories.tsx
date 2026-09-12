@@ -14,6 +14,9 @@ const meta = {
       },
     },
   },
+  // Required by the component, and every story composes its own through
+  // `render`. Declared here so each of them does not have to restate it.
+  args: { children: null },
 } satisfies Meta<typeof FormActions>;
 
 export default meta;

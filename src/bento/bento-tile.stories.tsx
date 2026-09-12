@@ -26,7 +26,10 @@ const meta = {
     tone: "blue",
     eyebrow: "Generative AI",
     title: "Language models",
-    description: "Every model this install can reach.",
+    // VDS119 — `children`, not `description`: the tile has no such prop, so
+    // every specimen in this file rendered with no body at all and nothing said
+    // so. The compiler never read this file until now.
+    children: "Every model this install can reach.",
     icon: IconCpu2,
     span: "col-span-2",
     to: "/models",
@@ -50,7 +53,7 @@ export const Featured: Story = {
 };
 
 export const WithoutDescription: Story = {
-  args: { description: undefined },
+  args: { children: undefined },
 };
 
 /** Every tone, so the palette can be read at a glance rather than guessed. */

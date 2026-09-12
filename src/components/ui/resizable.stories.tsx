@@ -18,7 +18,7 @@ type Story = StoryObj<typeof meta>;
 export const Horizontal: Story = {
   render: () => (
     <ResizablePanelGroup
-      direction="horizontal"
+      orientation="horizontal"
       className="h-[300px] w-[500px] rounded-md border"
     >
       <ResizablePanel defaultSize={50}>
@@ -36,19 +36,30 @@ export const Horizontal: Story = {
   ),
 };
 
+/**
+ * VDS119 — this said `direction="vertical"` and rendered horizontally: the prop
+ * was renamed to `orientation` in react-resizable-panels 4, and nothing in this
+ * repository type-checked the catalogue, so the story quietly showed the wrong
+ * thing.
+ *
+ * `overflowHidden` is on each panel because a vertical panel is short enough for
+ * its content to overflow, and a panel that scrolls is a scrollable region with
+ * no way into it from the keyboard — which the axe pass reported the moment this
+ * story started rendering vertically at all.
+ */
 export const Vertical: Story = {
   render: () => (
     <ResizablePanelGroup
-      direction="vertical"
+      orientation="vertical"
       className="h-[300px] w-[500px] rounded-md border"
     >
-      <ResizablePanel defaultSize={40}>
+      <ResizablePanel defaultSize={40} overflowHidden>
         <div className="flex h-full items-center justify-center p-6">
           <span className="font-semibold">Top</span>
         </div>
       </ResizablePanel>
       <ResizableHandle />
-      <ResizablePanel defaultSize={60}>
+      <ResizablePanel defaultSize={60} overflowHidden>
         <div className="flex h-full items-center justify-center p-6">
           <span className="font-semibold">Bottom</span>
         </div>
@@ -60,7 +71,7 @@ export const Vertical: Story = {
 export const ThreePanels: Story = {
   render: () => (
     <ResizablePanelGroup
-      direction="horizontal"
+      orientation="horizontal"
       className="h-[300px] w-[500px] rounded-md border"
     >
       <ResizablePanel defaultSize={25}>
@@ -87,7 +98,7 @@ export const ThreePanels: Story = {
 export const NestedGroups: Story = {
   render: () => (
     <ResizablePanelGroup
-      direction="horizontal"
+      orientation="horizontal"
       className="h-[300px] w-[500px] rounded-md border"
     >
       <ResizablePanel defaultSize={50}>
@@ -97,14 +108,14 @@ export const NestedGroups: Story = {
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel defaultSize={50}>
-        <ResizablePanelGroup direction="vertical">
-          <ResizablePanel defaultSize={50}>
+        <ResizablePanelGroup orientation="vertical">
+          <ResizablePanel defaultSize={50} overflowHidden>
             <div className="flex h-full items-center justify-center p-6">
               <span className="font-semibold">Two</span>
             </div>
           </ResizablePanel>
           <ResizableHandle />
-          <ResizablePanel defaultSize={50}>
+          <ResizablePanel defaultSize={50} overflowHidden>
             <div className="flex h-full items-center justify-center p-6">
               <span className="font-semibold">Three</span>
             </div>

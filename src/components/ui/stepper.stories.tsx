@@ -6,6 +6,9 @@ const meta = {
   title: "UI/Stepper",
   component: Stepper,
   tags: ["autodocs"],
+  // Both are required by the component, and every story composes its own steps
+  // through `render`. Declared here so each of them does not have to restate it.
+  args: { completedSteps: [], children: null },
 } satisfies Meta<typeof Stepper>;
 
 export default meta;

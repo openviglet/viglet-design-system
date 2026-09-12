@@ -31,7 +31,13 @@ const meta = {
 } satisfies Meta<typeof BentoFormHero>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+/**
+ * Not `StoryObj<typeof meta>`. Every story here composes a hero inside a page
+ * rather than driving one through args, so the bound type would demand an
+ * `args` nothing reads. What the compiler checks is the JSX in each `render`,
+ * which it does either way (VDS119).
+ */
+type Story = StoryObj;
 
 export const Hero: Story = {
   render: () => (

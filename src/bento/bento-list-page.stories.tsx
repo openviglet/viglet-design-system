@@ -32,7 +32,13 @@ const meta = {
 } satisfies Meta<typeof BentoListPage>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+/**
+ * Not `StoryObj<typeof meta>`. `BentoListPage` is generic over the entity, and
+ * these stories build a real one through `common` and `render`. The bound type
+ * would ask for an `args` on the default instantiation that no story uses; the
+ * props each story actually passes are checked in the JSX (VDS119).
+ */
+type Story = StoryObj;
 
 const common = {
   tryAgainUrl: "/models",
@@ -105,21 +111,27 @@ export const Customisable: Story = {
   ),
 };
 
-/** The mosaic on its own, for a page that supplies its own hero and chrome. */
+/**
+ * The mosaic on its own, for a page that supplies its own hero and chrome.
+ *
+ * VDS119 — this story used to pass `resolved` and `chip`, which belong to the
+ * internal `StaticGrid` and are not this component's props, and no `items`,
+ * `itemKey` or empty-state text, which are. It rendered whatever that made of
+ * it and nothing read the file.
+ */
 export const TileGrid: Story = {
   render: () => (
     <div className="p-6">
-      <BentoTileGrid
-        resolved={models.map((m, i) => ({
-          item: m,
-          key: m.id,
-          emphasis: i === 0 ? "LARGE" : "MEDIUM",
-        }))}
-        renderTile={common.renderTile}
-        chip="bento-chip bento-tone-blue"
+      <BentoTileGrid<Model>
+        items={models}
+        tryAgainUrl={common.tryAgainUrl}
+        itemKey={common.itemKey}
+        // This one takes no emphasis — the grid without the hero renders every
+        // tile at one size, so the story picks it.
+        renderTile={(m) => common.renderTile(m, "MEDIUM")}
         hideNew
-        newRoute="/models/new"
-        newLabel="New model"
+        emptyTitle={common.emptyTitle}
+        emptyDescription={common.emptyDescription}
       />
     </div>
   ),

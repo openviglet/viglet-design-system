@@ -18,7 +18,12 @@ const meta = {
 } satisfies Meta<typeof DialogDelete>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+/**
+ * Not `StoryObj<typeof meta>`. The dialog is open/closed state, so each story
+ * owns a `useState` and passes the pair itself; there is no `args` a control
+ * panel could drive. The props each story passes are checked in the JSX (VDS119).
+ */
+type Story = StoryObj;
 
 export const Default: Story = {
   render: function Confirming() {

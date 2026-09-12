@@ -80,7 +80,7 @@
     "build": "tsc -b && node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && vite build && node -e \"require('fs').cpSync('src/styles/preset.css','dist/preset.css')\" && node scripts/build-fonts.mjs && node scripts/emit-exports.mjs && node scripts/check-dist.mjs && node scripts/check-exports.mjs && node scripts/check-size.mjs",
     "check:dist": "node scripts/check-dist.mjs",
     "check:size": "node scripts/check-size.mjs",
-    "typecheck": "tsc -b --force",
+    "typecheck": "tsc -b --force && tsc -p .storybook/tsconfig.json --noEmit",
     "lint": "eslint . --max-warnings 0",
     "test": "vitest run",
     "test:watch": "vitest",

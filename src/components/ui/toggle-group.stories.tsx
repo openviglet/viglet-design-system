@@ -14,6 +14,10 @@ const meta = {
   title: "UI/ToggleGroup",
   component: ToggleGroup,
   tags: ["autodocs"],
+  // `type` is the discriminant of the props union and has no default, so the
+  // type asks every story for it. Each one composes its own group through
+  // `render`; this is the shape they are all a variation of.
+  args: { type: "single", children: null },
 } satisfies Meta<typeof ToggleGroup>;
 
 export default meta;

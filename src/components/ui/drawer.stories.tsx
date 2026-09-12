@@ -26,7 +26,13 @@ const meta = {
 } satisfies Meta<typeof Drawer>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+/**
+ * Not `StoryObj<typeof meta>`. `Drawer` is vaul's `Drawer.Root`, whose props
+ * resolve to `never` for Storybook's arg inference, so the bound type asks every
+ * story for an `args` that cannot be written. Each story here is a composition
+ * of the drawer's parts rather than one instance driven by args (VDS119).
+ */
+type Story = StoryObj;
 
 export const Default: Story = {
   render: () => (
