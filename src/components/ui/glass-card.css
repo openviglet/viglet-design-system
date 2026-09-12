@@ -1,16 +1,33 @@
 /* ══════════════════════════════════════════════════════
    GLASS CARD — glassmorphism wrapper
-   Tint driven by --ff-color-rgb (or --glass-card-color-rgb override);
-   falls back to Turing blue.
+
+   The shadow tint is `--glass-card-color`, which `GlassCard` writes from its
+   `color` prop, and `--glass-card-color-dark` from `colorDark`. Both are
+   declared here as well, so the rule that reads them also states what they are
+   when nobody passes one: an inline declaration from the component wins over
+   these, which is what makes the props work at all.
+
+   VDS114 — the light rule used to read `--ff-color-rgb` and the dark one a flat
+   black, so neither prop reached anything and a comment here named a third
+   spelling (`--glass-card-color-rgb`) that nothing set or read. The default
+   below keeps the `FloatingFormulasBg` behaviour that was doing the work: an
+   ancestor's `--ff-color-rgb` still tints the card, it is just no longer the
+   only thing that can.
+
+   `color-mix` rather than `rgba(var(--triple), α)`: the props are documented as
+   a CSS colour, and a colour cannot be spliced into an `rgba()` argument list.
    ══════════════════════════════════════════════════════ */
 
 .vig-glass-card {
+  --glass-card-color: rgb(var(--ff-color-rgb, 37, 99, 235));
+  --glass-card-color-dark: rgb(0, 0, 0);
+
   background: rgba(255, 255, 255, 0.75);
   -webkit-backdrop-filter: blur(20px) saturate(1.4);
   backdrop-filter: blur(20px) saturate(1.4);
   border: 1px solid rgba(255, 255, 255, 0.3);
   box-shadow:
-    0 8px 32px rgba(var(--ff-color-rgb, 37, 99, 235), 0.08),
+    0 8px 32px color-mix(in oklab, var(--glass-card-color) 8%, transparent),
     0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
@@ -18,6 +35,6 @@
   background: rgba(15, 23, 42, 0.7);
   border: 1px solid rgba(148, 163, 184, 0.12);
   box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 8px 32px color-mix(in oklab, var(--glass-card-color-dark) 30%, transparent),
     0 1px 3px rgba(0, 0, 0, 0.2);
 }

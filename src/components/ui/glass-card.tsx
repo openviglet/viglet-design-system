@@ -8,16 +8,21 @@ import "./glass-card.css";
  *
  * Ships with sensible defaults for every visible surface concern (rounded
  * corners, responsive padding) so consumers compose it without restating the
- * same utility classes. Tint is driven by the `--ff-color-rgb` custom
- * property set by {@link FloatingFormulasBg} so the card shadow matches the
- * surrounding palette. Pass any Tailwind override via `className` — the merge
+ * same utility classes. Pass any Tailwind override via `className` — the merge
  * is done with `tailwind-merge` so the last declaration of a conflicting
  * utility (e.g. `p-4` overriding the default `p-6 sm:p-8`) wins.
+ *
+ * The shadow tint follows `color` / `colorDark`. With neither, the light shadow
+ * still takes `--ff-color-rgb` from an ancestor {@link FloatingFormulasBg}, so a
+ * card inside one matches the surrounding palette without being told to.
  */
 export interface GlassCardProps extends HTMLAttributes<HTMLDivElement> {
-  /** Accent color for the shadow tint (CSS `color` or `rgb(...)` value). */
+  /**
+   * Accent colour for the shadow tint — any CSS colour. Also tints the dark
+   * shadow unless `colorDark` says otherwise.
+   */
   color?: string;
-  /** Accent color in dark mode. */
+  /** Accent colour for the shadow tint in dark mode. */
   colorDark?: string;
 }
 

@@ -2,28 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-### §VDS114 The prop the stylesheet ignores
-
-`GlassCard` accepts `color` and `colorDark` and writes them to `--glass-card-color` and
-`--glass-card-color-dark` as inline custom properties. `glass-card.css` has two rules.
-The light one reads `--ff-color-rgb`, inherited from an ancestor `FloatingFormulasBg`.
-The dark one hardcodes a flat black. Neither reads either property the component sets,
-and a comment in the stylesheet names a third spelling, `--glass-card-color-rgb`, that
-nothing sets or reads either.
-
-So both props are inert. The `WithAccentColor` story is pixel-identical to `Default`,
-and the dark shadow can never be tinted by anything at all.
-
-The props carry doc comments promising a tint the stylesheet has no way to produce,
-which is worse than their absence: a product author reads the prop, passes a brand
-colour, sees no change, and has nothing to debug. There is no unit or parity test for
-this component.
-
-Acceptance:
-- The stylesheet reads the properties the component sets, in both schemes — or the props and their doc comments are removed.
-- One spelling of the custom property exists.
-- A test asserts `WithAccentColor` renders differently from `Default`.
-
 ### §VDS115 The search nobody cancels
 
 VDS61 gave the icon picker a monotonic request id so a slow response cannot overwrite a
