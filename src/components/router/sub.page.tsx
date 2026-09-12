@@ -90,9 +90,16 @@ export const SubPage: React.FC<Props> = ({
         >
           <InternalSidebar {...props} />
           <SidebarInset className={`${spacing.inset} md:rounded-xl md:border bg-background md:shadow-sm`}>
-            <main className={`flex flex-1 flex-col ${spacing.main} max-md:[&_.px-6]:px-2`}>
+            {/*
+              VDS125 — a div and not a `main`. `SidebarInset` above is already a
+              `<main>`, so this one made two main landmarks nested in each other
+              on every console entity page, neither of them named. This element
+              is the flex column and the density spacing; the landmark is its
+              parent's job.
+            */}
+            <div className={`flex flex-1 flex-col ${spacing.main} max-md:[&_.px-6]:px-2`}>
               <Outlet context={outletContext} />
-            </main>
+            </div>
           </SidebarInset>
         </SidebarProvider>
       </div>
