@@ -3,7 +3,7 @@
 ## Block A — The gate the design system never had
 
 - 📋 **VDS77** (deps: cloud-frontend and cloud-console declaring react-hook-form) **react-hook-form is a dependency, so a consumer can get a second copy of the one library here carrying a context** — Two consumers declare no react-hook-form and get it from here, so the peer change is theirs first. → §VDS77
-- 📋 **VDS105** (deps: VDS97 ✅) **the NavigationMenu landmark keeps Radix's hardcoded Main, so a screen reader hears English in every product** — The pass VDS97 asked for found one more of its shape, and no gate can see a spoken name this package omits rather than mistypes. → §VDS105
+- 🛠 **VDS105** (deps: VDS97 ✅) **the NavigationMenu landmark keeps Radix's hardcoded Main, so a screen reader hears English in every product** — The pass VDS97 asked for found one more of its shape, and no gate can see a spoken name this package omits rather than mistypes. → §VDS105
 
 ## Block E — The assistant every product shares
 
