@@ -26,7 +26,8 @@
       "openGuide": "Show keyboard shortcuts",
       "navigate": "Move between results",
       "openSelected": "Open the selected area",
-      "dismiss": "Close the palette or a dialog"
+      "dismiss": "Close the palette or a dialog",
+      "or": "or"
     },
     "layout": {
       "customize": "Customize layout",

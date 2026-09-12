@@ -91,6 +91,14 @@ export {
   type BentoCommandPaletteResult,
 } from "./bento-command-palette";
 export { BentoShell, type BentoShellColumn, type BentoShellProps } from "./bento-shell";
+export {
+  BENTO_SHELL_SHORTCUTS,
+  useBentoShellShortcuts,
+  type BentoShellAction,
+  type BentoShellShortcut,
+  type BentoShellShortcutsOptions,
+} from "./bento-shell-shortcuts";
+export { BentoPaletteTrigger, type BentoPaletteTriggerProps } from "./bento-palette-trigger";
 export { BentoShortcutsDialog, type BentoShortcutsDialogProps } from "./bento-shortcuts-dialog";
 export { BentoNavRail, type BentoNavRailProps } from "./bento-nav-rail";
 export { BentoUserMenu, type BentoUserMenuProps } from "./bento-user-menu";

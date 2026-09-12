@@ -4,7 +4,6 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS149** (deps: VDS131 ✅) **each product hand-rolls the palette trigger and its keyboard shortcuts, and the two bindings already differ** — The shortcuts dialog lists the question mark as global, so a product binding the slash instead shows a guide to a dead key and leaves its real shortcut unlisted. → §VDS149
 - 📋 **VDS150** (deps: VDS136 ✅) **192 of 237 exported components carry no doc comment, so find_component can match them only by name and props** — The catalogue takes a purpose from the declaration and invents none, so an agent asking for a job misses every component whose comment was never written. → §VDS150
 - 📋 **VDS153** (deps: VDS143 ✅) **the list page's layout editor disables its buttons while it saves, so the pressed button drops focus** — Save layout, cancel, reset and set-as-default each take disabled={busy}, the pattern VDS143 replaced in the form hero, save bar and entity shell. → §VDS153
 

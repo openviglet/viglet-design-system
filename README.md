@@ -900,11 +900,27 @@ already ranked them by relevance it understands, and a substring match here
 would only undo that. Set `pending` while the query is in flight so the dialog
 says so rather than showing an empty list that is not empty yet.
 
+Bind the shell's keys with `useBentoShellShortcuts` rather than a keydown listener
+of your own. ⌘K on macOS, Ctrl+K elsewhere, or `/` calls `onPalette`, and `?`
+calls `onShortcuts`. A bare key typed into an input, a textarea, a select or an
+editable node is left to the field. `BentoPaletteTrigger` is the header button,
+with the same chord as its hint, and `BentoShortcutsDialog` lists the same set
+(`BENTO_SHELL_SHORTCUTS`), so the guide shows exactly the keys that work:
+
+```tsx
+useBentoShellShortcuts({
+  onPalette: () => setPaletteOpen((open) => !open),
+  onShortcuts: () => setShortcutsOpen((open) => !open),
+});
+
+<BentoShell headerStart={<><ProductMark /><BentoPaletteTrigger onClick={() => setPaletteOpen(true)} /></>}>
+```
+
 "Carries none of it" is measured rather than claimed. `pnpm run build` ends by
 bundling three fixtures through this package's own `exports` map, and fails if a
 bento module, a bento class name or a run of `bento.css`'s selectors reaches a
 consumer that imported only the root entry. `size-budget.json` records what each
-entry costs: today the whole root entry is 91 KB gzipped and `./bento` 30 KB,
+entry costs: today the whole root entry is 91 KB gzipped and `./bento` 31 KB,
 measured with everything the build externalises left out, so the numbers
 describe this package rather than its dependencies. The preset's
 `--vg-bento-tone-*` tokens are deliberately not counted as the layer: they ship

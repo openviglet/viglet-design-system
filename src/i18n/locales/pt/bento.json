@@ -26,7 +26,8 @@
       "openGuide": "Mostrar atalhos de teclado",
       "navigate": "Mover entre os resultados",
       "openSelected": "Abrir a área selecionada",
-      "dismiss": "Fechar a paleta ou um diálogo"
+      "dismiss": "Fechar a paleta ou um diálogo",
+      "or": "ou"
     },
     "layout": {
       "customize": "Personalizar layout",

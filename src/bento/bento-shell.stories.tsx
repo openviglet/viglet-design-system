@@ -10,6 +10,8 @@ import {
 } from "./bento-command-palette";
 import type { BentoNavGroup, BentoNavItem } from "./bento-nav";
 import { BentoNavRail } from "./bento-nav-rail";
+import { BentoPaletteTrigger } from "./bento-palette-trigger";
+import { useBentoShellShortcuts } from "./bento-shell-shortcuts";
 import { BentoShortcutsDialog } from "./bento-shortcuts-dialog";
 import { BentoUserMenu } from "./bento-user-menu";
 import { VigletAssistant } from "@/components/ui/viglet-assistant";
@@ -62,27 +64,36 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 function ShellPage({ column }: Readonly<{ column: BentoShellColumn }>) {
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
+  // The shell's one binding set: ⌘K or / for the palette, ? for the guide.
+  useBentoShellShortcuts({
+    onPalette: () => setPaletteOpen((open) => !open),
+    onShortcuts: () => setShortcutsOpen((open) => !open),
+  });
+
   return (
-    <BentoShell
-      column={column}
-      rail={<BentoNavRail groups={groups} homeRoute="/" homeLabel="Home" />}
-      headerStart={<span className="text-sm font-medium tracking-tight">Product</span>}
-      headerEnd={
-        <button
-          type="button"
-          className="rounded-full border border-border/60 bg-card/60 px-3 py-1.5 text-sm text-muted-foreground"
-        >
-          Search
-        </button>
-      }
-    >
-      <h1 className="text-2xl font-semibold tracking-tight">A page</h1>
-      <p className="mt-2 text-sm text-muted-foreground">
-        The page sets no width, gutter or rhythm. This column is <code>{column}</code>, and
-        every page rendered in it starts and ends on the same line.
-      </p>
-      <div className="bento-glass mt-6 h-40 rounded-3xl" />
-    </BentoShell>
+    <>
+      <BentoShell
+        column={column}
+        rail={<BentoNavRail groups={groups} homeRoute="/" homeLabel="Home" />}
+        headerStart={
+          <>
+            <span className="text-sm font-medium tracking-tight">Product</span>
+            <BentoPaletteTrigger onClick={() => setPaletteOpen(true)} />
+          </>
+        }
+      >
+        <h1 className="text-2xl font-semibold tracking-tight">A page</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          The page sets no width, gutter or rhythm. This column is <code>{column}</code>, and
+          every page rendered in it starts and ends on the same line.
+        </p>
+        <div className="bento-glass mt-6 h-40 rounded-3xl" />
+      </BentoShell>
+      <BentoCommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} items={items} />
+      <BentoShortcutsDialog open={shortcutsOpen} onOpenChange={setShortcutsOpen} />
+    </>
   );
 }
 

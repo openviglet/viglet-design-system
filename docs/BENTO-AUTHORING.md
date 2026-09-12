@@ -34,6 +34,8 @@ when it is given one (§7).
 **The header carries a set, in this order:** the mark and wordmark; a back control where
 the route has a parent; the palette trigger, with the platform's own keyboard hint. On the
 trailing edge: the locale where a second one ships, the ground, and the signed-in user.
+The trigger is `BentoPaletteTrigger`, and `useBentoShellShortcuts` binds the keys it and
+`BentoShortcutsDialog` show, so no product writes a keydown listener for them.
 
 Two things the header is not. It is not a second always-visible nav — the rail is the nav
 and the palette is the mobile one, and a second eats the width the content needs. And it is

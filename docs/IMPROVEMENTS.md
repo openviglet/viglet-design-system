@@ -32,26 +32,6 @@ so rather than leaving it to be rediscovered.
 
 ## Block F — What a consuming CMS needs from the package next
 
-### §VDS149 One binding set for the palette and the guide that lists it
-
-BENTO-AUTHORING puts the palette trigger, with the platform's own key hint, in the
-header's set, and the package ships the palette and the shortcuts dialog but neither the
-trigger nor the binding. So Turing's shell and Shio's each write a platform check for
-the Cmd or Ctrl hint, a button, and a window keydown listener that ignores keys typed
-into a field.
-
-They agree on Cmd+K and on nothing else. Turing binds ? to the shortcuts dialog. Shio
-binds / to the palette and never binds ?, while mounting BentoShortcutsDialog, which
-lists ? as a global shortcut and does not list /. Shio's typing guard counts a select
-and Turing's does not.
-
-Export BentoPaletteTrigger, the button with the hint, and a useBentoShellShortcuts hook
-taking onPalette and onShortcuts, which owns one binding set and one typing guard. The
-dialog reads the same set, so what it lists is what is bound. The tests assert that the
-hook ignores a key typed into an input, a textarea, a select or a contenteditable, and
-that the dialog's rows are the hook's bindings. Whether / belongs in the set is the one
-choice to settle while building it.
-
 ### §VDS150 Purposes the catalogue can read
 
 dist/catalogue.json takes a component's purpose from the doc comment on its own
