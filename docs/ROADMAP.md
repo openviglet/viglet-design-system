@@ -2,7 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-- 🛠 **VDS77** (deps: —) **react-hook-form is a dependency, so a consumer can get a second copy of the one library here carrying a context** — Both consumers now declare it themselves, so the demotion here is the remaining half and no install grows a second copy. → §VDS77
 - 📋 **VDS107** (deps: —) **BadgeColorful renders a consumer's entity name as raw HTML and splices it into a style selector** — Every product's delete dialog passes a name it did not author, so markup in an entity name runs as script. → §VDS107
 - 📋 **VDS108** (deps: —) **Sidebar drops id, data attributes and className on mobile, where its props land on a node that renders nothing** — The desktop branch forwards the same props to a real div, so a test hook or a label works until the viewport narrows. → §VDS108
 - 📋 **VDS109** (deps: —) **A bento dialog's inline translation fallback still names Turing, where the locale bundle no longer does** — The i18n gate reads the compiled bundles only, so the one string a host without the bundle sees is the one unchecked. → §VDS109
