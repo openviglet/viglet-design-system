@@ -2,28 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-### §VDS112 What the barrel forgot to re-export
-
-Six names are exported from their component files, used in the catalogue, and reachable
-from no published subpath. `popover.tsx` exports `PopoverHeader`, `PopoverTitle` and
-`PopoverDescription`, all three demonstrated in `popover.stories.tsx`; `sidebar.tsx`
-exports `useSidebarOptional`, whose doc comment says it exists so a Module Federation
-remote can probe for a provider without throwing; `section-card.tsx` exports
-`colorVariants` and `ColorVariant`. `components/ui/index.ts` re-exports the component
-neighbours of each and stops short of these.
-
-`components/index.ts` is `export * from "./ui"`, so the root barrel inherits the same
-gap, and none of the six appear in `dist/exports.json`.
-
-A product therefore sees a story it cannot reproduce, and the one hook written for a
-multi-remote host — the shape two consumers actually deploy — has to be reimplemented at
-the call site, which is the local copy the non-goals rule out.
-
-Acceptance:
-- All six names are re-exported and appear in `dist/exports.json`.
-- A gate reports any name exported from a component file that no subpath re-exports.
-- That gate runs in `pnpm test`, not only on a release.
-
 ### §VDS113 The class list that is built by hand
 
 `BadgeLocale` builds its class list by splicing `className` into a template literal with

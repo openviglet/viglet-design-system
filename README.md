@@ -523,7 +523,9 @@ Console-era, `@deprecated`, still exported — see [the swap table](#two-eras-an
 
 ### Hooks
 
-`useIsMobile`, `useDateLocale`, `useGridAdapter`, `useSubPageBreadcrumb`, `useAssistantNotifications`
+`useIsMobile`, `useDateLocale`, `useGridAdapter`, `useSubPageBreadcrumb`, `useAssistantNotifications`, `useSidebarOptional`
+
+`useSidebarOptional()` is `useSidebar()` for a component that may not have a `SidebarProvider` above it — it returns `undefined` instead of throwing, which is what a Module Federation remote needs when the host owns the sidebar and the remote only renders into it.
 
 `useGridAdapter(data, config)` tracks each extractor in `config`, not the object holding them, so a `url` builder that closes over a route param or a locale re-maps the rows when it changes. Pass the config inline if you like — keep the extractors themselves stable (a field name, a module-level function, a `useCallback`) and the memo holds.
 

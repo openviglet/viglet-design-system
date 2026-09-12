@@ -2,7 +2,11 @@ export { BlankSlate } from "./blank-slate";
 export { DialogDelete, type VigBlockedByItem } from "./dialog.delete";
 export { GradientButtonLink } from "./gradient-button-link";
 export { GridList, type ItemActionProps as VigGridItemActionProps } from "./grid.list";
-export { InternalSidebar } from "./internal.sidebar";
+export {
+  InternalSidebar,
+  type InternalSidebarCount,
+  type NavMainItem,
+} from "./internal.sidebar";
 export { LoadProvider } from "./loading-provider";
 export { NavMain } from "./nav-main";
 export { NavUser } from "./nav-user";

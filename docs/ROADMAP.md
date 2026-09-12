@@ -2,7 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS112** (deps: —) **Three Popover parts, useSidebarOptional and SectionCard's variant type reach no published subpath** — The catalogue demonstrates parts a consumer cannot import, and the hook written for a remote host is unreachable. → §VDS112
 - 📋 **VDS113** (deps: —) **BadgeLocale writes a literal undefined class, and three components splice className instead of merging it** — Every callsite omitting the optional prop ships the broken class, and an override cannot win a merge that never runs. → §VDS113
 - 📋 **VDS114** (deps: —) **GlassCard's color and colorDark props set custom properties its stylesheet never reads** — The accent story renders identically to the default, so a documented prop and the example proving it are both inert. → §VDS114
 - 📋 **VDS115** (deps: —) **The icon picker's Iconify search runs to completion after the dialog's host unmounts** — Nothing cancels the request, so a route change mid-search still pays for a response nobody reads. → §VDS115

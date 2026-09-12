@@ -13,7 +13,7 @@ export { FormActions } from "./form-actions";
 export { FormItemTwoColumns } from "./form-item-two-columns";
 export { GradientButton, gradientButtonVariants } from "./gradient-button";
 export { IconPickerDialog, type IconPickerDialogProps } from "./icon-picker-dialog";
-export { GradientSwitch } from "./gradient-switch";
+export { GradientSwitch, gradientSwitchVariants } from "./gradient-switch";
 export { FloatingFormulasBg, type FloatingFormulasBgProps } from "./floating-formulas-bg";
 export { GlassCard, type GlassCardProps } from "./glass-card";
 export { PulseRing, type PulseRingProps } from "./pulse-ring";
@@ -22,14 +22,24 @@ export { Input } from "./input";
 export { Label } from "./label";
 export { NavigationMenu, NavigationMenuContent, NavigationMenuIndicator, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, NavigationMenuViewport, navigationMenuTriggerStyle } from "./navigation-menu";
 export { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "./pagination";
-export { Popover, PopoverAnchor, PopoverContent, PopoverTrigger } from "./popover";
+export { Popover, PopoverAnchor, PopoverContent, PopoverDescription, PopoverHeader, PopoverTitle, PopoverTrigger } from "./popover";
 export { Progress } from "./progress";
 export { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "./resizable";
-export { SectionCard } from "./section-card";
+// The compound's own prop types and its colour map. Renamed on the way out
+// because this barrel is flat: `HeaderProps` and `ContentProps` say nothing
+// about which component they belong to once they sit beside eighty other names.
+export {
+  SectionCard,
+  colorVariants as sectionCardColorVariants,
+  type ColorVariant as SectionCardColorVariant,
+  type ContentProps as SectionCardContentProps,
+  type HeaderProps as SectionCardHeaderProps,
+  type StaticHeaderProps as SectionCardStaticHeaderProps,
+} from "./section-card";
 export { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton, SelectSeparator, SelectTrigger, SelectValue } from "./select";
 export { Separator } from "./separator";
 export { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "./sheet";
-export { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupAction, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarInput, SidebarInset, SidebarMenu, SidebarMenuAction, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, SidebarMenuSkeleton, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider, SidebarRail, SidebarSeparator, SidebarTrigger, useSidebar } from "./sidebar";
+export { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupAction, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarInput, SidebarInset, SidebarMenu, SidebarMenuAction, SidebarMenuBadge, SidebarMenuButton, SidebarMenuItem, SidebarMenuSkeleton, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarProvider, SidebarRail, SidebarSeparator, SidebarTrigger, useSidebar, useSidebarOptional } from "./sidebar";
 export { Skeleton } from "./skeleton";
 export { StickySaveBar } from "./sticky-save-bar";
 export type { StickySaveBarProps, StickySaveBarVariant } from "./sticky-save-bar";
