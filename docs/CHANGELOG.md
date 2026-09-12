@@ -172,3 +172,8 @@
   checked **the bridge is opt-in and the state prop still wins** a product that sets state by hand keeps that behaviour; the hook is a separate export a caller chooses.
 - ✅ **VDS103** **nothing compares the mascot with the design it was drawn from, so it shipped the wrong colour and over-faceted** — A browser test compares the mascot's pixels with a reviewed image, and its frame now follows from its props (design recorded in `docs/design/README.md`).
 - ✅ **VDS106** **a mascot defect smaller than 2% of the frame passes the reference-image gate, as the ember layer order does** — The sphere and the ground around it are scored apart, and the ember layer order is gated on the draw order instead (design superseded: the sparks are half a percent of the disc, not several).
+
+## Block F — What a consuming CMS needs from the package next
+
+## Block G — The package knows one chrome
+

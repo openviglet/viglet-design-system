@@ -29,3 +29,368 @@ together, so each one is true when it lands.
 
 Until then schools is the consumer that does not declare it, and this line is what says
 so rather than leaving it to be rediscovered.
+
+## Block F — What a consuming CMS needs from the package next
+
+### §VDS129 The register is short by half, and its guard checks the direction that held
+
+Shio's product source imports the root, ./bento, ./bento.css, ./styles, ./router and,
+from vite.config.ts, ./vite. The register lists three of them and records the chrome as
+console, two Shio blocks after its console moved to bento. The rationale beside that
+entry also carries a wrong premise: it says counting the test directory would inflate
+the figure, when src holds thirty real importers of ./bento.
+
+The guard in consumers.test.ts asserts that every declared entry is a real subpath.
+Nothing asserts the converse, and nothing can from a consumer's side, because
+consumers.json is in neither files nor exports, so a product cannot read the register
+that governs it.
+
+The fix has four parts. Correct Shio's entry and delete the false sentence. Give each
+consumer a sourceRoots field, so product source is declared rather than guessed. Publish
+the register. And ship a viglet-ds-consumer-entries bin that measures a consumer's
+imports and diffs them against its declaration in both directions, exiting non-zero on
+either. The planted case is a consumer declaring one entry and importing two, and the
+bin must name the undeclared one. Shio's SH943 runs that bin inside its own pnpm test.
+
+### §VDS130 A dev loop that reaches nothing and says so in a sentence
+
+use-local.mjs --list prints that no 2026.3 checkout depending on the package was found,
+because the walk resolves .. from the repository root and .. is now the worktree
+container holding only this package. Shio's copy-ds.cmd, which forwards here, fails with
+could not find the design system checkout. The script's own header records the same
+failure one directory level down, where it silently did nothing useful for two version
+bumps.
+
+The assumption is the defect, not the depth: a products root derived from where this
+checkout happens to sit breaks every time the layout moves. So the register becomes the
+source. Each consumer gains a checkout field, resolved first, with the walk kept only as
+a fallback for a consumer not yet declared. Zero consumers found stops being a sentence
+and becomes a non-zero exit that names the register.
+
+The guard is a test asserting every declared checkout either exists on this machine or
+is marked offMachine, so the register cannot rot back into the same silence. It depends
+on DSF1 because the checkout field lives in the register that task publishes, and it
+unblocks every consumer-side trial of the tasks below.
+
+### §VDS131 The shell the contract describes and the barrel does not export
+
+BENTO-AUTHORING section 1 is explicit: main sets the max width, the gutters and the
+vertical rhythm once, and a page sets none of the three. The package ships the rail, the
+header pieces, the palette and the back-to-top control, and no component that composes
+them around a main. The two orphan files beside the other bento components describe that
+component; the only BentoShell token in the barrel is a form-state type.
+
+The consequence is measurable in Shio: six bento pages set their own max-width at three
+different widths, which is exactly the defect the contract says exists only between
+screens.
+
+Export BentoShell, owning the rail gutter, the header slot, main, and the corner. Its
+main takes column as default, narrow or wide, keyed to custom properties in bento.css
+rather than to a Tailwind class each page repeats. Point the orphan story and test at
+it, and render both products' shells from it. The test asserts one main per shell, the
+column variables applied, and that a page rendered inside it sets no width of its own.
+
+### §VDS132 A page lint for the two rules the skill names
+
+The vendored SKILL.md closes on two rules: a page sets no max width, gutters or vertical
+rhythm, and a product claims --primary through the four --vg-primary-*-base inputs
+rather than by setting --vg-primary, which would key the dark ground to the light value.
+Both are stated as prose. The package's two bins check duplicates and vendoring, and
+neither reads a consumer's pages or stylesheets.
+
+Ship viglet-ds-page-lint as the third bin, with the flag vocabulary the other two use
+and the viglet-ds-allow exemption-with-a-reason shape the duplicate gate already has,
+since a gate with no way to say this one is mine is a gate somebody deletes. It reports
+a width, gutter or rhythm utility on a routed page's outermost element, and any write to
+--vg-primary or --vg-primary-foreground outside the preset.
+
+It depends on DSF3 because the first rule has no correct alternative until a shell owns
+the column. The non-vacuity case is required: plant each violation in a fixture consumer
+and assert the bin names file and line, because a lint wired wrong reports success for
+the same reason a clean tree does.
+
+### §VDS133 One corner, two tenants
+
+Measured in source: the dock's collapsed wrapper is fixed bottom-5 right-5 z-50 and the
+back-to-top control is fixed bottom-6 right-6 z-40. Neither knows the other exists. No
+product mounts the dock yet, which is the only reason nobody has seen the button
+disappear; Shio mounting it is the first time both are on one screen, and on every long
+page the scroll control goes under the mascot.
+
+The contract already has the answer in principle: BENTO-AUTHORING gives each region one
+owner, and the corner is a region. So the shell owns it. BentoShell lays out a corner
+stack in which the dock takes the corner and back-to-top sits above it, and both
+components gain an inline or slotted mode the shell uses instead of their own fixed
+positioning. A product that mounts either outside a shell keeps today's behaviour.
+
+The test renders both inside the shell and asserts their bounding boxes do not intersect
+at mobile and desktop widths, and that the caption, which extends left of the orb, does
+not cover the back-to-top control either.
+
+### §VDS134 Reports are not chat
+
+VigletAssistantMessage has role user or assistant, a text and one optional action. The
+dock's own design says it is also a place the system reports from, and
+useAssistantNotifications lifts toast titles into the caption. But once a product
+reports through the dock rather than beside it, which is what replacing notifications
+means, every report needs to survive the caption: a list of what happened, when, whether
+it was read, and what to do about it.
+
+Today a product can only fake that by inventing assistant messages, which puts the
+system's words in the mascot's mouth and makes an agent's reply indistinguishable from a
+publish receipt.
+
+Add a report kind beside the two chat roles, carrying a tone that maps onto the avatar's
+five states, a timestamp, a read flag, and an actions array of up to three. Add onRead
+and onDismiss callbacks, so the product owns persistence the way it owns messages. A
+report never opens the composer. unread becomes a count. The tests assert that a report
+renders distinctly from both chat roles, that each action is a named button, and that
+the aria-live caption announces a report once.
+
+### §VDS135 The package as a Claude Code plugin
+
+page-reference.mjs argues for copying: a contract kept in another repository is read
+after the fifth screen, so the surfaces are written into the consumer where a session
+trips over them. That argument holds for the artboards, which a consumer wants on disk.
+It is weaker for the skill, which a plugin delivers into every session by name, updates
+when the plugin does, and leaves no second copy to drift.
+
+Ship .claude-plugin/plugin.json and a marketplace entry carrying the viglet-ds-pages
+skill, a check command that runs the three bins against the working tree, and a
+PreToolUse hook that runs the duplicate check against a component file as it is written,
+which is when the instruction is cheapest to follow. Declare a supported package range,
+because a plugin release train and an npm release train drift, and page-reference
+already refuses to write when the vendored copy is ahead.
+
+Shio's claude-plugin directory is the template, including its test asserting every path
+in every manifest exists. Page-reference keeps vendoring the artboards and stops
+vendoring the skill when the plugin is enabled.
+
+### §VDS136 A catalogue an agent can ask
+
+An agent building a Shio screen today decides between BentoPanel and
+AdaptiveSectionCard, or between the dock and a toast, by reading dist type declarations
+and the stories. exports.json tells it a name exists and nothing about what it is for,
+what it must not be used for, or which contract rule governs it.
+
+The plugin from DSF7 wires an MCP server generated from the installed dist, never
+hand-written. Tools stay few because a tool list is paid on every turn: find a component
+by job, and read one component's props, rules and example. The bulk text, the authoring
+contract, the boundary and the token reference, is exposed as resources rather than
+tools.
+
+The token case must be made honestly or not at all, since this is only a win if the
+vendored skill shrinks to a pointer. So the task lands with a budget file in the shape
+Shio uses, measuring the tool list, the per-call cost of a lookup, and the skill it
+replaces. A generation test fails when an exported component has no catalogue entry, so
+the catalogue cannot fall behind the barrel.
+
+### §VDS137 Contrast measured where a product re-keys
+
+BENTO-AUTHORING tells a product to claim --primary through the four base inputs and
+requires the solid fill to hold 4.5:1 on both grounds. The contrast gate measures the
+preset's own pairs, found by a naming convention. A consumer's override is never
+measured, and the accent family does not follow the convention the gate pairs by.
+
+Shio shows why it matters: its accent is an orange claimed at :root, and the analysis
+measured it near 3.6:1 as text and its primary button far lower on the dark ground. The
+lints that exist in Shio assert that a token is set, not what ratio it reaches.
+
+Generalise the gate into an exported measurePairs that takes a stylesheet and a ground,
+resolves the custom properties the way the preset does, and returns every named pair
+with its ratio. Add the accent family to the pairs it knows. Ship it through page-lint's
+--contrast flag so a consumer runs it against its own override. The planted case is an
+override one step too light, which must fail naming the pair and both grounds.
+
+### §VDS138 A data table the contract can govern
+
+The list shape the contract names is BentoListPage with a renderTile, which fits a dozen
+sites or post types and not a folder of four thousand posts. Shio's content browser,
+trash, static files, review queue and admin lists render their own tables, and none of
+them shares virtualization, column choice, sorting, range selection or the keyboard
+rules section 6 requires.
+
+Export BentoDataTable over the table library both consoles already depend on:
+virtualized rows, a column picker whose layout is a prop plus a persist callback the way
+BentoListPage takes its layout, sortable headers announcing their sort, row selection
+with shift-click and shift-arrow ranges, a selection action bar, and roving focus so a
+row is reachable and actionable without a mouse. Row actions are a menu with named
+items, never hover-only buttons.
+
+It holds no data and no product vocabulary; the product passes rows, columns and
+actions. Tests assert keyboard range selection, that only the visible window is mounted
+at ten thousand rows, and that every row action is reachable by keyboard and named for a
+screen reader.
+
+### §VDS139 Filters, drawn once
+
+A top-tier content list is filtered more than it is scrolled. Shio's planned query
+vocabulary lets a curator ask for drafts of one type, in one locale, changed this week
+by an agent, and the same questions recur in the review queue, the media library and the
+activity trail. The package has a search input and nothing that renders a structured
+filter, a removable chip or a saved view.
+
+Export BentoFilterBar: a free-text field, a set of typed facets the product declares,
+each rendered as a menu of choices or a date range, the active filters as removable
+chips, and a clear-all. It takes a value and an onChange and owns no state, so the
+product can mirror it into the URL, which is what makes a filtered view deep-linkable.
+Saved views are a slot, not a store.
+
+It depends on DSF10 because the table's selection must clear when a filter changes the
+row set. Tests assert that every chip is a named, removable button, that facets are
+keyboard operable, and that the bar emits one change per user action rather than one per
+keystroke.
+
+### §VDS140 One diff for every comparison a curator makes
+
+Shio's round adds revision history with rollback, a review that shows what an agent
+changed field by field, and a translation workspace comparing source and target. All
+three put two versions of structured content side by side, and review of a created page
+has to render the whole thing as additions rather than showing nothing.
+
+Export BentoDiff, taking two values and a field schema and rendering a field-level
+comparison: unchanged fields collapsed, text diffed by word, rich text diffed on its
+rendered blocks rather than its markup, and a created or deleted side rendered as all
+additions or all removals. Pair it with BentoVersionRail, a vertical list of revisions
+with author, actor kind, a human or an agent, and time, from which two are chosen for
+comparison.
+
+Neither fetches anything. Tests assert the created-page case renders content rather than
+an empty panel, that a change is announced by text and not only by colour, and that the
+rail's selection is keyboard operable.
+
+### §VDS141 The shell owns the region and the way past the rail
+
+VDS125 fixed SubPage nesting a main inside SidebarInset's own, which was the console
+era's form of this problem. The bento era has the opposite one: nothing emits a main at
+all, so each product decides where the landmark goes, and Shio's analysis found a main
+on three of its forty-seven pages and no skip link anywhere. Past a fixed rail and a
+header carrying a palette trigger, a keyboard reader tabs through every chrome control
+on every navigation.
+
+BentoShell from DSF3 renders exactly one main, labelled, and a skip link as its first
+focusable element, visible on focus, that moves focus into main. On route change the
+shell moves focus to the page's h1 and announces the title, which is what a single-page
+app owes a screen reader and what no page should implement for itself.
+
+BentoEmptyState's title renders as a heading at the level its context declares, because
+a styled div in one chrome and a heading in the other is a skipped level inside a shared
+component. Tests assert one main, the skip link's target, and focus on navigation.
+
+### §VDS142 A console verb with a name
+
+Shio's first design law says every capability lands on the agent surface before the
+console, and its conformance tests classify manifest features and mutating paths. They
+cannot see a console action, because an action is a menu item with a label key and an
+onSelect closure. The agent side names every verb: an op on shio_write, a tool, a batch
+operation.
+
+BentoActionsMenuItem and the entity shell's action slots gain a required id, typed as a
+string the product declares, and render it as a data attribute. The package attaches no
+meaning to it; it only guarantees that every action reaching the DOM carries a stable
+name.
+
+That is enough for a consumer to build the census: Shio can walk its declared console
+actions and assert each id maps to an agent op or a classified exception, the same
+Reason-with-a-falsifier shape its two conformance gates use. The change is breaking for
+consumers that pass no id, so it ships with a codemod-free deprecation path: a missing
+id warns in development for one release, then fails type-checking.
+
+### §VDS143 Busy is not disabled
+
+The package's buttons and the entity shell's save controls mark a pending action by
+setting disabled. A disabled element leaves the tab order, so focus falls back to the
+document body the instant a keyboard user presses Save, and the outcome, now reported
+through a toast or the assistant's caption, is announced to someone whose place on the
+page is gone.
+
+The fix belongs here rather than in each product: while loading, a control sets
+aria-busy and aria-disabled, stays focusable, ignores activation, and shows its spinner.
+Only a control that is genuinely unavailable uses disabled. BentoFormHero,
+BentoScrollSaveBar, BentoEntityShell and the base Button take a loading prop that
+applies this, so no consumer has to know the distinction.
+
+The test tabs to Save, activates it, and asserts that document.activeElement is still
+the button while the promise is pending and after it settles, and that a second
+activation during loading does not call the handler twice.
+
+## Block G — The package knows one chrome
+
+### §VDS144 A census for the cutover the non-goal waits for
+
+Two standing non-goals protect the console chrome: do not make bento the only chrome
+this package knows, and do not remove the console-era exports before every console cuts
+over. The first names a reason that is spent, Shio migrating behind a parallel route,
+which finished. The second is sound, and uncheckable: every console cuts over is a
+condition nobody can observe, because the chrome field in consumers.json is typed by
+hand.
+
+Measured over source, excluding installed copies: Shio renders no console chrome and is
+declared console; Dumont imports SectionCardChromeProvider 64 times, GridList 48,
+SubPageHeader 37 and useSectionChrome 24 while also importing ./bento in 44 files; the
+cloud checkout imports no console-era component at all.
+
+So the chrome field becomes measured. A census reads each consumer's declared
+sourceRoots through its checkout, counts imports of the console-era exports, and fails
+when a consumer declared bento imports any, or one declared console imports none. It
+prints the per-consumer count on green. Every removal task below depends on this reading
+zero consoles, which turns the non-goal from a promise into a gate.
+
+### §VDS145 The default belongs to the chrome that is staying
+
+bento-section-chrome.tsx declares SectionChrome as console or bento and creates its
+context with console as the default. A consumer that has finished migrating pays for
+that on every route: Shio's App.tsx wraps about twenty-five route elements in
+SectionCardChromeProvider chrome=bento, and its EmptyState documents that a component
+rendered under no provider, on a login, setup or not-found page, concludes there is a
+console chrome to render into.
+
+The cost of the default should fall on the product that still needs the old chrome, and
+it would fall once rather than per route. Flip the default to bento. A console consumer
+sets chrome=console at its root in one line; the census from DSG1 names exactly which
+consumers that is, so the release note can say it instead of hoping.
+
+This is a breaking change for those consumers and ships as one: the changelog names the
+line to add, and a test asserts that a component under no provider renders bento. It is
+also the step that lets a bento consumer delete its wrappers before the switch itself is
+gone.
+
+### §VDS146 Removing the switch, and the non-goal that kept it
+
+The chrome switch was the right tool for a migration: one component rendering two looks
+from one set of fields, so a page could move between shells without its form being
+rewritten. With the migration over in every consumer the census reads, the switch has no
+second value to choose. What stays is SectionChrome, SectionCardChromeProvider,
+useSectionChrome, the console branch inside AdaptiveSectionCard and BentoFormSection,
+and the tests asserting both halves.
+
+Dead branches in a shared package are not harmless. A new component copying the adapter
+pattern inherits a chrome parameter that means nothing, and a consumer reading the
+barrel learns there are two chromes when there is one.
+
+This task lands only when DSG1 reads zero console consumers, which in today's numbers
+means after Dumont's own cutover. It removes the type, the provider, the hook and every
+console branch, keeps AdaptiveSectionCard only if it still differs from
+BentoFormSection, and drops the non-goal about bento being the only chrome. The
+consumers.json chrome vocabulary loses the console value in the same commit, so the
+census cannot be satisfied by a declaration nobody measured.
+
+### §VDS147 The console-era exports, retired
+
+src/components/router still carries the console era's page vocabulary: PageHeader,
+SubPage, SubPageHeader, StickyPageHeader, GridList, InternalSidebar, NavMain, NavUser,
+Page, PageContent and BlankSlate. They were deprecated rather than removed because they
+rendered live screens in every console, and the non-goal about console-era exports holds
+removal until every console cuts over.
+
+With DSG1's census as the condition and DSG3's switch gone, that condition is finally a
+number rather than a belief. Remove the components, their stories and tests, and their
+entries from the published exports, and let the size and exports gates record the entry
+shrinking. Anything still worth keeping from them, a sticky title or a blank slate, has
+a bento counterpart or becomes one first as its own line, per the non-goal against
+redesigning a component while moving it.
+
+The assertion is the exports gate itself: none of the eleven names resolves from any
+published subpath, and the census, run once more, still reads zero. The standing
+non-goal is then closed rather than edited, with the census recorded as what satisfied
+it.
