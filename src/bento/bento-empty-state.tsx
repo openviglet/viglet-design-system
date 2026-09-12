@@ -21,6 +21,13 @@ export interface BentoEmptyStateProps {
    * empty cell inside a mosaic (see the list-page `EmptyHintTile`).
    */
   align?: "center" | "start";
+  /**
+   * The title's heading level, one below the heading the empty state sits under:
+   * 2 under a page's hero, 3 inside a section. It is a heading in every chrome,
+   * since a styled div in one and a heading in another is a skipped level inside
+   * a shared component.
+   */
+  titleLevel?: 2 | 3 | 4;
   className?: string;
 }
 
@@ -42,10 +49,12 @@ export function BentoEmptyState({
   description,
   action,
   align = "center",
+  titleLevel = 2,
   className,
 }: Readonly<BentoEmptyStateProps>) {
   const chip = bentoChipClass(tone);
   const centered = align === "center";
+  const Title = `h${titleLevel}` as const;
   return (
     <div
       className={cn(
@@ -59,7 +68,7 @@ export function BentoEmptyState({
       >
         <Icon size={24} />
       </span>
-      <div className="text-lg font-semibold tracking-tight">{title}</div>
+      <Title className="m-0 text-lg font-semibold tracking-tight">{title}</Title>
       {description && (
         <p className={cn("max-w-md text-sm text-muted-foreground", centered && "mx-auto")}>
           {description}

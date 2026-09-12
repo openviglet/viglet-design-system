@@ -189,6 +189,7 @@
 - ✅ **VDS138** **the layer offers no virtualized, keyboard-operable data table, so consoles hand-roll each list** — BentoDataTable mounts only the visible rows, sorts from headers that announce it, selects ranges from the keyboard or a click, and names every row action.
 - ✅ **VDS139** **the layer has no filter bar or filter chips, so each product composes its own query row** — BentoFilterBar renders declared facets and removable named chips with one change per action, and a table's selectionScope clears a stale selection.
 - ✅ **VDS140** **three planned console surfaces need the same diff and version rail, and the layer offers neither** — The diff and the version rail compare two versions field by field, render a created side as additions, name each change in words, and pick by keyboard.
+- ✅ **VDS141** **no component in the layer owns a main landmark or a skip link** — BentoShell renders one labelled main and a skip link, moves focus to the new page's h1 and announces it on navigation, and the empty state's title is a heading.
 
 ## Block G — The package knows one chrome
 

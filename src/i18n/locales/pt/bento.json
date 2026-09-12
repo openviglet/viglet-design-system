@@ -46,6 +46,10 @@
     "tour": {
       "replay": "Fazer o tour"
     },
+    "shell": {
+      "skip": "Pular para o conteúdo",
+      "main": "Conteúdo principal"
+    },
     "diff": {
       "added": "Adicionado",
       "removed": "Removido",

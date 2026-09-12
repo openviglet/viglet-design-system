@@ -1,4 +1,6 @@
-import type { ReactNode } from "react";
+import { type ReactNode, type RefObject, useEffect, useId, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { useInRouterContext, useLocation } from "react-router-dom";
 
 import { CornerSlotContext } from "@/lib/corner-slot";
 import { cn } from "@/lib/utils";
@@ -66,6 +68,11 @@ export function BentoShell({
   backToTop = true,
   children,
 }: Readonly<BentoShellProps>) {
+  const { t } = useTranslation();
+  const inRouter = useInRouterContext();
+  const mainId = useId();
+  const main = useRef<HTMLElement>(null);
+  const announcer = useRef<HTMLSpanElement>(null);
   const full = column === "full";
   const header = headerStart != null || headerEnd != null;
   const corner = backToTop || dock != null;
@@ -82,6 +89,23 @@ export function BentoShell({
         full ? "flex h-svh flex-col overflow-hidden" : "min-h-svh",
       )}
     >
+      {/*
+        VDS141 — the first thing a keyboard reaches, so a reader skips the rail
+        and every header control on every page. Hidden until it has focus.
+      */}
+      <a
+        href={`#${mainId}`}
+        onClick={(event) => {
+          event.preventDefault();
+          main.current?.focus();
+        }}
+        className="sr-only rounded-full border border-border/60 bg-card px-4 py-2 text-sm shadow-lg focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60]"
+      >
+        {t("bento.shell.skip", { defaultValue: "Skip to content" })}
+      </a>
+      <span ref={announcer} role="status" aria-live="polite" className="sr-only" />
+      {inRouter && <RouteFocus main={main} announcer={announcer} />}
+
       {rail}
 
       {header && (
@@ -91,7 +115,14 @@ export function BentoShell({
         </header>
       )}
 
-      <main data-column={column} className="bento-shell-main">
+      <main
+        ref={main}
+        id={mainId}
+        tabIndex={-1}
+        aria-label={t("bento.shell.main", { defaultValue: "Main content" })}
+        data-column={column}
+        className="bento-shell-main"
+      >
         {children}
       </main>
 
@@ -115,4 +146,51 @@ export function BentoShell({
       )}
     </div>
   );
+}
+
+/**
+ * VDS141 — what a single-page app owes a screen reader on navigation, done once.
+ *
+ * A route change swaps the page without a load, so nothing tells a screen reader
+ * that anything happened and focus stays on the link that was pressed, inside a
+ * page that is gone. This moves focus to the new page's h1 and says its title,
+ * which no page should implement for itself.
+ *
+ * The heading may arrive a moment after the path (a lazy route, a query), so it
+ * is looked for for up to a second before focus settles on main instead. The
+ * first path is the page the reader opened, and moves nothing: a load that took
+ * focus away from the browser's own place would be the opposite of the fix.
+ */
+function RouteFocus({
+  main,
+  announcer,
+}: Readonly<{ main: RefObject<HTMLElement | null>; announcer: RefObject<HTMLSpanElement | null> }>) {
+  const { pathname } = useLocation();
+  const previous = useRef(pathname);
+
+  useEffect(() => {
+    // Compared with the last path rather than flagged as a first run, so a
+    // development double mount still moves nothing on load.
+    if (previous.current === pathname) return;
+    previous.current = pathname;
+
+    let tries = 0;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const land = () => {
+      const heading = main.current?.querySelector<HTMLElement>("h1") ?? null;
+      if (!heading && tries++ < 20) {
+        timer = setTimeout(land, 50);
+        return;
+      }
+      if (heading && !heading.hasAttribute("tabindex")) heading.setAttribute("tabindex", "-1");
+      (heading ?? main.current)?.focus();
+      // Written to the live region directly: an announcement is not state the
+      // shell renders from.
+      if (announcer.current) announcer.current.textContent = heading?.textContent?.trim() || document.title;
+    };
+    land();
+    return () => clearTimeout(timer);
+  }, [pathname, main, announcer]);
+
+  return null;
 }

@@ -4,7 +4,6 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS141** (deps: VDS131 ✅) **no component in the layer owns a main landmark or a skip link** — The contract gives the reading column to the shell, yet a consumer composing its own main decides landmarks page by page, and none offers a skip link. → §VDS141
 - 📋 **VDS142** (deps: —) **an actions-menu item takes no id, so no lint can match a console verb to an agent verb** — Every console action is an anonymous onSelect while the agent's verbs are named strings, so a new console action with no agent equivalent is invisible to any census. → §VDS142
 - 📋 **VDS143** (deps: —) **a button that is loading sets disabled and drops the focus of the control just pressed** — Keyboard and screen-reader users lose their place on every save, because a disabled button leaves the tab order at the moment the result is announced. → §VDS143
 - 📋 **VDS149** (deps: VDS131 ✅) **each product hand-rolls the palette trigger and its keyboard shortcuts, and the two bindings already differ** — The shortcuts dialog lists the question mark as global, so a product binding the slash instead shows a guide to a dead key and leaves its real shortcut unlisted. → §VDS149

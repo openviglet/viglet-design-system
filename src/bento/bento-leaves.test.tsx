@@ -191,6 +191,17 @@ describe("BentoEmptyState", () => {
     expect(screen.getByText("Nothing here")).toBeInTheDocument()
     expect(screen.getByRole("button", { name: "Create" })).toBeInTheDocument()
   })
+
+  // VDS141 — a styled div in one chrome and a heading in another is a skipped
+  // level inside a shared component, so the title is a heading everywhere.
+  it("renders its title as a heading, at the level its context declares", () => {
+    const { unmount } = draw(<BentoEmptyState title="Nothing here" />)
+    expect(screen.getByRole("heading", { level: 2, name: "Nothing here" })).toBeInTheDocument()
+    unmount()
+
+    draw(<BentoEmptyState title="No samples" titleLevel={3} />)
+    expect(screen.getByRole("heading", { level: 3, name: "No samples" })).toBeInTheDocument()
+  })
 })
 
 describe("BentoStatusMarker", () => {

@@ -1,12 +1,12 @@
 import { readFileSync } from "node:fs"
 import { join, resolve } from "node:path"
-import { render, screen, within } from "@testing-library/react"
+import { render, screen, waitFor, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { IconCpu2, IconSearch } from "@tabler/icons-react"
 import i18next from "i18next"
 import type { ReactElement } from "react"
 import { I18nextProvider, initReactI18next } from "react-i18next"
-import { MemoryRouter } from "react-router-dom"
+import { Link, MemoryRouter, Route, Routes } from "react-router-dom"
 import { beforeAll, describe, expect, it, vi } from "vitest"
 
 import { VigletAssistant } from "@/components/ui/viglet-assistant"
@@ -311,6 +311,75 @@ describe("BentoShell", () => {
     expect(
       screen.getByRole("button", { name: /assistant\.open|open/i }).parentElement!.parentElement!,
     ).toHaveClass("fixed")
+  })
+})
+
+// VDS141 — the landmark, the way past the rail, and focus on navigation, owned
+// by the shell so no page implements them for itself.
+describe("BentoShell's landmarks and focus", () => {
+  it("renders one labelled main, and a skip link as the first thing a keyboard reaches", async () => {
+    const user = userEvent.setup()
+    draw(
+      <BentoShell rail={<BentoNavRail groups={groups} homeRoute="/bento" homeLabel="Home" />} headerEnd={<button type="button">Account</button>}>
+        <h1>Page</h1>
+      </BentoShell>,
+    )
+
+    const mains = screen.getAllByRole("main")
+    expect(mains).toHaveLength(1)
+    expect(mains[0]).toHaveAccessibleName(/main/i)
+
+    await user.tab()
+    const skip = screen.getByRole("link", { name: /skip/i })
+    expect(skip).toHaveFocus()
+    expect(skip).toHaveAttribute("href", `#${mains[0].id}`)
+
+    await user.keyboard("{Enter}")
+    expect(mains[0]).toHaveFocus()
+  })
+
+  it("moves focus to the new page's heading and says its title on navigation, and not on load", async () => {
+    const user = userEvent.setup()
+    render(
+      <I18nextProvider i18n={i18next}>
+        <MemoryRouter initialEntries={["/one"]}>
+          <BentoShell>
+            <Routes>
+              <Route path="/one" element={<><h1>First page</h1><Link to="/two">Next</Link></>} />
+              <Route path="/two" element={<h1>Second page</h1>} />
+            </Routes>
+          </BentoShell>
+        </MemoryRouter>
+      </I18nextProvider>,
+    )
+
+    // Opening a page takes nothing from where the browser put focus.
+    expect(document.body).toHaveFocus()
+
+    await user.click(screen.getByRole("link", { name: "Next" }))
+    const heading = await screen.findByRole("heading", { name: "Second page" })
+    await waitFor(() => expect(heading).toHaveFocus())
+    const statuses = screen.getAllByRole("status")
+    expect(statuses.some((s) => s.textContent === "Second page")).toBe(true)
+  })
+
+  it("lands on main when the new page has no h1", async () => {
+    const user = userEvent.setup()
+    render(
+      <I18nextProvider i18n={i18next}>
+        <MemoryRouter initialEntries={["/one"]}>
+          <BentoShell backToTop={false}>
+            <Routes>
+              <Route path="/one" element={<Link to="/two">Next</Link>} />
+              <Route path="/two" element={<p>No heading here</p>} />
+            </Routes>
+          </BentoShell>
+        </MemoryRouter>
+      </I18nextProvider>,
+    )
+
+    await user.click(screen.getByRole("link", { name: "Next" }))
+    await waitFor(() => expect(screen.getByRole("main")).toHaveFocus(), { timeout: 2000 })
   })
 })
 

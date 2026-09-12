@@ -238,7 +238,13 @@ push, and a violation fails the build.
   `{boolean}` expression is a lint failure.
 - **Headings increase by one.** The hero is `h1`, so a section under it is `h2`
   — which is what `BentoFormSection` renders by default. A repeated label, like
-  the sticky bar's title, is not a heading at all.
+  the sticky bar's title, is not a heading at all. `BentoEmptyState`'s title is an
+  `h2` too; pass `titleLevel={3}` when it sits inside a section.
+- **Landmarks and focus are the shell's.** `BentoShell` renders the one `main`,
+  labelled, and a skip link as the first thing a keyboard reaches. On a route
+  change it moves focus to the new page's `h1` and announces it, so give every
+  page exactly one `h1` (the hero is one) and never manage focus on navigation
+  yourself.
 - **Contrast holds at 4.5:1**, including text on a tinted surface. Tinted pills
   need the darker text token in light mode.
 - **Reduced motion**: every animation in `bento.css` is turned off under

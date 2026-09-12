@@ -32,24 +32,6 @@ so rather than leaving it to be rediscovered.
 
 ## Block F — What a consuming CMS needs from the package next
 
-### §VDS141 The shell owns the region and the way past the rail
-
-VDS125 fixed SubPage nesting a main inside SidebarInset's own, which was the console
-era's form of this problem. The bento era has the opposite one: nothing emits a main at
-all, so each product decides where the landmark goes, and Shio's analysis found a main
-on three of its forty-seven pages and no skip link anywhere. Past a fixed rail and a
-header carrying a palette trigger, a keyboard reader tabs through every chrome control
-on every navigation.
-
-BentoShell from DSF3 renders exactly one main, labelled, and a skip link as its first
-focusable element, visible on focus, that moves focus into main. On route change the
-shell moves focus to the page's h1 and announces the title, which is what a single-page
-app owes a screen reader and what no page should implement for itself.
-
-BentoEmptyState's title renders as a heading at the level its context declares, because
-a styled div in one chrome and a heading in the other is a skipped level inside a shared
-component. Tests assert one main, the skip link's target, and focus on navigation.
-
 ### §VDS142 A console verb with a name
 
 Shio's first design law says every capability lands on the agent surface before the
