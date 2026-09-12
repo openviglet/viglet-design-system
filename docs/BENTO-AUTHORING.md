@@ -15,8 +15,21 @@ or by the product passing a prop. Almost all of the divergence between two produ
 from this layer is an argument about that ownership rather than about a component.
 [docs/reference/page-anatomy.dc.html](reference/page-anatomy.dc.html) draws it.
 
-**The nav is the rail** — fixed, one width, desktop only, with its gutter reserved by
-`bento-rail-gutter` on whatever wraps the routed page (§7).
+**`BentoShell` is the shell.** Pass it the rail, the header's two edges and the routed
+page; it owns the rest of this section.
+
+```tsx
+<BentoShell
+  rail={<BentoNavRail groups={groups} homeRoute={ROUTES.HOME} />}
+  headerStart={<ProductMark />}
+  headerEnd={<BentoUserMenu accountRoute={ROUTES.ACCOUNT} logoutUrl={ROUTES.LOGOUT} />}
+>
+  <Outlet />
+</BentoShell>
+```
+
+**The nav is the rail** — fixed, one width, desktop only. The shell reserves its gutter
+when it is given one (§7).
 
 **The header carries a set, in this order:** the mark and wordmark; a back control where
 the route has a parent; the palette trigger, with the platform's own keyboard hint. On the
@@ -33,6 +46,12 @@ vertical rhythm once, so every page begins and ends on the same line; a page set
 the three. A narrower column for a single-question form is a variant the shell offers by
 name, not a class each page repeats. The moment pages set their own they disagree, and the
 defect exists only *between* screens — which is why nobody reviewing one of them sees it.
+
+`column` names the variant: `default` for every page, `narrow` for a single-question
+form, `wide` for a table or a board, and `full` for a tool that owns the viewport, such as
+a chat, which fills the width and height and scrolls inside itself. The route decides the
+variant and passes it to the shell; the page never does. Each width is a custom property
+(`--bento-column-default`, `-narrow`, `-wide`), so a product re-keys one once.
 
 **A page may own an aside**, inside that column and scrolling with it: filters, a contents
 list, a conversation. That is not the console era's sidebar, which collapses, remembers its
@@ -213,10 +232,10 @@ push, and a violation fails the build.
   tiles and `row-span-2` for a featured one. **Keep spans in multiples of two**
   so tiles reflow cleanly at every breakpoint — this is what keeps two consoles'
   grids aligned.
-- The nav rail is desktop-only. Reserve its gutter with `bento-rail-gutter` on
-  whatever wraps the routed page. On mobile, navigation is the header's command
-  trigger and the global shortcut; do not add a second always-visible nav that
-  eats mobile width.
+- The nav rail is desktop-only. `BentoShell` reserves its gutter; a shell that is
+  still a product's own puts `bento-rail-gutter` on whatever wraps the routed page.
+  On mobile, navigation is the header's command trigger and the global shortcut;
+  do not add a second always-visible nav that eats mobile width.
 - There is **no sidebar provider**, and no context between the shell's pieces.
   The console era needs one because its sidebar collapses, remembers and pushes
   content; the rail is fixed, one width, and hidden below `md`. That is about the

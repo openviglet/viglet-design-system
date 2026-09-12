@@ -178,6 +178,7 @@
 
 - ✅ **VDS129** **consumers.json declares three of Shio's six entries and still records its chrome as console** — consumers.json ships with each consumer's sourceRoots, and viglet-ds-consumer-entries fails a consumer whose imports and declared entries differ either way (design recorded in `consumers.json`).
 - ✅ **VDS130** **use:local finds no consumer, because the walk up from this checkout now reaches a worktree container** — use:local finds each consumer at the checkout consumers.json declares, and names a missing one instead of finding nothing (design recorded in `scripts/lib/checkouts.mjs`).
+- ✅ **VDS131** **the contract gives the reading column to the shell, and the package exports no shell to own it** — BentoShell owns the rail gutter, the header edges, main and the corner, and its named columns are properties in bento.css (design recorded in `docs/BENTO-AUTHORING.md`).
 
 ## Block G — The package knows one chrome
 

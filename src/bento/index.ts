@@ -17,9 +17,11 @@
  *
  *   import "@viglet/viglet-design-system/bento.css"
  *
- * The shell is three pieces and no provider: BentoNavRail down the left,
- * BentoUserMenu in the header, BentoBackToTop at the corner. Wrap the routed
- * page in `bento-rail-gutter` so content clears the rail.
+ * The shell is BentoShell, and no provider: it reserves the gutter for the
+ * BentoNavRail passed as `rail`, lays out the header's two edges (BentoUserMenu
+ * goes in the trailing one), owns `main` and its reading column, and puts
+ * BentoBackToTop at the corner. The routed page is its children and sets no
+ * width of its own.
  *
  * There is deliberately no sidebar provider here, and no context between them.
  * The console era needs one because its sidebar collapses, remembers and
@@ -64,6 +66,7 @@ export {
   type BentoCommandPaletteProps,
   type BentoCommandPaletteResult,
 } from "./bento-command-palette";
+export { BentoShell, type BentoShellColumn, type BentoShellProps } from "./bento-shell";
 export { BentoShortcutsDialog, type BentoShortcutsDialogProps } from "./bento-shortcuts-dialog";
 export { BentoNavRail, type BentoNavRailProps } from "./bento-nav-rail";
 export { BentoUserMenu, type BentoUserMenuProps } from "./bento-user-menu";

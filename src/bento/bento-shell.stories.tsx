@@ -3,6 +3,7 @@ import { IconCpu2, IconDatabase, IconSettings } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
 import { BentoBackToTop } from "./bento-back-to-top";
+import { BentoShell, type BentoShellColumn } from "./bento-shell";
 import {
   BentoCommandPalette,
   type BentoCommandPaletteResult,
@@ -14,9 +15,11 @@ import { BentoUserMenu } from "./bento-user-menu";
 import { UserProvider } from "@/contexts/user.context";
 
 /**
- * The shell: a fixed rail down the left, a command palette on ⌘K, and the
- * back-to-top. No sidebar provider and no context between them — the rail is
- * fixed, one width, and hidden below `md`, so there is no state to share.
+ * The shell: `BentoShell` lays out a fixed rail down the left, the header's two
+ * edges, `main` with its reading column, and the back-to-top at the corner. A
+ * command palette opens on ⌘K beside it. No sidebar provider and no context
+ * between them — the rail is fixed, one width, and hidden below `md`, so there is
+ * no state to share.
  *
  * Every route here is supplied by the story, because a product's map of itself
  * is the one thing this package never holds.
@@ -56,6 +59,41 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+function ShellPage({ column }: Readonly<{ column: BentoShellColumn }>) {
+  return (
+    <BentoShell
+      column={column}
+      rail={<BentoNavRail groups={groups} homeRoute="/" homeLabel="Home" />}
+      headerStart={<span className="text-sm font-medium tracking-tight">Product</span>}
+      headerEnd={
+        <button
+          type="button"
+          className="rounded-full border border-border/60 bg-card/60 px-3 py-1.5 text-sm text-muted-foreground"
+        >
+          Search
+        </button>
+      }
+    >
+      <h1 className="text-2xl font-semibold tracking-tight">A page</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
+        The page sets no width, gutter or rhythm. This column is <code>{column}</code>, and
+        every page rendered in it starts and ends on the same line.
+      </p>
+      <div className="bento-glass mt-6 h-40 rounded-3xl" />
+    </BentoShell>
+  );
+}
+
+/** The column every page uses unless it is a single-question form or a table. */
+export const Shell: Story = {
+  render: () => <ShellPage column="default" />,
+};
+
+/** The narrower column a single-question form asks for by name. */
+export const ShellNarrowColumn: Story = {
+  render: () => <ShellPage column="narrow" />,
+};
 
 export const NavRail: Story = {
   render: () => (

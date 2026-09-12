@@ -422,15 +422,81 @@
 
 /* Reserves the gutter the fixed nav rail occupies, so page content is not
    underneath it. The rail is `w-16` and hidden below `md`, and this matches on
-   both counts — put it on whatever element wraps the routed page.
+   both counts.
 
-   It is a class rather than a layout component on purpose: a shell is the one
-   thing every product already has, and the useful part is the measurement, not
-   another wrapper to nest inside. */
+   `BentoShell` puts it on its own root when it is given a rail. It stays a class
+   for a product whose shell is still its own: the measurement is the rail's,
+   and a product copying the literal is how the two stop matching. */
 @media (min-width: 48rem) {
   .bento-rail-gutter {
     padding-left: 4rem;
   }
+}
+
+/* ---------------------------------------------------------------------------
+ * The reading column (VDS131).
+ *
+ * BENTO-AUTHORING §1 gives `main` the max width, the gutters and the vertical
+ * rhythm, once, and a page none of the three. Each is a property here rather than
+ * a Tailwind class, so a product re-keys the column by redefining one variable
+ * and a page has nothing to repeat. `BentoShell` picks the width by name through
+ * `data-column`.
+ * ------------------------------------------------------------------------- */
+@layer base {
+  :root {
+    --bento-column-default: 80rem;
+    --bento-column-narrow: 56rem;
+    --bento-column-wide: 96rem;
+    --bento-shell-gutter: 1rem;
+    --bento-shell-rhythm: 1.5rem;
+  }
+
+  @media (min-width: 48rem) {
+    :root {
+      --bento-shell-gutter: 2rem;
+      --bento-shell-rhythm: 2.5rem;
+    }
+  }
+}
+
+.bento-shell-main {
+  --bento-column: var(--bento-column-default);
+  position: relative;
+  z-index: 10;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--bento-column);
+  margin-inline: auto;
+  padding: var(--bento-shell-rhythm) var(--bento-shell-gutter);
+}
+
+.bento-shell-main:focus {
+  outline: none;
+}
+
+.bento-shell-main[data-column="narrow"] {
+  --bento-column: var(--bento-column-narrow);
+}
+
+.bento-shell-main[data-column="wide"] {
+  --bento-column: var(--bento-column-wide);
+}
+
+/* A tool that owns the viewport fills what the header leaves and scrolls inside
+   itself, so the column has no bottom rhythm to keep. */
+.bento-shell-main[data-column="full"] {
+  --bento-column: none;
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  min-height: 0;
+  padding-bottom: 0;
+}
+
+/* The header's edges line up with the column's gutter rather than with a
+   padding of their own. */
+.bento-shell-bar {
+  padding-inline: var(--bento-shell-gutter);
 }
 
 /* An icon that leads a dialog title, in the product's accent rather than the

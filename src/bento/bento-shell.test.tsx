@@ -11,7 +11,14 @@ import { beforeAll, describe, expect, it, vi } from "vitest"
 
 import { UserProvider } from "@/contexts/user.context"
 
-import { BentoBackToTop, BentoNavRail, BentoUserMenu, type BentoNavGroup } from "./index"
+import {
+  BentoBackToTop,
+  BentoNavRail,
+  BentoShell,
+  BentoUserMenu,
+  type BentoNavGroup,
+  type BentoShellColumn,
+} from "./index"
 
 // A page can look bento inside a console that does not, which the conventions
 // call the first mistake. So the shell has to be installable — and installable
@@ -200,8 +207,93 @@ describe("BentoBackToTop", () => {
   })
 })
 
+// VDS131 — the component the contract gives the reading column to. What the
+// column measures in a browser is bento-shell.parity.test.tsx; this is the
+// structure and the ownership.
+describe("BentoShell", () => {
+  it("renders one main, and the page inside it", () => {
+    const { container } = draw(
+      <BentoShell>
+        <p>the page</p>
+      </BentoShell>,
+    )
+
+    expect(container.querySelectorAll("main")).toHaveLength(1)
+    expect(screen.getByRole("main")).toContainElement(screen.getByText("the page"))
+  })
+
+  it("names the column on main, default unless asked", () => {
+    const { rerender } = draw(<BentoShell>page</BentoShell>)
+    expect(screen.getByRole("main")).toHaveAttribute("data-column", "default")
+
+    for (const column of ["narrow", "wide", "full"] satisfies BentoShellColumn[]) {
+      rerender(
+        <I18nextProvider i18n={i18next}>
+          <MemoryRouter>
+            <BentoShell column={column}>page</BentoShell>
+          </MemoryRouter>
+        </I18nextProvider>,
+      )
+      expect(screen.getByRole("main")).toHaveAttribute("data-column", column)
+    }
+  })
+
+  it("reserves the rail's gutter only when it is given a rail", () => {
+    const bare = draw(<BentoShell>page</BentoShell>)
+    expect(bare.container.querySelector("[data-slot='bento-shell']")).not.toHaveClass("bento-rail-gutter")
+    bare.unmount()
+
+    const railed = draw(
+      <BentoShell rail={<BentoNavRail groups={groups} homeRoute="/bento" homeLabel="Home" />}>page</BentoShell>,
+    )
+    const shell = railed.container.querySelector("[data-slot='bento-shell']")
+    expect(shell).toHaveClass("bento-rail-gutter")
+    expect(shell).toContainElement(screen.getByRole("navigation"))
+  })
+
+  it("lays the header out edge to edge, and renders none without a slot", () => {
+    const bare = draw(<BentoShell>page</BentoShell>)
+    expect(screen.queryByRole("banner")).not.toBeInTheDocument()
+    bare.unmount()
+
+    draw(
+      <BentoShell headerStart={<a href="/">Mark</a>} headerEnd={<button type="button">Account</button>}>
+        page
+      </BentoShell>,
+    )
+    const header = screen.getByRole("banner")
+    const [start, end] = Array.from(header.children)
+    expect(start).toContainElement(screen.getByRole("link", { name: "Mark" }))
+    expect(end).toContainElement(screen.getByRole("button", { name: "Account" }))
+  })
+
+  it("puts the back-to-top control at the corner unless told otherwise", () => {
+    const withDefault = draw(<BentoShell>page</BentoShell>)
+    expect(screen.getByRole("button", { name: /back ?to ?top/i })).toBeInTheDocument()
+    withDefault.unmount()
+
+    const empty = draw(<BentoShell corner={null}>page</BentoShell>)
+    expect(screen.queryByRole("button", { name: /back ?to ?top/i })).not.toBeInTheDocument()
+    empty.unmount()
+
+    draw(<BentoShell corner={<span>dock</span>}>page</BentoShell>)
+    expect(screen.getByText("dock")).toBeInTheDocument()
+    expect(screen.getByRole("main")).not.toContainElement(screen.getByText("dock"))
+  })
+})
+
 describe("the shell's layout contract", () => {
   const css = readFileSync(join(resolve(import.meta.dirname), "bento.css"), "utf8")
+
+  it("keys each named column to a custom property rather than a class", () => {
+    expect(css).toMatch(/\.bento-shell-main\s*\{[^}]*max-width: var\(--bento-column\)/)
+    expect(css).toMatch(/\.bento-shell-main\s*\{[^}]*padding: var\(--bento-shell-rhythm\) var\(--bento-shell-gutter\)/)
+    for (const column of ["narrow", "wide"]) {
+      expect(css).toMatch(
+        new RegExp(String.raw`\.bento-shell-main\[data-column="${column}"\]\s*\{\s*--bento-column: var\(--bento-column-${column}\)`),
+      )
+    }
+  })
 
   it("reserves the rail's gutter at the width the rail actually is", () => {
     // The rail is w-16 (4rem) and hidden below md (48rem); the gutter has to

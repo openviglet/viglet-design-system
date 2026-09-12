@@ -32,24 +32,6 @@ so rather than leaving it to be rediscovered.
 
 ## Block F — What a consuming CMS needs from the package next
 
-### §VDS131 The shell the contract describes and the barrel does not export
-
-BENTO-AUTHORING section 1 is explicit: main sets the max width, the gutters and the
-vertical rhythm once, and a page sets none of the three. The package ships the rail, the
-header pieces, the palette and the back-to-top control, and no component that composes
-them around a main. The two orphan files beside the other bento components describe that
-component; the only BentoShell token in the barrel is a form-state type.
-
-The consequence is measurable in Shio: six bento pages set their own max-width at three
-different widths, which is exactly the defect the contract says exists only between
-screens.
-
-Export BentoShell, owning the rail gutter, the header slot, main, and the corner. Its
-main takes column as default, narrow or wide, keyed to custom properties in bento.css
-rather than to a Tailwind class each page repeats. Point the orphan story and test at
-it, and render both products' shells from it. The test asserts one main per shell, the
-column variables applied, and that a page rendered inside it sets no width of its own.
-
 ### §VDS132 A page lint for the two rules the skill names
 
 The vendored SKILL.md closes on two rules: a page sets no max width, gutters or vertical
@@ -273,6 +255,26 @@ applies this, so no consumer has to know the distinction.
 The test tabs to Save, activates it, and asserts that document.activeElement is still
 the button while the promise is pending and after it settles, and that a second
 activation during loading does not call the handler twice.
+
+### §VDS149 One binding set for the palette and the guide that lists it
+
+BENTO-AUTHORING puts the palette trigger, with the platform's own key hint, in the
+header's set, and the package ships the palette and the shortcuts dialog but neither the
+trigger nor the binding. So Turing's shell and Shio's each write a platform check for
+the Cmd or Ctrl hint, a button, and a window keydown listener that ignores keys typed
+into a field.
+
+They agree on Cmd+K and on nothing else. Turing binds ? to the shortcuts dialog. Shio
+binds / to the palette and never binds ?, while mounting BentoShortcutsDialog, which
+lists ? as a global shortcut and does not list /. Shio's typing guard counts a select
+and Turing's does not.
+
+Export BentoPaletteTrigger, the button with the hint, and a useBentoShellShortcuts hook
+taking onPalette and onShortcuts, which owns one binding set and one typing guard. The
+dialog reads the same set, so what it lists is what is bound. The tests assert that the
+hook ignores a key typed into an input, a textarea, a select or a contenteditable, and
+that the dialog's rows are the hook's bindings. Whether / belongs in the set is the one
+choice to settle while building it.
 
 ## Block G — The package knows one chrome
 

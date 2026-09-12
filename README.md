@@ -369,7 +369,7 @@ Nothing is being removed. No product has started cutting over, and a removal wil
 | `NavMain` | `BentoNavRail` | |
 | `NavUser` | `BentoUserMenu` | Routes and feature flags arrive as props. |
 | `SubPage` | `BentoEntityShell` | Renders through a render prop, so the shell never learns what an entity is. |
-| `Page`, `PageContent` | — | No single replacement, deliberately: the shell is where a product is itself. Compose `BentoNavRail`, `BentoUserMenu` and `BentoCommandPalette`. |
+| `Page`, `PageContent` | `BentoShell` | Takes the rail, the header's two edges and the page; it owns `main` and the reading column, so a page sets no width. |
 
 `DialogDelete`, `LoadProvider` and `GradientButtonLink` are **not** console-era — the bento layer uses them itself, and they are not deprecated.
 
@@ -653,6 +653,7 @@ of it:
 ```ts
 import "@viglet/viglet-design-system/bento.css";
 import {
+  BentoShell,
   BentoEntityShell,
   BentoListPage,
   BentoFormHero,
@@ -664,6 +665,26 @@ import {
 The stylesheet is a separate import from the components, so a consumer taking
 only the layout maths does not pull CSS it never renders. It reads the preset's
 tokens, so import the preset too.
+
+`BentoShell` is the page frame. It reserves the gutter for the rail you pass,
+lays out the header's leading and trailing edges, puts `BentoBackToTop` at the
+corner, and owns `main`: the width, the gutters and the vertical rhythm. A page
+inside it sets none of those. Choose the width by name with `column`: `default`,
+`narrow` for a single-question form, `wide` for a table, or `full` for a tool
+that fills the viewport. Each width is a custom property
+(`--bento-column-default`, `--bento-column-narrow`, `--bento-column-wide`) that
+you can redefine at `:root`.
+
+```tsx
+<BentoShell
+  column={isForm ? "narrow" : "default"}
+  rail={<BentoNavRail groups={groups} homeRoute={ROUTES.HOME} />}
+  headerStart={<ProductMark />}
+  headerEnd={<BentoUserMenu accountRoute={ROUTES.ACCOUNT} logoutUrl={ROUTES.LOGOUT} />}
+>
+  <Outlet />
+</BentoShell>
+```
 
 `BentoCommandPalette` takes a second group whose items the product supplies per
 query, beside the nav items it matches itself. Pass `onQueryChange` to hear the
@@ -702,7 +723,7 @@ correct rather than a leak. The subpath is for a consumer who wants only that
 background.
 
 Every subpath in the table above is also **imported, required and type-checked
-as you would use it** on each build: one fixture pulls all fifteen through the
+as you would use it** on each build: one fixture pulls all sixteen through the
 real `exports` map, a CommonJS probe requires the seven that offer it, and a
 generated TypeScript probe imports a value from each typed entry and uses it —
 so a `types` field resolving to the wrong declarations fails here rather than
