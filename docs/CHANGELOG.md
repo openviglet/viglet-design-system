@@ -70,6 +70,9 @@
   checked **a product can name the region in its own language** loadingLabel is written into the emitted HTML and no English is left in it, asserted over the transform output.
   checked **a multilingual product picks by the reader's language** loadingLabels emits a picker reading navigator.language, exact tag then primary subtag, and the build-time label stands for scripting off.
   checked **the four consumers already on it are not relabelled** with no option the region keeps Loading <title>, so the change is an upgrade rather than a silent rename.
+- ✅ **VDS97** **the Toaster region keeps sonner's English name, Notifications, because the package passes it no label** — The notice region says the package's own word, in the reader's language, and a product passing its own still wins.
+  checked **the notice region is named in the reader's language** Toaster renders under pt with the bundle's word and no Notifications in the region's accessible name.
+  checked **a product's own word still wins** containerAriaLabel goes in before the spread, and a caller passing one is what the region announces.
 
 ## Block B — Bento becomes a design-system layer
 

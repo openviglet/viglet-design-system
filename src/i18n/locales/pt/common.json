@@ -25,7 +25,8 @@
     "next": "Próxima",
     "goToPreviousPage": "Ir para a página anterior",
     "goToNextPage": "Ir para a próxima página",
-    "stepOf": "Etapa {{index}} de {{count}}"
+    "stepOf": "Etapa {{index}} de {{count}}",
+    "notifications": "Notificações"
   },
   "backendStatus": {
     "offline": "Servidor indisponível. Tentando reconectar...",

@@ -21,13 +21,19 @@ import { describe, expect, it } from "vitest"
 
 const srcDir = resolve(import.meta.dirname, "..")
 
-/** The attributes a person reads or hears. `label` is the prop this package's own components take for one. */
+/**
+ * The attributes a person reads or hears. `label` is the prop this package's own
+ * components take for one; `containerAriaLabel` is sonner's, added by VDS97 —
+ * a spoken name can arrive under a dependency's spelling, and this list only
+ * ever knew the platform's.
+ */
 const SPOKEN = new Set([
   "alt",
   "aria-description",
   "aria-label",
   "aria-roledescription",
   "aria-valuetext",
+  "containerAriaLabel",
   "label",
   "placeholder",
   "title",

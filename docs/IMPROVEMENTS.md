@@ -29,28 +29,6 @@ Acceptance:
 - It is then a peerDependency and a devDependency here, not a dependency.
 - A consumer resolving a different minor still gets exactly one copy.
 
-### §VDS97 The name sonner gives the notice region
-
-The package's `Toaster` wraps sonner and passes it no `containerAriaLabel`, so the
-region every notice lands in keeps sonner's own default: `Notifications`, followed by
-its hotkey, `alt+T`. A screen reader says it whenever that region is reached — English,
-in every product, in every language.
-
-VDS93's gate cannot see it and should not: there is no literal in this package's source.
-The English is a dependency's default, and the omission is the defect. roadkeep-gui
-found it from the consumer side when its pseudo-locale run began reading names (its
-RG140), and fixed it there by passing a label out of its own catalogue. Every other
-product still announces English.
-
-**The fix is the package's own word as the default.** `Toaster` calls `useTranslation`
-and passes `containerAriaLabel={t("common.notifications", { defaultValue:
-"Notifications" })}` unless the caller passed one, with the key in both locales. The
-hotkey sonner appends is a key name and stays as the platform spells it. A unit test
-renders the `Toaster` under `pt` and reads the region's name.
-
-The same question is worth one pass over the other wrapped primitives — a default a
-dependency supplies in English is invisible to every gate that reads this package.
-
 ### §VDS98 English in a prop default
 
 VDS93 claims no shipped component draws or announces a string outside the bundles, and
@@ -105,6 +83,34 @@ package can promise is complete.
 
 A test passes a bundle in a third language and asserts both that its keys resolve and
 that the package's `en` is still there to fall back to.
+
+### §VDS105 The name Radix gives the nav landmark
+
+The pass VDS97 asked for, over the primitives this package wraps, found one more of the
+same shape.
+
+`@radix-ui/react-navigation-menu` renders its root as a `nav` carrying a hardcoded
+`aria-label="Main"`. `NavigationMenu` here passes none, so the landmark is announced as
+"Main" in every product and every language — English a dependency wrote, exactly as
+sonner's `Notifications` was.
+
+Nothing else in the wrapped set does it. vaul, react-resizable-panels and the Radix
+dialog and select primitives were read the same way and supply no spoken default of
+their own: they either require the name or leave the element unnamed. That is worth
+recording, because the absence is what makes this a short list rather than a sweep
+somebody has to repeat.
+
+Two things make this one different from VDS97, and they argue for a different answer. A
+navigation landmark's name is what distinguishes it from the other landmarks on the
+page, so the useful word is the product's — "Main" is only wrong, not untranslated, when
+a page has a second nav. And `NavigationMenu` spreads `props` onto the root, so a
+product can already pass `aria-label` today; what it cannot do is discover that it has
+to.
+
+**So the fix is a default plus a gate rather than a default alone.** Name it from
+`common.mainNavigation` unless the caller passed one, the way the Toaster now does, and
+extend the VDS93 literals gate so a spoken attribute this package *omits* on a wrapped
+primitive is reported — which is the half no gate holds.
 
 ## Block E — The assistant every product shares
 

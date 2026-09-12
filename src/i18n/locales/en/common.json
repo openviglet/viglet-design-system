@@ -25,7 +25,8 @@
     "next": "Next",
     "goToPreviousPage": "Go to previous page",
     "goToNextPage": "Go to next page",
-    "stepOf": "Step {{index}} of {{count}}"
+    "stepOf": "Step {{index}} of {{count}}",
+    "notifications": "Notifications"
   },
   "backendStatus": {
     "offline": "Server unavailable. Retrying automatically...",
