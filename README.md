@@ -1,9 +1,10 @@
 # Viglet Design System
 
 Shared component library, design tokens, hooks, utilities, and i18n for the
-seven applications that install it: the Turing, Dumont and Shio consoles,
-the Cloud Console, the Cloud Home, Schools, and the Roadkeep GUI.
-`consumers.json` is the list, and it is what the guards read.
+nine applications that install it: the Turing, Dumont and Shio consoles,
+the Cloud Console, the Cloud Home, Schools, the Roadkeep GUI,
+the Openviglet Website and Viglet Docs. `consumers.json` is the list, and it is
+what the guards read.
 
 **[Browse the component catalogue](https://openviglet.github.io/viglet-design-system/)** — every
 component, its variants and its props, rebuilt on each commit to `2026.3`. Look
@@ -17,9 +18,12 @@ subpaths it takes, and CI refuses prose that names a subset as though it were
 the whole set. An eighth is one entry there, and the checks widen with it.
 
 Three are Vite consoles (Turing, Shio, Dumont), one is a Vite platform home
-(the Cloud Home), one is a Vite desktop shell (the Roadkeep GUI), and two are
-Next applications (the Cloud Console and Schools). The split matters: a Next
-consumer takes no `./router` and no `./vite`.
+(the Cloud Home), one is a Vite desktop shell (the Roadkeep GUI), one is a Vite
+marketing site (the Openviglet Website), two are Next applications
+(the Cloud Console and Schools), and one is Docusaurus (Viglet Docs). The split
+matters: a
+Next consumer takes no `./router` and no `./vite`, and Viglet Docs takes no root
+entry at all — only `./preset` and the background.
 
 ## Installation
 
@@ -37,10 +41,13 @@ install to one copy — `npm ls react-hook-form` should say `deduped`.
 ## Trying a change in a product before publishing
 
 A change here is a change to shared chrome, so the question is always what it
-does to Shio, Turing, Dumont, the Cloud Console, the Cloud Home, Schools and the
-Roadkeep GUI — and the answer should not require a publish. `use:local` walks a
-products root, so it reaches the first three; the other four are checked out
-elsewhere and `npm pack` into them is the loop until that changes (VDS73). From this checkout:
+does to Shio, Turing, Dumont, the Cloud Console, the Cloud Home, Schools,
+the Roadkeep GUI, the Openviglet Website and Viglet Docs — and the answer should
+not require a publish. `use:local` walks a products root, so it reaches the first
+three; the other six are checked out elsewhere and `npm pack` into them is the
+loop until that changes (VDS73). The last two take the package by caret range
+rather than pinning it, so they also receive each release the moment they
+install one. From this checkout:
 
 ```bash
 pnpm use:local           # build, then push dist into every 2026.3 product on disk
@@ -710,8 +717,9 @@ The catalogue proves a component; these prove the arrangement.
 ## Contributing
 
 The package manager here is pnpm, matching the Shio, Turing, Dumont, Cloud Home
-and Schools workspaces. The Cloud Console and the Roadkeep GUI install with npm,
-which is a fact about those repositories and not about this one.
+and Schools workspaces. The Cloud Console, the Roadkeep GUI,
+the Openviglet Website and Viglet Docs install with npm, which is a fact about
+those repositories and not about this one.
 
 ```bash
 pnpm install

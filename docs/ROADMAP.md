@@ -2,7 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS122** (deps: —) **Two packages install this by caret range and are named in no consumer list, so no guard here reads them** — consumers.json calls itself the one place that set lives, and VDS73 widened it because a consumer nobody wrote down is invisible to every check. → §VDS122
 - 📋 **VDS124** (deps: —) **Nothing in the lint config forbids dangerouslySetInnerHTML, so the next one ships with no gate** — VDS107 removed the only one, and a review caught it rather than a check; the prop takes a consumer's content straight to innerHTML and nothing here reads it. → §VDS124
 - 📋 **VDS126** (deps: —) **The resize handle's grip is selected by panel-group-direction, which v4 renamed, so it never rotates** — A vertical handle draws the grip pointing the way a horizontal one drags, and it is the one part of the component that says which way this moves. → §VDS126
 

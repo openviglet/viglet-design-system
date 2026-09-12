@@ -8,7 +8,10 @@ const manifest = JSON.parse(readFileSync(join(root, "consumers.json"), "utf8")) 
     id: string
     name: string
     package: string
-    framework: "vite" | "next"
+    // VDS122 — a third, and the reason the field exists rather than a boolean:
+    // viglet-docs is Docusaurus, which takes neither `./router` nor `./vite`
+    // and no root entry either.
+    framework: "vite" | "next" | "docusaurus"
     chrome: string
     accent: string
     entries: string[]

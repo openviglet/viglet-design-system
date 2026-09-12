@@ -27,6 +27,14 @@
     "and no product has re-keyed yet. The parity digest reads this, so the day one",
     "does, the digest is required to carry that set.",
     "",
+    "VDS122 widened it a third time, to nine, and the two it added were invisible",
+    "for a third reason: both take the package by caret range rather than pinning",
+    "it, so each receives a release the moment it installs one, and neither is a",
+    "product — a marketing site and a docs site are not what a guard here goes",
+    "looking for. Both were reached by reading their imports, not by being",
+    "remembered. `viglet-docs` is also the first consumer on a third framework;",
+    "it takes no root entry at all, only `./preset` and the background.",
+    "",
     "`entries` is what each product imports today, read from its source. It is a",
     "snapshot and will drift; what does not drift is the membership, which is",
     "what the guards read. Measured over product source only: shio-react's test",
@@ -113,6 +121,24 @@
       "chrome": "bento",
       "accent": "amber",
       "entries": [".", "./fonts", "./styles"]
+    },
+    {
+      "id": "openviglet-website",
+      "name": "Openviglet Website",
+      "package": "openviglet-website",
+      "framework": "vite",
+      "chrome": "marketing-site",
+      "accent": "cool",
+      "entries": [".", "./floating-formulas-bg.css", "./preset", "./styles"]
+    },
+    {
+      "id": "viglet-docs",
+      "name": "Viglet Docs",
+      "package": "viglet-docs",
+      "framework": "docusaurus",
+      "chrome": "docs-site",
+      "accent": "cool",
+      "entries": ["./floating-formulas-bg", "./floating-formulas-bg.css", "./preset"]
     }
   ]
 }

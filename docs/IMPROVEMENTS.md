@@ -30,31 +30,6 @@ together, so each one is true when it lands.
 Until then schools is the consumer that does not declare it, and this line is what says
 so rather than leaving it to be rediscovered.
 
-### §VDS122 Two more consumers nobody wrote down
-
-`consumers.json` says of itself that it is the one place the consumer set lives, and
-that prose naming a subset as though it were the whole is a test failure rather than a
-style note. VDS73 widened it from three to seven for exactly that reason: cloud-frontend
-was a Vite SPA nobody had written down, and being outside the products root that
-`use:local` walks is what kept it invisible.
-
-Two more are invisible the same way. `openviglet-website` and `viglet-docs` both declare
-`@viglet/viglet-design-system` at `^2026.3.2` — a caret range, where every listed
-consumer except `@rk/ui` pins exact — so both receive each release the moment they
-install, and neither appears in `consumers.json`, in the README's count of applications,
-or in any guard that reads the file.
-
-They are not equivalent, and the answer is probably not the same for both. `viglet-docs`
-imports one subpath, `./floating-formulas-bg`, for a decorative background.
-`openviglet-website` imports nothing from the package at all in its own source, which
-either means the dependency is unused or that the import is somewhere this did not look.
-
-What to settle: whether each is a consumer this package holds itself to. If it is, it
-belongs in `consumers.json` with its framework, chrome, accent and entries, and the
-README's count moves with it. If it is not — a site taking one decorative entry may
-genuinely not be — then say so where the next person looks, because the absence
-currently reads as an oversight and cannot be told apart from one.
-
 ### §VDS124 The prop that has to stay at zero
 
 `dangerouslySetInnerHTML` is the one React prop that turns a string into markup, and

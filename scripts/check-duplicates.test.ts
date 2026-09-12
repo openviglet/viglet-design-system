@@ -6,7 +6,8 @@ import { fileURLToPath } from "node:url"
 import { afterAll, beforeAll, describe, expect, it } from "vitest"
 
 // This CLI ships to every consumer — Turing, Shio, Dumont, the Cloud Console,
-// the Cloud Home, Schools and the Roadkeep GUI — and runs in the CI of the ones
+// the Cloud Home, Schools, the Roadkeep GUI, the Openviglet Website
+// and Viglet Docs — and runs in the CI of the ones
 // that have adopted
 // it, so a change to its parsing turns a product's build red or, worse, silently
 // green. It is exercised the way a consumer runs it — as a process, over files
