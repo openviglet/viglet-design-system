@@ -196,3 +196,4 @@
 ## Block G — The package knows one chrome
 
 - ✅ **VDS144** **nothing measures which consumers still render console chrome, so the cutover a non-goal waits on is unobservable** — pnpm chrome:census measures each consumer's console-era imports through shims and holds its chrome to them, and the register now says turing and dumont are mixed.
+- ✅ **VDS145** **the section-chrome context defaults to console, so a bento consumer wraps every route in a provider to escape it** — Section chrome now defaults to bento: a consumer still on console chrome adds <SectionCardChromeProvider chrome="console"> once at its root, as the census names.

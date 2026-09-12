@@ -46,12 +46,15 @@ const inChrome = (chrome: "console" | "bento", children: ReactNode) =>
   draw(<SectionCardChromeProvider chrome={chrome}>{children}</SectionCardChromeProvider>)
 
 describe("one form, two chromes", () => {
-  it("renders the console card with no provider at all", () => {
+  // VDS145 — the default belongs to the chrome that is staying. A login, setup or
+  // not-found page renders under no provider, and took the console look while
+  // console was the default.
+  it("renders the frosted section with no provider at all", () => {
     const { container } = draw(<SharedSection />)
 
     expect(screen.getByText("Connection")).toBeInTheDocument()
     expect(screen.getByLabelText("Endpoint")).toBeInTheDocument()
-    expect(container.querySelector(".bento-glass")).not.toBeInTheDocument()
+    expect(container.querySelector(".bento-glass")).toBeInTheDocument()
   })
 
   it("renders the console card under a console provider", () => {
@@ -155,10 +158,10 @@ describe("useSectionChrome", () => {
     return <span data-testid="chrome">{useSectionChrome()}</span>
   }
 
-  it("reports console when nothing declared one", () => {
+  it("reports bento when nothing declared one", () => {
     draw(<Probe />)
 
-    expect(screen.getByTestId("chrome")).toHaveTextContent("console")
+    expect(screen.getByTestId("chrome")).toHaveTextContent("bento")
   })
 
   it("reports what the nearest provider declared", () => {

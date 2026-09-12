@@ -67,7 +67,7 @@ export const BentoChrome: Story = {
   ),
 };
 
-/** No provider at all: the console card, so an existing form is unaffected. */
+/** No provider at all: the frosted section, since bento is the default and a console consumer declares console at its root. */
 export const NoProvider: Story = {
   render: () => (
     <div className="flex max-w-2xl flex-col gap-4">

@@ -14,12 +14,22 @@ import { BentoFormSection } from "./bento-form-section";
 import type { BentoTone } from "./bento-tones";
 
 /**
- * Which chrome a section renders in. `console` is the default, so a form that
- * knows nothing about this behaves exactly as it always did.
+ * Which chrome a section renders in. `bento` is the default (VDS145).
+ *
+ * It used to be `console`, so a form that knew nothing about this looked as it
+ * always had, and the cost fell on every product that had moved: one bento
+ * product wrapped about twenty-five routes in a bento provider, and a login or
+ * not-found page rendered under none still took the console look. The default
+ * belongs to the chrome that is staying. A consumer still on console-era chrome,
+ * which `pnpm chrome:census` names, declares it once at its root:
+ *
+ * ```tsx
+ * <SectionCardChromeProvider chrome="console">…</SectionCardChromeProvider>
+ * ```
  */
 export type SectionChrome = "console" | "bento";
 
-const SectionChromeContext = createContext<SectionChrome>("console");
+const SectionChromeContext = createContext<SectionChrome>("bento");
 
 /**
  * Declare the chrome for everything beneath it.
@@ -91,9 +101,9 @@ export interface AdaptiveSectionCardProps {
 }
 
 /**
- * A `SectionCard` that renders as a frosted {@link BentoFormSection} under a
- * `bento` {@link SectionCardChromeProvider}, and as the console's collapsible
- * card everywhere else. Import it aliased where you want a drop-in:
+ * A `SectionCard` that renders as a frosted {@link BentoFormSection}, and as the
+ * console's collapsible card under a `console` {@link SectionCardChromeProvider}.
+ * Import it aliased where you want a drop-in:
  *
  * ```tsx
  * import { AdaptiveSectionCard as SectionCard } from "@viglet/viglet-design-system/bento"

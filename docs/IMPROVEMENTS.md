@@ -102,25 +102,6 @@ aria-disabled with the same treatment rather than the attribute.
 
 ## Block G — The package knows one chrome
 
-### §VDS145 The default belongs to the chrome that is staying
-
-bento-section-chrome.tsx declares SectionChrome as console or bento and creates its
-context with console as the default. A consumer that has finished migrating pays for
-that on every route: Shio's App.tsx wraps about twenty-five route elements in
-SectionCardChromeProvider chrome=bento, and its EmptyState documents that a component
-rendered under no provider, on a login, setup or not-found page, concludes there is a
-console chrome to render into.
-
-The cost of the default should fall on the product that still needs the old chrome, and
-it would fall once rather than per route. Flip the default to bento. A console consumer
-sets chrome=console at its root in one line; the census from DSG1 names exactly which
-consumers that is, so the release note can say it instead of hoping.
-
-This is a breaking change for those consumers and ships as one: the changelog names the
-line to add, and a test asserts that a component under no provider renders bento. It is
-also the step that lets a bento consumer delete its wrappers before the switch itself is
-gone.
-
 ### §VDS146 Removing the switch, and the non-goal that kept it
 
 The chrome switch was the right tool for a migration: one component rendering two looks

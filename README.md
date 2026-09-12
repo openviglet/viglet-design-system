@@ -836,6 +836,14 @@ reports `onLayoutChange`, and you store the layout, as you do for `BentoListPage
 />
 ```
 
+`AdaptiveSectionCard` is one form section markup for both chromes: the frosted
+bento section by default, and the console's collapsible card beneath
+`<SectionCardChromeProvider chrome="console">`. **The default is bento as of this
+release.** It used to be console, which made every migrated product wrap its
+routes in a bento provider. A product still on console-era chrome now adds the
+console provider once, at its root. `pnpm chrome:census` lists which products
+those are, and `useSectionChrome()` reads the chrome in effect.
+
 **Give every `BentoActionsMenu` item an `id`**, a stable name for the verb such as
 `"post.delete"`, and the same for `BentoEntityShell`'s `extraActions`. It is
 rendered as `data-action-id` and means nothing to the package, but it lets a
