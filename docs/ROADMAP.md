@@ -2,7 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS109** (deps: —) **A bento dialog's inline translation fallback still names Turing, where the locale bundle no longer does** — The i18n gate reads the compiled bundles only, so the one string a host without the bundle sees is the one unchecked. → §VDS109
 - 📋 **VDS110** (deps: —) **The bento nav rail asserts an icon and a label key its own type declares optional** — A hub section without an icon throws, and one without a label key gives an icon-only link no accessible name. → §VDS110
 - 📋 **VDS111** (deps: —) **AdaptiveSectionCard drops className under bento chrome, the one switch it exists to hide** — A shared form styled through the wrapper loses that styling the moment a console renders it in the other chrome. → §VDS111
 - 📋 **VDS112** (deps: —) **Three Popover parts, useSidebarOptional and SectionCard's variant type reach no published subpath** — The catalogue demonstrates parts a consumer cannot import, and the hook written for a remote host is unreachable. → §VDS112

@@ -47,7 +47,7 @@ export function BentoShortcutsDialog({ open, onOpenChange, isMac }: Readonly<Ben
             {t("bento.shortcuts.title", { defaultValue: "Keyboard shortcuts" })}
           </DialogTitle>
           <DialogDescription>
-            {t("bento.shortcuts.description", { defaultValue: "Move around Turing without leaving the keyboard." })}
+            {t("bento.shortcuts.description", { defaultValue: "Move around without leaving the keyboard." })}
           </DialogDescription>
         </DialogHeader>
 

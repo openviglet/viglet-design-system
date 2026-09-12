@@ -2,26 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-### §VDS109 The brand the bundle gate cannot see
-
-`bento-shortcuts-dialog.tsx` asks i18next for `bento.shortcuts.description` with the
-inline default "Move around Turing without leaving the keyboard." The shipped English
-bundle for the same key was de-branded and reads "Move around without leaving the
-keyboard." The two have drifted, and the source string is the one that wins for exactly
-the audience it exists for: a host that has not registered the bento bundle.
-
-VDS73 widened the i18n gate to catch a shared string naming a product, but that gate
-reads `vigDesignSystemTranslations` — the compiled locale JSON — and never opens a
-source file. An inline `defaultValue` is therefore outside it by construction.
-
-A sweep of `src/` finds this is the only `defaultValue` naming a product today, which is
-what makes now the cheap moment to close the hole rather than only the string.
-
-Acceptance:
-- The inline default matches the English bundle and names no product.
-- The i18n gate reads inline `defaultValue` strings in `src/` as well as the compiled bundles.
-- Adding a product name to a `defaultValue` fails the suite.
-
 ### §VDS110 Two assertions against an optional field
 
 `BentoNavSection` declares both `icon` and `labelKey` optional, and the type's own doc

@@ -3,6 +3,8 @@ import { join, relative, resolve } from "node:path"
 import ts from "typescript"
 import { describe, expect, it } from "vitest"
 
+import { CONSUMER_PRODUCTS } from "@/test/products"
+
 /**
  * VDS93 — a string a shipped component draws or announces is a string the
  * bundles hold.
@@ -39,7 +41,7 @@ const SPOKEN = new Set([
   "title",
 ])
 
-/** A child of these is code, not a word: `badge-colorful` writes a stylesheet. */
+/** A child of these is code, not a word: a `<style>` body is CSS. */
 const CODE = new Set(["style", "script"])
 
 /**
@@ -258,6 +260,41 @@ function omissionsIn(fileName: string, source: string): string[] {
   return found
 }
 
+/**
+ * VDS109 — the product name a bundle no longer carries, in the string that
+ * stands in for the bundle.
+ *
+ * VDS73 holds the compiled locale JSON to naming no consumer. A `defaultValue`
+ * is what a host that never registered these bundles actually reads, it is
+ * written in this source rather than in that JSON, and that gate opens no source
+ * file — so the two were free to drift and had: the shortcuts dialog still said
+ * "Move around Turing without leaving the keyboard" after the bundle was
+ * de-branded, and the only audience for the inline string is the console least
+ * likely to be Turing.
+ *
+ * `rendered` is reused, so a default assembled from a ternary or a concatenation
+ * is read the same way a rendered literal is.
+ */
+function productsIn(fileName: string, source: string): string[] {
+  const file = ts.createSourceFile(fileName, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX)
+  const found: string[] = []
+
+  const visit = (node: ts.Node) => {
+    if (ts.isPropertyAssignment(node) && node.name.getText() === "defaultValue") {
+      for (const text of rendered(node.initializer)) {
+        for (const product of CONSUMER_PRODUCTS) {
+          if (!text.includes(product)) continue
+          const { line } = file.getLineAndCharacterOfPosition(node.getStart())
+          found.push(`${line + 1}: defaultValue names ${product} — ${JSON.stringify(text)}`)
+        }
+      }
+    }
+    ts.forEachChild(node, visit)
+  }
+  visit(file)
+  return found
+}
+
 /** Shipped components — a story or a test typing English proves nothing. */
 function components(dir: string, found: string[] = []): string[] {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -314,6 +351,49 @@ describe("a shipped component says nothing the bundles do not hold", () => {
     "%s",
     (_, file) => {
       expect(literalsIn(file, readFileSync(file, "utf8")), "put the word in the en and pt bundles and ask for it with t()").toEqual([])
+    },
+  )
+})
+
+describe("an inline default names no product either", () => {
+  it("reads the forms a default takes, and passes the fix", () => {
+    const specimen = (code: string) => productsIn("specimen.tsx", code)
+
+    // Named through the manifest rather than typed: a specimen naming two
+    // consumers of seven is the omission `scripts/consumers.test.ts` refuses,
+    // and one that names them all goes stale the day an eighth is declared.
+    expect(CONSUMER_PRODUCTS.length).toBeGreaterThan(2)
+    const [one] = CONSUMER_PRODUCTS
+    const last = CONSUMER_PRODUCTS.at(-1)!
+
+    expect(specimen(`t("k", { defaultValue: "Move around ${one} freely." })`)).toEqual([
+      `1: defaultValue names ${one} — "Move around ${one} freely."`,
+    ])
+    // Every consumer in the manifest, including the ones whose name is two words.
+    expect(specimen(`t("k", { defaultValue: "Open ${last}" })`)).toEqual([
+      `1: defaultValue names ${last} — "Open ${last}"`,
+    ])
+    // Assembled rather than written whole: `rendered` reads each piece, so a
+    // name arriving through a ternary or a template is still read.
+    expect(specimen("t(\"k\", { defaultValue: `Move around ${x} " + one + "` })")).toEqual([
+      `1: defaultValue names ${one} — " ${one}"`,
+    ])
+    expect(specimen(`t("k", { defaultValue: c ? "Open ${one}" : "Open" })`)).toEqual([
+      `1: defaultValue names ${one} — "Open ${one}"`,
+    ])
+
+    // The fix, and the strings that are not defaults.
+    expect(specimen(`t("k", { defaultValue: "Move around without leaving." })`)).toEqual([])
+    expect(specimen(`const doc = { title: "${one}" }`)).toEqual([])
+  })
+
+  it.each(shipped.map((file) => [relative(srcDir, file).replaceAll("\\", "/"), file]))(
+    "%s",
+    (_, file) => {
+      expect(
+        productsIn(file, readFileSync(file, "utf8")),
+        "the inline default is what a host without the bundles reads, so it names no consumer",
+      ).toEqual([])
     },
   )
 })

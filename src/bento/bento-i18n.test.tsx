@@ -3,6 +3,7 @@ import { join, resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 
 import { vigDesignSystemTranslations } from "@/i18n"
+import { CONSUMER_PRODUCTS } from "@/test/products"
 
 // The chrome has to render words in a console that has never heard of it. A
 // missing key is not a crash — it renders the key, so a rail reading
@@ -110,17 +111,10 @@ describe("the locale bundles hold no product's strings", () => {
     const text = JSON.stringify(bento)
 
     // VDS73 — every consumer's name, not the three the strings were extracted
-// from. A shared string naming any product is the defect; widening the list
-// only strengthens it.
-for (const product of [
-      "Turing",
-      "Shio",
-      "Dumont",
-      "Cloud Console",
-      "Cloud Home",
-      "Schools",
-      "Roadkeep GUI",
-    ]) {
+    // from. A shared string naming any product is the defect; widening the list
+    // only strengthens it. VDS109 moved the list to `@/test/products`, which the
+    // sweep over inline `defaultValue` strings reads too.
+    for (const product of CONSUMER_PRODUCTS) {
       expect(text, `the ${lang} bento strings name ${product}`).not.toContain(product)
     }
   })
