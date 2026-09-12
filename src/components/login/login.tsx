@@ -1,5 +1,6 @@
 import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 import { createContext, useContext } from "react";
+import { cn } from "@/lib/utils";
 import { FloatingFormulasBg, type FloatingFormulasBgProps } from "../ui/floating-formulas-bg";
 import { GlassCard } from "../ui/glass-card";
 import { PulseRing } from "../ui/pulse-ring";
@@ -81,7 +82,7 @@ function LoginRoot({
         // composited to #101729 and put body text at 13.2:1 against the 11.2:1
         // the console cards were tuned to - the login read brighter than
         // everything else precisely because it bypassed the tokens.
-        className={`vig-login relative min-h-svh flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-900 ${className ?? ""}`}
+        className={cn("vig-login relative min-h-svh flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-900", className)}
         style={{ ...(style ?? {}), ...themeStyle } as CSSProperties}
         {...rest}
       >
@@ -100,7 +101,7 @@ function LoginBackground(props: Readonly<Omit<FloatingFormulasBgProps, "color" |
 /** Absolute top-right toolbar slot (settings popover, theme toggle, etc.). */
 function LoginSettings({ children, className, ...rest }: Readonly<HTMLAttributes<HTMLDivElement>>) {
   return (
-    <div className={`absolute top-4 right-4 z-30 flex items-center gap-2 ${className ?? ""}`} {...rest}>
+    <div className={cn("absolute top-4 right-4 z-30 flex items-center gap-2", className)} {...rest}>
       {children}
     </div>
   );
@@ -109,7 +110,7 @@ function LoginSettings({ children, className, ...rest }: Readonly<HTMLAttributes
 /** Centered stack container for the visible card + surrounding text. */
 function LoginContent({ children, className, ...rest }: Readonly<HTMLAttributes<HTMLDivElement>>) {
   return (
-    <div className={`relative z-20 flex flex-col items-center w-full max-w-md px-6 py-4 ${className ?? ""}`} {...rest}>
+    <div className={cn("relative z-20 flex flex-col items-center w-full max-w-md px-6 py-4", className)} {...rest}>
       {children}
     </div>
   );
@@ -122,7 +123,7 @@ interface LoginLogoProps extends HTMLAttributes<HTMLDivElement> {
 /** Logo wrapper with pulse ring + glass container. */
 function LoginLogo({ children, pulsePaused, className, ...rest }: Readonly<LoginLogoProps>) {
   return (
-    <div className={`vig-login__fade-in mb-3 ${className ?? ""}`} {...rest}>
+    <div className={cn("vig-login__fade-in mb-3", className)} {...rest}>
       <PulseRing paused={pulsePaused}>
         <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm shadow-lg ring-1 ring-[rgba(var(--ff-color-rgb,37,99,235),0.2)] dark:ring-[rgba(var(--ff-color-dark-rgb,96,165,250),0.2)]">
           {children}
@@ -137,7 +138,7 @@ function LoginTitle({ children, className, ...rest }: Readonly<HTMLAttributes<HT
   return (
     <div className="vig-login__fade-in-d1 text-center mb-1">
       <h1
-        className={`text-2xl font-bold tracking-tight bg-clip-text text-transparent vig-login__title-gradient ${className ?? ""}`}
+        className={cn("text-2xl font-bold tracking-tight bg-clip-text text-transparent vig-login__title-gradient", className)}
         {...rest}
       >
         {children}
@@ -150,7 +151,7 @@ function LoginTitle({ children, className, ...rest }: Readonly<HTMLAttributes<HT
 function LoginTagline({ children, className, ...rest }: Readonly<HTMLAttributes<HTMLParagraphElement>>) {
   return (
     <div className="vig-login__fade-in-d1 text-center mb-4">
-      <p className={`text-sm text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed ${className ?? ""}`} {...rest}>
+      <p className={cn("text-sm text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed", className)} {...rest}>
         {children}
       </p>
     </div>
@@ -160,7 +161,7 @@ function LoginTagline({ children, className, ...rest }: Readonly<HTMLAttributes<
 /** Row of feature pills. */
 function LoginFeatures({ children, className, ...rest }: Readonly<HTMLAttributes<HTMLDivElement>>) {
   return (
-    <div className={`vig-login__fade-in-d2 flex flex-wrap justify-center gap-2 mb-5 ${className ?? ""}`} {...rest}>
+    <div className={cn("vig-login__fade-in-d2 flex flex-wrap justify-center gap-2 mb-5", className)} {...rest}>
       {children}
     </div>
   );
@@ -172,7 +173,7 @@ export interface LoginFeaturePillProps extends HTMLAttributes<HTMLDivElement> {
 /** Single pill (icon + label) used inside {@link Login.Features}. */
 function LoginFeaturePill({ icon, children, className, ...rest }: Readonly<LoginFeaturePillProps>) {
   return (
-    <div className={`vig-login__feature-pill flex items-center gap-1.5 rounded-full px-3 py-1 ${className ?? ""}`} {...rest}>
+    <div className={cn("vig-login__feature-pill flex items-center gap-1.5 rounded-full px-3 py-1", className)} {...rest}>
       {icon}
       <span className="text-xs font-medium text-slate-600 dark:text-slate-300">{children}</span>
     </div>
@@ -182,7 +183,7 @@ function LoginFeaturePill({ icon, children, className, ...rest }: Readonly<Login
 /** Glass-morphism card that hosts the actual login form. */
 function LoginCard({ children, className, ...rest }: Readonly<HTMLAttributes<HTMLDivElement>>) {
   return (
-    <div className={`vig-login__fade-in-d3 w-full ${className ?? ""}`} {...rest}>
+    <div className={cn("vig-login__fade-in-d3 w-full", className)} {...rest}>
       <GlassCard>{children}</GlassCard>
     </div>
   );
@@ -192,7 +193,7 @@ function LoginCard({ children, className, ...rest }: Readonly<HTMLAttributes<HTM
 function LoginFooter({ children, className, ...rest }: Readonly<HTMLAttributes<HTMLParagraphElement>>) {
   return (
     <div className="vig-login__fade-in-d3 mt-4 text-center">
-      <p className={`text-xs text-slate-400 dark:text-slate-500 ${className ?? ""}`} {...rest}>
+      <p className={cn("text-xs text-slate-400 dark:text-slate-500", className)} {...rest}>
         {children}
       </p>
     </div>

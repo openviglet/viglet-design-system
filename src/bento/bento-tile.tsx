@@ -1,6 +1,9 @@
 import { IconChevronRight } from "@tabler/icons-react";
 import type { ComponentType, ReactNode } from "react";
 import { Link } from "react-router-dom";
+
+import { cn } from "@/lib/utils";
+
 import { bentoChipClass, type BentoTone } from "./bento-tones";
 
 export interface BentoTileProps {
@@ -130,7 +133,7 @@ export function BentoTile({
   }
   if (onClick) {
     return (
-      <button type="button" onClick={onClick} className={`${className} w-full`}>
+      <button type="button" onClick={onClick} className={cn("w-full", className)}>
         {content}
       </button>
     );

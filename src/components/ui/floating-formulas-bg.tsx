@@ -1,4 +1,5 @@
 import { useMemo, useSyncExternalStore, type CSSProperties } from "react";
+import { cn } from "@/lib/utils";
 import "./floating-formulas-bg.css";
 
 /** Viewport width below which the backdrop thins to the paired factor. */
@@ -302,7 +303,7 @@ export function FloatingFormulasBg({
 
   return (
     <div
-      className={`absolute inset-0 pointer-events-none overflow-hidden ${motionPaused ? "ff-paused" : ""} ${className ?? ""}`}
+      className={cn("absolute inset-0 pointer-events-none overflow-hidden", motionPaused && "ff-paused", className)}
       style={themeStyle as CSSProperties}
       aria-hidden="true"
     >

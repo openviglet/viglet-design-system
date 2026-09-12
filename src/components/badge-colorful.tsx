@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { getHashedColor } from "@/lib/utils";
+import { cn, getHashedColor } from "@/lib/utils";
 import React from "react";
 
 interface BadgeColorfulProps {
@@ -35,7 +35,11 @@ export const BadgeColorful: React.FC<BadgeColorfulProps> = ({
             variant="outline"
             title={text}
             onClick={() => href && onClick?.(href)}
-            className={`vg-badge-colorful text-xs font-medium px-2 py-0.5 gap-1.5 cursor-pointer transition-all hover:opacity-80 dynamic-badge-${text.length} ${className ?? ""}`}
+            className={cn(
+                "vg-badge-colorful text-xs font-medium px-2 py-0.5 gap-1.5 cursor-pointer transition-all hover:opacity-80",
+                `dynamic-badge-${text.length}`,
+                className,
+            )}
             style={{
                 // Both palettes ride on the element; the stylesheet picks one.
                 "--badge-bg": colors.light.bg,

@@ -1,6 +1,8 @@
 import { IconAlertTriangle } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 
+import { cn } from "@/lib/utils";
+
 export interface BentoStatusMarkerProps {
   /**
    * The title is empty / missing. Takes precedence over `dirty` and renders
@@ -37,7 +39,7 @@ export function BentoStatusMarker({ titleMissing, dirty, className }: Readonly<B
   if (titleMissing) {
     return (
       <span
-        className={`${base} bento-status bento-status-error ${className ?? ""}`}
+        className={cn(base, "bento-status bento-status-error", className)}
       >
         <IconAlertTriangle className="size-3" />
         {t("bento.saveBar.titleRequired", { defaultValue: "Title required" })}
@@ -47,7 +49,7 @@ export function BentoStatusMarker({ titleMissing, dirty, className }: Readonly<B
 
   return (
     <span
-      className={`${base} bento-status bento-status-warn ${className ?? ""}`}
+      className={cn(base, "bento-status bento-status-warn", className)}
     >
       <span className="h-1.5 w-1.5 rounded-full bento-status-dot bento-pulse" />
       {t("bento.saveBar.unsaved", { defaultValue: "Unsaved changes" })}

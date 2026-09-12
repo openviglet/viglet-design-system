@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { parseLocale } from "@/lib/utils";
+import { cn, parseLocale } from "@/lib/utils";
 import { Globe } from "lucide-react";
 import React, { useState } from "react";
 
@@ -89,7 +89,7 @@ export const BadgeLocale: React.FC<BadgeLocaleProps> = ({ locale, className }) =
     return (
         <Badge
             variant="secondary"
-            className={`font-mono gap-2 py-1 pl-1 pr-2 w-fit ${className}`}
+            className={cn("font-mono gap-2 py-1 pl-1 pr-2 w-fit", className)}
         >
             {!imgError && countryCode ? (
                 <img

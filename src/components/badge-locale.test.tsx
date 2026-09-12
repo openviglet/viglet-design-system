@@ -20,6 +20,25 @@ describe("BadgeLocale", () => {
     expect(flag()).toHaveAttribute("src", expect.stringContaining("/br.png"))
   })
 
+  // VDS113 — `className` is optional and was spliced into a template literal
+  // with no fallback, so every callsite that omitted it — `LanguageSelect` in
+  // this package among them — rendered `class="… undefined"`, in every product.
+  it("renders no undefined class when className is omitted", () => {
+    const { container } = render(<BadgeLocale locale="pt_BR" />)
+
+    expect(container.querySelector("[data-slot='badge']")!.className).not.toContain("undefined")
+  })
+
+  it("lets a consumer's class win rather than follow the component's", () => {
+    const { container } = render(<BadgeLocale locale="pt_BR" className="py-4" />)
+
+    const badge = container.querySelector("[data-slot='badge']")!
+    // Merged, not appended: `py-1` is gone rather than sitting there losing to
+    // stylesheet order, which is what splicing left it doing.
+    expect(badge).toHaveClass("py-4")
+    expect(badge).not.toHaveClass("py-1")
+  })
+
   it("falls back to the globe when the flag fails to load", () => {
     const { container } = render(<BadgeLocale locale="pt_BR" />)
 

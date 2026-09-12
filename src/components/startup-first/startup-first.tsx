@@ -1,6 +1,7 @@
 import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 import { createContext, useContext } from "react";
 import { useTranslation } from "react-i18next";
+import { cn } from "@/lib/utils";
 import { FloatingFormulasBg, type FloatingFormulasBgProps } from "../ui/floating-formulas-bg";
 import { GlassCard } from "../ui/glass-card";
 import { PulseRing } from "../ui/pulse-ring";
@@ -82,7 +83,7 @@ function StartupFirstRoot({
   return (
     <StartupFirstThemeContext.Provider value={{ color, colorDark }}>
       <div
-        className={`vig-sf relative min-h-svh flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-950 ${className ?? ""}`}
+        className={cn("vig-sf relative min-h-svh flex items-center justify-center overflow-hidden bg-slate-50 dark:bg-slate-950", className)}
         style={{ ...(style ?? {}), ...themeStyle } as CSSProperties}
         {...rest}
       >
@@ -103,7 +104,7 @@ function StartupFirstBackground(
 /** Centered stack that hosts every visible element. */
 function StartupFirstContent({ children, className, ...rest }: Readonly<HTMLAttributes<HTMLDivElement>>) {
   return (
-    <div className={`relative z-20 flex flex-col items-center w-full max-w-lg px-6 py-6 ${className ?? ""}`} {...rest}>
+    <div className={cn("relative z-20 flex flex-col items-center w-full max-w-lg px-6 py-6", className)} {...rest}>
       {children}
     </div>
   );
@@ -120,7 +121,7 @@ function StartupFirstSteps({ current, total, className, ...rest }: Readonly<Star
   const { t } = useTranslation();
   return (
     <div
-      className={`vig-sf__fade-in flex items-center gap-2 mb-4 ${className ?? ""}`}
+      className={cn("vig-sf__fade-in flex items-center gap-2 mb-4", className)}
       // aria-label is prohibited on a bare div: with no role there is nothing
       // for the name to name, so screen readers drop it and the step count is
       // announced nowhere. `group` is the role a set of related dots has.
@@ -147,7 +148,7 @@ interface StartupFirstLogoProps extends HTMLAttributes<HTMLDivElement> {
 /** Product logo wrapped in a pulse ring. */
 function StartupFirstLogo({ children, pulsePaused, size = 80, className, style, ...rest }: Readonly<StartupFirstLogoProps>) {
   return (
-    <div className={`vig-sf__fade-in mb-4 ${className ?? ""}`} style={style} {...rest}>
+    <div className={cn("vig-sf__fade-in mb-4", className)} style={style} {...rest}>
       <PulseRing paused={pulsePaused}>
         <div
           className="flex items-center justify-center rounded-3xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm shadow-xl ring-1 ring-[rgba(var(--ff-color-rgb,37,99,235),0.2)] dark:ring-[rgba(var(--ff-color-dark-rgb,96,165,250),0.2)]"
@@ -165,7 +166,7 @@ function StartupFirstTitle({ children, className, ...rest }: Readonly<HTMLAttrib
   return (
     <div className="vig-sf__fade-in-d1 text-center mb-2">
       <h1
-        className={`text-3xl font-bold tracking-tight bg-clip-text text-transparent vig-sf__title-gradient ${className ?? ""}`}
+        className={cn("text-3xl font-bold tracking-tight bg-clip-text text-transparent vig-sf__title-gradient", className)}
         {...rest}
       >
         {children}
@@ -178,7 +179,7 @@ function StartupFirstTitle({ children, className, ...rest }: Readonly<HTMLAttrib
 function StartupFirstDescription({ children, className, ...rest }: Readonly<HTMLAttributes<HTMLParagraphElement>>) {
   return (
     <div className="vig-sf__fade-in-d1 text-center mb-5">
-      <p className={`text-sm text-slate-500 dark:text-slate-400 max-w-md leading-relaxed ${className ?? ""}`} {...rest}>
+      <p className={cn("text-sm text-slate-500 dark:text-slate-400 max-w-md leading-relaxed", className)} {...rest}>
         {children}
       </p>
     </div>
@@ -188,7 +189,7 @@ function StartupFirstDescription({ children, className, ...rest }: Readonly<HTML
 /** Glass-morphism card that hosts the form / step content. */
 function StartupFirstCard({ children, className, ...rest }: Readonly<HTMLAttributes<HTMLDivElement>>) {
   return (
-    <div className={`vig-sf__fade-in-d2 w-full ${className ?? ""}`} {...rest}>
+    <div className={cn("vig-sf__fade-in-d2 w-full", className)} {...rest}>
       <GlassCard>{children}</GlassCard>
     </div>
   );
@@ -197,7 +198,7 @@ function StartupFirstCard({ children, className, ...rest }: Readonly<HTMLAttribu
 /** Action row at the bottom (Back / Continue / etc). */
 function StartupFirstActions({ children, className, ...rest }: Readonly<HTMLAttributes<HTMLDivElement>>) {
   return (
-    <div className={`vig-sf__fade-in-d3 w-full mt-4 flex items-center justify-between gap-3 ${className ?? ""}`} {...rest}>
+    <div className={cn("vig-sf__fade-in-d3 w-full mt-4 flex items-center justify-between gap-3", className)} {...rest}>
       {children}
     </div>
   );
@@ -207,7 +208,7 @@ function StartupFirstActions({ children, className, ...rest }: Readonly<HTMLAttr
 function StartupFirstFooter({ children, className, ...rest }: Readonly<HTMLAttributes<HTMLParagraphElement>>) {
   return (
     <div className="vig-sf__fade-in-d3 mt-6 text-center">
-      <p className={`text-xs text-slate-400 dark:text-slate-500 ${className ?? ""}`} {...rest}>
+      <p className={cn("text-xs text-slate-400 dark:text-slate-500", className)} {...rest}>
         {children}
       </p>
     </div>
@@ -221,7 +222,7 @@ export interface StartupFirstHintProps extends HTMLAttributes<HTMLDivElement> {
 function StartupFirstHint({ icon, children, className, ...rest }: Readonly<StartupFirstHintProps>) {
   return (
     <div
-      className={`vig-sf__hint flex items-start gap-2 rounded-lg px-3 py-2 text-xs text-slate-600 dark:text-slate-300 ${className ?? ""}`}
+      className={cn("vig-sf__hint flex items-start gap-2 rounded-lg px-3 py-2 text-xs text-slate-600 dark:text-slate-300", className)}
       {...rest}
     >
       {icon}

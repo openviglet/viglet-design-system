@@ -90,6 +90,7 @@
 - ✅ **VDS111** **AdaptiveSectionCard drops className under bento chrome, the one switch it exists to hide** — BentoFormSection accepts className and merges it, and the bento branch forwards it, so a shared form keeps its styling in either chrome (design recorded in `src/bento/bento-section-chrome.tsx`).
 - ✅ **VDS112** **Three Popover parts, useSidebarOptional and SectionCard's variant type reach no published subpath** — Twelve component exports now reach a published subpath, and a test names any that stop doing so, by origin rather than by name (design recorded in `scripts/exported-surface.test.ts`).
 - ✅ **VDS123** **the command palette takes only nav items and matches them itself, so a product cannot offer its own results** — The palette takes a group the product fills per query, rendered in the order given and never re-ranked, with a pending state (design recorded in `src/bento/bento-command-palette.tsx`).
+- ✅ **VDS113** **BadgeLocale writes a literal undefined class, and three components splice className instead of merging it** — Every className merges through cn(), so an override wins the merge and no element ships a literal undefined class (design recorded in `scripts/eslint/merge-class-name.mjs`).
 
 ## Block B — Bento becomes a design-system layer
 

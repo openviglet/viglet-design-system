@@ -2,28 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-### §VDS113 The class list that is built by hand
-
-`BadgeLocale` builds its class list by splicing `className` into a template literal with
-no fallback. The prop is optional and the package's own `LanguageSelect` omits it, so
-the rendered element carries a literal `undefined` class — shipped, in every product,
-today.
-
-The wider defect is the template literal itself. `cn()` exists here to run
-tailwind-merge, which is what makes a consumer's `py-2` beat the component's `py-1`
-rather than merely following it into the class attribute and losing to stylesheet order.
-
-Two bento components splice the same way: `bento-status-marker.tsx` guards with `?? ""`
-and `bento-inline-edit.tsx` behind a default parameter, so neither can emit `undefined`,
-but neither merges either — and `bento-inline-edit` documents its `className` as the
-prop that keeps the display and edit states visually identical, which is precisely the
-case a non-merged override fails.
-
-Acceptance:
-- All three sites merge through `cn()`.
-- No rendered element carries a literal `undefined` class, asserted by a test.
-- A gate reports a class list built from a prop by template literal.
-
 ### §VDS114 The prop the stylesheet ignores
 
 `GlassCard` accepts `color` and `colorDark` and writes them to `--glass-card-color` and

@@ -1,4 +1,5 @@
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -58,7 +59,7 @@ export function BentoInlineEdit({
   onSave,
   multiline = false,
   placeholder,
-  className = "",
+  className,
   ariaLabel,
   autoFocus = false,
   readOnly = false,
@@ -144,13 +145,17 @@ export function BentoInlineEdit({
   // typographically identical to the editable display via `className`.
   if (readOnly) {
     return (
-      <span className={`block w-full ${className}`} aria-label={ariaLabel}>
+      <span className={cn("block w-full", className)} aria-label={ariaLabel}>
         {value || <span className="text-muted-foreground/80">{placeholder ?? "—"}</span>}
       </span>
     );
   }
 
-  const sharedClass = `w-full bg-transparent outline-none border-b transition-colors duration-200 ${className}`;
+  // `className` is appended at each use site rather than folded in here, so it
+  // stays last through `cn` and a consumer's override actually wins the merge.
+  // This prop is documented as what keeps the display and edit states
+  // typographically identical, which is exactly the case a losing override fails.
+  const sharedClass = "w-full bg-transparent outline-none border-b transition-colors duration-200";
   /*
    * Empty display state needs a permanent visual cue so the user
    * sees "click here to add a name". A dashed bottom border + a less
@@ -158,19 +163,22 @@ export function BentoInlineEdit({
    * looking like a styled input. Filled state stays clean — the
    * subtle hover border is enough once there's actual text.
    */
-  const displayClass = `${sharedClass} cursor-text rounded-sm ${
+  const displayClass = cn(
+    sharedClass,
+    "cursor-text rounded-sm",
     isEmpty
       ? "border-dashed border-border/70 hover:border-foreground/40"
-      : "border-transparent hover:border-border/60 focus-visible:border-border/80"
-  } ${saving ? "opacity-60" : ""}`;
-  const editClass = `${sharedClass} bento-editing`;
+      : "border-transparent hover:border-border/60 focus-visible:border-border/80",
+    saving && "opacity-60",
+  );
+  const editClass = cn(sharedClass, "bento-editing");
 
   if (!editing) {
     return (
       <button
         type="button"
         onClick={() => setEditing(true)}
-        className={`${displayClass} text-left`}
+        className={cn(displayClass, "text-left", className)}
         aria-label={ariaLabel ?? t("forms.formActions.edit")}
         disabled={saving}
       >
@@ -208,7 +216,7 @@ export function BentoInlineEdit({
         placeholder={placeholder}
         aria-label={ariaLabel}
         rows={3}
-        className={`${editClass} resize-none py-0.5 leading-snug`}
+        className={cn(editClass, "resize-none py-0.5 leading-snug", className)}
       />
     );
   }
@@ -222,7 +230,7 @@ export function BentoInlineEdit({
       onKeyDown={handleKeyDown}
       placeholder={placeholder}
       aria-label={ariaLabel}
-      className={`${editClass} h-auto px-0 py-0 shadow-none focus-visible:ring-0`}
+      className={cn(editClass, "h-auto px-0 py-0 shadow-none focus-visible:ring-0", className)}
     />
   );
 }

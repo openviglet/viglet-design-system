@@ -5,11 +5,19 @@ import reactRefresh from "eslint-plugin-react-refresh"
 import globals from "globals"
 import tseslint from "typescript-eslint"
 
+import mergeClassName from "./scripts/eslint/merge-class-name.mjs"
 import setStateInEffectViaCall from "./scripts/eslint/set-state-in-effect-via-call.mjs"
 
-// VDS57 — the project's own rules. One so far, and it exists because the
-// upstream rule it extends stops at one level of indirection.
-const vds = { rules: { "set-state-in-effect-via-call": setStateInEffectViaCall } }
+// VDS57, VDS113 — the project's own rules. Each exists because the defect it
+// names is one no upstream rule sees: the first because the rule it extends
+// stops at one level of indirection, the second because splicing a class list
+// is ordinary JavaScript everywhere except in a component library.
+const vds = {
+  rules: {
+    "merge-class-name": mergeClassName,
+    "set-state-in-effect-via-call": setStateInEffectViaCall,
+  },
+}
 
 export default tseslint.config([
   globalIgnores([
@@ -59,6 +67,9 @@ export default tseslint.config([
       // call; this covers the same defect written behind a name, which is the
       // form a listener forces you into and the one it had always passed.
       "vds/set-state-in-effect-via-call": "error",
+      // VDS113 — a spliced `className` cannot win tailwind-merge, and an omitted
+      // one rendered a literal `undefined` class in every product.
+      "vds/merge-class-name": "error",
     },
   },
   {

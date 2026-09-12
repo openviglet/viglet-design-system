@@ -1,4 +1,7 @@
 import type { HTMLAttributes, CSSProperties } from "react";
+
+import { cn } from "@/lib/utils";
+
 import "./pulse-ring.css";
 
 /**
@@ -37,7 +40,7 @@ export function PulseRing({
 
   return (
     <div
-      className={`vig-pulse-ring ${paused ? "" : "vig-pulse-ring--active"} ${className ?? ""}`}
+      className={cn("vig-pulse-ring", !paused && "vig-pulse-ring--active", className)}
       style={{ ...(style ?? {}), ...themeStyle } as CSSProperties}
       {...rest}
     >
