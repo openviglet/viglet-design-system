@@ -42,3 +42,8 @@ held = 60
 # make a block done, so the only test left was a line count reaching zero. Declared at all
 # means governed; both limits stay at their defaults.
 [criteria]
+
+[project]
+name = "Viglet Design System"
+description = "Shared components, tokens, hooks and i18n for Viglet products."
+icon = "🧩"
