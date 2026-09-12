@@ -2,34 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-### §VDS77 The form library that is not a peer (VDS77)
-
-`react-hook-form` sits in `dependencies`, while every other library this package shares
-state through — `react`, `react-dom`, `react-i18next`, `react-router-dom`,
-`next-themes`, `sonner`, `i18next` — is a peer. It is the exception, and it is the one
-carrying a React context: `components/ui/form.tsx` re-exports `FormProvider`,
-`useFormContext` and `useFormState` straight from it, so a second copy in a consumer's
-tree resolves to a different context and `useFormContext` returns null where a form was
-expected.
-
-Nothing is broken today. Turing asks `^7.82.0`, dumont `^7.84.0`, this package
-`^7.71.2`; the ranges overlap and pnpm dedupes to one copy. That is the arrangement
-working by coincidence — the day a consumer pins exact, or either side crosses a major,
-the install grows a second copy and a form silently stops seeing its provider. No build
-error, no type error, and `check-duplicates` cannot see it because that gate weighs
-source, not the tree.
-
-The move was not simply "declare it a peer": cloud-frontend and cloud-console declared
-none of their own and got it because this package brings it, so demoting it first would
-have broken their install. **That half has landed.** Both now declare `^7.72.1`, the
-version they already resolved, and `npm ls` reports one copy in each tree. Only this
-side is left.
-
-Acceptance:
-- ~~cloud-frontend and cloud-console declare `react-hook-form` themselves.~~ done
-- It is then a peerDependency and a devDependency here, not a dependency.
-- A consumer resolving a different minor still gets exactly one copy.
-
 ### §VDS107 The entity name that runs as script
 
 `BadgeColorful` renders its `text` prop through `dangerouslySetInnerHTML` and, three
@@ -336,3 +308,55 @@ Acceptance:
 - The entry classification lives in one module that both files import.
 - `check-dist` derives what to inspect from `build.lib.entry` or `dist`, not from a literal.
 - A new entry missing its banner fails the gate.
+
+### §VDS121 The consumer whose declaration has to wait for its bump
+
+VDS77 made `react-hook-form` a required peer, and six of the seven consumers declare it:
+shio `^7.87.0`, turing `^7.82.0`, dumont `^7.86.0`, and cloud-frontend, cloud-console
+and `@rk/ui` declared during that work. Schools is the one left.
+
+Nothing is broken today, because schools pins `@viglet/viglet-design-system` to an exact
+`2026.3.3` rather than a range. It never sees the peer until somebody bumps it, and pnpm
+would then auto-install the missing peer rather than fail — which is the same
+arrangement working by coincidence that VDS77 existed to remove.
+
+It was deliberately not declared during VDS77, and the reason is worth carrying. Schools
+is adopting a check of its own — `src/dependencies.test.ts` — that fails any dependency
+no file imports and that carries no documented reason, and it cross-checks each
+documented peer against the *installed* manifest. Schools imports no form, so declaring
+`react-hook-form` against the 2026.3.3 it installs would be a dependency nothing imports
+and whose stated reason the check could not confirm, because that release still calls it
+a dependency.
+
+**So the declaration belongs in the same change as the version bump**, not before it.
+Bump schools to the release carrying the peer, add `react-hook-form`, and add its entry
+to that test's allowlist naming this package as the peer it is provided for — all three
+together, so each one is true when it lands.
+
+Until then schools is the consumer that does not declare it, and this line is what says
+so rather than leaving it to be rediscovered.
+
+### §VDS122 Two more consumers nobody wrote down
+
+`consumers.json` says of itself that it is the one place the consumer set lives, and
+that prose naming a subset as though it were the whole is a test failure rather than a
+style note. VDS73 widened it from three to seven for exactly that reason: cloud-frontend
+was a Vite SPA nobody had written down, and being outside the products root that
+`use:local` walks is what kept it invisible.
+
+Two more are invisible the same way. `openviglet-website` and `viglet-docs` both declare
+`@viglet/viglet-design-system` at `^2026.3.2` — a caret range, where every listed
+consumer except `@rk/ui` pins exact — so both receive each release the moment they
+install, and neither appears in `consumers.json`, in the README's count of applications,
+or in any guard that reads the file.
+
+They are not equivalent, and the answer is probably not the same for both. `viglet-docs`
+imports one subpath, `./floating-formulas-bg`, for a decorative background.
+`openviglet-website` imports nothing from the package at all in its own source, which
+either means the dependency is unused or that the import is somewhere this did not look.
+
+What to settle: whether each is a consumer this package holds itself to. If it is, it
+belongs in `consumers.json` with its framework, chrome, accent and entries, and the
+README's count moves with it. If it is not — a site taking one decorative entry may
+genuinely not be — then say so where the next person looks, because the absence
+currently reads as an oversight and cannot be told apart from one.

@@ -27,6 +27,13 @@ consumer takes no `./router` and no `./vite`.
 pnpm add @viglet/viglet-design-system
 ```
 
+**Declare `react-hook-form` yourself.** It is a required peer, not something this
+package brings: the root entry exports `Form`, and that module re-exports
+`FormProvider`, `useFormContext` and `useFormState` straight from it. A second
+copy in your tree is a second React context, and `useFormContext` then returns
+null inside a form that looks correctly wired. Declaring it is what keeps the
+install to one copy — `npm ls react-hook-form` should say `deduped`.
+
 ## Trying a change in a product before publishing
 
 A change here is a change to shared chrome, so the question is always what it
@@ -648,6 +655,14 @@ optional because the root entry does not need it — only `./router` and `./bent
 do, and npm cannot mark a peer required for one entry point and optional for
 another. `pnpm run build` fails if any other entry starts importing it, so the
 split above stays true rather than becoming folklore.
+
+**`react-hook-form` is a required peer, and `react-router-dom` is the only
+optional one.** It was a plain dependency until VDS77, which is the one case
+where that is wrong: every other library this package shares state through is a
+peer, and this is the one carrying a React context a duplicate would split. The
+build already left it for the consumer to supply, so the manifest was promising
+something the bundle did not deliver; `scripts/externals.test.ts` now fails if
+anything externalised as a peer is declared a dependency again.
 
 [docs/BENTO-AUTHORING.md](docs/BENTO-AUTHORING.md) is the contract for writing a
 bento page: the three page shapes, what the package will not hold for you, and

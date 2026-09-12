@@ -87,6 +87,61 @@ describe("the externals are declared once", () => {
     }
   })
 
+  /**
+   * VDS77 — the list is named for peers, so the manifest has to agree with it.
+   *
+   * `react-hook-form` sat in `PEER_EXTERNALS` while `package.json` declared it a
+   * plain `dependency`. The build left it for the consumer to supply and the
+   * manifest promised this package would bring it, and nothing here or anywhere
+   * else noticed the two saying opposite things. It matters for this one more
+   * than for the rest of the list: `components/ui/form.tsx` re-exports
+   * `FormProvider`, `useFormContext` and `useFormState` straight from it, so a
+   * second copy in a consumer's tree is a second React context and
+   * `useFormContext` returns null where a form was expected.
+   *
+   * `EXACT_EXTERNALS` is the other arrangement and stays as it is: those are
+   * declared dependencies a consumer receives transitively and tree-shakes
+   * against its own usage. Nothing there carries a context, so a duplicate costs
+   * bytes rather than correctness.
+   */
+  describe("the peer externals are what the manifest calls peers", () => {
+    const manifest = JSON.parse(readFileSync(join(root, "package.json"), "utf8")) as {
+      dependencies: Record<string, string>
+      peerDependencies: Record<string, string>
+      devDependencies: Record<string, string>
+    }
+
+    /** `react/jsx-runtime` is React's, and `vite` is what the ./vite entry runs inside. */
+    const rootOf = (id: string) => (id.startsWith("@") ? id.split("/").slice(0, 2).join("/") : id.split("/")[0])
+
+    it.each(PEER_EXTERNALS.filter((id) => id !== "vite"))("%s is declared a peer", (id) => {
+      expect(
+        manifest.peerDependencies,
+        `${id} is externalised as a peer but the manifest does not ask the consumer for it`,
+      ).toHaveProperty(rootOf(id))
+    })
+
+    it("declares none of them a dependency, which is the contradiction", () => {
+      const bothWays = PEER_EXTERNALS.filter((id) => rootOf(id) in manifest.dependencies)
+      expect(
+        bothWays,
+        "these are left for the consumer to supply and promised by this package at the same time",
+      ).toEqual([])
+    })
+
+    it("installs the one that carries a context, so its own tests see one copy", () => {
+      // Not asserted of every peer: `react` and `react-dom` are declared nowhere
+      // here and arrive through pnpm's peer auto-install, which is the
+      // arrangement this repository already runs on. This one is named because
+      // the suite renders forms against it and a duplicate would be the very
+      // defect VDS77 removed.
+      expect(
+        manifest.devDependencies,
+        "react-hook-form is a peer this repository does not install for itself",
+      ).toHaveProperty("react-hook-form")
+    })
+  })
+
   it("records what the fixture measures — this package, not its dependencies", () => {
     // The number that made the defect visible: root-only was 327,757 bytes
     // gzipped while counting xlsx and the Radix tree. If it climbs back past

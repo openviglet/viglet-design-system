@@ -2,7 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-- 🛠 **VDS77** (deps: —) **react-hook-form is a dependency, so a consumer can get a second copy of the one library here carrying a context** — Both consumers now declare it themselves, so the demotion here is the remaining half and no install grows a second copy. → §VDS77
 - 📋 **VDS107** (deps: —) **BadgeColorful renders a consumer's entity name as raw HTML and splices it into a style selector** — Every product's delete dialog passes a name it did not author, so markup in an entity name runs as script. → §VDS107
 - 📋 **VDS108** (deps: —) **Sidebar drops id, data attributes and className on mobile, where its props land on a node that renders nothing** — The desktop branch forwards the same props to a real div, so a test hook or a label works until the viewport narrows. → §VDS108
 - 📋 **VDS109** (deps: —) **A bento dialog's inline translation fallback still names Turing, where the locale bundle no longer does** — The i18n gate reads the compiled bundles only, so the one string a host without the bundle sees is the one unchecked. → §VDS109
@@ -17,6 +16,8 @@
 - 📋 **VDS118** (deps: —) **The assets subpath has no size fixture, so the inline-asset cap never measures the entry shipping logos** — The cap was written after a 1.24MB logo reached a bundle, and that entry is the one it has never checked. → §VDS118
 - 📋 **VDS119** (deps: —) **No tsc project type-checks the stories, and 49 errors sit in the catalogue with every gate green** — The stories run through Vite, which strips types instead of checking them, so a wrong prop ships unflagged. → §VDS119
 - 📋 **VDS120** (deps: —) **The list of entries needing a use client banner is restated in the gate that checks it** — A new build entry added in one file only ships with no directive, and the check never looks at it. → §VDS120
+- 📋 **VDS121** (deps: VDS77 ✅) **schools takes the root entry but declares no react-hook-form, which is now a required peer of it** — It pins an older release so nothing breaks today, and the bump that reaches the peer would install it by pnpm's auto-install rather than by declaration. → §VDS121
+- 📋 **VDS122** (deps: —) **Two packages install this by caret range and are named in no consumer list, so no guard here reads them** — consumers.json calls itself the one place that set lives, and VDS73 widened it because a consumer nobody wrote down is invisible to every check. → §VDS122
 
 ## Non-goals
 
