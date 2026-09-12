@@ -4,7 +4,6 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS137** (deps: —) **no gate measures a consumer's own accent or primary override, only the preset's values** — The contrast test reads the preset and pairs by a naming rule the accent family does not follow, so a product's re-keyed orange can ship below AA with every gate green. → §VDS137
 - 📋 **VDS138** (deps: —) **the layer offers no virtualized, keyboard-operable data table, so consoles hand-roll each list** — BentoListPage renders tiles, so a list a curator sorts, range-selects and acts on at scale is rebuilt per product without the contract's keyboard rules. → §VDS138
 - 📋 **VDS139** (deps: VDS138) **the layer has no filter bar or filter chips, so each product composes its own query row** — Filtering by type, state, locale, author and date needs one shape a reader learns once, and a filter row drawn per product is the drift this package exists to stop. → §VDS139
 - 📋 **VDS140** (deps: —) **three planned console surfaces need the same diff and version rail, and the layer offers neither** — Revision history, review and translation each compare two values, so a diff drawn per surface would disagree about what changed and how it reads. → §VDS140

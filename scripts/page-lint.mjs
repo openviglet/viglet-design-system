@@ -9,6 +9,7 @@
 //   viglet-ds-page-lint --json                # machine-readable findings
 //   viglet-ds-page-lint --warn                # report, but exit 0
 //   viglet-ds-page-lint --page-pattern <re>   # which files are routed pages
+//   viglet-ds-page-lint --contrast <css>      # measure this stylesheet's tokens (repeatable)
 //
 // The rules:
 //
@@ -20,9 +21,15 @@
 //                  --vg-primary-foreground. One value there wins on both grounds,
 //                  so the dark ground takes the light colour; the four
 //                  --vg-primary-*-base inputs are read per ground.
+//   contrast.pair  With --contrast: a token pair the product's stylesheet
+//                  re-keys falls under 4.5:1 on either ground. Measured over the
+//                  installed preset with the product's stylesheets laid on top,
+//                  the way they cascade (VDS137).
+//   contrast.unread  With --contrast: a re-keyed token this cannot read as an
+//                  opaque colour, reported rather than measured as black.
 //
-// Both were prose in the vendored skill, and the bins beside this one read
-// exports, imports and vendored files, never a consumer's pages or stylesheets.
+// The first two were prose in the vendored skill, and the bins beside this one
+// read exports, imports and vendored files, never a consumer's pages or stylesheets.
 //
 // A page is a file whose name matches `--page-pattern` (default `.page.tsx` or
 // `.page.jsx`), and its outermost element is what its default export returns:
@@ -35,13 +42,17 @@
 //
 //   // viglet-ds-allow-page-column -- a kiosk with no shell
 //   /* viglet-ds-allow-primary -- the theme editor previews a raw value */
+//   /* viglet-ds-allow-contrast -- the brand orange, signed off at 4.2:1 as large text */
 //
 // The reason is required. An exemption with none is reported as the finding it
 // was meant to excuse.
 
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs"
 import { createRequire } from "node:module"
-import { join, relative, resolve } from "node:path"
+import { dirname, join, relative, resolve } from "node:path"
+import { fileURLToPath } from "node:url"
+
+import { AA_TEXT, measurePairs } from "./lib/contrast.mjs"
 
 const SOURCE_EXTENSIONS = new Set([".ts", ".tsx", ".js", ".jsx", ".mts", ".mjs", ".cts", ".cjs"])
 const STYLE_EXTENSIONS = new Set([".css", ".scss"])
@@ -50,12 +61,14 @@ const SKIP_DIRS = new Set(["node_modules", ".git", "dist", "build", "out", "cove
 const args = process.argv.slice(2)
 const asJson = args.includes("--json")
 const warnOnly = args.includes("--warn")
-// The value after a flag is not a root. Skipped by index and only when the flag
-// is there: VDS78 is what `indexOf(...) + 1` does when it is not.
+// The value after a flag is not a root. Skipped by index and only where the flag
+// is: VDS78 is what `indexOf(...) + 1` does when it is not.
+const VALUE_FLAGS = new Set(["--page-pattern", "--contrast"])
+const valueAt = new Set(args.flatMap((a, i) => (VALUE_FLAGS.has(a) ? [i + 1] : [])))
 const patternFlag = args.indexOf("--page-pattern")
-const patternValueAt = patternFlag === -1 ? -1 : patternFlag + 1
-const pagePattern = new RegExp(patternFlag === -1 ? String.raw`\.page\.[jt]sx$` : (args[patternValueAt] ?? ""))
-const roots = args.filter((a, i) => !a.startsWith("--") && i !== patternValueAt)
+const pagePattern = new RegExp(patternFlag === -1 ? String.raw`\.page\.[jt]sx$` : (args[patternFlag + 1] ?? ""))
+const contrastSheets = args.flatMap((a, i) => (a === "--contrast" && args[i + 1] ? [resolve(args[i + 1])] : []))
+const roots = args.filter((a, i) => !a.startsWith("--") && !valueAt.has(i))
 
 /** The consumer's TypeScript, or this package's own where it is a checkout. */
 function loadTypeScript() {
@@ -327,10 +340,83 @@ if (scanned === 0) {
   process.exit(1)
 }
 
+// ---------------------------------------------------------------------------
+// contrast.pair and contrast.unread
+
+/** The preset this package ships, or its source where this is a checkout before a build. */
+function presetCss() {
+  const here = dirname(fileURLToPath(import.meta.url))
+  for (const candidate of [join(here, "..", "dist", "preset.css"), join(here, "..", "src", "styles", "preset.css")]) {
+    if (existsSync(candidate)) return readFileSync(candidate, "utf8")
+  }
+  console.error("page-lint: --contrast needs the preset, and this copy of the package has none.")
+  process.exit(1)
+}
+
+/**
+ * Every pair a product's stylesheet re-keys, measured on both grounds. A pair
+ * the product does not touch is the preset's, and the package's own gate holds
+ * it, so it is not reported here.
+ */
+function contrastFindings() {
+  const absent = contrastSheets.filter((file) => !existsSync(file))
+  if (absent.length > 0) {
+    console.error(`page-lint: --contrast names a stylesheet that is not there: ${absent.map(shown).join(", ")}`)
+    process.exit(1)
+  }
+  const products = contrastSheets.map((file) => ({ name: shown(file), css: readFileSync(file, "utf8") }))
+  const sheets = [{ name: "preset", css: presetCss() }, ...products]
+
+  const byPair = new Map()
+  for (const measured of [...measurePairs(sheets, "light"), ...measurePairs(sheets, "dark")]) {
+    const key = `${measured.foreground} on ${measured.surface}`
+    byPair.set(key, { ...byPair.get(key), [measured.ground]: measured })
+  }
+
+  const out = []
+  for (const [pair, grounds] of byPair) {
+    const both = [grounds.light, grounds.dark].filter(Boolean)
+    const touched = both.flatMap((m) => m.declared).find((d) => d.sheet !== "preset")
+    if (!touched) continue
+
+    const unread = [...new Set(both.flatMap((m) => m.unread))]
+    const failing = both.some((m) => m.ratio !== null && m.ratio < AA_TEXT)
+    if (unread.length === 0 && !failing) continue
+
+    const product = products.find((p) => p.name === touched.sheet)
+    const exemption = pragma(product.css, "contrast")
+    if (exemption === "reasoned") continue
+
+    const at = product.css.search(new RegExp(String.raw`${touched.token}\s*:`))
+    // Only a token with a -dark twin can be stepped on one ground alone.
+    const twin = sheets.some((sheet) => sheet.css.includes(`${touched.token}-dark:`))
+    const said = both
+      .map((m) => (m.ratio === null ? `unread on the ${m.ground} ground` : `${m.ratio.toFixed(2)}:1 on the ${m.ground} ground`))
+      .join(" and ")
+    out.push({
+      file: product.name,
+      line: at === -1 ? 1 : lineOf(product.css, at),
+      rule: unread.length > 0 ? "contrast.unread" : "contrast.pair",
+      detail:
+        `${pair} is ${said}; ${AA_TEXT}:1 needed` +
+        (exemption === "unreasoned" ? " (an exemption here gives no reason, so it does not apply)" : ""),
+      fix:
+        unread.length > 0
+          ? `write ${unread.join(" and ")} as an oklch(), hex, rgb() or hsl() colour, or a var() or color-mix(in oklab) this can follow`
+          : `step ${touched.token} until the pair clears ${AA_TEXT}:1 on both grounds` +
+            (twin ? `; ${touched.token}-dark sets the dark ground on its own` : ""),
+    })
+  }
+  return out
+}
+
+if (contrastSheets.length > 0) findings.push(...contrastFindings())
+
 if (asJson) {
   console.log(JSON.stringify({ scanned, pages, findings }, null, 2))
 } else if (findings.length === 0) {
-  console.log(`page-lint: ${scanned} file(s) scanned, ${pages} of them pages — no page sets its own column, nothing sets --vg-primary.`)
+  const measuredToo = contrastSheets.length > 0 ? `, every pair ${contrastSheets.length} stylesheet(s) re-key clears ${AA_TEXT}:1` : ""
+  console.log(`page-lint: ${scanned} file(s) scanned, ${pages} of them pages — no page sets its own column, nothing sets --vg-primary${measuredToo}.`)
 } else {
   console.error(`\npage-lint: ${findings.length} finding(s)\n`)
   for (const finding of findings) {

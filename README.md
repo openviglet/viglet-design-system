@@ -146,6 +146,27 @@ be installed in the product. A deliberate exception takes a reason, in the file:
 `viglet-ds-allow-primary -- <reason>` does the same for the second rule.
 `--warn` and `--json` work as they do for `viglet-ds-check-duplicates`.
 
+Pass the stylesheet where you re-key the palette to also measure it:
+
+```bash
+viglet-ds-page-lint src --contrast src/index.css
+```
+
+It lays your stylesheet over the preset the way the two cascade and measures every
+token pair your stylesheet changes on both grounds: each `--vg-X` with its
+`--vg-X-foreground`, text and muted text on the page, the accented label on the
+page, and the white label on the accent fill. A pair under 4.5:1 on either ground
+is a finding at the line that declares the token, with both grounds' ratios:
+
+```
+src/index.css:41  contrast.pair  --vg-accent-fg on --vg-background is 3.59:1 on the light ground and 7.53:1 on the dark ground; 4.5:1 needed
+```
+
+It reads `oklch()`, hex, `rgb()`, `hsl()`, `var()` chains and
+`color-mix(in oklab, …)`. Anything else is reported as unread rather than
+guessed. `viglet-ds-allow-contrast -- <reason>` in the stylesheet keeps a pair
+you have signed off.
+
 ## Keeping your entry in the register true
 
 `consumers.json` records the subpaths each product takes, and this package's

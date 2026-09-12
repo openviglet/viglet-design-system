@@ -193,7 +193,9 @@ value. The inputs are read per ground, so you never write a dark block.
 
 The solid fill carries text, so that pair holds 4.5:1 on both grounds (§6). An
 accent stop at full chroma usually does not, so this value is often a deeper step
-than the one the chip is drawn with.
+than the one the chip is drawn with. `viglet-ds-page-lint --contrast <your
+stylesheet>` measures every pair your re-key touches, on both grounds, before a
+screenshot does.
 
 If you need a one-off tint, set `--bento-tone-from` / `--bento-tone-to` on a
 subtree instead of touching the tokens.

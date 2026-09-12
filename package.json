@@ -76,6 +76,7 @@
     "scripts/consumer-entries.mjs",
     "scripts/mcp.mjs",
     "scripts/page-lint.mjs",
+    "scripts/lib/contrast.mjs",
     "scripts/page-reference.mjs",
     "docs/BENTO-AUTHORING.md",
     "docs/BENTO-BOUNDARY.md",

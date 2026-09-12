@@ -2,6 +2,15 @@ import { readFileSync } from "node:fs"
 import { join, resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 
+import {
+  AA_TEXT,
+  groundTokens,
+  luminance,
+  measurePairs,
+  parseColour,
+  ratio,
+} from "../../scripts/lib/contrast.mjs"
+
 const srcDir = resolve(import.meta.dirname, "..")
 const presetPath = join(srcDir, "styles", "preset.css")
 
@@ -15,158 +24,102 @@ const presetPath = join(srcDir, "styles", "preset.css")
  * gate (VDS6) runs axe, which checks contrast — on what a story renders, and no
  * story put muted text on a muted panel. So the check is on the tokens.
  *
- * **Arithmetic, not a browser.** jsdom does not compute `oklch()`, so asking it
- * what colour a label ended up would be asserting on the stylesheet's own text.
- * The conversion is Ottosson's OKLab matrix, which lands on linear sRGB — what
- * WCAG's relative luminance wants — so nothing is gamma-encoded only to be
- * decoded again.
+ * VDS137 — the arithmetic is `scripts/lib/contrast.mjs` now, the same module a
+ * consumer's `viglet-ds-page-lint --contrast` runs over its own override. It
+ * models the cascade (a ground is every `:root` block with the dark blocks laid
+ * over it), resolves `var()` and `color-mix(in oklab, …)`, and knows the pairs a
+ * name cannot derive: the page, muted text on it, the accented label, and the
+ * white label on the accent fill (VDS151 found that one below AA on dark).
  *
- * **A value it cannot read is a failure, not a skip.** A `color-mix` or a
- * dangling `var()` would otherwise shrink what this covers every time the preset
- * grows, and a pair nobody measures is a pair nobody is keeping.
+ * **A value it cannot read is a failure, not a skip.** A dangling `var()` would
+ * otherwise shrink what this covers every time the preset grows, and a pair
+ * nobody measures is a pair nobody is keeping.
  */
-
-/** WCAG 2 AA for body text. AAA's 7:1 rules out most of a neutral palette's greys. */
-const AA_TEXT = 4.5
-
-/** The declarations under one selector, comments removed first. */
-function tokensUnder(css: string, selector: string): Map<string, string> {
-  const bare = css.replace(/\/\*[\s\S]*?\*\//g, "")
-  const found = new Map<string, string>()
-  const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-  for (const block of bare.matchAll(new RegExp(`${escaped}\\s*\\{([^}]*)\\}`, "g"))) {
-    for (const declaration of (block[1] ?? "").split(";")) {
-      const at = declaration.indexOf(":")
-      if (at === -1) continue
-      const name = declaration.slice(0, at).trim()
-      if (name.startsWith("--")) found.set(name, declaration.slice(at + 1).trim())
-    }
-  }
-  return found
-}
-
-/** Follow `var(--x)` to the literal it names, a few hops at most. */
-function resolveToken(tokens: Map<string, string>, value: string, depth = 5): string {
-  const points = /^var\(\s*(--[\w-]+)\s*\)$/.exec(value.trim())
-  if (points === null || depth === 0) return value
-  const next = tokens.get(points[1] ?? "")
-  return next === undefined ? value : resolveToken(tokens, next, depth - 1)
-}
-
-/** Relative luminance of an `oklch(...)` literal, or null where it is not one. */
-function luminance(value: string): number | null {
-  const found = /^oklch\(\s*([\d.]+)(%?)\s+([\d.]+)\s+([\d.]+)(?:deg)?\s*(?:\/.*)?\)$/i.exec(value.trim())
-  if (found === null) return null
-  const l = Number(found[1]) / (found[2] === "%" ? 100 : 1)
-  const c = Number(found[3])
-  const h = (Number(found[4]) * Math.PI) / 180
-  const a = c * Math.cos(h)
-  const b = c * Math.sin(h)
-
-  const long = (l + 0.3963377774 * a + 0.2158037573 * b) ** 3
-  const medium = (l - 0.1055613458 * a - 0.0638541728 * b) ** 3
-  const short = (l - 0.0894841775 * a - 1.291485548 * b) ** 3
-  const clamp = (x: number) => Math.min(1, Math.max(0, x))
-
-  const r = clamp(4.0767416621 * long - 3.3077115913 * medium + 0.2309699292 * short)
-  const g = clamp(-1.2684380046 * long + 2.6097574011 * medium - 0.3413193965 * short)
-  const bl = clamp(-0.0041960863 * long - 0.7034186147 * medium + 1.707614701 * short)
-  return 0.2126 * r + 0.7152 * g + 0.0722 * bl
-}
-
-function ratio(front: number, behind: number): number {
-  return (Math.max(front, behind) + 0.05) / (Math.min(front, behind) + 0.05)
-}
 
 const preset = readFileSync(presetPath, "utf8")
-const light = tokensUnder(preset, ":root")
-/** Dark overrides what it redeclares and inherits the rest, as the cascade does. */
-const dark = new Map([...light, ...tokensUnder(preset, '[data-theme="dark"]')])
+const sheets = [{ name: "preset.css", css: preset }]
 
-/**
- * Every `--vg-X` that has a `--vg-X-foreground`, plus the page itself.
- *
- * VDS99 — the page was the one pair nothing measured. `--vg-foreground` is body
- * text, and stripping the suffix leaves `--vg`, which no preset declares, so the
- * filter below dropped it in both grounds: the most-rendered colour combination
- * in the package went unchecked while the gate reported a clean sweep. Its
- * surface is `--vg-background`, a name the pattern cannot derive and has to be
- * told.
- */
-function pairs(tokens: Map<string, string>): [surface: string, foreground: string][] {
-  const derived = [...tokens.keys()]
-    .filter((name) => name.startsWith("--vg-") && name.endsWith("-foreground"))
-    .map((foreground) => [foreground.slice(0, -"-foreground".length), foreground] as [string, string])
-    .filter(([surface]) => tokens.has(surface))
+describe.each(["light", "dark"] as const)("VDS92: every named token pair on the %s ground", (ground) => {
+  const measured = measurePairs(sheets, ground)
 
-  const page: [string, string][] =
-    tokens.has("--vg-background") && tokens.has("--vg-foreground")
-      ? [["--vg-background", "--vg-foreground"]]
-      : []
-
-  return [...page, ...derived]
-}
-
-describe.each([
-  ["light", light],
-  ["dark", dark],
-] as const)("VDS92: every named token pair on the %s ground", (_ground, tokens) => {
   it("finds the pairs, which is what makes the check below mean anything", () => {
     // The control: a parser that matched nothing would pass the ratio check over
-    // no pairs at all.
-    expect(pairs(tokens).map(([surface]) => surface)).toEqual(
-      expect.arrayContaining(["--vg-background", "--vg-card", "--vg-muted", "--vg-popover", "--vg-secondary"]),
+    // no pairs at all. VDS99 added the page; VDS137 the accent family.
+    expect(measured.map((p) => `${p.foreground} on ${p.surface}`)).toEqual(
+      expect.arrayContaining([
+        "--vg-foreground on --vg-background",
+        "--vg-muted-foreground on --vg-background",
+        "--vg-muted-foreground on --vg-muted",
+        "--vg-card-foreground on --vg-card",
+        "--vg-popover-foreground on --vg-popover",
+        "--vg-primary-foreground on --vg-primary",
+        "--vg-accent-fg on --vg-background",
+        "white on --vg-accent-fill-from",
+        "white on --vg-accent-fill-to",
+      ]),
     )
   })
 
-  it.each(pairs(tokens))("keeps %s legible under its foreground", (surface, foreground) => {
-    const behind = luminance(resolveToken(tokens, tokens.get(surface) ?? ""))
-    const front = luminance(resolveToken(tokens, tokens.get(foreground) ?? ""))
+  it.each(measured.map((p) => [`${p.foreground} on ${p.surface}`, p] as const))("keeps %s legible", (_, pair) => {
+    expect(pair.unread, `${pair.unread.join(" and ")} does not resolve to an opaque colour`).toEqual([])
+    expect(pair.ratio, `${pair.foreground} on ${pair.surface} is ${pair.ratio?.toFixed(2)}:1`).toBeGreaterThanOrEqual(AA_TEXT)
+  })
+})
 
-    expect(behind, `${surface} does not resolve to an oklch() literal`).not.toBeNull()
-    expect(front, `${foreground} does not resolve to an oklch() literal`).not.toBeNull()
-    // Measured off the asserted values, not off a fallback: `?? 0` stood here,
-    // so a token that stopped resolving was measured as black and could pass.
-    const measured = ratio(front!, behind!)
-    expect(measured, `${foreground} on ${surface} is ${measured.toFixed(2)}:1`).toBeGreaterThanOrEqual(AA_TEXT)
+describe("VDS137: measured where a product re-keys", () => {
+  const override = (css: string) => [...sheets, { name: "product.css", css }]
+  const pair = (css: string, ground: "light" | "dark", foreground: string, surface: string) =>
+    measurePairs(override(css), ground).find((p) => p.foreground === foreground && p.surface === surface)!
+
+  it("reads a product's primary through the base inputs, per ground", () => {
+    // One step too light for the white it carries, on light only.
+    const css = ":root { --vg-primary-base: oklch(0.62 0 0); --vg-primary-foreground-base: oklch(0.985 0 0); }"
+    expect(pair(css, "light", "--vg-primary-foreground", "--vg-primary").ratio).toBeLessThan(AA_TEXT)
+    // The dark ground reads its own input, which the product left alone.
+    expect(pair(css, "dark", "--vg-primary-foreground", "--vg-primary").ratio).toBeGreaterThanOrEqual(AA_TEXT)
+    expect(pair(css, "light", "--vg-primary-foreground", "--vg-primary").origin).toContain("product.css")
   })
 
-  // VDS151 — the accent fill carries a white label (GradientButton, the checked
-  // GradientSwitch), a pair the -foreground rule cannot find. The dark ground put
-  // that label on the bright stop itself, at 3.76:1.
-  it.each(["--vg-accent-fill-from", "--vg-accent-fill-to"])("keeps a white label legible on %s", (fill) => {
-    const value = resolveToken(tokens, tokens.get(fill) ?? "")
-    // The one mix the preset writes for a fill: a stop stepped towards black.
-    const mix = /^color-mix\(in oklab, (var\(--[\w-]+\)) ([\d.]+)%, black\)$/.exec(value)
-    const stop = /^oklch\(\s*([\d.]+)(%?)\s+([\d.]+)\s+([\d.]+)\s*\)$/.exec(resolveToken(tokens, mix?.[1] ?? value))
-    expect(stop, `${fill} does not resolve to an oklch() stop`).not.toBeNull()
-
-    const keep = mix ? Number(mix[2]) / 100 : 1
-    const lightness = (Number(stop![1]) / (stop![2] === "%" ? 100 : 1)) * keep
-    const behind = luminance(`oklch(${lightness} ${Number(stop![3]) * keep} ${stop![4]})`)
-    expect(behind).not.toBeNull()
-
-    const measured = ratio(1, behind!)
-    expect(measured, `white on ${fill} is ${measured.toFixed(2)}:1`).toBeGreaterThanOrEqual(AA_TEXT)
+  it("keys the dark ground to the light value when a product sets --vg-primary itself", () => {
+    // BENTO-AUTHORING §4's warning, measured: the product's :root lands after the
+    // preset's dark block and wins on both grounds.
+    const css = ":root { --vg-primary: oklch(0.205 0 0); --vg-primary-foreground: oklch(0.985 0 0); }"
+    const { tokens } = groundTokens(override(css), "dark")
+    expect(tokens.get("--vg-primary")).toBe("oklch(0.205 0 0)")
+    expect(pair(css, "dark", "--vg-card-foreground", "--vg-card").ratio).toBeGreaterThanOrEqual(AA_TEXT)
   })
 
-  it("keeps muted text legible on the page, which is where it most often sits", () => {
-    // Not a named pair, and the placement a muted label is usually in: a caption
-    // on the ground, not on a muted panel.
-    const ground = luminance(resolveToken(tokens, tokens.get("--vg-background") ?? ""))
-    const muted = luminance(resolveToken(tokens, tokens.get("--vg-muted-foreground") ?? ""))
+  it("measures a re-keyed accent, an orange too light to be a label", () => {
+    const css = ":root { --vg-accent-from: #f97316; --vg-accent-to: #ea580c; --vg-accent-text: rgb(249 115 22); }"
+    expect(pair(css, "light", "--vg-accent-fg", "--vg-background").ratio).toBeLessThan(AA_TEXT)
+    expect(pair(css, "light", "white", "--vg-accent-fill-from").ratio).toBeLessThan(AA_TEXT)
+  })
 
-    // VDS99 — `ratio(muted ?? 0, ground ?? 1)` measured an unresolvable ground as
-    // white, so on the light ground this case passed having measured nothing at
-    // all, against the rule the file states two lines up.
-    expect(ground, "--vg-background does not resolve to an oklch() literal").not.toBeNull()
-    expect(muted, "--vg-muted-foreground does not resolve to an oklch() literal").not.toBeNull()
+  it("reads the colour forms a product writes, and refuses the ones it cannot", () => {
+    for (const value of ["#000", "#000000", "rgb(0 0 0)", "rgba(0, 0, 0, 1)", "hsl(0 0% 0%)", "oklch(0 0 0)", "black"]) {
+      expect(luminance(parseColour(value)), value).toBeCloseTo(0, 5)
+    }
+    expect(luminance(parseColour("white"))).toBeCloseTo(1, 5)
+    expect(luminance(parseColour("color-mix(in oklab, white 50%, transparent)"))).toBeNull()
+    expect(parseColour("lab(50% 0 0)")).toBeNull()
+  })
 
-    const measured = ratio(muted!, ground!)
-    expect(
-      measured,
-      `--vg-muted-foreground on --vg-background is ${measured.toFixed(2)}:1`,
-    ).toBeGreaterThanOrEqual(AA_TEXT)
+  it("names what it cannot read rather than measuring it as black", () => {
+    const measured = pair(":root { --vg-background: var(--brand-ground); }", "light", "--vg-foreground", "--vg-background")
+    expect(measured.ratio).toBeNull()
+    expect(measured.unread).toEqual(["--vg-background"])
+  })
+
+  it("lays a product's dark block and a dark media query over its own :root", () => {
+    const css = [
+      ":root { --vg-accent-text-dark: oklch(0.3 0 0); }",
+      "@media (prefers-color-scheme: dark) { :root { --vg-background: oklch(0.1 0 0); } }",
+      "@layer base { .dark { --vg-foreground: oklch(0.2 0 0); } }",
+    ].join("\n")
+    const { tokens } = groundTokens(override(css), "dark")
+    expect(tokens.get("--vg-background")).toBe("oklch(0.1 0 0)")
+    expect(tokens.get("--vg-foreground")).toBe("oklch(0.2 0 0)")
+    expect(groundTokens(override(css), "light").tokens.get("--vg-foreground")).not.toBe("oklch(0.2 0 0)")
   })
 })
 
@@ -182,10 +135,8 @@ describe.each([
  * next change to the token fails here instead of quietly ageing the page.
  */
 describe("VDS99: the grounds canvas draws what the tokens say", () => {
-  const canvas = readFileSync(
-    resolve(srcDir, "..", "docs", "reference", "grounds.dc.html"),
-    "utf8",
-  )
+  const canvas = readFileSync(resolve(srcDir, "..", "docs", "reference", "grounds.dc.html"), "utf8")
+  const { tokens: light } = groundTokens(sheets, "light")
 
   /** Linear luminance to the sRGB byte a browser paints. */
   const byte = (linear: number) => {
@@ -193,8 +144,8 @@ describe("VDS99: the grounds canvas draws what the tokens say", () => {
     return Math.round(encoded * 255)
   }
 
-  const mutedLinear = luminance(resolveToken(light, light.get("--vg-muted-foreground") ?? ""))
-  const groundLinear = luminance(resolveToken(light, light.get("--vg-background") ?? ""))
+  const mutedLinear = luminance(parseColour(light.get("--vg-muted-foreground") ?? "", light))
+  const groundLinear = luminance(parseColour(light.get("--vg-background") ?? "", light))
 
   it("draws muted text in the colour the token resolves to", () => {
     expect(mutedLinear).not.toBeNull()

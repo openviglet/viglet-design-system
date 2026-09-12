@@ -14,9 +14,11 @@ it, through the product's own package manager (`pnpm exec`, `npx`, `yarn`).
    in that release, or may disagree with this plugin's skill.
 2. `viglet-ds-check-duplicates <src>`: a component the product declares that the package
    already exports. Each finding names the import that replaces it.
-3. `viglet-ds-page-lint <dirs>`: a page that sets its own column, and a stylesheet that sets
-   `--vg-primary` directly. Point it only at directories whose pages render inside
-   `BentoShell`. A product still on console chrome is not held to it.
+3. `viglet-ds-page-lint <dirs> --contrast <stylesheet>`: a page that sets its own column, a
+   stylesheet that sets `--vg-primary` directly, and a re-keyed token pair under 4.5:1 on
+   either ground. Point it only at directories whose pages render inside `BentoShell`, and
+   `--contrast` at the stylesheet that claims the product's accent and primary. A product
+   still on console chrome is not held to the column rule.
 4. `viglet-ds-page-reference --check`: whether the vendored artboards are current.
 5. `viglet-ds-consumer-entries`: whether this product's entry in the package's register
    matches what its source imports. A failure here is fixed in the design system

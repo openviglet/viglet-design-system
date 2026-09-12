@@ -190,6 +190,74 @@ describe("viglet-ds-page-lint: primary.direct", () => {
   })
 })
 
+// VDS137 — the product's own tokens, measured over the preset they re-key.
+describe("viglet-ds-page-lint: --contrast", () => {
+  it("names a primary override one step too light, the pair, its line and both grounds", () => {
+    write(
+      "src/theme.css",
+      [
+        "@import \"@viglet/viglet-design-system/preset.css\";",
+        "",
+        ":root {",
+        "  --vg-primary-base: oklch(0.62 0 0);",
+        "  --vg-primary-base-dark: oklch(0.922 0 0);",
+        "}",
+      ].join("\n"),
+    )
+
+    const result = run("--contrast", "src/theme.css")
+    expect(result.status).toBe(1)
+    expect(result.stderr).toContain("src/theme.css:4  contrast.pair")
+
+    const found = findings("--contrast", "src/theme.css").filter((f) => f.rule === "contrast.pair")
+    expect(found).toHaveLength(1)
+    expect(found[0].detail).toMatch(
+      /^--vg-primary-foreground on --vg-primary is [\d.]+:1 on the light ground and [\d.]+:1 on the dark ground; 4\.5:1 needed$/,
+    )
+  })
+
+  it("passes an override that keeps every pair it touches, and says what it measured", () => {
+    write("src/theme.css", ":root {\n  --vg-accent-text: oklch(0.45 0.2 40);\n  --vg-accent-text-dark: oklch(0.8 0.15 60);\n}\n")
+
+    const result = run("--contrast", "src/theme.css")
+    expect(result.stderr).toBe("")
+    expect(result.status).toBe(0)
+    expect(result.stdout).toContain("every pair 1 stylesheet(s) re-key clears 4.5:1")
+  })
+
+  it("reports a re-keyed accent below AA on the fill it carries a label on", () => {
+    // An orange of the kind that measured near 3.6:1 as text in a product.
+    write("src/brand.css", ":root { --vg-accent-from: #f97316; --vg-accent-to: #ea580c; --vg-accent-text: #f97316; }\n")
+
+    const pairs = findings("--contrast", "src/brand.css").map((f) => f.detail.split(" is ")[0])
+    // Orange-500 as a label on white measures 2.80:1, and white on its fill 3.87:1.
+    expect(pairs).toEqual(expect.arrayContaining(["--vg-accent-fg on --vg-background", "white on --vg-accent-fill-from"]))
+    // The darker second stop, stepped towards black, carries white at 4.84:1: a
+    // pair the product touched and kept is not a finding.
+    expect(pairs).not.toContain("white on --vg-accent-fill-to")
+  })
+
+  it("reports a token it cannot read instead of measuring it as black", () => {
+    write("src/theme.css", ":root {\n  --vg-background: var(--brand-ground);\n}\n")
+
+    const [finding] = findings("--contrast", "src/theme.css").filter((f) => f.rule === "contrast.unread")
+    expect(finding).toMatchObject({ file: "src/theme.css", line: 2 })
+    expect(finding.detail).toContain("unread on the light ground")
+  })
+
+  it("honours a reasoned exemption, and does not read the stylesheet as a root", () => {
+    write(
+      "src/theme.css",
+      "/* viglet-ds-allow-contrast -- signed off as large text only */\n:root { --vg-primary-base: oklch(0.62 0 0); }\n",
+    )
+    expect(run("--contrast", "src/theme.css").status).toBe(0)
+
+    const absent = run("--contrast", "src/nope.css")
+    expect(absent.status).toBe(1)
+    expect(absent.stderr).toContain("src/nope.css")
+  })
+})
+
 describe("viglet-ds-page-lint: the invocation", () => {
   it("exits zero under --warn with findings, and prints them", () => {
     write("src/a.page.tsx", 'export default () => <div className="max-w-xl" />\n')
@@ -225,5 +293,21 @@ describe("viglet-ds-page-lint: the invocation", () => {
     }
     expect(pkg.bin["viglet-ds-page-lint"]).toBe("./scripts/page-lint.mjs")
     expect(pkg.files).toContain("scripts/page-lint.mjs")
+  })
+
+  it("ships every module a shipped bin imports", () => {
+    // VDS137 — page-lint imports scripts/lib/contrast.mjs. A bin whose import is
+    // not in `files` installs fine and dies on its first line in the product.
+    const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8")) as {
+      bin: Record<string, string>
+      files: string[]
+    }
+    for (const bin of Object.values(pkg.bin)) {
+      const source = readFileSync(join(root, bin), "utf8")
+      for (const [, specifier] of source.matchAll(/from\s+["'](\.{1,2}\/[^"']+)["']/g)) {
+        const shipped = join(dirname(bin), specifier).replaceAll("\\", "/").replace(/^\.\//, "")
+        expect(pkg.files, `${bin} imports ${specifier}, which is not in files`).toContain(shipped)
+      }
+    }
   })
 })

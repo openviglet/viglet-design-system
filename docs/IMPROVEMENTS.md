@@ -32,23 +32,6 @@ so rather than leaving it to be rediscovered.
 
 ## Block F — What a consuming CMS needs from the package next
 
-### §VDS137 Contrast measured where a product re-keys
-
-BENTO-AUTHORING tells a product to claim --primary through the four base inputs and
-requires the solid fill to hold 4.5:1 on both grounds. The contrast gate measures the
-preset's own pairs, found by a naming convention. A consumer's override is never
-measured, and the accent family does not follow the convention the gate pairs by.
-
-Shio shows why it matters: its accent is an orange claimed at :root, and the analysis
-measured it near 3.6:1 as text and its primary button far lower on the dark ground. The
-lints that exist in Shio assert that a token is set, not what ratio it reaches.
-
-Generalise the gate into an exported measurePairs that takes a stylesheet and a ground,
-resolves the custom properties the way the preset does, and returns every named pair
-with its ratio. Add the accent family to the pairs it knows. Ship it through page-lint's
---contrast flag so a consumer runs it against its own override. The planted case is an
-override one step too light, which must fail naming the pair and both grounds.
-
 ### §VDS138 A data table the contract can govern
 
 The list shape the contract names is BentoListPage with a renderTile, which fits a dozen
