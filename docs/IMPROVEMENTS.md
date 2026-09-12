@@ -29,27 +29,6 @@ Acceptance:
 - It is then a peerDependency and a devDependency here, not a dependency.
 - A consumer resolving a different minor still gets exactly one copy.
 
-### §VDS94 The package's strings merged a namespace at a time
-
-Both ways into i18next merge the package's strings one namespace at a time, whole.
-
-- `initVigI18n(app)` spreads `{ ...ours, ...theirs }` per language, so a product that ships
-  its own `common` replaces the package's `common` outright.
-- `registerVigTranslations(i18n)` adds a namespace only where the host has none, so a host
-  with a `common` of its own gets none of the package's.
-
-Either way every key the package asks for under that namespace falls back to its English
-`defaultValue`, and VDS51 and VDS93 cannot see it: they read the package's bundles,
-which are complete. The consoles grew their own `common` before this package existed, so
-the namespaces most likely to collide are exactly the ones VDS93 just added to.
-
-**The fix is a deep merge with the product winning.** `initVigI18n` merges leaf by leaf,
-the product's leaf over the package's; `registerVigTranslations` calls
-`addResourceBundle` with `deep` on and `overwrite` off, so a host key is never replaced
-and a missing one is filled. A test hands each entry a product bundle that owns
-`common.save` and asserts both that its value wins and that `common.next` still resolves
-to the package's word.
-
 ### §VDS95 The switcher's own name
 
 `LanguageSwitcher` names its button `t("language.toggle", "Change language")`, and no
@@ -136,6 +115,31 @@ The adversarial review of VDS92 found the contrast gate weaker than its entry sa
 **The fix.** Not-null assertions before measuring, the ground pair added explicitly and
 to the control assertion, and the canvas redrawn at `oklch(0.52 0 0)` with the ratio the
 test computes.
+
+### §VDS104 The language list, not just the key list
+
+`initVigI18n` builds its resources by walking `["en", "pt"]`, the two languages this
+package ships. A product's bundle is only read at those keys, so a product that passes
+`es` or `fr` gets an i18next initialised without it: not a missing translation, but a
+language that does not exist in the instance the call returns.
+
+The loop is the whole of it. Nothing rejects the argument, nothing warns, and the
+function returns normally — the product's own screens then read their fallback language,
+which is the same silent failure VDS94 fixed one level down. VDS94 made the merge per
+key rather than per namespace; this is the same shape one level up, per language rather
+than per key.
+
+`registerVigTranslations` does not have the problem: it adds bundles to a host instance
+the product already initialised with its own languages. Only the door that owns the
+`init` call can lose one.
+
+**The fix is the union.** Walk the languages either side declares, and merge as VDS94
+already merges: a language only one side has arrives whole, and one both have merges
+leaf by leaf with the product winning. `fallbackLng` stays `en`, the one language the
+package can promise is complete.
+
+A test passes a bundle in a third language and asserts both that its keys resolve and
+that the package's `en` is still there to fall back to.
 
 ## Block E — The assistant every product shares
 

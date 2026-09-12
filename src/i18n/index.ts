@@ -45,9 +45,38 @@ export const vigDesignSystemTranslations = {
   },
 };
 
+type Bundle = Record<string, unknown>;
+
+const isBranch = (value: unknown): value is Bundle =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
+/**
+ * VDS94 — merge leaf by leaf, with the product's leaf winning.
+ *
+ * A spread merges a namespace at a time, so a product that ships its own
+ * `common` replaced the package's `common` outright and every key this package
+ * asks for under it fell back to an English `defaultValue`. VDS51 and VDS93
+ * cannot see that: they read this package's bundles, which are complete. The
+ * consoles grew a `common` of their own before this package existed, so the
+ * namespaces most likely to collide are exactly the ones being added to.
+ */
+function mergeBundles(ours: Bundle, theirs: Bundle): Bundle {
+  const merged: Bundle = { ...ours };
+
+  for (const [key, value] of Object.entries(theirs)) {
+    const mine = merged[key];
+    merged[key] = isBranch(mine) && isBranch(value) ? mergeBundles(mine, value) : value;
+  }
+
+  return merged;
+}
+
 /**
  * Initialize i18n with design system translations.
  * Call this in your app's entry point, optionally merging with app-specific translations.
+ *
+ * Where a key exists on both sides the product's value wins; where only this
+ * package has one, it survives rather than being dropped with its namespace.
  */
 export function initVigI18n(appTranslations?: Record<string, Record<string, unknown>>) {
   const mergedResources: Record<string, { translation: Record<string, unknown> }> = {};
@@ -57,10 +86,7 @@ export function initVigI18n(appTranslations?: Record<string, Record<string, unkn
     const appLangTranslations = appTranslations?.[lang] || {};
 
     mergedResources[lang] = {
-      translation: {
-        ...dsTranslations,
-        ...appLangTranslations,
-      },
+      translation: mergeBundles(dsTranslations, appLangTranslations),
     };
   }
 
@@ -85,17 +111,19 @@ export function initVigI18n(appTranslations?: Record<string, Record<string, unkn
 /**
  * Register design system translations into an existing i18n instance.
  * Useful when the host app already has i18n initialized.
+ *
+ * A key the host already has is never replaced; one it lacks is filled in. That
+ * is `addResourceBundle` with `deep` on and `overwrite` off, in one call per
+ * language.
+ *
+ * VDS94 — this used to add a namespace only where the host had none, so a host
+ * with a `common` of its own received none of the package's `common` keys and
+ * read the English defaults. Skipping the whole namespace was the bug; the guard
+ * it needed is per key, which is what `overwrite: false` already is.
  */
 export function registerVigTranslations(i18nInstance: typeof i18n) {
   for (const [lang, translations] of Object.entries(vigDesignSystemTranslations)) {
-    for (const [namespace, values] of Object.entries(translations)) {
-      if (typeof values === "object" && values !== null) {
-        const existing = i18nInstance.getResourceBundle(lang, "translation") || {};
-        if (!existing[namespace]) {
-          i18nInstance.addResourceBundle(lang, "translation", { [namespace]: values }, true, true);
-        }
-      }
-    }
+    i18nInstance.addResourceBundle(lang, "translation", translations, true, false);
   }
 }
 

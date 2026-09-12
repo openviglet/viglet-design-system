@@ -60,6 +60,9 @@
 - ✅ **VDS75** **the back-link eyebrow's arrow rule is about two components here and still lives in Turing's file** — The bento contract states the back-link arrow rule and a test holds it, so Turing's file can point here rather than keep its own copy.
   checked **the contract states the arrow rule, both halves of it** BENTO-AUTHORING section 2 carries when the arrow is required and when it must not appear, so Turing's file can point here instead.
   checked **a test holds it, not just the prose** backTo renders the arrow on both heroes, a non-link eyebrow draws none, and eyebrow silently winning over backTo is pinned.
+- ✅ **VDS94** **a product with its own common namespace loses every string the package ships under it, and reads English** — A product that ships its own common keeps its words and the package's: both doors merge key by key, with the product winning at the leaf.
+  checked **a product's own namespace keeps the package's siblings** both doors are driven with a bundle owning common.save, and common.next still resolves to the package's word.
+  checked **registering twice never overwrites a host key** addResourceBundle runs with overwrite off, and a second registerVigTranslations leaves the host's value in place.
 
 ## Block B — Bento becomes a design-system layer
 

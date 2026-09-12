@@ -166,6 +166,17 @@ import i18n from "i18next";
 registerVigTranslations(i18n);
 ```
 
+**Both merge key by key, and your key always wins.** Shipping your own `common`
+does not cost you the package's — `common.save` stays yours and `common.next`
+still resolves to the word this package ships. `registerVigTranslations` never
+replaces a key the host already has, so calling it twice is safe.
+
+This used to merge a namespace at a time: a product with its own `common`
+replaced the package's outright, and every string the package asked for under
+that namespace fell back to its English default — in a Portuguese product,
+silently. If you worked around it by renaming a namespace or copying the
+package's keys into yours, you can stop.
+
 ### 3. Setup providers
 
 ```tsx
