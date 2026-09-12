@@ -339,9 +339,10 @@ shio `^7.87.0`, turing `^7.82.0`, dumont `^7.86.0`, and cloud-frontend, cloud-co
 and `@rk/ui` declared during that work. Schools is the one left.
 
 Nothing is broken today, because schools pins `@viglet/viglet-design-system` to an exact
-`2026.3.3` rather than a range. It never sees the peer until somebody bumps it, and pnpm
-would then auto-install the missing peer rather than fail — which is the same
-arrangement working by coincidence that VDS77 existed to remove.
+`2026.3.9` rather than a range, the newest release published. It never sees the peer
+until somebody bumps it, and pnpm would then auto-install the missing peer rather than
+fail — which is the same arrangement working by coincidence that VDS77 existed to
+remove.
 
 It was deliberately not declared during VDS77, and the reason is worth carrying. Schools
 is adopting a check of its own — `src/dependencies.test.ts` — that fails any dependency
