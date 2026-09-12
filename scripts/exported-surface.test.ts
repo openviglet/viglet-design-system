@@ -174,7 +174,11 @@ describe("every exported name reaches a published subpath", () => {
     expect(routerBarrel.get("VigGridItemActionProps")).toBe(originOf(gridList, "ItemActionProps"))
   })
 
-  it("names every component export no entry re-exports", async () => {
+  // VDS148 — the timeout is sized for the loaded suite, not a quiet machine.
+  // Importing vite.config.ts loads the build's plugins, and beside the browser
+  // project this took 5149ms against a 500ms run alone, failing on the default
+  // with every assertion intact.
+  it("names every component export no entry re-exports", { timeout: 30_000 }, async () => {
     const entries = await entryFiles()
     expect(entries.length, "no entry was read from vite.config.ts").toBeGreaterThan(3)
 

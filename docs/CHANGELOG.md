@@ -104,6 +104,7 @@
 - ✅ **VDS126** **The resize handle's grip is selected by panel-group-direction, which v4 renamed, so it never rotates** — The handle reads aria-orientation, so a vertical group divides on a full-width bar with a turned grip (design superseded: v4 writes neither attribute, so the shape was wrong too).
 - ✅ **VDS127** **The catalogue build copies into dist, which a fresh checkout has not got, so Pages has failed 35 times running** — The catalogue build carries neither plugin that writes to dist, so it builds on a checkout that has none (design recorded in `.storybook/main.ts`).
 - ✅ **VDS128** **GitHub Pages was never enabled, so the catalogue deploys nowhere and the README's link 404s** — Pages is enabled with the Actions source, so the catalogue deploys and openviglet.github.io/viglet-design-system serves it.
+- ✅ **VDS148** **the exported-surface gate runs under the 5s default timeout and times out whenever the full suite is loaded** — The surface gate carries a timeout sized for the loaded suite, so it fails on an unreachable export and never on contention.
 
 ## Block B — Bento becomes a design-system layer
 
