@@ -2,37 +2,13 @@ import { existsSync, readdirSync, readFileSync } from "node:fs"
 import { join, resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 
+// The swap table and the era-neutral list live in scripts/lib/console-era.mjs,
+// which the chrome census (VDS144) reads too.
+import { CONSOLE_ERA, ERA_NEUTRAL } from "../../../scripts/lib/console-era.mjs"
+
 const routerDir = resolve(import.meta.dirname)
 const distDir = resolve(routerDir, "..", "..", "..", "dist")
 const barrelPath = join(routerDir, "index.ts")
-
-/**
- * The console page vocabulary, and the bento export a new page should reach for
- * instead. This is the swap table the README publishes; keeping it here as data
- * is what lets the assertions below hold both files to it.
- *
- * `Page` and `PageContent` map to nothing on purpose: the bento layer ships no
- * single shell, because the shell is where a product is itself.
- */
-const CONSOLE_ERA: Record<string, string | null> = {
-  PageHeader: "BentoHero",
-  SubPageHeader: "BentoHero",
-  StickyPageHeader: "useBentoScrollFade",
-  GridList: "BentoListPage",
-  BlankSlate: "BentoEmptyState",
-  InternalSidebar: "BentoNavRail",
-  NavMain: "BentoNavRail",
-  NavUser: "BentoUserMenu",
-  SubPage: "BentoEntityShell",
-  Page: null,
-  PageContent: null,
-}
-
-/**
- * Exports from the same barrel that are *not* console-era: the bento layer
- * imports them itself, so marking them deprecated would deprecate bento.
- */
-const ERA_NEUTRAL = ["DialogDelete", "LoadProvider", "GradientButtonLink"]
 
 /** Every shipped source in the barrel's directory, read once. */
 const ROUTER_SOURCES = readdirSync(routerDir)

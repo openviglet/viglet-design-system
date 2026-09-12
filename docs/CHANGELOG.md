@@ -195,3 +195,4 @@
 
 ## Block G — The package knows one chrome
 
+- ✅ **VDS144** **nothing measures which consumers still render console chrome, so the cutover a non-goal waits on is unobservable** — pnpm chrome:census measures each consumer's console-era imports through shims and holds its chrome to them, and the register now says turing and dumont are mixed.

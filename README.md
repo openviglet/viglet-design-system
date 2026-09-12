@@ -442,9 +442,9 @@ before reaching for `PageHeader`, `GridList` or `InternalSidebar`.
 
 ### Two eras, and which one a new page should use
 
-This package exports two complete page vocabularies. The **console era** is what the consoles ship on today; the **[bento layer](#the-bento-layer)** is the current one, and Turing has cut over to it. Every console-era export is marked `@deprecated` in its own types, so an editor strikes it through and offers the swap.
+This package exports two complete page vocabularies. The **console era** is what some consumers still ship pages on; the **[bento layer](#the-bento-layer)** is the current one. Every console-era export is marked `@deprecated` in its own types, so an editor strikes it through and offers the swap.
 
-Nothing is being removed. No product has started cutting over, and a removal will get its own roadmap line rather than arriving as a side effect of this notice — so existing pages keep working and need no rush.
+Nothing is being removed yet. `pnpm chrome:census` counts, per consumer checked out beside this repository, the source files still taking a console-era component, directly or through a re-export shim, and holds each entry's `chrome` in `consumers.json` to that count: `console`, `mixed` for a consumer that takes the bento layer too, or neither at zero. The removal waits until no entry says `console` or `mixed`, and gets its own roadmap line rather than arriving as a side effect of this notice, so existing pages keep working and need no rush.
 
 | Console era | Use instead | |
 |---|---|---|

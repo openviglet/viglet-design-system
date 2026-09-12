@@ -102,26 +102,6 @@ aria-disabled with the same treatment rather than the attribute.
 
 ## Block G — The package knows one chrome
 
-### §VDS144 A census for the cutover the non-goal waits for
-
-Two standing non-goals protect the console chrome: do not make bento the only chrome
-this package knows, and do not remove the console-era exports before every console cuts
-over. The first names a reason that is spent, Shio migrating behind a parallel route,
-which finished. The second is sound, and uncheckable: every console cuts over is a
-condition nobody can observe, because the chrome field in consumers.json is typed by
-hand.
-
-Measured over source, excluding installed copies: Shio renders no console chrome and is
-declared console; Dumont imports SectionCardChromeProvider 64 times, GridList 48,
-SubPageHeader 37 and useSectionChrome 24 while also importing ./bento in 44 files; the
-cloud checkout imports no console-era component at all.
-
-So the chrome field becomes measured. A census reads each consumer's declared
-sourceRoots through its checkout, counts imports of the console-era exports, and fails
-when a consumer declared bento imports any, or one declared console imports none. It
-prints the per-consumer count on green. Every removal task below depends on this reading
-zero consoles, which turns the non-goal from a promise into a gate.
-
 ### §VDS145 The default belongs to the chrome that is staying
 
 bento-section-chrome.tsx declares SectionChrome as console or bento and creates its

@@ -95,6 +95,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "use:local": "node scripts/use-local.mjs",
+    "chrome:census": "node scripts/chrome-census.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "prepublishOnly": "npm run build",

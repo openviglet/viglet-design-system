@@ -10,8 +10,7 @@
 
 ## Block G — The package knows one chrome
 
-- 📋 **VDS144** (deps: VDS129 ✅, VDS130 ✅) **nothing measures which consumers still render console chrome, so the cutover a non-goal waits on is unobservable** — The register marks three consumers console while Shio renders none of it and Dumont still imports console-era components over two hundred times. → §VDS144
-- 📋 **VDS145** (deps: VDS144) **the section-chrome context defaults to console, so a bento consumer wraps every route in a provider to escape it** — Shio wraps about twenty-five routes in a bento provider, and any component rendered outside those wrappers silently takes the console look. → §VDS145
+- 📋 **VDS145** (deps: VDS144 ✅) **the section-chrome context defaults to console, so a bento consumer wraps every route in a provider to escape it** — Shio wraps about twenty-five routes in a bento provider, and any component rendered outside those wrappers silently takes the console look. → §VDS145
 - 📋 **VDS146** (deps: VDS145) **SectionChrome, its provider and hook, and AdaptiveSectionCard's console branch outlive the era they serve** — Once no declared consumer renders console chrome, every chrome branch is dead code a new component can still copy, guarded by a non-goal whose reason is spent. → §VDS146
 - 📋 **VDS147** (deps: VDS146) **the console-era router components are still exported after being deprecated** — PageHeader, SubPage, GridList, InternalSidebar and their siblings still ship, so a new screen can still be built on the chrome every consumer is leaving. → §VDS147
 
@@ -29,9 +28,9 @@
 - **No product data in the package** Routes, entity names and nav surfaces belong to the
   product; the package exports the palette and the schema, never the array, or a Shio
   console ends up offering Turing routes.
-- **Do not make bento the only chrome this package knows** Shio migrates behind a
-  parallel route and will render both chromes for the length of that migration, so a
-  shared form must be able to say which one it is in.
-- **Do not remove the console-era exports before every console cuts over** PageHeader,
-  SubPage, GridList and InternalSidebar still render live screens in all three; VDS24
-  deprecates them, and removal is a separate decision with its own line.
+- **Do not make bento the only chrome this package knows** The chrome census still
+  measures console-era chrome in two consumers, recorded as mixed in consumers.json, so
+  a shared form must still be able to say which chrome it is in.
+- **Do not remove the console-era exports before every console cuts over** Cutover is a
+  reading, not a promise: pnpm chrome:census holds each consumer's chrome to its source,
+  and a removal waits until no entry in consumers.json says console or mixed.
