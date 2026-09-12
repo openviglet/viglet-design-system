@@ -27,6 +27,7 @@
     "goToNextPage": "Go to next page",
     "stepOf": "Step {{index}} of {{count}}",
     "notifications": "Notifications",
+    "mainNavigation": "Main navigation",
     "readyToSubmit": "Ready to submit",
     "completeAllSteps": "Complete all steps above",
     "closeAppSwitcher": "Close app switcher"

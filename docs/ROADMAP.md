@@ -3,19 +3,10 @@
 ## Block A — The gate the design system never had
 
 - 📋 **VDS77** (deps: cloud-frontend and cloud-console declaring react-hook-form) **react-hook-form is a dependency, so a consumer can get a second copy of the one library here carrying a context** — Two consumers declare no react-hook-form and get it from here, so the peer change is theirs first. → §VDS77
-- 🛠 **VDS105** (deps: VDS97 ✅) **the NavigationMenu landmark keeps Radix's hardcoded Main, so a screen reader hears English in every product** — The pass VDS97 asked for found one more of its shape, and no gate can see a spoken name this package omits rather than mistypes. → §VDS105
 
 ## Block E — The assistant every product shares
 
 - 📋 **VDS106** (deps: VDS103 ✅) **a mascot defect smaller than 2% of the frame passes the reference-image gate, as the ember layer order does** — The three defects VDS103 was built for include one it measures as under budget, so the layer order that put the sparks on top of the sun would ship again unseen. → §VDS106
-
-## Done when — VDS105
-
-- **the landmark is named from the bundles** NavigationMenu passes common.mainNavigation
-  unless the caller passed aria-label, and a pt render reads Portuguese.
-- **the gate reports an omitted spoken name, not just a mistyped one** the VDS93 reader
-  knows which wrapped primitives supply an English default and fails when this package
-  passes none.
 
 ## Done when — VDS106
 

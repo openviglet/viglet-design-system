@@ -158,6 +158,106 @@ function literalsIn(fileName: string, source: string): string[] {
   return found
 }
 
+/**
+ * VDS105 — the other half of the same claim: a spoken name this package
+ * *omits*.
+ *
+ * Everything above reads what this source says. A dependency can say something
+ * on this package's behalf instead, and then there is no literal to find:
+ * sonner's container announced `Notifications` (VDS97) and Radix's navigation
+ * root announces `Main` (VDS105), in every product and every language, because
+ * a wrapper passed nothing. A reader looking for English in this repository is
+ * blind to all of it.
+ *
+ * So the primitives that name themselves are listed, and a wrapper that renders
+ * one without supplying the name is the finding. The attribute it does supply
+ * is a spoken one, so the sweep above then holds it to a `t()` call — the two
+ * halves compose, and neither is enough alone.
+ *
+ * **The list is short because it was checked, not because nobody looked.** The
+ * rest of the wrapped set — vaul, react-resizable-panels, and the Radix dialog
+ * and select primitives — was read the same way and supplies no spoken default
+ * of its own: each either requires the name or leaves the element unnamed. A
+ * primitive added here later is the case to re-check.
+ */
+const NAMES_ITSELF = [
+  { module: "@radix-ui/react-navigation-menu", element: "Root", attribute: "aria-label", says: "Main" },
+  { module: "sonner", element: "Toaster", attribute: "containerAriaLabel", says: "Notifications" },
+] as const
+
+/**
+ * What each local JSX name in a file stands for, as `module` and the export
+ * taken from it. Resolved from the imports rather than by matching the tag,
+ * because both spellings this package uses hide the origin: `Toaster as Sonner`
+ * renames it, and `NavigationMenuPrimitive.Root` names the namespace instead.
+ */
+function importedNames(file: ts.SourceFile): Map<string, { module: string; element: string }> {
+  const names = new Map<string, { module: string; element: string }>()
+
+  for (const statement of file.statements) {
+    if (!ts.isImportDeclaration(statement) || !ts.isStringLiteral(statement.moduleSpecifier)) continue
+    const module = statement.moduleSpecifier.text
+    const clause = statement.importClause
+    if (!clause) continue
+
+    // `import Default from "m"` — no primitive here names itself through one,
+    // but a tag resolving to nothing at all would be a silent miss.
+    if (clause.name) names.set(clause.name.text, { module, element: "default" })
+
+    const bindings = clause.namedBindings
+    if (bindings && ts.isNamespaceImport(bindings)) {
+      // The namespace itself: `NavigationMenuPrimitive` stands for the module,
+      // and the element comes from the property the tag reads off it.
+      names.set(bindings.name.text, { module, element: "*" })
+    } else if (bindings && ts.isNamedImports(bindings)) {
+      for (const spec of bindings.elements) {
+        names.set(spec.name.text, { module, element: (spec.propertyName ?? spec.name).text })
+      }
+    }
+  }
+
+  return names
+}
+
+/** Every primitive `source` renders without the name it would otherwise announce. */
+function omissionsIn(fileName: string, source: string): string[] {
+  const file = ts.createSourceFile(fileName, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX)
+  const names = importedNames(file)
+  const found: string[] = []
+
+  const check = (opening: ts.JsxOpeningElement | ts.JsxSelfClosingElement) => {
+    const tag = opening.tagName
+    let origin: { module: string; element: string } | undefined
+
+    if (ts.isIdentifier(tag)) origin = names.get(tag.text)
+    else if (ts.isPropertyAccessExpression(tag) && ts.isIdentifier(tag.expression)) {
+      const namespace = names.get(tag.expression.text)
+      if (namespace?.element === "*") origin = { module: namespace.module, element: tag.name.text }
+    }
+    if (!origin) return
+
+    for (const primitive of NAMES_ITSELF) {
+      if (primitive.module !== origin.module || primitive.element !== origin.element) continue
+      const supplied = opening.attributes.properties.some(
+        (attr) => ts.isJsxAttribute(attr) && attr.name.getText() === primitive.attribute,
+      )
+      // A spread is not enough on purpose. A product could always pass this
+      // one; what it cannot do is find out that it has to.
+      if (supplied) continue
+      const { line } = file.getLineAndCharacterOfPosition(opening.getStart())
+      found.push(`${line + 1}: ${primitive.module} announces ${JSON.stringify(primitive.says)} without ${primitive.attribute}`)
+    }
+  }
+
+  const visit = (node: ts.Node) => {
+    if (ts.isJsxSelfClosingElement(node)) check(node)
+    else if (ts.isJsxElement(node)) check(node.openingElement)
+    ts.forEachChild(node, visit)
+  }
+  visit(file)
+  return found
+}
+
 /** Shipped components — a story or a test typing English proves nothing. */
 function components(dir: string, found: string[] = []): string[] {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -214,6 +314,53 @@ describe("a shipped component says nothing the bundles do not hold", () => {
     "%s",
     (_, file) => {
       expect(literalsIn(file, readFileSync(file, "utf8")), "put the word in the en and pt bundles and ask for it with t()").toEqual([])
+    },
+  )
+})
+
+describe("a wrapped primitive does not announce a name of its own", () => {
+  it("reads each spelling a tag can take, and passes the fix", () => {
+    const specimen = (code: string) => omissionsIn("specimen.tsx", code)
+
+    // The namespace spelling, which is how navigation-menu.tsx renders it.
+    expect(
+      specimen(`import * as P from "@radix-ui/react-navigation-menu"\nconst C = () => <P.Root className="x" />`),
+    ).toEqual([`2: @radix-ui/react-navigation-menu announces "Main" without aria-label`])
+
+    // The renamed named import, which is how sonner.tsx renders it.
+    expect(specimen(`import { Toaster as S } from "sonner"\nconst C = () => <S theme="dark" />`)).toEqual([
+      `2: sonner announces "Notifications" without containerAriaLabel`,
+    ])
+
+    // Supplied, in either spelling.
+    expect(
+      specimen(`import * as P from "@radix-ui/react-navigation-menu"\nconst C = () => <P.Root aria-label={t("k")}><b /></P.Root>`),
+    ).toEqual([])
+    expect(
+      specimen(`import { Toaster as S } from "sonner"\nconst C = () => <S containerAriaLabel={t("k")} />`),
+    ).toEqual([])
+
+    // A spread does not count: a product could always pass it, and the point is
+    // that it should not have to know to.
+    expect(
+      specimen(`import * as P from "@radix-ui/react-navigation-menu"\nconst C = (p) => <P.Root {...p} />`),
+    ).toEqual([`2: @radix-ui/react-navigation-menu announces "Main" without aria-label`])
+
+    // A tag of the same name from somewhere else is not this primitive, and
+    // another export of the same module is not the one that names itself.
+    expect(specimen(`import { Toaster as S } from "./local-toaster"\nconst C = () => <S />`)).toEqual([])
+    expect(
+      specimen(`import * as P from "@radix-ui/react-navigation-menu"\nconst C = () => <P.List />`),
+    ).toEqual([])
+  })
+
+  it.each(shipped.map((file) => [relative(srcDir, file).replaceAll("\\", "/"), file]))(
+    "%s",
+    (_, file) => {
+      expect(
+        omissionsIn(file, readFileSync(file, "utf8")),
+        "name it from the bundles with t(), before the spread so a product can still override it",
+      ).toEqual([])
     },
   )
 })

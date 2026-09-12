@@ -2,9 +2,24 @@ import * as React from "react"
 import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu"
 import { cva } from "class-variance-authority"
 import { ChevronDownIcon } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * VDS105 — the landmark names itself, in the reader's language.
+ *
+ * Radix renders this root as a `nav` carrying a hardcoded `aria-label="Main"`,
+ * so passing none left the landmark announced as "Main" in every product and
+ * every language — English a dependency wrote, exactly as sonner's
+ * `Notifications` was. VDS93 cannot see it and should not: there is no literal
+ * here to find, and the omission is the defect. The literals gate grew a second
+ * half for that shape; `src/i18n/literals.test.ts` holds the list.
+ *
+ * A navigation landmark's name is also what tells it apart from the other
+ * landmarks on a page, so a product with a second nav wants its own word.
+ * Passing `aria-label` has always worked — before the spread, so it still does.
+ */
 function NavigationMenu({
   className,
   children,
@@ -13,10 +28,13 @@ function NavigationMenu({
 }: React.ComponentProps<typeof NavigationMenuPrimitive.Root> & {
   viewport?: boolean
 }) {
+  const { t } = useTranslation()
+
   return (
     <NavigationMenuPrimitive.Root
       data-slot="navigation-menu"
       data-viewport={viewport}
+      aria-label={t("common.mainNavigation", { defaultValue: "Main navigation" })}
       className={cn(
         "group/navigation-menu relative flex max-w-max flex-1 items-center justify-center",
         className

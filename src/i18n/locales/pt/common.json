@@ -27,6 +27,7 @@
     "goToNextPage": "Ir para a próxima página",
     "stepOf": "Etapa {{index}} de {{count}}",
     "notifications": "Notificações",
+    "mainNavigation": "Navegação principal",
     "readyToSubmit": "Pronto para enviar",
     "completeAllSteps": "Conclua todas as etapas acima",
     "closeAppSwitcher": "Fechar o alternador de aplicativos"
