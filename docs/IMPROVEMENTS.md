@@ -21,6 +21,29 @@ all. The per-instance colour the `<style>` element is reaching for is what a CSS
 property on the element is for.
 
 Acceptance:
+- ~~cloud-frontend and cloud-console declare `react-hook-form` themselves.~~ done
+- It is then a peerDependency and a devDependency here, not a dependency.
+- A consumer resolving a different minor still gets exactly one copy.
+
+### §VDS107 The entity name that runs as script
+
+`BadgeColorful` renders its `text` prop through `dangerouslySetInnerHTML` and, three
+lines later, interpolates the same string into a `<style>` element as `.dark
+[title="${text}"]`. Neither path escapes anything, and there is no sanitiser anywhere in
+the package.
+
+The prop is not decorative. `components/router/dialog.delete.tsx` passes `usage.name` —
+an entity name out of the consumer's own content — into it, so every product's delete
+dialog renders a string it did not author as live markup. A name carrying an `onerror`
+attribute executes; a name carrying a quote or a closing style tag escapes the attribute
+selector and writes arbitrary rules into the host page.
+
+This is the only `dangerouslySetInnerHTML` in the package, it carries no
+`eslint-disable` and no comment explaining itself, and the component has no test file at
+all. The per-instance colour the `<style>` element is reaching for is what a CSS custom
+property on the element is for.
+
+Acceptance:
 - `text` is rendered as a text child, escaped by React like every other string.
 - No `<style>` element is built from a prop value.
 - A test renders a name containing a tag, a quote and a closing style tag, and asserts each appears as text.
