@@ -3,8 +3,18 @@ import * as AccordionPrimitive from "@radix-ui/react-accordion"
 import { ChevronDown } from "lucide-react"
 import * as React from "react"
 
+/**
+ * A vertical stack of headed sections, each expanding to show its content: the
+ * Radix root, with `type` set to `single` or `multiple`.
+ *
+ * For one collapsible form section on its own, `SectionCard` collapses by itself.
+ */
 const Accordion = AccordionPrimitive.Root
 
+/**
+ * One section of an `Accordion`, holding its trigger and content under a unique
+ * `value`.
+ */
 const AccordionItem = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Item>
@@ -13,6 +23,10 @@ const AccordionItem = React.forwardRef<
 ))
 AccordionItem.displayName = "AccordionItem"
 
+/**
+ * The header button that expands or collapses its `AccordionItem`, with a chevron
+ * that turns.
+ */
 const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
@@ -33,6 +47,9 @@ const AccordionTrigger = React.forwardRef<
 ))
 AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName
 
+/**
+ * The body of an `AccordionItem`, animated open and closed.
+ */
 const AccordionContent = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content>

@@ -3,6 +3,13 @@ import * as TabsPrimitive from "@radix-ui/react-tabs"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * A set of panels shown one at a time from a row of tabs, on the Radix primitive,
+ * composed with `TabsList`, `TabsTrigger` and `TabsContent`.
+ *
+ * To pick one of a few options that sets a value rather than showing a panel, use
+ * `ToggleGroup`.
+ */
 function Tabs({
   className,
   ...props
@@ -16,6 +23,9 @@ function Tabs({
   )
 }
 
+/**
+ * The row of tabs in `Tabs`.
+ */
 function TabsList({
   className,
   ...props
@@ -32,6 +42,9 @@ function TabsList({
   )
 }
 
+/**
+ * One tab, which shows the `TabsContent` of the same `value`.
+ */
 function TabsTrigger({
   className,
   ...props
@@ -48,6 +61,9 @@ function TabsTrigger({
   )
 }
 
+/**
+ * The panel shown while its tab is selected.
+ */
 function TabsContent({
   className,
   ...props

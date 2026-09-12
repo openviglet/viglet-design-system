@@ -3,6 +3,13 @@ import * as AvatarPrimitive from "@radix-ui/react-avatar"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * A round avatar frame holding an `AvatarImage` and the `AvatarFallback` shown
+ * until the image loads.
+ *
+ * For a person's initials with no picture, `UserAvatar` is already built; the
+ * Viglet mascot is `VigletAvatar`.
+ */
 function Avatar({
   className,
   ...props
@@ -19,6 +26,9 @@ function Avatar({
   )
 }
 
+/**
+ * The picture inside an `Avatar`, shown once it has loaded.
+ */
 function AvatarImage({
   className,
   ...props
@@ -32,6 +42,10 @@ function AvatarImage({
   )
 }
 
+/**
+ * What an `Avatar` shows while its image loads or when it has none, usually
+ * initials.
+ */
 function AvatarFallback({
   className,
   ...props

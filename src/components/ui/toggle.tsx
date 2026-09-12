@@ -26,6 +26,10 @@ const toggleVariants = cva(
   }
 )
 
+/**
+ * A button that stays pressed or not, such as bold in a toolbar, in the default or
+ * outline style. For one choice among several, use `ToggleGroup`.
+ */
 function Toggle({
   className,
   variant,

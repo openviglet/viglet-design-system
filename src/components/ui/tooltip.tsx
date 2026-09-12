@@ -3,6 +3,12 @@ import * as TooltipPrimitive from "@radix-ui/react-tooltip"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * Sets how long a pointer rests before the tooltips beneath it open.
+ *
+ * Each `Tooltip` mounts its own provider with no delay and reads that one, so a
+ * provider placed around a `Tooltip` does not change its delay.
+ */
 function TooltipProvider({
   delayDuration = 0,
   ...props
@@ -16,6 +22,12 @@ function TooltipProvider({
   )
 }
 
+/**
+ * A short label that appears beside an element on hover or keyboard focus, composed
+ * with `TooltipTrigger` and `TooltipContent`.
+ *
+ * Put nothing a reader needs only in it. Content to read or act in is `Popover`.
+ */
 function Tooltip({
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Root>) {
@@ -26,12 +38,18 @@ function Tooltip({
   )
 }
 
+/**
+ * The element a `Tooltip` labels. Pass `asChild` to use your own.
+ */
 function TooltipTrigger({
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {
   return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />
 }
 
+/**
+ * The tooltip's bubble, with an arrow, portalled beside its trigger.
+ */
 function TooltipContent({
   className,
   sideOffset = 0,

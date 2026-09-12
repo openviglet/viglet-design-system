@@ -3,6 +3,10 @@ import * as SeparatorPrimitive from "@radix-ui/react-separator"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * A horizontal or vertical hairline between pieces of content, hidden from a screen
+ * reader unless `decorative` is false.
+ */
 function Separator({
   className,
   orientation = "horizontal",

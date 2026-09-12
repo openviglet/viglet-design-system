@@ -2,6 +2,12 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * A single-line text field in the form style.
+ *
+ * For text edited in place on a bento page, use `BentoInlineEdit`, and for many
+ * lines `Textarea`.
+ */
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (
     <input

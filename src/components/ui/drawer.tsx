@@ -3,30 +3,49 @@ import { Drawer as DrawerPrimitive } from "vaul"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * A panel that slides in from an edge, the bottom by default, and can be dragged
+ * closed, on the vaul primitive.
+ *
+ * For a panel from any edge with no dragging, use `Sheet`, and for a centred modal
+ * `Dialog`.
+ */
 function Drawer({
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Root>) {
   return <DrawerPrimitive.Root data-slot="drawer" {...props} />
 }
 
+/**
+ * The element that opens its `Drawer`.
+ */
 function DrawerTrigger({
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Trigger>) {
   return <DrawerPrimitive.Trigger data-slot="drawer-trigger" {...props} />
 }
 
+/**
+ * Renders a drawer at the end of the document. `DrawerContent` already uses one.
+ */
 function DrawerPortal({
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Portal>) {
   return <DrawerPrimitive.Portal data-slot="drawer-portal" {...props} />
 }
 
+/**
+ * A control that closes its `Drawer`.
+ */
 function DrawerClose({
   ...props
 }: React.ComponentProps<typeof DrawerPrimitive.Close>) {
   return <DrawerPrimitive.Close data-slot="drawer-close" {...props} />
 }
 
+/**
+ * The dimmed backdrop behind an open drawer. `DrawerContent` already renders one.
+ */
 function DrawerOverlay({
   className,
   ...props
@@ -43,6 +62,10 @@ function DrawerOverlay({
   )
 }
 
+/**
+ * The sliding panel of a `Drawer`, with its overlay, and a drag handle when it
+ * comes from the bottom.
+ */
 function DrawerContent({
   className,
   children,
@@ -70,6 +93,9 @@ function DrawerContent({
   )
 }
 
+/**
+ * The top of `DrawerContent`, stacking the title and description.
+ */
 function DrawerHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -83,6 +109,9 @@ function DrawerHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * The bottom of `DrawerContent`, for its actions.
+ */
 function DrawerFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -93,6 +122,9 @@ function DrawerFooter({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * The drawer's heading, which is also its accessible name.
+ */
 function DrawerTitle({
   className,
   ...props
@@ -106,6 +138,9 @@ function DrawerTitle({
   )
 }
 
+/**
+ * The line under a drawer's title, announced as its description.
+ */
 function DrawerDescription({
   className,
   ...props

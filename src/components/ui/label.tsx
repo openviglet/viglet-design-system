@@ -3,6 +3,10 @@ import * as LabelPrimitive from "@radix-ui/react-label"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * A label for a form control, on the Radix primitive. Inside a `FormField`, use
+ * `FormLabel`, which is bound to the field.
+ */
 function Label({
   className,
   ...props

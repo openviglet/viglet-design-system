@@ -32,29 +32,6 @@ so rather than leaving it to be rediscovered.
 
 ## Block F — What a consuming CMS needs from the package next
 
-### §VDS150 Purposes the catalogue can read
-
-dist/catalogue.json takes a component's purpose from the doc comment on its own
-declaration, and writes an empty summary where there is none rather than inventing one.
-Measured at the build that shipped the catalogue: 45 of 237 components are described.
-find_component ranks the rest by name, prop names and the contract sections that name
-them, which works for BentoPanel and fails for a job worded differently from the
-component's name. read_component answers them with no description at all.
-
-The ratchet has landed. check-catalogue reads catalogue-undescribed.txt, fails a
-component outside it with no summary, fails a listed one that gained a summary, and
-fails a listed name that is no longer a component. The bento and router layers and the
-product's own root components are described, several of them by moving a comment that
-sat on the props interface or floated above the file, where the catalogue never read it.
-
-What is left is the primitive layer: the Radix and shadcn parts such as Accordion, Card,
-the Dialog, Drawer, Sheet and Select parts, the Sidebar family and Tooltip. Write each
-first sentence as the purpose, and where a sibling does the job better say so: Card
-beside BentoPanel and GlassCard, Sheet beside Drawer and Dialog, Popover beside
-HoverCard and Tooltip, Switch beside GradientSwitch. Delete each name from the list in
-the change that describes it, and rerun the build: the find sample jobs in
-check-catalogue must still rank their component first.
-
 ### §VDS152 The deprecation ends
 
 BentoActionsMenuItem.id shipped optional, with a warning outside production for an item
@@ -84,6 +61,45 @@ while it runs, so none leaves the tab order, and change the test to assert aria-
 focus kept, and a second press ignored. BentoInlineEdit disables its display button
 while a commit is saving; since focus has already left the field by then, give it
 aria-disabled with the same treatment rather than the attribute.
+
+### §VDS154 A provided tooltip delay that nothing reads
+
+Tooltip in src/components/ui/tooltip.tsx wraps its Radix root in a TooltipProvider of
+its own, whose delayDuration defaults to 0. Radix reads the nearest provider, so that
+inner one always wins, and a provider a product or a component places around its
+tooltips sets a delay nothing reads. BentoNavRail wraps the rail in TooltipProvider
+delayDuration={200} so a pointer travelling down the rail does not flash every label on
+the way; every label still opens at once. The pattern came from upstream shadcn, which
+is why it looks deliberate.
+
+Build the fix in the Tooltip wrapper, not in the rail. TooltipProvider sets a small
+context of its own beside the Radix one, and Tooltip mounts its inner provider only when
+that context is absent, so a lone Tooltip keeps working with no provider and a provided
+delay reaches every tooltip under it. The rejected alternative is a delayDuration prop
+on every Tooltip, which puts the same number on each call site and leaves the provider
+documented as doing something it does not.
+
+A browser test in the parity project holds it: a Tooltip under a provider with a delay
+is not open immediately after hover and is open after the delay, and a Tooltip with no
+provider opens at once. Update the TooltipProvider doc comment, which currently records
+the defect as the behaviour.
+
+### §VDS155 First sentences that are not purposes
+
+VDS150 put a doc comment on every exported component, and check-catalogue now fails a
+component without one. It cannot judge whether the first sentence says what the
+component is for, and five of the comments written before it do not.
+
+BadgeColorful opens with why its text is never treated as markup. NavigationMenu and
+Toaster open with the fix that named their landmark, which the catalogue's readable pass
+reduces to a lowercase fragment. BentoStatusMarker's first sentence ends in a colon, so
+its summary stops mid-list. UserAvatar repeats its own name before saying what it is.
+
+Rewrite each first sentence as the purpose, keeping the note that was there as a later
+paragraph, since each one records a real decision. Then rebuild and read the five
+through find_component. A mechanical check is not part of this: whether a sentence names
+a purpose is a reading, and a rule that a summary starts with a capital would fail the
+many correct comments that open with a roadmap id.
 
 ## Block G — The package knows one chrome
 

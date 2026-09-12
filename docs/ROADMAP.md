@@ -4,17 +4,13 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-- ⏳ **VDS150** (deps: VDS136 ✅) **192 of 237 exported components carry no doc comment, so find_component can match them only by name and props** — 158 Radix and shadcn primitive parts are still undescribed and listed in catalogue-undescribed.txt, which only shrinks. → §VDS150
 - 📋 **VDS153** (deps: VDS143 ✅) **the list page's layout editor disables its buttons while it saves, so the pressed button drops focus** — Save layout, cancel, reset and set-as-default each take disabled={busy}, the pattern VDS143 replaced in the form hero, save bar and entity shell. → §VDS153
+- 📋 **VDS154** (deps: —) **a TooltipProvider delay never reaches a Tooltip, because each Tooltip mounts its own provider with no delay** — The nav rail asks for a 200ms delay so a pointer crossing it does not flash every label, and gets none. → §VDS154
+- 📋 **VDS155** (deps: —) **five doc comments open with a fix note or a caveat, which the catalogue then serves as the component's purpose** — find_component shows BadgeColorful as a sentence about markup safety and NavigationMenu as one about its landmark, so neither says what it is for. → §VDS155
 
 ## Block G — The package knows one chrome
 
 - 📋 **VDS147** (deps: VDS146 ⏸) **the console-era router components are still exported after being deprecated** — PageHeader, SubPage, GridList, InternalSidebar and their siblings still ship, so a new screen can still be built on the chrome every consumer is leaving. → §VDS147
-
-## Done when — VDS150
-
-- **catalogue-undescribed.txt lists no component** check-catalogue prints every exported
-  component as described, and the list file holds only its header comment.
 
 ## Non-goals
 

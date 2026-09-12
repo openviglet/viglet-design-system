@@ -3,6 +3,10 @@ import * as SwitchPrimitive from "@radix-ui/react-switch"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * An on-off switch on the Radix primitive, in the neutral colours. `GradientSwitch`
+ * takes the product's accent.
+ */
 function Switch({
   className,
   ...props

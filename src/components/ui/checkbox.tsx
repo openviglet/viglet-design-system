@@ -4,6 +4,10 @@ import { CheckIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * A checkbox on the Radix primitive. Pair it with a `Label`, or with a `FormLabel`
+ * inside a `FormField`.
+ */
 function Checkbox({
   className,
   ...props

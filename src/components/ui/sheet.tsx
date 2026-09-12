@@ -7,16 +7,29 @@ import { useTranslation } from "react-i18next"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * A panel that slides over the page from one edge, on the Radix dialog primitive,
+ * composed with `SheetTrigger` and `SheetContent`.
+ *
+ * A centred modal is `Dialog`, and a panel dragged closed on a touch screen
+ * `Drawer`.
+ */
 function Sheet({ ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />
 }
 
+/**
+ * The element that opens its `Sheet`.
+ */
 function SheetTrigger({
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Trigger>) {
   return <SheetPrimitive.Trigger data-slot="sheet-trigger" {...props} />
 }
 
+/**
+ * A control that closes its `Sheet`.
+ */
 function SheetClose({
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Close>) {
@@ -45,6 +58,10 @@ function SheetOverlay({
   )
 }
 
+/**
+ * The sliding panel of a `Sheet`, from the `side` given, the right by default, with
+ * a close button.
+ */
 function SheetContent({
   className,
   children,
@@ -83,6 +100,9 @@ function SheetContent({
   )
 }
 
+/**
+ * The top of `SheetContent`, stacking the title and description.
+ */
 function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -93,6 +113,9 @@ function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * The bottom of `SheetContent`, for its actions.
+ */
 function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -103,6 +126,9 @@ function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * The sheet's heading, which is also its accessible name.
+ */
 function SheetTitle({
   className,
   ...props
@@ -116,6 +142,9 @@ function SheetTitle({
   )
 }
 
+/**
+ * The line under a sheet's title, announced as its description.
+ */
 function SheetDescription({
   className,
   ...props

@@ -47,6 +47,9 @@ function NavigationMenu({
   )
 }
 
+/**
+ * The row of top-level entries in a `NavigationMenu`.
+ */
 function NavigationMenuList({
   className,
   ...props
@@ -63,6 +66,10 @@ function NavigationMenuList({
   )
 }
 
+/**
+ * One top-level entry in a `NavigationMenuList`: a link, or a trigger with its
+ * content.
+ */
 function NavigationMenuItem({
   className,
   ...props
@@ -80,6 +87,9 @@ const navigationMenuTriggerStyle = cva(
   "group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground disabled:pointer-events-none disabled:opacity-50 data-[state=open]:hover:bg-accent data-[state=open]:text-accent-foreground data-[state=open]:focus:bg-accent data-[state=open]:bg-accent/50 focus-visible:ring-ring/50 outline-none transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1"
 )
 
+/**
+ * The button that opens an entry's `NavigationMenuContent`, with a chevron.
+ */
 function NavigationMenuTrigger({
   className,
   children,
@@ -100,6 +110,9 @@ function NavigationMenuTrigger({
   )
 }
 
+/**
+ * The panel an entry opens, shown in the menu's viewport.
+ */
 function NavigationMenuContent({
   className,
   ...props
@@ -117,6 +130,10 @@ function NavigationMenuContent({
   )
 }
 
+/**
+ * Where the open entry's content renders, sized to it. `NavigationMenu` mounts one
+ * unless `viewport` is false.
+ */
 function NavigationMenuViewport({
   className,
   ...props
@@ -139,6 +156,9 @@ function NavigationMenuViewport({
   )
 }
 
+/**
+ * A link inside a navigation menu. Pass `active` for the current page.
+ */
 function NavigationMenuLink({
   className,
   ...props
@@ -155,6 +175,9 @@ function NavigationMenuLink({
   )
 }
 
+/**
+ * The arrow under the trigger whose content is open.
+ */
 function NavigationMenuIndicator({
   className,
   ...props

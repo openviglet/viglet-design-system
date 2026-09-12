@@ -3,10 +3,24 @@ import * as HoverCardPrimitive from "@radix-ui/react-hover-card"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * A preview card that opens while a pointer rests on a link, to show more about
+ * what the link names.
+ *
+ * Radix built it for sighted pointer users, so put nothing a reader needs only in
+ * it. A short label is `Tooltip`, and content a reader opens and acts in is
+ * `Popover`.
+ */
 const HoverCard = HoverCardPrimitive.Root
 
+/**
+ * The link or element that opens its `HoverCard` on hover.
+ */
 const HoverCardTrigger = HoverCardPrimitive.Trigger
 
+/**
+ * The floating panel of a `HoverCard`.
+ */
 const HoverCardContent = React.forwardRef<
   React.ElementRef<typeof HoverCardPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof HoverCardPrimitive.Content>

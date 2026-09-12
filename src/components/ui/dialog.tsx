@@ -18,24 +18,36 @@ function Dialog({
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
 }
 
+/**
+ * The element that opens its `Dialog`. Pass `asChild` to use your own button.
+ */
 function DialogTrigger({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
   return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />
 }
 
+/**
+ * Renders a dialog at the end of the document. `DialogContent` already uses one.
+ */
 function DialogPortal({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Portal>) {
   return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />
 }
 
+/**
+ * A control that closes its `Dialog`. Pass `asChild` to use your own button.
+ */
 function DialogClose({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Close>) {
   return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
 }
 
+/**
+ * The dimmed backdrop behind an open dialog. `DialogContent` already renders one.
+ */
 function DialogOverlay({
   className,
   ...props
@@ -52,6 +64,10 @@ function DialogOverlay({
   )
 }
 
+/**
+ * The centred panel of a `Dialog`, with its overlay, and a close button unless
+ * `showCloseButton` is false.
+ */
 function DialogContent({
   className,
   children,
@@ -87,6 +103,9 @@ function DialogContent({
   )
 }
 
+/**
+ * The top of `DialogContent`, stacking the title and description.
+ */
 function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -97,6 +116,9 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * The bottom row of `DialogContent`, for its actions, stacked on a narrow screen.
+ */
 function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -110,6 +132,10 @@ function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * The dialog's heading, which is also its accessible name, so every dialog needs
+ * one.
+ */
 function DialogTitle({
   className,
   ...props
@@ -123,6 +149,9 @@ function DialogTitle({
   )
 }
 
+/**
+ * The line under a dialog's title, announced as the dialog's description.
+ */
 function DialogDescription({
   className,
   ...props

@@ -5,6 +5,13 @@ import { useTranslation } from "react-i18next"
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
+/**
+ * The `nav` landmark for moving between pages of results, composed with
+ * `PaginationContent`, `PaginationItem`, `PaginationLink`, `PaginationPrevious` and
+ * `PaginationNext`.
+ *
+ * `BentoDataTable` mounts only the rows in view and needs no pages.
+ */
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
     const { t } = useTranslation()
     return (
@@ -17,6 +24,9 @@ function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
     )
 }
 
+/**
+ * The list of page links inside `Pagination`.
+ */
 const PaginationContent = React.forwardRef<
     HTMLOListElement,
     React.ComponentProps<"ol">
@@ -29,6 +39,9 @@ const PaginationContent = React.forwardRef<
 ))
 PaginationContent.displayName = "PaginationContent"
 
+/**
+ * One entry in `PaginationContent`.
+ */
 const PaginationItem = React.forwardRef<
     HTMLLIElement,
     React.ComponentProps<"li">
@@ -37,6 +50,9 @@ const PaginationItem = React.forwardRef<
 ))
 PaginationItem.displayName = "PaginationItem"
 
+/**
+ * A link to one page. `isActive` marks the current one.
+ */
 function PaginationLink({
     className,
     isActive,
@@ -65,6 +81,9 @@ function PaginationLink({
     )
 }
 
+/**
+ * The link to the previous page, labelled for a screen reader.
+ */
 function PaginationPrevious({
     className,
     ...props
@@ -83,6 +102,9 @@ function PaginationPrevious({
     )
 }
 
+/**
+ * The link to the next page, labelled for a screen reader.
+ */
 function PaginationNext({
     className,
     ...props
@@ -101,6 +123,9 @@ function PaginationNext({
     )
 }
 
+/**
+ * Stands in for the page numbers left out between two links.
+ */
 function PaginationEllipsis({
     className,
     ...props

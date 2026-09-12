@@ -3,18 +3,30 @@ import { Popover as PopoverPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * A floating panel a reader opens from a trigger to read or act in, on the Radix
+ * primitive.
+ *
+ * A short label on hover is `Tooltip`, and a menu of actions `DropdownMenu`.
+ */
 function Popover({
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Root>) {
   return <PopoverPrimitive.Root data-slot="popover" {...props} />
 }
 
+/**
+ * The element that opens its `Popover`.
+ */
 function PopoverTrigger({
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Trigger>) {
   return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />
 }
 
+/**
+ * The floating panel of a `Popover`, portalled and aligned to its trigger.
+ */
 function PopoverContent({
   className,
   align = "center",
@@ -37,12 +49,18 @@ function PopoverContent({
   )
 }
 
+/**
+ * Positions a `Popover` against an element other than its trigger.
+ */
 function PopoverAnchor({
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Anchor>) {
   return <PopoverPrimitive.Anchor data-slot="popover-anchor" {...props} />
 }
 
+/**
+ * The top of `PopoverContent`, stacking a title and description.
+ */
 function PopoverHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -53,6 +71,9 @@ function PopoverHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * A popover's title. It renders a `div`, not a heading.
+ */
 function PopoverTitle({ className, ...props }: React.ComponentProps<"h2">) {
   return (
     <div
@@ -63,6 +84,9 @@ function PopoverTitle({ className, ...props }: React.ComponentProps<"h2">) {
   )
 }
 
+/**
+ * A muted line under a popover's title.
+ */
 function PopoverDescription({
   className,
   ...props

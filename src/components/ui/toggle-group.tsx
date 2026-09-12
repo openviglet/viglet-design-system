@@ -17,6 +17,10 @@ const ToggleGroupContext = React.createContext<
   spacing: 0,
 })
 
+/**
+ * A row of toggles of which one is pressed, or several with `type="multiple"`,
+ * sharing a variant and size.
+ */
 function ToggleGroup({
   className,
   variant,
@@ -48,6 +52,9 @@ function ToggleGroup({
   )
 }
 
+/**
+ * One toggle in a `ToggleGroup`, identified by its `value`.
+ */
 function ToggleGroupItem({
   className,
   children,

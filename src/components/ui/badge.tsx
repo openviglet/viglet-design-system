@@ -25,6 +25,12 @@ const badgeVariants = cva(
   }
 )
 
+/**
+ * A small pill label in the primary, secondary, destructive or outline style.
+ *
+ * An entity name tinted with its own colour is `BadgeColorful`, a locale with its
+ * flag `BadgeLocale`, and a bento page's save state `BentoStatusMarker`.
+ */
 function Badge({
   className,
   variant,

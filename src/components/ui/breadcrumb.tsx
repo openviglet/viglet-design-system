@@ -5,6 +5,13 @@ import { useTranslation } from "react-i18next"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * The breadcrumb trail's `nav` landmark, composed with `BreadcrumbList`,
+ * `BreadcrumbItem`, `BreadcrumbLink` and `BreadcrumbPage`.
+ *
+ * A console-era page fills it from `BreadcrumbProvider`. A bento page's way back is
+ * its hero's back link, and it has no trail.
+ */
 function Breadcrumb({ ...props }: React.ComponentProps<"nav">) {
   const { t } = useTranslation()
   return (
@@ -16,6 +23,9 @@ function Breadcrumb({ ...props }: React.ComponentProps<"nav">) {
   )
 }
 
+/**
+ * The ordered list of crumbs inside a `Breadcrumb`.
+ */
 function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
   return (
     <ol
@@ -29,6 +39,9 @@ function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
   )
 }
 
+/**
+ * One crumb in a `BreadcrumbList`, holding a link or the current page.
+ */
 function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
   return (
     <li
@@ -39,6 +52,9 @@ function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
   )
 }
 
+/**
+ * A crumb that navigates. Pass `asChild` to render the router's own link.
+ */
 function BreadcrumbLink({
   asChild,
   className,
@@ -57,6 +73,9 @@ function BreadcrumbLink({
   )
 }
 
+/**
+ * The current page's crumb, marked `aria-current` and not a link.
+ */
 function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span
@@ -70,6 +89,9 @@ function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
   )
 }
 
+/**
+ * The divider between two crumbs, a chevron unless you pass another.
+ */
 function BreadcrumbSeparator({
   children,
   className,
@@ -88,6 +110,9 @@ function BreadcrumbSeparator({
   )
 }
 
+/**
+ * Stands in for the crumbs collapsed out of a long trail.
+ */
 function BreadcrumbEllipsis({
   className,
   ...props

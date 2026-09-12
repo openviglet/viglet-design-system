@@ -210,9 +210,8 @@ authoring contract, the boundary and the token reference are resources
 (`viglet-ds://authoring`, `viglet-ds://boundary`, `viglet-ds://tokens`). The data
 is `dist/catalogue.json`, generated at build time from the declarations you
 compile against and also exported as `./catalogue.json`. A component's purpose is
-its own doc comment, so a component without one is found by name and props alone.
-The build refuses a new component that arrives without one, and
-`catalogue-undescribed.txt` lists the older ones still waiting for theirs.
+its own doc comment, and every exported component has one: the build refuses a
+component that arrives without it.
 
 ```
 /plugin marketplace add openviglet/viglet-design-system

@@ -3,6 +3,10 @@ import * as SliderPrimitive from "@radix-ui/react-slider"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * A track with one thumb or more for picking a number, or a range, between `min`
+ * and `max`, on the Radix primitive.
+ */
 function Slider({
   className,
   defaultValue,

@@ -63,6 +63,13 @@ function useSidebarOptional() {
   return React.useContext(SidebarContext)
 }
 
+/**
+ * Holds a console sidebar's open state, remembered in a cookie, and toggles it on
+ * Ctrl or ⌘ with B. Everything from `Sidebar` down needs it above them.
+ *
+ * A bento shell has no provider: its rail, `BentoNavRail`, is fixed and has no
+ * state to share.
+ */
 function SidebarProvider({
   defaultOpen = true,
   open: openProp,
@@ -161,6 +168,13 @@ function SidebarProvider({
   )
 }
 
+/**
+ * The console era's sidebar, from the left or right, collapsing off canvas, to
+ * icons, or not at all.
+ *
+ * A bento page does not use it. Its navigation is `BentoNavRail` and the command
+ * palette.
+ */
 function Sidebar({
   side = "left",
   variant = "sidebar",
@@ -285,6 +299,10 @@ function Sidebar({
   )
 }
 
+/**
+ * The button that opens or collapses the sidebar. It renders nothing without a
+ * `SidebarProvider` above it.
+ */
 function SidebarTrigger({
   className,
   onClick,
@@ -317,6 +335,10 @@ function SidebarTrigger({
   )
 }
 
+/**
+ * The thin strip along the sidebar's edge that collapses or expands it when
+ * clicked.
+ */
 function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
   const { toggleSidebar } = useSidebar()
   const { t } = useTranslation()
@@ -344,6 +366,10 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
   )
 }
 
+/**
+ * The page's `main` beside a sidebar, inset with a rounded edge when the sidebar's
+ * `variant` is `inset`.
+ */
 function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
   return (
     <main
@@ -358,6 +384,9 @@ function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
   )
 }
 
+/**
+ * A search field sized for a sidebar.
+ */
 function SidebarInput({
   className,
   ...props
@@ -372,6 +401,9 @@ function SidebarInput({
   )
 }
 
+/**
+ * The top of a sidebar, above its scrolling content.
+ */
 function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -383,6 +415,9 @@ function SidebarHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * The bottom of a sidebar, below its scrolling content.
+ */
 function SidebarFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -394,6 +429,9 @@ function SidebarFooter({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * A hairline between the parts of a sidebar.
+ */
 function SidebarSeparator({
   className,
   ...props
@@ -408,6 +446,9 @@ function SidebarSeparator({
   )
 }
 
+/**
+ * The scrolling middle of a sidebar, holding its groups.
+ */
 function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -422,6 +463,9 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * A section of a sidebar's content: a label, an action and a menu.
+ */
 function SidebarGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -433,6 +477,9 @@ function SidebarGroup({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * The heading of a `SidebarGroup`, hidden while the sidebar is collapsed to icons.
+ */
 function SidebarGroupLabel({
   className,
   asChild = false,
@@ -454,6 +501,9 @@ function SidebarGroupLabel({
   )
 }
 
+/**
+ * A button beside a `SidebarGroup`'s label, such as one that adds an entry.
+ */
 function SidebarGroupAction({
   className,
   asChild = false,
@@ -477,6 +527,9 @@ function SidebarGroupAction({
   )
 }
 
+/**
+ * The body of a `SidebarGroup`.
+ */
 function SidebarGroupContent({
   className,
   ...props
@@ -491,6 +544,9 @@ function SidebarGroupContent({
   )
 }
 
+/**
+ * The list of links in a sidebar group.
+ */
 function SidebarMenu({ className, ...props }: React.ComponentProps<"ul">) {
   return (
     <ul
@@ -502,6 +558,9 @@ function SidebarMenu({ className, ...props }: React.ComponentProps<"ul">) {
   )
 }
 
+/**
+ * One entry in a `SidebarMenu`.
+ */
 function SidebarMenuItem({ className, ...props }: React.ComponentProps<"li">) {
   return (
     <li
@@ -535,6 +594,10 @@ const sidebarMenuButtonVariants = cva(
   }
 )
 
+/**
+ * A sidebar link or button. `isActive` marks the current page, and `tooltip` labels
+ * it while the sidebar is collapsed to icons.
+ */
 function SidebarMenuButton({
   asChild = false,
   isActive = false,
@@ -585,6 +648,10 @@ function SidebarMenuButton({
   )
 }
 
+/**
+ * A button at the end of a `SidebarMenuItem`, shown only on hover with
+ * `showOnHover`.
+ */
 function SidebarMenuAction({
   className,
   asChild = false,
@@ -617,6 +684,9 @@ function SidebarMenuAction({
   )
 }
 
+/**
+ * A count at the end of a `SidebarMenuItem`.
+ */
 function SidebarMenuBadge({
   className,
   ...props
@@ -648,6 +718,10 @@ function hashToRange(value: string) {
   return Math.abs(hash)
 }
 
+/**
+ * A placeholder row for a sidebar menu still loading, with an icon when `showIcon`
+ * is set.
+ */
 function SidebarMenuSkeleton({
   className,
   showIcon = false,
@@ -689,6 +763,9 @@ function SidebarMenuSkeleton({
   )
 }
 
+/**
+ * A nested list of links under a `SidebarMenuItem`.
+ */
 function SidebarMenuSub({ className, ...props }: React.ComponentProps<"ul">) {
   return (
     <ul
@@ -704,6 +781,9 @@ function SidebarMenuSub({ className, ...props }: React.ComponentProps<"ul">) {
   )
 }
 
+/**
+ * One entry in a `SidebarMenuSub`.
+ */
 function SidebarMenuSubItem({
   className,
   ...props
@@ -718,6 +798,9 @@ function SidebarMenuSubItem({
   )
 }
 
+/**
+ * A link in a `SidebarMenuSub`. `isActive` marks the current page.
+ */
 function SidebarMenuSubButton({
   asChild = false,
   size = "md",

@@ -3,6 +3,10 @@ import { Progress as ProgressPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * A horizontal bar filled to `value` percent, for work with a known end. A page
+ * still loading shows a skeleton instead, as `LoadProvider` does.
+ */
 function Progress({
   className,
   value,

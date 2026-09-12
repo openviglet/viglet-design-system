@@ -4,24 +4,42 @@ import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * A dropdown for choosing one value from a list, on the Radix primitive, composed
+ * with `SelectTrigger`, `SelectValue`, `SelectContent` and `SelectItem`.
+ *
+ * A content locale has its own, `LanguageSelect`. A menu of actions is
+ * `DropdownMenu`.
+ */
 function Select({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Root>) {
   return <SelectPrimitive.Root data-slot="select" {...props} />
 }
 
+/**
+ * Groups related options under a `SelectLabel`.
+ */
 function SelectGroup({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Group>) {
   return <SelectPrimitive.Group data-slot="select-group" {...props} />
 }
 
+/**
+ * Renders the chosen option's text inside `SelectTrigger`, or the `placeholder`
+ * while there is none.
+ */
 function SelectValue({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Value>) {
   return <SelectPrimitive.Value data-slot="select-value" {...props} />
 }
 
+/**
+ * The button that shows the chosen value and opens the list, compact with
+ * `size="sm"`. Give it an `aria-label` where no label names it.
+ */
 function SelectTrigger({
   className,
   size = "default",
@@ -48,6 +66,9 @@ function SelectTrigger({
   )
 }
 
+/**
+ * The floating list of a `Select`'s options, with scroll buttons when it overflows.
+ */
 function SelectContent({
   className,
   children,
@@ -85,6 +106,9 @@ function SelectContent({
   )
 }
 
+/**
+ * A heading over a group of options that nobody can choose.
+ */
 function SelectLabel({
   className,
   ...props
@@ -98,6 +122,9 @@ function SelectLabel({
   )
 }
 
+/**
+ * One option in a `Select`, with a check while it is chosen.
+ */
 function SelectItem({
   className,
   children,
@@ -122,6 +149,9 @@ function SelectItem({
   )
 }
 
+/**
+ * A line between groups of options.
+ */
 function SelectSeparator({
   className,
   ...props
@@ -135,6 +165,9 @@ function SelectSeparator({
   )
 }
 
+/**
+ * Scrolls a long option list up. `SelectContent` already renders one.
+ */
 function SelectScrollUpButton({
   className,
   ...props
@@ -153,6 +186,9 @@ function SelectScrollUpButton({
   )
 }
 
+/**
+ * Scrolls a long option list down. `SelectContent` already renders one.
+ */
 function SelectScrollDownButton({
   className,
   ...props

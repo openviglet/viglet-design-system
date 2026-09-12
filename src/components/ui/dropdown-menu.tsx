@@ -4,12 +4,23 @@ import { CheckIcon, ChevronRightIcon, CircleIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * A menu of actions opened from a button, on the Radix primitive, composed with
+ * `DropdownMenuTrigger`, `DropdownMenuContent` and `DropdownMenuItem`.
+ *
+ * The verbs on a bento page or row are `BentoActionsMenu`, which names each one. To
+ * choose a value in a form, use `Select`.
+ */
 function DropdownMenu({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
   return <DropdownMenuPrimitive.Root data-slot="dropdown-menu" {...props} />
 }
 
+/**
+ * Renders a menu at the end of the document. `DropdownMenuContent` already uses
+ * one.
+ */
 function DropdownMenuPortal({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Portal>) {
@@ -18,6 +29,9 @@ function DropdownMenuPortal({
   )
 }
 
+/**
+ * The button that opens its `DropdownMenu`. Pass `asChild` to use your own.
+ */
 function DropdownMenuTrigger({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Trigger>) {
@@ -29,6 +43,9 @@ function DropdownMenuTrigger({
   )
 }
 
+/**
+ * The floating panel holding a menu's items.
+ */
 function DropdownMenuContent({
   className,
   sideOffset = 4,
@@ -49,6 +66,9 @@ function DropdownMenuContent({
   )
 }
 
+/**
+ * Groups related items in a menu.
+ */
 function DropdownMenuGroup({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Group>) {
@@ -57,6 +77,10 @@ function DropdownMenuGroup({
   )
 }
 
+/**
+ * One action in a menu. Set `variant="destructive"` for one that deletes, and
+ * `inset` to line it up with items that carry an indicator.
+ */
 function DropdownMenuItem({
   className,
   inset,
@@ -80,6 +104,9 @@ function DropdownMenuItem({
   )
 }
 
+/**
+ * A menu item that toggles on and off, with a check while it is on.
+ */
 function DropdownMenuCheckboxItem({
   className,
   children,
@@ -106,6 +133,9 @@ function DropdownMenuCheckboxItem({
   )
 }
 
+/**
+ * Holds the `DropdownMenuRadioItem`s of which one is chosen.
+ */
 function DropdownMenuRadioGroup({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.RadioGroup>) {
@@ -117,6 +147,9 @@ function DropdownMenuRadioGroup({
   )
 }
 
+/**
+ * One choice in a `DropdownMenuRadioGroup`, marked while it is chosen.
+ */
 function DropdownMenuRadioItem({
   className,
   children,
@@ -141,6 +174,9 @@ function DropdownMenuRadioItem({
   )
 }
 
+/**
+ * A heading inside a menu that nobody can choose.
+ */
 function DropdownMenuLabel({
   className,
   inset,
@@ -161,6 +197,9 @@ function DropdownMenuLabel({
   )
 }
 
+/**
+ * A line between groups of menu items.
+ */
 function DropdownMenuSeparator({
   className,
   ...props
@@ -174,6 +213,10 @@ function DropdownMenuSeparator({
   )
 }
 
+/**
+ * The keys shown at the end of a menu item. It only displays them; binding them is
+ * yours.
+ */
 function DropdownMenuShortcut({
   className,
   ...props
@@ -190,12 +233,19 @@ function DropdownMenuShortcut({
   )
 }
 
+/**
+ * A submenu inside a menu, composed with `DropdownMenuSubTrigger` and
+ * `DropdownMenuSubContent`.
+ */
 function DropdownMenuSub({
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Sub>) {
   return <DropdownMenuPrimitive.Sub data-slot="dropdown-menu-sub" {...props} />
 }
 
+/**
+ * The item that opens a submenu, with a chevron.
+ */
 function DropdownMenuSubTrigger({
   className,
   inset,
@@ -220,6 +270,9 @@ function DropdownMenuSubTrigger({
   )
 }
 
+/**
+ * The panel of a submenu.
+ */
 function DropdownMenuSubContent({
   className,
   ...props

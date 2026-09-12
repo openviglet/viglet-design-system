@@ -3,6 +3,10 @@ import { Group, Panel, Separator } from "react-resizable-panels"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * A row or column of panels a reader resizes by dragging the handles between them,
+ * on react-resizable-panels.
+ */
 function ResizablePanelGroup({
   className,
   ...props
@@ -21,6 +25,10 @@ function ResizablePanelGroup({
   )
 }
 
+/**
+ * One panel in a `ResizablePanelGroup`. `overflowHidden` clips content that would
+ * spill past its edge.
+ */
 function ResizablePanel({
   overflowHidden,
   className,
@@ -36,6 +44,9 @@ function ResizablePanel({
   )
 }
 
+/**
+ * The draggable divider between two panels. `withHandle` shows a grip on it.
+ */
 function ResizableHandle({
   withHandle,
   className,
