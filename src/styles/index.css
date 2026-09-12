@@ -99,6 +99,27 @@ select:-webkit-autofill {
   border-radius: 9999px;
 }
 
+/* BadgeColorful — VDS107. The per-instance palette is hashed from the badge's
+   text and arrives as six custom properties on the element; this rule is what
+   reads them, and the dark half is the swap that used to be a `<style>` element
+   splicing that same text into `.dark [title="…"]`.
+
+   DELIBERATELY UNLAYERED, for the reason the autofill block above gives: the
+   colour has to beat Badge's own `text-foreground` utility and the `border-border`
+   in `@layer base`, and an unlayered declaration does that without !important. */
+.vg-badge-colorful {
+  background-color: var(--badge-bg);
+  color: var(--badge-text);
+  border-color: var(--badge-border);
+}
+
+.dark .vg-badge-colorful,
+[data-theme="dark"] .vg-badge-colorful {
+  background-color: var(--badge-dark-bg);
+  color: var(--badge-dark-text);
+  border-color: var(--badge-dark-border);
+}
+
 /* Pulsing brand dot (used next to badges/nav items) */
 .vg-brand-dot {
   display: inline-block;

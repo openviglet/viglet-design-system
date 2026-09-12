@@ -83,6 +83,7 @@
 - ✅ **VDS104** **initVigI18n walks only en and pt, so a product passing a third language gets an instance without it** — initVigI18n merges over the union of the languages either side declares, so a product's third language arrives whole (design recorded in `src/i18n/index.ts`).
 - ✅ **VDS105** **the NavigationMenu landmark keeps Radix's hardcoded Main, so a screen reader hears English in every product** — The nav landmark is named from the bundles, and the gate now reports a spoken name this package omits on a primitive that announces its own (design recorded in `src/i18n/literals.test.ts`).
 - ✅ **VDS77** **react-hook-form is a dependency, so a consumer can get a second copy of the one library here carrying a context** — react-hook-form is a required peer and a devDependency, so the one library here carrying a React context cannot be duplicated in a tree (design recorded in `scripts/externals.test.ts`).
+- ✅ **VDS107** **BadgeColorful renders a consumer's entity name as raw HTML and splices it into a style selector** — BadgeColorful renders an entity name as text and hashes its palette onto custom properties, so the name is neither markup nor a selector (design recorded in `src/styles/index.css`).
 
 ## Block B — Bento becomes a design-system layer
 

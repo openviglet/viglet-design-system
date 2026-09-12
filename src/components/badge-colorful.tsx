@@ -10,6 +10,15 @@ interface BadgeColorfulProps {
     prefix?: React.ReactNode;
 }
 
+/**
+ * `text` is an entity name out of the consumer's own content — `dialog.delete`
+ * passes `usage.name` straight in — so nothing here may treat it as markup or
+ * as a selector. It is rendered as a text node, and the per-instance colour it
+ * hashes to is carried by custom properties on the element rather than by a
+ * `<style>` element that spliced the name into `.dark [title="…"]`.
+ * `.vg-badge-colorful` in src/styles/index.css reads those properties and is
+ * what swaps them for dark mode.
+ */
 export const BadgeColorful: React.FC<BadgeColorfulProps> = ({
     text,
     href,
@@ -22,38 +31,23 @@ export const BadgeColorful: React.FC<BadgeColorfulProps> = ({
     const colors = getHashedColor(text);
 
     return (
-        <>
-            <Badge
-                variant="outline"
-                title={text}
-                onClick={() => href && onClick?.(href)}
-                className={`text-xs font-medium px-2 py-0.5 gap-1.5 cursor-pointer transition-all hover:opacity-80 dynamic-badge-${text.length} ${className ?? ""}`}
-                style={{
-                    // Variáveis CSS locais para este badge específico
-                    "--badge-bg": colors.light.bg,
-                    "--badge-text": colors.light.text,
-                    "--badge-border": colors.light.border,
-                    "--badge-dark-bg": colors.dark.bg,
-                    "--badge-dark-text": colors.dark.text,
-                    "--badge-dark-border": colors.dark.border,
-
-                    backgroundColor: "var(--badge-bg)",
-                    color: "var(--badge-text)",
-                    borderColor: "var(--badge-border)",
-                } as React.CSSProperties}
-            >
-                {prefix}
-                <span dangerouslySetInnerHTML={{ __html: text }} />
-            </Badge>
-
-            {/* Estilo global injetado apenas uma vez para lidar com dark mode via variáveis */}
-            <style suppressHydrationWarning>{`
-        .dark [title="${text}"] {
-          background-color: var(--badge-dark-bg) !important;
-          color: var(--badge-dark-text) !important;
-          border-color: var(--badge-dark-border) !important;
-        }
-      `}</style>
-        </>
+        <Badge
+            variant="outline"
+            title={text}
+            onClick={() => href && onClick?.(href)}
+            className={`vg-badge-colorful text-xs font-medium px-2 py-0.5 gap-1.5 cursor-pointer transition-all hover:opacity-80 dynamic-badge-${text.length} ${className ?? ""}`}
+            style={{
+                // Both palettes ride on the element; the stylesheet picks one.
+                "--badge-bg": colors.light.bg,
+                "--badge-text": colors.light.text,
+                "--badge-border": colors.light.border,
+                "--badge-dark-bg": colors.dark.bg,
+                "--badge-dark-text": colors.dark.text,
+                "--badge-dark-border": colors.dark.border,
+            } as React.CSSProperties}
+        >
+            {prefix}
+            <span>{text}</span>
+        </Badge>
     );
 };

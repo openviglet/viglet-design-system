@@ -32,6 +32,14 @@ export const WithLink: Story = {
   },
 };
 
+// The name comes from the consumer's content — DialogDelete passes `usage.name`
+// — so the badge renders it as characters. Markup in a name is shown, not run.
+export const UntrustedName: Story = {
+  args: {
+    text: `<img src=x onerror="alert(1)">`,
+  },
+};
+
 export const Gallery: Story = {
   render: () => (
     <div className="flex flex-wrap gap-2">

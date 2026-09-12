@@ -2,29 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-### §VDS107 The entity name that runs as script
-
-`BadgeColorful` renders its `text` prop through `dangerouslySetInnerHTML` and, three
-lines later, interpolates the same string into a `<style>` element as `.dark
-[title="${text}"]`. Neither path escapes anything, and there is no sanitiser anywhere in
-the package.
-
-The prop is not decorative. `components/router/dialog.delete.tsx` passes `usage.name` —
-an entity name out of the consumer's own content — into it, so every product's delete
-dialog renders a string it did not author as live markup. A name carrying an `onerror`
-attribute executes; a name carrying a quote or a closing style tag escapes the attribute
-selector and writes arbitrary rules into the host page.
-
-This is the only `dangerouslySetInnerHTML` in the package, it carries no
-`eslint-disable` and no comment explaining itself, and the component has no test file at
-all. The per-instance colour the `<style>` element is reaching for is what a CSS custom
-property on the element is for.
-
-Acceptance:
-- ~~cloud-frontend and cloud-console declare `react-hook-form` themselves.~~ done
-- It is then a peerDependency and a devDependency here, not a dependency.
-- A consumer resolving a different minor still gets exactly one copy.
-
 ### §VDS108 The props that vanish below the breakpoint
 
 `Sidebar` has two branches. The desktop one spreads `{...props}` onto the
@@ -386,3 +363,30 @@ Choosing one calls back with the item.
 **Asynchronous, because a query leaving the process takes time.** The group says whether
 it is still resolving, so the dialog shows that rather than an empty list that is not
 empty yet.
+
+### §VDS124 The prop that has to stay at zero
+
+`dangerouslySetInnerHTML` is the one React prop that turns a string into markup, and
+this package renders strings it did not author: `DialogDelete` passes `usage.name`, an
+entity name out of the consumer's own content. VDS107 is what that combination costs — a
+delete dialog that ran a name carrying an `onerror` attribute, in three products at
+once.
+
+That one is gone, and the package now has none. What it does not have is anything that
+keeps the count at zero. The prop reached `main` with no `eslint-disable`, no comment
+and no test, so nothing refused it and nothing asked; it was found by reading the file.
+The next one arrives the same way.
+
+`eslint.config.js` is where the refusal belongs, and it needs no new plugin —
+`eslint-plugin-react` is not installed here and the rule it would bring
+(`react/no-danger`) is one `no-restricted-syntax` selector on a JSX attribute name. The
+message is the argument, not the ban: the prop is allowed where a human wrote down why,
+which is what an `eslint-disable-next-line` with a reason already is.
+
+Scope it to `src/`. The scripts under `scripts/` render nothing, and a story is source
+like any other file here.
+
+Acceptance:
+- A `dangerouslySetInnerHTML` anywhere under `src/` fails `npm run lint`.
+- The failure names what to do instead, not just the rule.
+- An author who means it can still write one, with a disable line that states why.
