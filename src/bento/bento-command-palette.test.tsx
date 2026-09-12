@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs"
 import { join, resolve } from "node:path"
-import { render, screen } from "@testing-library/react"
+import { render, screen, within } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { IconCpu2, IconSearch } from "@tabler/icons-react"
 import i18next from "i18next"
@@ -242,5 +242,146 @@ describe("BentoCommandPalette, ported cases", () => {
     await user.keyboard("{ArrowDown}")
 
     expect(screen.getAllByRole("option")[1]).toHaveAttribute("aria-selected", "true")
+  })
+})
+
+// VDS123 — the group a product fills. The palette used to take nav items and
+// nothing else, so a consumer searching its own records either rebuilt the
+// dialog or handed over a pre-built list for the client matcher to reorder. The
+// assertions below are about the two halves of that: the product's order is the
+// answer, and a query that has not come back yet is not an empty one.
+
+const records = [
+  { id: "r1", label: "Quarterly report", description: "2026 Q1" },
+  { id: "r2", label: "Annual report", description: "2025" },
+]
+
+describe("BentoCommandPalette — the group a product fills", () => {
+  it("renders the supplied items under their own heading", () => {
+    draw(
+      <BentoCommandPalette
+        open
+        onOpenChange={vi.fn()}
+        items={items}
+        group={{ label: "Documents", items: records, onSelect: vi.fn() }}
+      />,
+    )
+
+    const documents = screen.getByRole("group", { name: "Documents" })
+
+    expect(within(documents).getByText("Quarterly report")).toBeInTheDocument()
+    expect(within(documents).getByText("Annual report")).toBeInTheDocument()
+  })
+
+  it("keeps the product's order, whatever the query says", async () => {
+    const user = userEvent.setup()
+    draw(
+      <BentoCommandPalette
+        open
+        onOpenChange={vi.fn()}
+        items={[]}
+        group={{ label: "Documents", items: records, onSelect: vi.fn() }}
+      />,
+    )
+
+    // "Annual" is the closer substring match; the product ranked it second and
+    // that is the answer, so nothing here reorders it.
+    await user.type(screen.getByRole("combobox"), "annual")
+
+    const labels = screen.getAllByRole("option").map((o) => o.textContent)
+    expect(labels[0]).toContain("Quarterly report")
+    expect(labels[1]).toContain("Annual report")
+  })
+
+  it("reports the query as typed, and again when it reopens", async () => {
+    const user = userEvent.setup()
+    const onQueryChange = vi.fn()
+    const { rerender } = draw(
+      <BentoCommandPalette open onOpenChange={vi.fn()} items={items} onQueryChange={onQueryChange} />,
+    )
+
+    await user.type(screen.getByRole("combobox"), "re")
+    expect(onQueryChange).toHaveBeenLastCalledWith("re")
+
+    rerender(
+      <I18nextProvider i18n={i18next}>
+        <MemoryRouter>
+          <BentoCommandPalette open={false} onOpenChange={vi.fn()} items={items} onQueryChange={onQueryChange} />
+        </MemoryRouter>
+      </I18nextProvider>,
+    )
+    rerender(
+      <I18nextProvider i18n={i18next}>
+        <MemoryRouter>
+          <BentoCommandPalette open onOpenChange={vi.fn()} items={items} onQueryChange={onQueryChange} />
+        </MemoryRouter>
+      </I18nextProvider>,
+    )
+
+    expect(onQueryChange).toHaveBeenLastCalledWith("")
+  })
+
+  it("calls back with the chosen item and closes", async () => {
+    const user = userEvent.setup()
+    const onSelect = vi.fn()
+    const onOpenChange = vi.fn()
+    draw(
+      <BentoCommandPalette
+        open
+        onOpenChange={onOpenChange}
+        items={[]}
+        group={{ label: "Documents", items: records, onSelect }}
+      />,
+    )
+
+    await user.click(screen.getByText("Quarterly report"))
+
+    expect(onSelect).toHaveBeenCalledWith(records[0])
+    expect(onOpenChange).toHaveBeenCalledWith(false)
+  })
+
+  it("says it is still resolving rather than showing no matches", () => {
+    draw(
+      <BentoCommandPalette
+        open
+        onOpenChange={vi.fn()}
+        items={[]}
+        group={{ label: "Documents", items: [], pending: true, onSelect: vi.fn() }}
+      />,
+    )
+
+    // This suite runs i18next with empty resources and a handler that returns
+    // the key, so a package string renders as its key rather than its bundle
+    // text. The product's own words above are literals and read as themselves.
+    expect(screen.getByText("bento.palette.searching")).toBeInTheDocument()
+    expect(screen.queryByText("bento.palette.noResults")).not.toBeInTheDocument()
+  })
+
+  it("runs one arrow-key cursor across both groups", async () => {
+    const user = userEvent.setup()
+    draw(
+      <BentoCommandPalette
+        open
+        onOpenChange={vi.fn()}
+        items={items}
+        group={{ label: "Documents", items: records, onSelect: vi.fn() }}
+      />,
+    )
+
+    const options = () => screen.getAllByRole("option")
+    expect(options()).toHaveLength(4)
+
+    await user.click(screen.getByRole("combobox"))
+    await user.keyboard("{ArrowDown}{ArrowDown}")
+
+    // Off the end of the nav group and into the product's, with no second cursor.
+    expect(options()[2]).toHaveAttribute("aria-selected", "true")
+    expect(options()[2].textContent).toContain("Quarterly report")
+  })
+
+  it("heads no group when the product supplies none", () => {
+    draw(<BentoCommandPalette open onOpenChange={vi.fn()} items={items} />)
+
+    expect(screen.queryByRole("group")).not.toBeInTheDocument()
   })
 })

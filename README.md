@@ -622,6 +622,25 @@ The stylesheet is a separate import from the components, so a consumer taking
 only the layout maths does not pull CSS it never renders. It reads the preset's
 tokens, so import the preset too.
 
+`BentoCommandPalette` takes a second group whose items the product supplies per
+query, beside the nav items it matches itself. Pass `onQueryChange` to hear the
+query as typed and `group` to answer it:
+
+```tsx
+<BentoCommandPalette
+  open={open}
+  onOpenChange={setOpen}
+  items={navItems}
+  onQueryChange={setQuery}
+  group={{ label: t("documents"), items: hits, pending, onSelect: openDocument }}
+/>
+```
+
+Those items are rendered in the order given and never re-ranked — your search
+already ranked them by relevance it understands, and a substring match here
+would only undo that. Set `pending` while the query is in flight so the dialog
+says so rather than showing an empty list that is not empty yet.
+
 "Carries none of it" is measured rather than claimed. `pnpm run build` ends by
 bundling three fixtures through this package's own `exports` map, and fails if a
 bento module, a bento class name or a run of `bento.css`'s selectors reaches a

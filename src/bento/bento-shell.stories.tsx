@@ -1,9 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { IconCpu2, IconDatabase, IconSettings } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { BentoBackToTop } from "./bento-back-to-top";
-import { BentoCommandPalette } from "./bento-command-palette";
+import {
+  BentoCommandPalette,
+  type BentoCommandPaletteResult,
+} from "./bento-command-palette";
 import type { BentoNavGroup, BentoNavItem } from "./bento-nav";
 import { BentoNavRail } from "./bento-nav-rail";
 import { BentoShortcutsDialog } from "./bento-shortcuts-dialog";
@@ -67,6 +70,52 @@ export const NavRail: Story = {
 
 export const CommandPalette: Story = {
   render: () => <BentoCommandPalette open onOpenChange={() => {}} items={items} />,
+};
+
+/**
+ * The second group, whose items the product supplies per query. The palette
+ * renders them in the order given and never re-ranks them, because the product
+ * asked its own source and that order is the answer. Here the "source" is a
+ * timeout, which is what makes the pending line visible.
+ */
+export const CommandPaletteWithProductResults: Story = {
+  render: function ProductResultsStory() {
+    const [query, setQuery] = useState("");
+    const [pending, setPending] = useState(false);
+    const [results, setResults] = useState<BentoCommandPaletteResult[]>([]);
+
+    useEffect(() => {
+      if (!query) {
+        setResults([]);
+        setPending(false);
+        return;
+      }
+      setPending(true);
+      const timer = setTimeout(() => {
+        setResults([
+          { id: "r1", label: `Quarterly report — ${query}`, description: "2026 Q1" },
+          { id: "r2", label: `Annual report — ${query}`, description: "2025" },
+        ]);
+        setPending(false);
+      }, 400);
+      return () => clearTimeout(timer);
+    }, [query]);
+
+    return (
+      <BentoCommandPalette
+        open
+        onOpenChange={() => {}}
+        items={items}
+        onQueryChange={setQuery}
+        group={{
+          label: "Documents",
+          items: results,
+          pending,
+          onSelect: (item) => console.log("chose", item.id),
+        }}
+      />
+    );
+  },
 };
 
 export const ShortcutsDialog: Story = {

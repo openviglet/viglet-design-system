@@ -10,7 +10,9 @@
       "search": "Buscar",
       "open": "Abrir paleta de comandos",
       "noResults": "Nenhum resultado",
-      "opensConsole": "Abre fora deste shell"
+      "opensConsole": "Abre fora deste shell",
+      "areas": "Áreas",
+      "searching": "Buscando…"
     },
     "saveBar": {
       "unsaved": "Alterações não salvas",
