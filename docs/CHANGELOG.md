@@ -95,6 +95,7 @@
 - ✅ **VDS115** **The icon picker's Iconify search runs to completion after the dialog's host unmounts** — Both Iconify paths take an abort signal and the picker aborts what is in flight on unmount, so a route change stops paying for it (design recorded in `src/components/ui/icon-picker-dialog.tsx`).
 - ✅ **VDS125** **SubPage nests a main landmark inside SidebarInset's own, so every console entity page has two** — SubPage's inner box is a div, so the console entity shell has one main landmark and it is the inset's.
 - ✅ **VDS116** **Eight standalone exported components appear in no story, so the axe pass never reaches them** — Fourteen components have a story, so the axe pass reaches every component file, and a test names one no story reaches (design recorded in `scripts/story-coverage.test.ts`).
+- ✅ **VDS117** **The root entry re-exports the i18n runtime, so a consumer that never asked for it resolves i18next** — The root entry carries no i18n runtime and is 4.4KB smaller gzipped, and check:size refuses a root-only bundle that reaches one (design recorded in `scripts/check-size.mjs`).
 
 ## Block B — Bento becomes a design-system layer
 

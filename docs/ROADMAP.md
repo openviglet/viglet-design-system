@@ -2,7 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS117** (deps: —) **The root entry re-exports the i18n runtime, so a consumer that never asked for it resolves i18next** — Three consumers take the root barrel and no i18n subpath, yet each carries the locale chunk and two peers. → §VDS117
 - 📋 **VDS118** (deps: —) **The assets subpath has no size fixture, so the inline-asset cap never measures the entry shipping logos** — The cap was written after a 1.24MB logo reached a bundle, and that entry is the one it has never checked. → §VDS118
 - 📋 **VDS119** (deps: —) **No tsc project type-checks the stories, and 49 errors sit in the catalogue with every gate green** — The stories run through Vite, which strips types instead of checking them, so a wrong prop ships unflagged. → §VDS119
 - 📋 **VDS120** (deps: —) **The list of entries needing a use client banner is restated in the gate that checks it** — A new build entry added in one file only ships with no directive, and the check never looks at it. → §VDS120

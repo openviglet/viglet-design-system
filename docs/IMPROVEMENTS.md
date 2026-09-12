@@ -2,28 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-### §VDS117 The i18n runtime on the root entry
-
-`src/index.ts` re-exports the `./i18n` subpath's runtime — `registerVigTranslations`,
-`vigDesignSystemTranslations` and `initVigI18n`. Walking the built ESM graph from
-`dist/index.es.js` reaches the locale chunk, about 13.9 KB of bundled translations, and
-through it three bare imports: `i18next`, `i18next-browser-languagedetector` and
-`react-i18next`, none of them marked optional in `peerDependenciesMeta`.
-
-Three of the seven consumers — Shio, Schools and the Roadkeep GUI — take `.` and no
-`./i18n`. Each must therefore resolve two peer packages it never asked for and carry
-locale data it never reads. The README documents only the subpath form, so nothing tells
-a consumer that the root entry offers this at all.
-
-`check:size` measures a root-only fixture as a worst case and asserts bento evidence,
-font-face count, subpath CSS leakage and inline asset size. Nothing asserts the root
-entry is free of i18n, which is why this has been true without anyone noticing.
-
-Acceptance:
-- The root entry does not re-export the i18n runtime; `./i18n` remains the way in.
-- `check:size` asserts the root-only fixture reaches no locale bundle and no i18next import.
-- The three root-only consumers still build.
-
 ### §VDS118 The entry the size gate skips
 
 VDS40 found the root entry was 96% four inlined PNG logos, one of them 1.27 MB, and part

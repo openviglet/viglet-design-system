@@ -52,6 +52,19 @@ const BASELINE = join(root, "size-budget.json")
 export const TOLERANCE = 0.02
 
 /**
+ * A phrase only the locale bundles carry, read from the Portuguese source so a
+ * reworded string cannot quietly disarm the check that uses it (VDS117).
+ */
+export const LOCALE_PHRASE = (() => {
+  const path = join(root, "src", "i18n", "locales", "pt", "language.json")
+  const value = JSON.parse(readFileSync(path, "utf8"))?.language?.toggle
+  if (typeof value !== "string" || value.length < 8) {
+    throw new Error(`check-size: no locale phrase to probe with in ${path}`)
+  }
+  return value
+})()
+
+/**
  * The two consumers whose cost is being asserted.
  *
  * Each imports its whole entry rather than a handful of names. That makes the
@@ -76,6 +89,8 @@ const FIXTURES = {
     // than listed: asking it of every subpath is what VDS46 had to undo, and
     // listing the answer instead is what VDS47 replaced.
     subpathFree: true,
+    // VDS117 — and no i18n runtime, which the root barrel used to re-export.
+    i18nExpected: false,
   },
   bento: {
     source: [
@@ -124,6 +139,48 @@ export function bentoEvidence(chunks) {
     }
     const hits = JS_MARKERS.filter((m) => text.includes(m))
     if (hits.length > 0) found.push(`${chunk.fileName}: ${hits.join(", ")}`)
+  }
+
+  return found
+}
+
+/**
+ * The i18n peers a bundle imports. Bare specifiers, because both are external.
+ *
+ * `react-i18next` is deliberately not here: every component that draws a word
+ * calls `useTranslation`, so the root entry reaches it by design and always
+ * will. These two are the ones only the *runtime* pulls — the registration
+ * helpers and the language detector — and they are what a consumer taking `.`
+ * and no `./i18n` had to resolve without ever asking (VDS117).
+ */
+const I18N_PEERS = ["i18next-browser-languagedetector", "i18next"]
+
+/**
+ * Evidence that the i18n runtime reached an emitted bundle.
+ *
+ * Two independent markers, because either alone could go quiet. The imports say
+ * the peers arrived; the phrase says the *translations* did, which is the bigger
+ * half — about 14 KB — and would survive a refactor that reached the bundle
+ * without naming either package.
+ *
+ * The phrase is read from the locale source rather than written here, so a
+ * reworded string does not silently turn the check off.
+ */
+export function i18nEvidence(chunks, phrase) {
+  const found = []
+
+  for (const chunk of chunks) {
+    if (chunk.type === "asset" || chunk.fileName.endsWith(".css")) continue
+    const { code } = chunk
+
+    // `from "i18next"`, and the same specifier under a require or an import().
+    // Matched with its quotes so `react-i18next` is not read as `i18next`.
+    for (const peer of I18N_PEERS) {
+      if (new RegExp(`["']${peer}["']`).test(code)) found.push(`${chunk.fileName}: imports ${peer}`)
+    }
+    if (phrase && code.includes(phrase)) {
+      found.push(`${chunk.fileName}: carries the locale bundle (${JSON.stringify(phrase)})`)
+    }
   }
 
   return found
@@ -406,10 +463,19 @@ async function bundle(name, { source }) {
  * fixture must contain is as much a decision as what it must not, and both
  * halves have been wrong here before.
  */
-export function assess(name, fixture, chunks, subpathCss = {}) {
+export function assess(name, fixture, chunks, subpathCss = {}, localePhrase = LOCALE_PHRASE) {
   const failures = []
   const bento = bentoEvidence(chunks)
   const faces = fontFaces(chunks)
+
+  if (fixture.i18nExpected === false) {
+    const i18n = i18nEvidence(chunks, localePhrase)
+    if (i18n.length > 0) {
+      failures.push(
+        `${name}: the i18n runtime reached a consumer that never imported ./i18n\n    ${i18n.join("\n    ")}`,
+      )
+    }
+  }
 
   if (fixture.subpathFree) {
     for (const leak of subpathLeakage(chunks, subpathCss)) {

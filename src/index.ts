@@ -26,8 +26,18 @@ export * from "./lib";
 // Models
 export * from "./models";
 
-// i18n
-export { registerVigTranslations, vigDesignSystemTranslations, initVigI18n } from "./i18n";
+// i18n lives on its own subpath and is deliberately not re-exported here.
+//
+// VDS117 — this barrel used to carry `registerVigTranslations`,
+// `vigDesignSystemTranslations` and `initVigI18n`, which pulled the locale
+// chunk — about 14 KB of bundled translations — and through it bare imports of
+// `i18next` and `i18next-browser-languagedetector` into every consumer of the
+// root entry. Three of the seven take `.` and no `./i18n`, so each resolved two
+// peer packages it never asked for and carried translations it never read. The
+// README documented only the subpath form, so nothing announced the shortcut
+// either.
+//
+//   import { initVigI18n } from "@viglet/viglet-design-system/i18n";
 
 // Styles (import separately via "@viglet/viglet-design-system/styles")
 // import "@viglet/viglet-design-system/styles";

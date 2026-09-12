@@ -9,6 +9,7 @@ import {
   assess,
   bentoEvidence,
   drift,
+  i18nEvidence,
   oversizedAssets,
   selectorsIn,
   subpathLeakage,
@@ -120,6 +121,61 @@ describe("what one fixture is held to", () => {
     expect(assess("root-only", { bentoExpected: false }, [plain])).toEqual([])
     expect(assess("bento", { bentoExpected: true }, [bentoChunk])).toEqual([])
     expect(assess("fonts", { bentoExpected: false, mustEmbedFonts: true }, [fontCss])).toEqual([])
+  })
+})
+
+// VDS117 — the root barrel re-exported the i18n runtime, so a consumer taking
+// `.` and no `./i18n` resolved two peer packages it never asked for and carried
+// about 14 KB of translations it never read. Nothing in this script asserted
+// otherwise, which is how it stayed true without anyone noticing.
+describe("the i18n detector", () => {
+  const PHRASE = "Alterar idioma"
+
+  it("finds the peers only the runtime pulls", () => {
+    const found = i18nEvidence([chunk("entry.js", 'import"i18next";')], PHRASE)
+    expect(found.join(" | ")).toContain("imports i18next")
+
+    const detector = i18nEvidence(
+      [chunk("entry.js", 'import"i18next-browser-languagedetector";')],
+      PHRASE,
+    )
+    expect(detector.join(" | ")).toContain("imports i18next-browser-languagedetector")
+  })
+
+  it("does not read react-i18next as i18next", () => {
+    // Every component that draws a word calls useTranslation, so the root entry
+    // reaches this one by design. Matching the substring would report each of
+    // them and the check would be turned off within the week.
+    expect(i18nEvidence([chunk("entry.js", 'import"react-i18next";')], PHRASE)).toEqual([])
+  })
+
+  it("finds the translations even where neither peer is named", () => {
+    // The bigger half, and the one that survives a refactor reaching the bundle
+    // some other way: the locale data itself.
+    const found = i18nEvidence([chunk("entry.js", `const t={toggle:"${PHRASE}"}`)], PHRASE)
+    expect(found.join(" | ")).toContain("carries the locale bundle")
+  })
+
+  it("says nothing about a bundle carrying neither", () => {
+    expect(i18nEvidence([chunk("entry.js", "const x=1")], PHRASE)).toEqual([])
+    expect(i18nEvidence([asset("entry.css", ".a{color:red}")], PHRASE)).toEqual([])
+  })
+
+  it("refuses a root-only fixture that carries it", () => {
+    const found = assess(
+      "root-only",
+      { bentoExpected: false, i18nExpected: false },
+      [chunk("entry.js", 'import"i18next";')],
+      {},
+      PHRASE,
+    )
+    expect(found.join(" | ")).toContain("never imported ./i18n")
+  })
+
+  it("leaves a fixture that never opted out alone", () => {
+    expect(
+      assess("bento", { bentoExpected: true }, [chunk("entry.js", 'const t="bento-tone-blue";import"i18next";')], {}, PHRASE),
+    ).toEqual([])
   })
 })
 

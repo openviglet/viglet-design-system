@@ -154,6 +154,12 @@ one the catalogue shows.
 
 ### 2. Initialize i18n
 
+`/i18n` is the only way in. The root entry used to re-export these three, which
+meant every consumer of `.` resolved `i18next` and
+`i18next-browser-languagedetector` and carried the locale bundle whether or not
+it ever asked for a translation; since 2026.3 it does not, and a product that
+imported them from `.` changes the specifier and nothing else.
+
 ```ts
 import { initVigI18n } from "@viglet/viglet-design-system/i18n";
 
