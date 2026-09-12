@@ -2,27 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-### §VDS118 The entry the size gate skips
-
-VDS40 found the root entry was 96% four inlined PNG logos, one of them 1.27 MB, and part
-of the answer was `MAX_INLINE_ASSET` — a 256 KB cap in `check-size.mjs`.
-
-That cap is evaluated inside `assess()`, which runs once per entry in `FIXTURES`.
-`FIXTURES` holds `root-only`, `bento` and `fonts`. None of them imports `./assets`, and
-`size-budget.json` records no baseline for it. So the one published entry that actually
-ships the artwork is the one entry the artwork check never sees.
-
-Nothing is over the cap today, and the bite is narrower than it looks: `logos.test.ts`
-caps every PNG in `src/assets/products` at 96 KB and 256 px on arrival, which is
-strictly tighter than 256 KB for those four files. What is missing is the baseline —
-`./assets` is the only published entry with neither a recorded size nor an inline-asset
-check, so growth there is unmeasured rather than merely uncapped.
-
-Acceptance:
-- `FIXTURES` includes an `assets` entry and `size-budget.json` records its baseline.
-- `MAX_INLINE_ASSET` is evaluated against that entry.
-- Adding an oversized asset reachable from `./assets` fails `check:size`.
-
 ### §VDS119 The catalogue no compiler reads
 
 `tsconfig.app.json` excludes `src/**/*.stories.ts` and `.tsx`. `tsconfig.node.json`

@@ -4,6 +4,7 @@ import { resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 
 import {
+  FIXTURES,
   MAX_INLINE_ASSET,
   TOLERANCE,
   assess,
@@ -176,6 +177,39 @@ describe("the i18n detector", () => {
     expect(
       assess("bento", { bentoExpected: true }, [chunk("entry.js", 'const t="bento-tone-blue";import"i18next";')], {}, PHRASE),
     ).toEqual([])
+  })
+})
+
+// VDS118 — `MAX_INLINE_ASSET` is a 256 KB cap written after VDS40 found the root
+// entry was 96% four inlined PNG logos, one of them 1.27 MB. It is evaluated once
+// per fixture, and no fixture imported `./assets` — so the one published entry
+// that actually ships the artwork was the one entry the artwork check never saw,
+// and nothing recorded its size either.
+describe("the entry that ships the artwork", () => {
+  const budget = JSON.parse(
+    readFileSync(resolve(import.meta.dirname, "..", "size-budget.json"), "utf8"),
+  ) as Record<string, { raw: number; gzip: number }>
+
+  it("is one of the fixtures, and imports the subpath it is named for", () => {
+    expect(Object.keys(FIXTURES)).toContain("assets")
+    expect(FIXTURES.assets.source).toContain("/assets")
+  })
+
+  it("has a recorded baseline, which is the half a cap cannot give it", () => {
+    // logos.test.ts caps each PNG at 96 KB on arrival, which is tighter than
+    // this for the four files it knows about. What it cannot notice is the
+    // entry growing.
+    expect(budget.assets?.gzip).toBeGreaterThan(0)
+  })
+
+  it("is held to the inline-asset cap like any other entry", () => {
+    const over = chunk("entry.js", `const a="base64,${"A".repeat(MAX_INLINE_ASSET + 1)}"`)
+
+    expect(assess("assets", FIXTURES.assets, [over]).join(" | ")).toContain("inline it smaller")
+  })
+
+  it("passes in the shape it is meant to have", () => {
+    expect(assess("assets", FIXTURES.assets, [chunk("entry.js", "const x=1")])).toEqual([])
   })
 })
 

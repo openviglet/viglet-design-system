@@ -65,14 +65,14 @@ export const LOCALE_PHRASE = (() => {
 })()
 
 /**
- * The two consumers whose cost is being asserted.
+ * The consumers whose cost is being asserted.
  *
  * Each imports its whole entry rather than a handful of names. That makes the
  * claim as strong as it can be — not even a consumer taking *everything* from
  * the root entry pulls a bento module — and it makes the recorded number stable
  * under a rename, which a hand-picked list of imports is not.
  */
-const FIXTURES = {
+export const FIXTURES = {
   "root-only": {
     source: [
       `import * as ds from "${PKG}";`,
@@ -99,6 +99,28 @@ const FIXTURES = {
       "globalThis.__vdsProbe = Object.keys(bento).length;",
     ].join("\n"),
     bentoExpected: true,
+  },
+  /**
+   * VDS118 — the artwork, measured on the entry that ships it.
+   *
+   * `MAX_INLINE_ASSET` exists because VDS40 found the root entry was 96% four
+   * inlined PNG logos, one of them 1.27 MB. The cap is evaluated once per
+   * fixture, and until now no fixture imported `./assets` — so the one published
+   * entry that actually carries the artwork was the one entry the artwork check
+   * never saw, and `size-budget.json` recorded no number for it either.
+   *
+   * `logos.test.ts` is tighter than this for the four files it knows about: 96 KB
+   * and 256 px on arrival. What it cannot do is notice the entry growing, which
+   * is what a recorded baseline is for.
+   */
+  assets: {
+    source: [
+      `import * as assets from "${PKG}/assets";`,
+      "globalThis.__vdsProbe = Object.keys(assets).length;",
+    ].join("\n"),
+    bentoExpected: false,
+    // Logo data, so nothing here should reach either of those.
+    i18nExpected: false,
   },
   // VDS41 — the brand faces, which left `./styles` and became opt-in. This
   // fixture measures what opting in costs, and, more importantly, proves it
