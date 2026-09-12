@@ -25,6 +25,14 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs"
 import { basename, dirname, join, relative, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 
+import {
+  CLIENT_ENTRIES,
+  ENTRIES,
+  ROUTER_ENTRIES,
+  SERVER_ENTRIES,
+  emittedFiles,
+} from "./lib/entries.mjs"
+
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..")
 const dist = join(repoRoot, "dist")
 const failures = []
@@ -87,8 +95,7 @@ for (const promise of promised) {
   }
 }
 
-// 4. Only ./router and ./bento may reach for the router.
-const ROUTER_ENTRIES = new Set(["router", "bento"])
+// 4. Only the entries declared as router-using may reach for the router.
 for (const file of files) {
   const match = /^(.+)[.](es|cjs)[.]js$/.exec(basename(file))
   if (!match) continue
@@ -148,16 +155,15 @@ for (const file of files.filter((f) => f.endsWith(".css"))) {
 // build-time plugin that runs in Node, or on `./assets`, which is logo data,
 // takes away a server component's ability to import them for no gain.
 //
-// The list lives in vite.config.ts, which is what writes the banner. This
-// asserts the emitted files agree with it, in both formats, because a config
-// that stops taking effect is silent: the build still succeeds and the
-// directive is simply gone.
-const CLIENT_ENTRIES = new Set(["index", "bento", "router", "floating-formulas-bg", "i18n"])
-const SERVER_ENTRIES = new Set(["assets", "vite"])
+// VDS120 — the classification is `scripts/lib/entries.mjs`, which is also what
+// the build reads to know its entries at all. This used to be a literal here and
+// another in vite.config.ts, and the loop below iterated *this* one: an eighth
+// entry added to the build alone shipped with no banner and was never looked at,
+// which is this gate passing on exactly the file it exists to catch.
 const DIRECTIVE = /^\s*["']use client["']/
 
-for (const entry of [...CLIENT_ENTRIES, ...SERVER_ENTRIES]) {
-  for (const file of [`${entry}.es.js`, `${entry}.cjs`]) {
+for (const entry of Object.keys(ENTRIES)) {
+  for (const file of emittedFiles(entry)) {
     const path = join(dist, file)
     if (!existsSync(path)) {
       failures.push(`${file} is missing, so its client boundary cannot be checked`)

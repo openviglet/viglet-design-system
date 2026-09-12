@@ -98,6 +98,7 @@
 - ✅ **VDS117** **The root entry re-exports the i18n runtime, so a consumer that never asked for it resolves i18next** — The root entry carries no i18n runtime and is 4.4KB smaller gzipped, and check:size refuses a root-only bundle that reaches one (design recorded in `scripts/check-size.mjs`).
 - ✅ **VDS118** **The assets subpath has no size fixture, so the inline-asset cap never measures the entry shipping logos** — check:size bundles the assets subpath, records its baseline at 63900 gzipped and holds it to the inline-asset cap (design recorded in `scripts/check-size.mjs`).
 - ✅ **VDS119** **No tsc project type-checks the stories, and 49 errors sit in the catalogue with every gate green** — pnpm run typecheck reads the catalogue, and the 54 errors in it are gone, including two props the components never had (design recorded in `.storybook/tsconfig.json`).
+- ✅ **VDS120** **The list of entries needing a use client banner is restated in the gate that checks it** — The build and check-dist read one entry module, so an entry cannot exist unclassified and the banner check covers every one (design recorded in `scripts/lib/entries.mjs`).
 
 ## Block B — Bento becomes a design-system layer
 

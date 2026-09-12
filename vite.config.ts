@@ -5,22 +5,8 @@ import tailwindcss from "@tailwindcss/vite"
 import { defineConfig, type Plugin } from "vite"
 import dts from "vite-plugin-dts"
 
+import { CLIENT_ENTRIES, ENTRIES } from "./scripts/lib/entries.mjs"
 import { isExternal } from "./scripts/lib/externals.mjs"
-
-// VDS71 — which built entries a React Server Components consumer must treat as
-// client code. Named here rather than derived, because the answer is a fact
-// about each entry's contents and the build cannot infer intent: `./vite` runs
-// in Node at build time and `./assets` is logo data, so both stay
-// server-renderable and a server component can import them.
-const CLIENT_ENTRIES = new Set([
-  "index",
-  "bento",
-  "router",
-  "floating-formulas-bg",
-  // Not obvious: this pulls i18next-browser-languagedetector, which reads
-  // navigator and localStorage.
-  "i18n",
-])
 
 // Stylesheets a consumer imports by their own subpath, copied verbatim so the
 // entry in the exports map is the file itself.
@@ -71,22 +57,14 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: {
-        index: resolve(__dirname, "src/index.ts"),
-        // The second era of chrome, deliberately not in the root barrel.
-        bento: resolve(__dirname, "src/bento/index.ts"),
-        i18n: resolve(__dirname, "src/i18n/index.ts"),
-        // The product logos. Their own entry because library mode inlines
-        // every asset, so a root re-export shipped 1.90 MB of base64 PNG to
-        // every consumer — see VDS40.
-        assets: resolve(__dirname, "src/assets/products/index.ts"),
-        router: resolve(__dirname, "src/router.ts"),
-        vite: resolve(__dirname, "src/vite/index.ts"),
-        "floating-formulas-bg": resolve(
-          __dirname,
-          "src/components/ui/floating-formulas-bg.tsx",
-        ),
-      },
+      // VDS120 — read from `scripts/lib/entries.mjs`, which is also what
+      // `check-dist` reads. An entry therefore cannot exist without a row
+      // there, and a row there says which side of the RSC boundary it is on and
+      // whether it may reach the router. The lists used to be restated per file
+      // and were free to disagree; each entry's own comment lives beside its row.
+      entry: Object.fromEntries(
+        Object.entries(ENTRIES).map(([name, { source }]) => [name, resolve(__dirname, source)]),
+      ),
       formats: ["es", "cjs"],
       // `.cjs`, not `.cjs.js`. package.json declares "type": "module", so Node
       // reads any `.js` as ESM — and these are real CommonJS, so every

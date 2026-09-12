@@ -2,28 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-### §VDS120 Two lists free to disagree, again
-
-VDS43 moved `PEER_EXTERNALS` and `EXACT_EXTERNALS` into `scripts/lib/externals.mjs`
-because `vite.config.ts` and `check-size.mjs` had disagreed about what a consumer
-supplies. The comment above the import still says so, in the past tense: shared so the
-two cannot disagree — they did.
-
-The same shape survives one file over. `CLIENT_ENTRIES` — which entries get the `"use
-client"` banner — is a hand-maintained `Set` in `vite.config.ts` and an independent
-literal in `check-dist.mjs`, beside `SERVER_ENTRIES`; `ROUTER_ENTRIES` in the same file
-is a third. The check iterates its own sets rather than `build.lib.entry` or `dist`
-itself.
-
-So an eighth entry added to the build alone ships with no banner, and the loop never
-looks at it — VDS71's gate passing on precisely the kind of file it was written to
-catch, with the failure landing in a Next consumer's build instead.
-
-Acceptance:
-- The entry classification lives in one module that both files import.
-- `check-dist` derives what to inspect from `build.lib.entry` or `dist`, not from a literal.
-- A new entry missing its banner fails the gate.
-
 ### §VDS121 The consumer whose declaration has to wait for its bump
 
 VDS77 made `react-hook-form` a required peer, and six of the seven consumers declare it:
