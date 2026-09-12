@@ -84,6 +84,7 @@
 - ✅ **VDS105** **the NavigationMenu landmark keeps Radix's hardcoded Main, so a screen reader hears English in every product** — The nav landmark is named from the bundles, and the gate now reports a spoken name this package omits on a primitive that announces its own (design recorded in `src/i18n/literals.test.ts`).
 - ✅ **VDS77** **react-hook-form is a dependency, so a consumer can get a second copy of the one library here carrying a context** — react-hook-form is a required peer and a devDependency, so the one library here carrying a React context cannot be duplicated in a tree (design recorded in `scripts/externals.test.ts`).
 - ✅ **VDS107** **BadgeColorful renders a consumer's entity name as raw HTML and splices it into a style selector** — BadgeColorful renders an entity name as text and hashes its palette onto custom properties, so the name is neither markup nor a selector (design recorded in `src/styles/index.css`).
+- ✅ **VDS108** **Sidebar drops id, data attributes and className on mobile, where its props land on a node that renders nothing** — Sidebar's mobile branch forwards rest props and className to SheetContent, so an id or a label survives the breakpoint (design recorded in `src/components/ui/sidebar.tsx`).
 
 ## Block B — Bento becomes a design-system layer
 

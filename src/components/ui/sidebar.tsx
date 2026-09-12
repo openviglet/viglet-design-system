@@ -194,19 +194,31 @@ function Sidebar({
   }
 
   if (isMobile) {
+    // VDS108 — the rest props belong on `SheetContent`, which renders an element.
+    // `Sheet` is Radix's `Dialog.Root`: it renders nothing of its own and drops
+    // every attribute it does not recognise, so an `id`, a `data-testid` or an
+    // `aria-label` set on `<Sidebar>` reached the DOM on desktop and vanished here.
+    // `style` is pulled out of them because this branch supplies one of its own;
+    // merging keeps the consumer's declarations without losing the mobile width.
+    const { style, ...rest } = props
     return (
-      <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
+      <Sheet open={openMobile} onOpenChange={setOpenMobile}>
         <SheetContent
           data-sidebar="sidebar"
           data-slot="sidebar"
           data-mobile="true"
-          className="bg-sidebar text-sidebar-foreground w-(--sidebar-width) p-0 [&>button]:hidden"
+          side={side}
+          {...rest}
+          className={cn(
+            "bg-sidebar text-sidebar-foreground w-(--sidebar-width) p-0 [&>button]:hidden",
+            className
+          )}
           style={
             {
               "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
+              ...style,
             } as React.CSSProperties
           }
-          side={side}
         >
           <SheetHeader className="sr-only">
             <SheetTitle>{t("sidebar.title", { defaultValue: "Sidebar" })}</SheetTitle>

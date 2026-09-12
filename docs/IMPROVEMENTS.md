@@ -2,27 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-### §VDS108 The props that vanish below the breakpoint
-
-`Sidebar` has two branches. The desktop one spreads `{...props}` onto the
-`sidebar-container` div, so an `id`, a `data-testid`, an `aria-label` or a handler
-reaches the DOM. The mobile one spreads the same `props` onto `Sheet` — a re-export of
-Radix's `Dialog.Root`, which renders no element of its own and drops what it does not
-recognise. `className` goes the same way: `SheetContent`'s class list is a hardcoded
-literal.
-
-So every attribute a consumer sets on `<Sidebar>` works until the viewport crosses the
-md breakpoint, and then silently does not. That is the hardest variant to notice, and
-the one an end-to-end test is most likely to be driving.
-
-There is no `sidebar.test.tsx` — only a story — so nothing covers either branch today,
-which is why the two were free to diverge.
-
-Acceptance:
-- The mobile branch forwards rest props and `className` to `SheetContent`, not to `Sheet`.
-- A test renders a `Sidebar` with an `id`, a `data-testid` and a `className` on the mobile branch and finds all three in the DOM.
-- The same assertions run against the desktop branch, so the two cannot drift again.
-
 ### §VDS109 The brand the bundle gate cannot see
 
 `bento-shortcuts-dialog.tsx` asks i18next for `bento.shortcuts.description` with the
