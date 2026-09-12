@@ -38,6 +38,13 @@
 // and nothing else.
 export { BentoActionsMenu, type BentoActionsMenuItem, type BentoActionsMenuProps, type BentoActionTone } from "./bento-actions-menu";
 export { BentoCountTile, type BentoCountTileProps } from "./bento-count-tile";
+export {
+  BentoDataTable,
+  type BentoDataTableAction,
+  type BentoDataTableColumn,
+  type BentoDataTableLayout,
+  type BentoDataTableProps,
+} from "./bento-data-table";
 export { BentoEmptyState, type BentoEmptyStateProps } from "./bento-empty-state";
 export {
   BentoEntityShell,

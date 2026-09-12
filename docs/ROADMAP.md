@@ -4,8 +4,7 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS138** (deps: —) **the layer offers no virtualized, keyboard-operable data table, so consoles hand-roll each list** — BentoListPage renders tiles, so a list a curator sorts, range-selects and acts on at scale is rebuilt per product without the contract's keyboard rules. → §VDS138
-- 📋 **VDS139** (deps: VDS138) **the layer has no filter bar or filter chips, so each product composes its own query row** — Filtering by type, state, locale, author and date needs one shape a reader learns once, and a filter row drawn per product is the drift this package exists to stop. → §VDS139
+- 📋 **VDS139** (deps: VDS138 ✅) **the layer has no filter bar or filter chips, so each product composes its own query row** — Filtering by type, state, locale, author and date needs one shape a reader learns once, and a filter row drawn per product is the drift this package exists to stop. → §VDS139
 - 📋 **VDS140** (deps: —) **three planned console surfaces need the same diff and version rail, and the layer offers neither** — Revision history, review and translation each compare two values, so a diff drawn per surface would disagree about what changed and how it reads. → §VDS140
 - 📋 **VDS141** (deps: VDS131 ✅) **no component in the layer owns a main landmark or a skip link** — The contract gives the reading column to the shell, yet a consumer composing its own main decides landmarks page by page, and none offers a skip link. → §VDS141
 - 📋 **VDS142** (deps: —) **an actions-menu item takes no id, so no lint can match a console verb to an agent verb** — Every console action is an anonymous onSelect while the agent's verbs are named strings, so a new console action with no agent equivalent is invisible to any census. → §VDS142

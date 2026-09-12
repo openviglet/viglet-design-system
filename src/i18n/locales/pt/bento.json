@@ -46,6 +46,17 @@
     "tour": {
       "replay": "Fazer o tour"
     },
+    "table": {
+      "selected": "{{count}} selecionados",
+      "selectionActions": "Ações sobre a seleção",
+      "clearSelection": "Limpar seleção",
+      "columns": "Colunas",
+      "selectAll": "Selecionar todas as linhas",
+      "selectRow": "Selecionar {{row}}",
+      "actions": "Ações",
+      "rowActions": "Ações para {{row}}",
+      "empty": "Nada para mostrar"
+    },
     "backToTop": "Voltar ao topo"
   }
 }

@@ -85,6 +85,13 @@ there.
 `BentoEntityTile` for the common icon-chip + status-pill + title + meta shape;
 hand-roll a tile only when the entity genuinely needs a different layout.
 
+A list a reader sorts, selects a range of and acts on in bulk, or one that runs
+to thousands of rows, is `BentoDataTable` instead. It mounts only the visible rows,
+its headers sort and say how, a row is reachable and selectable from the keyboard,
+and row actions are a menu of named items. Pass the rows, the columns and the
+actions, and store the column layout it reports. Never build a table from `Table`
+and a scroll container: that is the list every console rebuilt before this one.
+
 **A form screen with its own hero** is `BentoFormHero` as the first child inside
 the `<form>` it submits. It renders both halves of the morph itself.
 

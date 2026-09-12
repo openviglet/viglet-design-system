@@ -46,6 +46,17 @@
     "tour": {
       "replay": "Take the tour"
     },
+    "table": {
+      "selected": "{{count}} selected",
+      "selectionActions": "Actions on the selection",
+      "clearSelection": "Clear selection",
+      "columns": "Columns",
+      "selectAll": "Select all rows",
+      "selectRow": "Select {{row}}",
+      "actions": "Actions",
+      "rowActions": "Actions for {{row}}",
+      "empty": "Nothing to show"
+    },
     "backToTop": "Back to top"
   }
 }

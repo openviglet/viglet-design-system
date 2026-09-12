@@ -804,6 +804,30 @@ you can redefine at `:root`.
 </BentoShell>
 ```
 
+`BentoDataTable` is the list a curator sorts, range-selects and acts on at scale.
+It mounts only the rows in view, so ten thousand cost what twenty do. Pass `rows`,
+`getRowId`, `columns` (a header, a `cell`, and a `sortValue` to make it sortable),
+and optionally `rowActions` for a per-row menu and `selectionActions` for the bar
+that appears over a selection. The arrows move between rows, Shift with an arrow
+or a click extends a selection, and Enter calls `onRowOpen`. The column picker
+reports `onLayoutChange`, and you store the layout, as you do for `BentoListPage`.
+
+```tsx
+<BentoDataTable
+  rows={posts}
+  getRowId={(p) => p.id}
+  getRowLabel={(p) => p.title}
+  label={t("posts")}
+  columns={[
+    { id: "title", header: t("title"), cell: (p) => p.title, sortValue: (p) => p.title, hideable: false },
+    { id: "updated", header: t("updated"), cell: (p) => format(p.updated), sortValue: (p) => p.updated },
+  ]}
+  rowActions={[{ id: "trash", label: t("trash"), icon: IconTrash, tone: "destructive", onSelect: trash }]}
+  selectionActions={[{ id: "trash", label: t("trash"), icon: IconTrash, onSelect: trash }]}
+  onRowOpen={(p) => navigate(p.url)}
+/>
+```
+
 `BentoCommandPalette` takes a second group whose items the product supplies per
 query, beside the nav items it matches itself. Pass `onQueryChange` to hear the
 query as typed and `group` to answer it:
@@ -827,7 +851,7 @@ says so rather than showing an empty list that is not empty yet.
 bundling three fixtures through this package's own `exports` map, and fails if a
 bento module, a bento class name or a run of `bento.css`'s selectors reaches a
 consumer that imported only the root entry. `size-budget.json` records what each
-entry costs: today the whole root entry is 91 KB gzipped and `./bento` 23 KB,
+entry costs: today the whole root entry is 91 KB gzipped and `./bento` 26 KB,
 measured with everything the build externalises left out, so the numbers
 describe this package rather than its dependencies. The preset's
 `--vg-bento-tone-*` tokens are deliberately not counted as the layer: they ship

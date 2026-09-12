@@ -32,26 +32,6 @@ so rather than leaving it to be rediscovered.
 
 ## Block F — What a consuming CMS needs from the package next
 
-### §VDS138 A data table the contract can govern
-
-The list shape the contract names is BentoListPage with a renderTile, which fits a dozen
-sites or post types and not a folder of four thousand posts. Shio's content browser,
-trash, static files, review queue and admin lists render their own tables, and none of
-them shares virtualization, column choice, sorting, range selection or the keyboard
-rules section 6 requires.
-
-Export BentoDataTable over the table library both consoles already depend on:
-virtualized rows, a column picker whose layout is a prop plus a persist callback the way
-BentoListPage takes its layout, sortable headers announcing their sort, row selection
-with shift-click and shift-arrow ranges, a selection action bar, and roving focus so a
-row is reachable and actionable without a mouse. Row actions are a menu with named
-items, never hover-only buttons.
-
-It holds no data and no product vocabulary; the product passes rows, columns and
-actions. Tests assert keyboard range selection, that only the visible window is mounted
-at ten thousand rows, and that every row action is reachable by keyboard and named for a
-screen reader.
-
 ### §VDS139 Filters, drawn once
 
 A top-tier content list is filtered more than it is scrolled. Shio's planned query

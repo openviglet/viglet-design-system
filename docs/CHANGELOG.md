@@ -186,6 +186,7 @@
 - ✅ **VDS136** **nothing machine-readable answers which component does a job, so an agent greps the type declarations** — viglet-ds-mcp serves a catalogue generated from the declarations by job and by name, the plugin skill points at it, and the build holds its token budget.
 - ✅ **VDS151** **the dark ground puts the gradient button's white label on the bright accent stop, at 3.76:1** — The accent fill keeps its darker step on the dark ground, so the white label clears AA on both, and the contrast gate measures white on each fill.
 - ✅ **VDS137** **no gate measures a consumer's own accent or primary override, only the preset's values** — viglet-ds-page-lint --contrast measures every pair a product's stylesheet re-keys, accent family included, on both grounds, and names the declaring line.
+- ✅ **VDS138** **the layer offers no virtualized, keyboard-operable data table, so consoles hand-roll each list** — BentoDataTable mounts only the visible rows, sorts from headers that announce it, selects ranges from the keyboard or a click, and names every row action.
 
 ## Block G — The package knows one chrome
 
