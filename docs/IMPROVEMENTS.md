@@ -2,26 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-### §VDS75 The rule that stayed behind
-
-VDS20 brought the bento authoring contract here and Turing's T999 reduced its copy to a
-pointer plus what is genuinely about that product's routes, privileges and entities. One
-rule would not fit either side of that line and is still sitting in Turing's file,
-marked as owed here.
-
-A back-link eyebrow leads with a left arrow, so it reads as the way back to the list
-rather than as a label. BentoEntityShell already does it -- it wraps the eyebrow in a
-Link to listRoute and puts the arrow in -- so a caller passes just the label. The rule
-matters for the other case: a page hand-rolling a BentoHero whose eyebrow is a back-link
-has to include the arrow itself, at 14px and aria-hidden, inside an inline-flex
-items-center gap-1 Link. And it must not be added to an eyebrow that navigates nowhere,
-where an arrow promises a destination.
-
-That is a statement about two components in this package and about how a caller composes
-the second one, which is what the contract here is for. It stayed behind only because
-nobody moved it. Bringing it over closes the last thing Turing's file says this contract
-does not state, and lets that file's section 6 be deleted rather than maintained.
-
 ### §VDS77 The form library that is not a peer (VDS77)
 
 `react-hook-form` sits in `dependencies`, while every other library this package shares

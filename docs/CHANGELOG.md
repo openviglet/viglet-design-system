@@ -57,6 +57,9 @@
 - ✅ **VDS93** **fourteen strings are typed into shipped components as English, and a screen reader announces most of them unseen** — Every word a shipped component says now comes from the en and pt bundles, and a test that parses the source fails on any literal; it found twenty-one, not the fourteen filed.
   checked **No shipped component draws or announces a string outside the bundle** A literal asks for no key, so VDS51 passes over it and a Portuguese product speaks English exactly where nobody looks.
   checked **A test fails on an sr-only, aria-label or lone element-text literal** The three shapes the fourteen took, read off the source so the next one fails on the line being written.
+- ✅ **VDS75** **the back-link eyebrow's arrow rule is about two components here and still lives in Turing's file** — The bento contract states the back-link arrow rule and a test holds it, so Turing's file can point here rather than keep its own copy.
+  checked **the contract states the arrow rule, both halves of it** BENTO-AUTHORING section 2 carries when the arrow is required and when it must not appear, so Turing's file can point here instead.
+  checked **a test holds it, not just the prose** backTo renders the arrow on both heroes, a non-link eyebrow draws none, and eyebrow silently winning over backTo is pinned.
 
 ## Block B — Bento becomes a design-system layer
 

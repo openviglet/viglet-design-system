@@ -2,7 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS75** (deps: —) **the back-link eyebrow's arrow rule is about two components here and still lives in Turing's file** — It is the last thing that file says this contract does not state, so section 6 stays maintained rather than deleted. → §VDS75
 - 📋 **VDS77** (deps: —) **react-hook-form is a dependency, so a consumer can get a second copy of the one library here carrying a context** — Two consumers declare no react-hook-form and get it from here, so the peer change is theirs first. → §VDS77
 - 📋 **VDS94** (deps: —) **a product with its own common namespace loses every string the package ships under it, and reads English** — initVigI18n spreads the product's bundle over the package's one namespace at a time, and registerVigTranslations skips any namespace the host already has. → §VDS94
 - 📋 **VDS95** (deps: VDS94) **the LanguageSwitcher names itself with a key no locale ships, so its button says Change language in every product** — VDS51 files language.toggle beside the product nouns it leaves to consumers, though here the package's own switcher is naming itself. → §VDS95
