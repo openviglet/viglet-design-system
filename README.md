@@ -173,6 +173,24 @@ the entry here is wrong, so the fix is a change to `consumers.json` in this
 repository. `--json` prints the measurement; `--root <dir>` measures a checkout
 other than the current directory.
 
+## Using it from Claude Code
+
+This repository publishes a Claude Code plugin, `viglet-ds`, for a product that
+installs the package. It loads the page contract as a skill by name, adds
+`/viglet-ds-check` to run the CLIs above against the working tree, and denies a
+write that declares a component the package already exports, naming the import
+to use instead.
+
+```
+/plugin marketplace add openviglet/viglet-design-system
+/plugin install viglet-ds@viglet-design-system
+```
+
+With the plugin enabled in a repository's `.claude/settings.json`,
+`viglet-ds-page-reference` writes only the artboards and leaves the skill to the
+plugin. [claude-plugin/README.md](claude-plugin/README.md) has the settings to
+commit and the package range the plugin supports.
+
 ## Setup
 
 ### 1. Import styles

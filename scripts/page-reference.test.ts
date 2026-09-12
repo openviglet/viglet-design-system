@@ -79,6 +79,42 @@ describe("vendoring the page reference", () => {
     expect(second.stdout).toContain("current")
   })
 
+  // VDS135 — the plugin carries the skill, so a second copy beside it only drifts.
+  it("writes the artboards and no skill when the viglet-ds plugin is enabled", () => {
+    write(".claude/settings.json", JSON.stringify({ enabledPlugins: { "viglet-ds@viglet-design-system": true } }))
+
+    expect(run().status).toBe(0)
+    expect(existsSync(join(root, SKILL))).toBe(false)
+    expect(existsSync(join(root, "docs/design/vds-page-anatomy.dc.html"))).toBe(true)
+
+    const again = run("--check")
+    expect(again.status).toBe(0)
+    expect(again.stdout).toContain("current")
+  })
+
+  it("removes the skill it vendored once the plugin is enabled, and leaves one it did not write", () => {
+    expect(run().status).toBe(0)
+    expect(existsSync(join(root, SKILL))).toBe(true)
+
+    write(".claude/settings.local.json", JSON.stringify({ enabledPlugins: { "viglet-ds@viglet-design-system": true } }))
+    const checked = run("--check")
+    expect(checked.status).toBe(1)
+    expect(checked.stdout).toContain(`would remove  ${SKILL}`)
+
+    expect(run().status).toBe(0)
+    expect(existsSync(join(root, SKILL))).toBe(false)
+    expect(existsSync(join(root, ".claude/skills/viglet-ds-pages/authoring.md"))).toBe(false)
+
+    // A skill of the same name with no package stamp is the repository's own.
+    write(SKILL, "---\nname: viglet-ds-pages\ndescription: ours\n---\n")
+    expect(run().status).toBe(0)
+    expect(existsSync(join(root, SKILL))).toBe(true)
+
+    // A plugin switched off in settings enables nothing.
+    write(".claude/settings.local.json", JSON.stringify({ enabledPlugins: { "viglet-ds@viglet-design-system": false } }))
+    expect(run("--check").stdout).toContain("authoring.md")
+  })
+
   it("keeps an adopter's own canvas entries and adds its own beside them", () => {
     write(
       "docs/design/canvas.json",

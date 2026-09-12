@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "viglet-design-system",
+  "description": "Plugins published from the Viglet Design System repository.",
+  "owner": {
+    "name": "Viglet Team",
+    "url": "https://github.com/openviglet"
+  },
+  "plugins": [
+    {
+      "name": "viglet-ds",
+      "source": "./claude-plugin",
+      "category": "development",
+      "description": "The Viglet Design System in an agent session: the page contract as a skill, a check command over the package's gates, and a hook that catches a local copy of a shared component as it is written."
+    }
+  ]
+}

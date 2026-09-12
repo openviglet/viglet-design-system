@@ -187,10 +187,42 @@ function declaration() {
   }
 }
 
+/**
+ * VDS135 — whether this repository enables the `viglet-ds` Claude Code plugin.
+ *
+ * The plugin delivers the skill into every session by name and updates with it,
+ * so a vendored copy beside it is a second skill of the same name that drifts.
+ * The artboards are different: a consumer wants them on disk, and they stay.
+ * Read from the project's settings, where enabling a plugin for a repository is
+ * recorded, and never guessed from what is installed on this machine.
+ */
+function pluginEnabled() {
+  for (const name of [".claude/settings.json", ".claude/settings.local.json"]) {
+    const at = join(root, name)
+    if (!existsSync(at)) continue
+    try {
+      const enabled = JSON.parse(readFileSync(at, "utf8")).enabledPlugins ?? {}
+      if (Object.entries(enabled).some(([id, on]) => on === true && id.split("@")[0] === "viglet-ds")) {
+        return true
+      }
+    } catch {
+      /* a settings file this cannot read enables nothing */
+    }
+  }
+  return false
+}
+
+const plugin = pluginEnabled()
+const SKILL_FILES = [SKILL, `${SKILL_DIR}/authoring.md`, `${SKILL_DIR}/boundary.md`]
+
 const surfaces = [
-  copied(SKILL, orientation(canvasDir, artboards.length)),
-  copied(`${SKILL_DIR}/authoring.md`, readFileSync(join(payload, "docs", "BENTO-AUTHORING.md"), "utf8")),
-  copied(`${SKILL_DIR}/boundary.md`, readFileSync(join(payload, "docs", "BENTO-BOUNDARY.md"), "utf8")),
+  ...(plugin
+    ? []
+    : [
+        copied(SKILL, orientation(canvasDir, artboards.length)),
+        copied(`${SKILL_DIR}/authoring.md`, readFileSync(join(payload, "docs", "BENTO-AUTHORING.md"), "utf8")),
+        copied(`${SKILL_DIR}/boundary.md`, readFileSync(join(payload, "docs", "BENTO-BOUNDARY.md"), "utf8")),
+      ]),
   ...artboards.map((name) =>
     copied(`${canvasDir}/vds-${name}`, readFileSync(join(REFERENCE, name), "utf8")),
   ),
@@ -204,11 +236,13 @@ const surfaces = [
  * "refresh" means downgrade and every word of a drift report would be wrong. So
  * it is named and refused instead.
  */
-const wired = existsSync(join(root, SKILL))
-const stamped = wired
+const wired = plugin || existsSync(join(root, SKILL))
+const stamped = existsSync(join(root, SKILL))
   ? (/^vds-version:\s*(\S+)\s*$/m.exec(readFileSync(join(root, SKILL), "utf8"))?.[1] ?? null)
   : null
 const ahead =
+  // With the plugin on, the vendored skill is on its way out, so its stamp says nothing.
+  !plugin &&
   stamped !== null &&
   stamped !== version &&
   stamped.localeCompare(version, undefined, { numeric: true }) > 0
@@ -224,11 +258,16 @@ const changing = surfaces.filter((s) => s.drifted)
  * gate to mean what it says.
  */
 const shipped = new Set(artboards.map((name) => `vds-${name}`))
-const orphans = existsSync(join(root, canvasDir))
-  ? readdirSync(join(root, canvasDir))
-      .filter((name) => name.startsWith("vds-") && name.endsWith(".dc.html") && !shipped.has(name))
-      .map((name) => `${canvasDir}/${name}`)
-  : []
+const orphans = [
+  ...(existsSync(join(root, canvasDir))
+    ? readdirSync(join(root, canvasDir))
+        .filter((name) => name.startsWith("vds-") && name.endsWith(".dc.html") && !shipped.has(name))
+        .map((name) => `${canvasDir}/${name}`)
+    : []),
+  // A vendored skill left behind once the plugin carries it. Only one this
+  // package stamped: a skill of the same name the repository wrote is its own.
+  ...(plugin && stamped !== null ? SKILL_FILES.filter((file) => existsSync(join(root, file))) : []),
+]
 
 /** created / updated, in the conditional under `--check` and the past tense after a write. */
 function state(surface) {
@@ -250,6 +289,7 @@ if (asJson) {
         root,
         canvasDir,
         wired,
+        plugin,
         stamped,
         ahead,
         code: code(),

@@ -1,0 +1,11 @@
+{
+  "name": "@viglet/viglet-ds-claude-plugin",
+  "private": true,
+  "version": "2026.3.0",
+  "description": "The Viglet Design System plugin for Claude Code: a skill, a check command and a duplicate-guard hook. Private: it is distributed through this repository's marketplace, not npm. supportedPackage is the range of the package the plugin is written against, and the hook and the command read it. It is not peerDependencies, which would make this directory look like a consumer to use:local.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "supportedPackage": {
+    "@viglet/viglet-design-system": ">=2026.3.11 <2026.4.0"
+  }
+}

@@ -32,25 +32,6 @@ so rather than leaving it to be rediscovered.
 
 ## Block F — What a consuming CMS needs from the package next
 
-### §VDS135 The package as a Claude Code plugin
-
-page-reference.mjs argues for copying: a contract kept in another repository is read
-after the fifth screen, so the surfaces are written into the consumer where a session
-trips over them. That argument holds for the artboards, which a consumer wants on disk.
-It is weaker for the skill, which a plugin delivers into every session by name, updates
-when the plugin does, and leaves no second copy to drift.
-
-Ship .claude-plugin/plugin.json and a marketplace entry carrying the viglet-ds-pages
-skill, a check command that runs the three bins against the working tree, and a
-PreToolUse hook that runs the duplicate check against a component file as it is written,
-which is when the instruction is cheapest to follow. Declare a supported package range,
-because a plugin release train and an npm release train drift, and page-reference
-already refuses to write when the vendored copy is ahead.
-
-Shio's claude-plugin directory is the template, including its test asserting every path
-in every manifest exists. Page-reference keeps vendoring the artboards and stops
-vendoring the skill when the plugin is enabled.
-
 ### §VDS136 A catalogue an agent can ask
 
 An agent building a Shio screen today decides between BentoPanel and
