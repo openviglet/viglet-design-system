@@ -112,6 +112,30 @@ describe("VigletAvatar", () => {
     expect(closed).toBeLessThan(160)
   })
 
+  it("draws every ember before the core, so the sphere occludes them", () => {
+    // VDS106 — the third of VDS100's defects, and the one the reference image
+    // cannot hold. The embers used to be drawn over the core: white specks
+    // sitting on the ball, the one thing a sun's sparks must not look like.
+    //
+    // A pixel comparison is the wrong instrument for it. Thirty-four sparks a
+    // pixel across are about 0.5% of the disc the sphere covers, under any
+    // budget loose enough to survive a second rasteriser — measured, not
+    // assumed. What the defect actually is, though, is an ordering, and the
+    // recorder above sees order exactly: the embers are the only `arc`, the
+    // facets are the only `closePath`.
+    render(<VigletAvatar />)
+
+    let lastEmber = -1
+    for (const [at, call] of recorder.calls.entries()) {
+      if (call.startsWith("arc(")) lastEmber = at
+    }
+    const firstFacet = recorder.calls.findIndex((call) => call.startsWith("closePath"))
+
+    expect(lastEmber, "no ember was drawn, so this asserts nothing").toBeGreaterThan(-1)
+    expect(firstFacet, "no facet was drawn, so this asserts nothing").toBeGreaterThan(-1)
+    expect(lastEmber, "an ember is drawn over the core instead of behind it").toBeLessThan(firstFacet)
+  })
+
   it("draws one frame and starts no loop when the reader asked for less motion", () => {
     prefersReducedMotion(true)
     const schedule = vi.spyOn(window, "requestAnimationFrame")

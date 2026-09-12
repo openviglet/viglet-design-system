@@ -30,27 +30,3 @@ Acceptance:
 - A consumer resolving a different minor still gets exactly one copy.
 
 ## Block E — The assistant every product shares
-
-### §VDS106 A budget the sparks are too small for
-
-VDS103 put an image on the other side of the mascot and scored the whole frame: the
-fraction of pixels differing from `docs/design/viglet-avatar-idle.png` by more than a
-channel tolerance, against a 2% budget. Putting each of VDS100's three defects back
-gives 16.9% for the display-encoded palette and 6.7% for the 320-facet ball — and, for
-the embers drawn over the core instead of behind it, a figure under the budget. The gate
-does not catch it.
-
-The budget is not the thing to lower. The reference is written on one machine and read
-on whichever runs CI, and the mascot is a lattice of hairline seams over a sphere, so
-most of its pixels are antialiased edges where two rasterisers legitimately disagree. 2%
-is what buys that headroom.
-
-What is wrong is the denominator. Thirty-four sparks a pixel across are a fraction of a
-percent of a 128-square frame and several percent of the disc the sphere occupies, which
-is where they wrongly appear. So score by region: the disc of the core, and the annulus
-outside it where the halo, the orbit and the embers live, each with its own budget. The
-geometry is already in the component — `unit` is the sphere radius and the centre is the
-frame's — so the regions are derived rather than measured off the picture.
-
-On ship: re-measure the three defects and correct the figures in the test's header
-comment, which states them.

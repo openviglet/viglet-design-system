@@ -49,6 +49,11 @@ read straight off its own canvas. This one **is** read by a test —
 browser and compares the pixels with it, which is the check that VDS100's three
 defects went through a green pipeline for want of.
 
+The sphere and the space around it are scored apart (VDS106). The mascot is the
+middle sixth of its frame, so a defect in it was diluted by five parts of dark
+ground before it reached a budget: the wrong palette repainted 93% of the sphere
+and read as 17% of the frame.
+
 It is a reviewed image, not a generated one. It was written by that test and
 then looked at beside `viglet-avatar-cms.jsx` — the palette per state, and the
 180 facets of `IcosahedronGeometry(0.62, 2)` — before being committed.

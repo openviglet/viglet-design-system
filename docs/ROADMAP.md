@@ -6,15 +6,6 @@
 
 ## Block E — The assistant every product shares
 
-- 📋 **VDS106** (deps: VDS103 ✅) **a mascot defect smaller than 2% of the frame passes the reference-image gate, as the ember layer order does** — The three defects VDS103 was built for include one it measures as under budget, so the layer order that put the sparks on top of the sun would ship again unseen. → §VDS106
-
-## Done when — VDS106
-
-- **the embers drawn over the core fail the gate** Put that layer order back and the
-  comparison is red; put it right and the suite is green.
-- **the core and the space around it are scored apart** Each region carries its own
-  budget, derived from the sphere radius rather than measured off the reference.
-
 ## Non-goals
 
 - **Do not fork a shared component inside a product** The one-line re-export shim is the
