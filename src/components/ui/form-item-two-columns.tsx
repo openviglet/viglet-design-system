@@ -48,6 +48,13 @@ const FormItemTwoColumnsDescription: React.FC<
     <FormDescription className={cn(className)} {...props} />
 )
 
+/**
+ * A form row with its label and description on the left and the control on the
+ * right, the shape of a setting with a switch.
+ *
+ * Compose `FormItemTwoColumns.Left`, holding `.Label` and `.Description`, and
+ * `FormItemTwoColumns.Right`, holding the control, inside a `FormField`.
+ */
 export const FormItemTwoColumns = Object.assign(FormItemTwoColumnsRoot, {
     Left: FormItemTwoColumnsLeft,
     Right: FormItemTwoColumnsRight,

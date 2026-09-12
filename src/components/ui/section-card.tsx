@@ -83,6 +83,14 @@ interface SectionCardProps {
   className?: string;
 }
 
+/**
+ * A console-era form section: a collapsible card with a coloured icon header over
+ * its fields.
+ *
+ * Compose `SectionCard.Header`, or `SectionCard.StaticHeader` for one that does
+ * not collapse, and `SectionCard.Content`. A bento form groups its fields in
+ * `BentoFormSection`, and `AdaptiveSectionCard` renders either from this markup.
+ */
 function SectionCard({ variant = "blue", defaultOpen = true, children, className }: Readonly<SectionCardProps>) {
   const [open, setOpen] = useState(defaultOpen);
   const toggle = () => setOpen((v) => !v);

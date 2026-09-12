@@ -261,6 +261,14 @@ export interface FloatingFormulasBgProps {
   className?: string;
 }
 
+/**
+ * The animated backdrop of drifting formula terms, molecular bonds and glow orbs
+ * behind a login or first-access screen.
+ *
+ * It thins itself out on small viewports, where many blurred animated layers
+ * flicker, and a `seed` fixes its arrangement. `Login.Background` and
+ * `StartupFirst.Background` render it with the screen's colours already applied.
+ */
 export function FloatingFormulasBg({
   itemCount = 35,
   extraTokens,

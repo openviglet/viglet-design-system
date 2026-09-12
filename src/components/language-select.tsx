@@ -17,6 +17,14 @@ interface LanguageSelectProps {
     className?: string;
 }
 
+/**
+ * A select for choosing the locale of a piece of content, each option shown with
+ * its flag badge.
+ *
+ * Pass the product's `locales`. `extraLocaleValues` adds codes that list does not
+ * name, so a stored value still shows as chosen. It sets a value; the reader's
+ * own interface language is `LanguageSwitcher`'s.
+ */
 export function LanguageSelect({
     value,
     onValueChange,

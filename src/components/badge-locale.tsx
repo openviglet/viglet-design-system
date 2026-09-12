@@ -76,6 +76,13 @@ export function getLocaleCountryCode(locale: string): string {
     return (COUNTRY_OVERRIDES[languageCode] || languageCode).toLowerCase();
 }
 
+/**
+ * A badge showing a locale code beside its country's flag, or a globe where no
+ * flag loads.
+ *
+ * The flag comes from flagcdn.com. To let a reader choose a locale, use
+ * `LanguageSelect`, which shows this badge on every option.
+ */
 export const BadgeLocale: React.FC<BadgeLocaleProps> = ({ locale, className }) => {
     const countryCode = getLocaleCountryCode(locale);
 

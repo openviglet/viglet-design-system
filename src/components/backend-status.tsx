@@ -4,18 +4,6 @@ import { createContext, useCallback, useContext, useEffect, useState } from "rea
 import { useTranslation } from "react-i18next";
 import { GradientButton } from "./ui/gradient-button";
 
-/**
- * Centralized "is the backend reachable" indicator.
- *
- * - Wrap your app in `<BackendStatusProvider>` (with a health endpoint).
- * - From your axios interceptors, call `reportBackendOffline()` when a request
- *   fails with no response, and `reportBackendOnline()` on any success.
- * - The provider polls the health endpoint while offline to detect recovery
- *   and renders a sticky banner at the top of the viewport.
- *
- * @since 2026.2.29
- */
-
 type Status = "online" | "offline" | "checking";
 
 /* ───────── Module-level event bus (lets non-React code talk to the provider) ───────── */
@@ -85,6 +73,18 @@ interface BackendStatusProviderProps {
   children: React.ReactNode;
 }
 
+/**
+ * Tracks whether the backend is reachable, and shows a sticky banner while it is not.
+ *
+ * - Wrap the app in it once, with the health endpoint to poll.
+ * - From the axios interceptors, call `reportBackendOffline()` when a request
+ *   fails with no response, and `reportBackendOnline()` on any success.
+ * - While offline it polls the health endpoint to notice the recovery.
+ *
+ * `useBackendStatus` reads the status and a `retry` anywhere beneath it.
+ *
+ * @since 2026.2.29
+ */
 export function BackendStatusProvider({
   healthEndpoint = "/api/v2/ping",
   pollInterval = 5000,
@@ -125,6 +125,13 @@ export function BackendStatusProvider({
 
 /* ───────── Banner ───────── */
 
+/**
+ * The "server unavailable, retrying" banner, with a retry button, that
+ * `BackendStatusProvider` renders while the backend is unreachable.
+ *
+ * Mount it yourself only to place it elsewhere, with `showBanner={false}` on the
+ * provider, and always beneath that provider.
+ */
 export function BackendStatusBanner() {
   const { status, retry } = useBackendStatus();
   const { t } = useTranslation();

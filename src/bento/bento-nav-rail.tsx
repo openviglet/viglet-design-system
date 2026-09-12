@@ -39,19 +39,6 @@ function isSectionActive(pathname: string, group: BentoNavGroup): boolean {
   return group.items.some((i) => i.bentoRoute && isWithin(pathname, i.bentoRoute));
 }
 
-/**
- * The persistent Bento navigation rail (T549, restructured in T573) — a slim,
- * fixed, frosted icon strip on the left (desktop only). It lists **Home + the
- * three section hubs** (Generative AI · Enterprise Search · Management), never
- * the ~22 leaf surfaces. That keeps the rail at a fixed, small height no matter
- * how many surfaces migrate, so it can never overflow the viewport the way the
- * flat console sidebar did. Each hub opens an area page that groups every
- * surface of that section as a bento mosaic; individual surfaces are reached
- * from the hub or jumped to directly via the `⌘K` command palette.
- *
- * Hidden below `md` — on mobile the header's command button + global `⌘K`
- * provide navigation without the rail eating horizontal space.
- */
 export interface BentoNavRailProps {
   /**
    * The sections a product decided this reader may see, already filtered.
@@ -69,6 +56,19 @@ export interface BentoNavRailProps {
   homeLabel?: string;
 }
 
+/**
+ * The fixed icon rail down the left edge, with Home and one link per section hub
+ * and never the leaf surfaces.
+ *
+ * Listing hubs rather than surfaces keeps the rail a fixed, small height however
+ * many surfaces a product has, so it cannot overflow the viewport the way a flat
+ * console sidebar did. Each hub opens its section's area, where the surfaces sit
+ * as a bento mosaic, and a surface is reached from there or from the command
+ * palette. `BentoShell` takes it as `rail` and reserves its gutter.
+ *
+ * Hidden below `md`, where the header's palette trigger and the global shortcut
+ * navigate instead. The console era's collapsible `Sidebar` is not for a bento page.
+ */
 export function BentoNavRail({
   groups,
   homeRoute,

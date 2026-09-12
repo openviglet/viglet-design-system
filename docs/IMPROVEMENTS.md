@@ -37,18 +37,23 @@ so rather than leaving it to be rediscovered.
 dist/catalogue.json takes a component's purpose from the doc comment on its own
 declaration, and writes an empty summary where there is none rather than inventing one.
 Measured at the build that shipped the catalogue: 45 of 237 components are described.
-find_component ranks the other 192 by name, prop names and the contract sections that
-name them, which works for BentoPanel and fails for a job worded differently from the
+find_component ranks the rest by name, prop names and the contract sections that name
+them, which works for BentoPanel and fails for a job worded differently from the
 component's name. read_component answers them with no description at all.
 
-Two parts. First, write the missing comments, first sentence as the purpose and a
-sentence on what not to use it for where a sibling does that job, starting with the
-bento layer and the components the contract names, since those are the ones an agent is
-sent to choose between. Second, a ratchet so the count cannot fall back: check-catalogue
-reads a list of the components still undescribed, fails when a component outside that
-list has no summary, and fails when a listed one has gained a summary and was not
-removed from the list. A new component then arrives described or does not build, and the
-list only shrinks.
+The ratchet has landed. check-catalogue reads catalogue-undescribed.txt, fails a
+component outside it with no summary, fails a listed one that gained a summary, and
+fails a listed name that is no longer a component. The bento and router layers and the
+product's own root components are described, several of them by moving a comment that
+sat on the props interface or floated above the file, where the catalogue never read it.
+
+What is left is the primitive layer: the Radix and shadcn parts such as Accordion, Card,
+the Dialog, Drawer, Sheet and Select parts, the Sidebar family and Tooltip. Write each
+first sentence as the purpose, and where a sibling does the job better say so: Card
+beside BentoPanel and GlassCard, Sheet beside Drawer and Dialog, Popover beside
+HoverCard and Tooltip, Switch beside GradientSwitch. Delete each name from the list in
+the change that describes it, and rerun the build: the find sample jobs in
+check-catalogue must still rank their component first.
 
 ### §VDS152 The deprecation ends
 

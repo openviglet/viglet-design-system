@@ -1,18 +1,5 @@
 import { useEffect, useRef, type CSSProperties } from "react";
 
-/**
- * VigletAvatar — the Viglet mascot: a small sun, drawn rather than imported.
- *
- * The original design (`docs/design/viglet-avatar-cms.jsx`) builds this in
- * three.js. three is around 170 KB gzipped and this package's whole root entry
- * budget is 86 KB, so the geometry is drawn here instead: an icosahedron at
- * three's detail 2 is 180 triangles, and flat-shading them into a 2D context is
- * the same picture at the 96-160 px a product renders it at.
- *
- * The mascot is decorative — `aria-hidden`. It says nothing a screen reader can
- * use, and the surface that wraps it owns the accessible name and the words.
- */
-
 export type VigletAvatarState =
   | "idle"
   | "working"
@@ -302,6 +289,20 @@ export interface VigletAvatarProps {
   style?: CSSProperties;
 }
 
+/**
+ * The Viglet mascot, a small animated sun whose `state` shows what the system is
+ * doing.
+ *
+ * The original design (`docs/design/viglet-avatar-cms.jsx`) builds this in
+ * three.js. three is around 170 KB gzipped and this package's whole root entry
+ * budget is 86 KB, so the geometry is drawn here instead: an icosahedron at
+ * three's detail 2 is 180 triangles, and flat-shading them into a 2D context is
+ * the same picture at the 96-160 px a product renders it at.
+ *
+ * The mascot is decorative — `aria-hidden`. It says nothing a screen reader can
+ * use, and the surface that wraps it owns the accessible name and the words. The
+ * dock with a caption and a transcript around it is `VigletAssistant`.
+ */
 export function VigletAvatar({
   state = "idle",
   size = 128,

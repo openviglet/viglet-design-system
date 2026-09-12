@@ -9,20 +9,6 @@ import { Input } from "./input";
 import { VigletAvatar, type VigletAvatarState } from "./viglet-avatar";
 
 /**
- * VigletAssistant — the dock the mascot lives in.
- *
- * Collapsed it is a status light with a caption beside it; open it is a panel
- * with a transcript and a composer. Both halves are optional in the sense that
- * matters: without `onSend` there is no composer and no chat, and the dock is a
- * place the system reports from.
- *
- * It knows no backend. The original design posts to an LLM endpoint from the
- * browser with a model id inline; a package six products install cannot hold an
- * endpoint, let alone a key, so this takes `messages`, `busy` and `onSend` and
- * leaves all of that to the product.
- */
-
-/**
  * Something the product can offer from a row — "use this title", "open the
  * record". The label is the product's copy, so it arrives translated rather than
  * being translated here.
@@ -212,6 +198,20 @@ function ReportTime({ at, locale }: Readonly<{ at: VigletAssistantReport["at"]; 
   );
 }
 
+/**
+ * The assistant dock the mascot lives in, in the corner of a shell: a status light
+ * with a caption, opening to the system's reports and, given `onSend`, a chat.
+ *
+ * Collapsed it is the light and the caption beside it; open it is a panel with a
+ * transcript and a composer. Without `onSend` there is no composer and no chat,
+ * and the dock is a place the system reports from. Pass it to `BentoShell` as
+ * `dock`. The mascot alone, with no dock around it, is `VigletAvatar`.
+ *
+ * It knows no backend. The original design posts to an LLM endpoint from the
+ * browser with a model id inline; a package six products install cannot hold an
+ * endpoint, let alone a key, so this takes `messages`, `busy` and `onSend` and
+ * leaves all of that to the product.
+ */
 export function VigletAssistant({
   state,
   caption,

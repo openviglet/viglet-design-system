@@ -6,32 +6,6 @@ import { GlassCard } from "../ui/glass-card";
 import { PulseRing } from "../ui/pulse-ring";
 import "./login.css";
 
-/**
- * Login — compound component for the Viglet product login / hero screen.
- *
- * Use via the dot-notation children (`<Login.Background />`, `<Login.Logo>`,
- * `<Login.Title>`, etc.) to compose the screen. Every product sets its own
- * palette once at the root (`color` / `colorDark`) — it cascades to every
- * child that cares about accent color (bg, glass card shadow, pulse ring,
- * title gradient, feature pills).
- *
- * Example:
- *   <Login color="#2563eb" colorDark="#60a5fa">
- *     <Login.Background withLightning />
- *     <Login.Content>
- *       <Login.Logo><TurLogo size={52} /></Login.Logo>
- *       <Login.Title>Viglet Turing ES</Login.Title>
- *       <Login.Tagline>{t("login.heroTagline")}</Login.Tagline>
- *       <Login.Features>
- *         <Login.FeaturePill icon={<Search />}>Semantic search</Login.FeaturePill>
- *         <Login.FeaturePill icon={<Sparkles />}>AI</Login.FeaturePill>
- *       </Login.Features>
- *       <Login.Card><LoginForm /></Login.Card>
- *       <Login.Footer>Viglet Turing ES — Enterprise Search Intelligence</Login.Footer>
- *     </Login.Content>
- *   </Login>
- */
-
 interface LoginTheme {
   color?: string;
   colorDark?: string;
@@ -200,6 +174,33 @@ function LoginFooter({ children, className, ...rest }: Readonly<HTMLAttributes<H
   );
 }
 
+/**
+ * The login screen, composed: an animated backdrop, the product's logo in a pulse
+ * ring, a title, tagline and feature pills, and a glass card holding the form.
+ *
+ * Compose it from the dot-notation children (`<Login.Background />`,
+ * `<Login.Logo>`, `<Login.Title>` and the rest). A product sets its palette once
+ * at the root with `color` / `colorDark`, and it cascades to every child that
+ * takes the accent: the backdrop, the card's shadow, the ring, the title
+ * gradient and the pills. The first-access screen before any user exists is
+ * `StartupFirst`, built the same way.
+ *
+ * Example:
+ *   <Login color="#2563eb" colorDark="#60a5fa">
+ *     <Login.Background withLightning />
+ *     <Login.Content>
+ *       <Login.Logo><ProductLogo size={52} /></Login.Logo>
+ *       <Login.Title>Product name</Login.Title>
+ *       <Login.Tagline>{t("login.heroTagline")}</Login.Tagline>
+ *       <Login.Features>
+ *         <Login.FeaturePill icon={<Search />}>Semantic search</Login.FeaturePill>
+ *         <Login.FeaturePill icon={<Sparkles />}>AI</Login.FeaturePill>
+ *       </Login.Features>
+ *       <Login.Card><LoginForm /></Login.Card>
+ *       <Login.Footer>Product name — what it is for</Login.Footer>
+ *     </Login.Content>
+ *   </Login>
+ */
 export const Login = Object.assign(LoginRoot, {
   Background: LoginBackground,
   Settings: LoginSettings,

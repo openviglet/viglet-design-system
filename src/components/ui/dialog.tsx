@@ -5,6 +5,13 @@ import { useTranslation } from "react-i18next"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * A modal dialog: the Radix root holding the open state, composed with
+ * `DialogTrigger`, `DialogContent`, `DialogTitle` and `DialogDescription`.
+ *
+ * To confirm a deletion use `DialogDelete`. For a panel that slides in from an
+ * edge use `Sheet`, or `Drawer` for one a reader drags on a touch screen.
+ */
 function Dialog({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Root>) {

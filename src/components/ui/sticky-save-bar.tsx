@@ -23,6 +23,13 @@ interface StickySaveBarProps {
   variant?: StickySaveBarVariant
 }
 
+/**
+ * A console-era bar that sticks to the top of a form with its title, badges, and
+ * Save and Cancel buttons.
+ *
+ * A bento form's save bar is the hero's morph instead, through `BentoFormHero` or
+ * `BentoEntityShell`: never a permanently visible sticky bar.
+ */
 function StickySaveBar({ title, badges, actions, onCancel, loading, disabled, variant = "gray" }: Readonly<StickySaveBarProps>) {
   const { t } = useTranslation()
 

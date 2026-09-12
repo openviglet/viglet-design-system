@@ -39,6 +39,14 @@ interface UserProviderProps {
   fetchUser: () => Promise<VigUser>
 }
 
+/**
+ * Loads the signed-in user once through `fetchUser` and shares it, with whether
+ * it is loading, ready or failed, through `useCurrentUser`.
+ *
+ * Mount it above `BentoUserMenu` and anything else that reads the user. A product
+ * with a user type of its own wraps this provider rather than mounting a second
+ * context, which a hook from this package could not read.
+ */
 export function UserProvider({ children, fetchUser }: UserProviderProps) {
   const [user, setUser] = React.useState<VigUser>({} as VigUser)
   const [status, setStatus] = React.useState<VigUserStatus>("loading")

@@ -12,6 +12,13 @@ interface AppFooterProps {
   links?: FooterLink[];
 }
 
+/**
+ * A page footer: a hairline, then the product's mark, name and version, and a
+ * few links that open in a new tab.
+ *
+ * It is `mt-auto`, so it expects a shell that is a flex column whose main grows.
+ * No bento shell mounts one yet, and a page does not grow a footer of its own.
+ */
 export function AppFooter({ logo, productName, version, links = [] }: Readonly<AppFooterProps>) {
   return (
     <footer className="mt-auto">

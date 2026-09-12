@@ -89,6 +89,14 @@ const gradientButtonVariants = cva(
     }
 )
 
+/**
+ * A button in the product's accent gradient, with secondary, destructive,
+ * success, outline and ghost variants.
+ *
+ * The default variant reads the accent tokens, so it follows a product's re-keyed
+ * brand. For a neutral button use `Button`, and for a route change
+ * `GradientButtonLink`.
+ */
 function GradientButton({
     className,
     variant,

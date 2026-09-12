@@ -47,8 +47,8 @@ export interface BentoShellProps {
 }
 
 /**
- * VDS131 — the shell BENTO-AUTHORING §1 describes: the rail's gutter, the header,
- * `main` and the corner, each owned once, here.
+ * VDS131 — the page shell every bento screen renders in: the nav rail's gutter,
+ * the header, `main` with its reading column, and the corner, each owned once.
  *
  * The contract gave the reading column to the shell and the package shipped only
  * the pieces around it, so every product composed its own `main` and every page

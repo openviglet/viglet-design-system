@@ -32,6 +32,15 @@ interface Props {
   description?: string;
   confirmLabel?: string;
 }
+
+/**
+ * The confirmation before deleting something: the reader types its name to
+ * enable the delete, or is told what still uses it when `blockedBy` lists anything.
+ *
+ * Pass `trigger={null}` and drive `open` yourself to open it from a menu item.
+ * `BentoEntityShell` already mounts one behind its Delete action, so a detail
+ * screen built on it does not add its own.
+ */
 export const DialogDelete: React.FC<Props> = ({
   feature, name, onDelete, open, setOpen,
   trigger,

@@ -13,6 +13,13 @@ interface FormActionsProps {
   className?: string;
 }
 
+/**
+ * The row of buttons at the foot of a console-era form: `FormActions.Cancel`,
+ * `FormActions.Submit`, and `FormActions.Delete`, which shows on small screens only.
+ *
+ * A bento form saves from its hero and the save bar that follows it, through
+ * `BentoFormHero` or `BentoEntityShell`, and has no footer row.
+ */
 function FormActions({ children, className }: Readonly<FormActionsProps>) {
   return (
     <div className={cn("flex items-center justify-end gap-3 pt-4 border-t", className)}>

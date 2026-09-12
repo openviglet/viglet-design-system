@@ -10,6 +10,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { GradientButton } from "./ui/gradient-button"
 
+/**
+ * A header button opening a menu of the light, dark and system themes. It sets
+ * the theme through `ThemeProvider`, which has to be mounted above it.
+ */
 export function ModeToggle() {
   const { setTheme } = useTheme()
   const { t } = useTranslation()
@@ -44,6 +48,11 @@ const THEME_OPTIONS = [
   { value: "system", labelKey: "theme.system", icon: Monitor },
 ] as const
 
+/**
+ * The theme control for a console sidebar on a small screen: one row that cycles
+ * through light, dark and system. Hidden from `md` up, where `ModeToggle` sits in
+ * the header.
+ */
 export function ModeToggleSidebar() {
   const { theme, setTheme } = useTheme()
   const { t } = useTranslation()

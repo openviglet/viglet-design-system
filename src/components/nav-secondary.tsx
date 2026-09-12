@@ -11,6 +11,13 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 
+/**
+ * A console sidebar group of plain links, each an icon and a title, such as help
+ * and documentation below the main nav.
+ *
+ * It renders inside `Sidebar`. A bento shell has no sidebar: its navigation is
+ * `BentoNavRail` and the command palette.
+ */
 export function NavSecondary({
   items,
   ...props

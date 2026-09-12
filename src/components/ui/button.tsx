@@ -37,6 +37,14 @@ const buttonVariants = cva(
   }
 )
 
+/**
+ * The neutral button, `bg-primary` by default, with destructive, outline,
+ * secondary, ghost and link variants.
+ *
+ * For an action in the brand accent gradient, as the bento forms use, reach for
+ * `GradientButton`, and for a route change `GradientButtonLink`. Pass `loading`
+ * while the action runs rather than `disabled`, which drops the focus.
+ */
 function Button({
   className,
   variant,

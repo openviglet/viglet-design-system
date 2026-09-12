@@ -2,6 +2,14 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * A plain styled HTML table in a horizontally scrolling container, composed with
+ * `TableHeader`, `TableBody`, `TableRow`, `TableHead` and `TableCell`.
+ *
+ * A list a reader sorts, selects in a range or acts on in bulk, or one that runs
+ * to thousands of rows, is `BentoDataTable`: never build one from this and a
+ * scroll container.
+ */
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
     <div

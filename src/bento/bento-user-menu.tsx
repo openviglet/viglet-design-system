@@ -13,14 +13,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { UserAvatar } from "@/components/ui/user-avatar";
 
-/**
- * User avatar + dropdown styled to harmonize with the Bento UI.
- *
- * Uses the same Radix DropdownMenu primitives as the design-system
- * `UserMenu`, but the surface (`.bento-dropdown`) and items
- * (`.bento-dropdown-item`) carry the frosted-glass look and iOS spring
- * easing so it feels like part of the bento language.
- */
 export interface BentoUserMenuProps {
   /** Where the account entry leads. */
   accountRoute: string;
@@ -43,6 +35,14 @@ export interface BentoUserMenuProps {
   onReplayTour?: () => void;
 }
 
+/**
+ * The signed-in user's avatar and menu at the end of a bento header: account,
+ * the tenancy routes a product passes, the shortcut guide, the tour and sign-out.
+ *
+ * It reads the user from `UserProvider`, which has to be mounted above it. The
+ * Radix DropdownMenu primitives are the console's, and the surface and items take
+ * the frosted bento look and its spring easing. It replaces the console's `NavUser`.
+ */
 export function BentoUserMenu({
   accountRoute,
   logoutUrl,

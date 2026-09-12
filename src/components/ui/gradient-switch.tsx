@@ -50,6 +50,12 @@ const gradientSwitchVariants = cva(
     }
 )
 
+/**
+ * An on-off switch whose checked track takes the product's accent gradient, or a
+ * fixed secondary, destructive or success hue.
+ *
+ * `Switch` is the neutral one.
+ */
 function GradientSwitch({
     className,
     variant,

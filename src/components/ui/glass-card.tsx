@@ -2,20 +2,6 @@ import type { HTMLAttributes, CSSProperties } from "react";
 import { cn } from "../../lib/utils";
 import "./glass-card.css";
 
-/**
- * GlassCard — glassmorphism container used by login, onboarding and hero
- * cards across Viglet products.
- *
- * Ships with sensible defaults for every visible surface concern (rounded
- * corners, responsive padding) so consumers compose it without restating the
- * same utility classes. Pass any Tailwind override via `className` — the merge
- * is done with `tailwind-merge` so the last declaration of a conflicting
- * utility (e.g. `p-4` overriding the default `p-6 sm:p-8`) wins.
- *
- * The shadow tint follows `color` / `colorDark`. With neither, the light shadow
- * still takes `--ff-color-rgb` from an ancestor {@link FloatingFormulasBg}, so a
- * card inside one matches the surrounding palette without being told to.
- */
 export interface GlassCardProps extends HTMLAttributes<HTMLDivElement> {
   /**
    * Accent colour for the shadow tint — any CSS colour. Also tints the dark
@@ -28,6 +14,19 @@ export interface GlassCardProps extends HTMLAttributes<HTMLDivElement> {
 
 const DEFAULT_SURFACE = "rounded-2xl p-6 sm:p-8";
 
+/**
+ * A frosted glass card for a login, onboarding or hero surface, with rounded
+ * corners and responsive padding already set.
+ *
+ * Pass any Tailwind override through `className`; the merge is done with
+ * `tailwind-merge`, so the last of two conflicting utilities wins (`p-4` over the
+ * default `p-6 sm:p-8`). Inside a bento shell a frosted box is `BentoPanel`, and a
+ * form section is `BentoFormSection`.
+ *
+ * The shadow tint follows `color` / `colorDark`. With neither, the light shadow
+ * still takes `--ff-color-rgb` from an ancestor {@link FloatingFormulasBg}, so a
+ * card inside one matches the surrounding palette without being told to.
+ */
 export function GlassCard({
   children,
   color,

@@ -65,17 +65,6 @@ export interface BentoCommandPaletteProps {
 }
 
 /**
- * The Bento `⌘K` command palette (T549) — a keyboard-first launcher over
- * every navigable area. Built on the Radix `Dialog` primitive (zero extra
- * deps): a filter box + a flat, arrow-key-navigable result list. Migrated
- * surfaces navigate inside the bento shell; not-yet-migrated areas link out
- * to the console (marked with an external-link glyph) so the palette reaches
- * everything during the migration.
- *
- * Global open/close (⌘K / Ctrl+K) is owned by the parent shell; this
- * component only renders and drives selection while `open`.
- */
-/**
  * A run of options under an optional heading. `role="group"` is what keeps the
  * heading inside the listbox without becoming an option of its own.
  */
@@ -131,6 +120,18 @@ function Option({
   );
 }
 
+/**
+ * The keyboard-first launcher over every surface the nav rail lists, plus any
+ * results the product supplies for the query.
+ *
+ * Built on the Radix `Dialog` primitive: a filter box and a flat result list the
+ * arrow keys move through. A surface with a bento route navigates inside the
+ * shell; one without links out, marked with an external-link glyph, so the
+ * palette reaches everything while a product migrates.
+ *
+ * It only renders and drives selection while `open`. `useBentoShellShortcuts`
+ * opens it from the keyboard and `BentoPaletteTrigger` from the header.
+ */
 export function BentoCommandPalette({
   open,
   onOpenChange,

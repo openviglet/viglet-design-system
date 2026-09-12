@@ -4,17 +4,6 @@ import { cn } from "@/lib/utils";
 
 import "./pulse-ring.css";
 
-/**
- * PulseRing — animated ring that radiates outward from a logo container.
- *
- * Wraps a product logo (or any square-ish element) and emits a pulse in the
- * accent color to signal "the product is loading / ready". Used on login and
- * startup screens across Viglet products. Pass `color` / `colorDark` to match
- * the surrounding palette; by default matches Turing blue.
- *
- * The ring is rendered as a self-contained CSS animation on the element's
- * box-shadow — no extra DOM, no impact on layout beyond the wrapped logo.
- */
 export interface PulseRingProps extends HTMLAttributes<HTMLDivElement> {
   /** Accent color of the pulse (light mode). */
   color?: string;
@@ -24,6 +13,15 @@ export interface PulseRingProps extends HTMLAttributes<HTMLDivElement> {
   paused?: boolean;
 }
 
+/**
+ * An animated ring radiating from a logo, to say a product is loading or ready on
+ * a login or first-access screen.
+ *
+ * It wraps the logo, or any square-ish element, and pulses in the accent colour.
+ * Pass `color` / `colorDark` to match the surrounding palette. The ring is a CSS
+ * animation on the element's box-shadow: no extra DOM, and no effect on layout
+ * beyond the wrapped logo. `Login.Logo` and `StartupFirst.Logo` already wrap one.
+ */
 export function PulseRing({
   children,
   color,

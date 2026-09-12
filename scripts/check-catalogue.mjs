@@ -12,6 +12,8 @@
 //   2. The tool list, a find and the largest read stay under the ceilings in
 //      token-budget.properties, and the tool list plus the skill stay smaller
 //      than the contract documents they replace.
+//   3. A component has a doc comment unless catalogue-undescribed.txt names it,
+//      and that list only shrinks (VDS150).
 
 import { existsSync, readFileSync } from "node:fs"
 import { dirname, join, resolve } from "node:path"
@@ -33,6 +35,41 @@ export const SAMPLE_JOBS = [
   ["empty state", "BentoEmptyState"],
   ["language switcher", "LanguageSwitcher"],
 ]
+
+/** The names in catalogue-undescribed.txt: one per line, `#` comments and blank lines dropped. */
+export function readUndescribed(text) {
+  return text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("#"))
+}
+
+/**
+ * VDS150 — the described count only rises.
+ *
+ * The catalogue takes a purpose from a component's own doc comment and invents
+ * none, so a component without one is found by its name alone. A component the
+ * list does not name and that has no summary fails, so a new one arrives
+ * described or does not build. A listed one that has gained a summary fails too,
+ * so the list is edited in the change that described it, and a listed name that
+ * is no longer a component fails, or the list would outlive what it counts.
+ */
+export function undescribedFindings(components, listed) {
+  const failures = []
+  const allowed = new Set(listed)
+  for (const component of components) {
+    if (!component.summary && !allowed.has(component.name)) {
+      failures.push(`${component.name} has no doc comment: write one on its declaration, its first sentence the component's purpose`)
+    } else if (component.summary && allowed.has(component.name)) {
+      failures.push(`${component.name} is described now: remove it from catalogue-undescribed.txt`)
+    }
+  }
+  const names = new Set(components.map((component) => component.name))
+  for (const name of listed) {
+    if (!names.has(name)) failures.push(`${name} is in catalogue-undescribed.txt but is not an exported component`)
+  }
+  return failures
+}
 
 /** Every `key=value`, comments dropped; a key the gate needs and cannot find is a failure. */
 function budgets() {
@@ -66,6 +103,10 @@ function main() {
   for (const name of [...pascal].sort()) {
     if (!accounted.has(name)) failures.push(`${name} is exported and in neither the catalogue nor its set-aside list`)
   }
+
+  // 3. Descriptions, which only accumulate.
+  const undescribed = readUndescribed(readFileSync(join(root, "catalogue-undescribed.txt"), "utf8"))
+  failures.push(...undescribedFindings(catalogue.components, undescribed))
 
   // 2. The budget.
   const declared = budgets()

@@ -3,20 +3,6 @@ import React, { type ErrorInfo, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { GradientButton } from "./ui/gradient-button";
 
-/**
- * Top-level boundary that catches React render errors and displays a friendly
- * fallback with a reload button. Logs the stack trace to the console.
- *
- * Usage:
- * ```tsx
- * <ErrorBoundary>
- *   <App />
- * </ErrorBoundary>
- * ```
- *
- * @since 2026.2.29
- */
-
 interface Props {
   children: ReactNode;
   /** Custom fallback. Receives the captured error and a `reset()` callback. */
@@ -28,6 +14,21 @@ interface State {
   error?: Error;
 }
 
+/**
+ * Catches a render error anywhere beneath it and shows a fallback with a reload
+ * button in place of a blank page.
+ *
+ * Pass `fallback` to render your own; it receives the error and a `reset()`. The
+ * error and its component stack are logged to the console either way.
+ *
+ * ```tsx
+ * <ErrorBoundary>
+ *   <App />
+ * </ErrorBoundary>
+ * ```
+ *
+ * @since 2026.2.29
+ */
 export class ErrorBoundary extends React.Component<Props, State> {
   state: State = { hasError: false };
 

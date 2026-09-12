@@ -14,6 +14,14 @@ interface BreadcrumbContextType {
 }
 
 const BreadcrumbContext = createContext<BreadcrumbContextType | undefined>(undefined);
+
+/**
+ * Holds the breadcrumb trail a console-era page pushes to and its header reads,
+ * through `useBreadcrumb`.
+ *
+ * Mount it once above the pages that set a trail. A bento page carries its way
+ * back in the hero's back link and needs none.
+ */
 export function BreadcrumbProvider({ children }: { readonly children: ReactNode }) {
     const [items, setItems] = useState<BreadcrumbItem[]>([]);
 

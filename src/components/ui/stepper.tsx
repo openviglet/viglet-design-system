@@ -31,6 +31,14 @@ interface StepperProps {
   className?: string;
 }
 
+/**
+ * A vertical numbered checklist whose steps tick off as `completedSteps` turns
+ * true, ending in `Stepper.Completion`, which says when every step is done.
+ *
+ * It tracks completion and nothing else: no step index, and no moving the reader
+ * between screens. A first-access screen shows its progress with
+ * `StartupFirst.Steps` instead.
+ */
 function Stepper({ completedSteps, children, className }: Readonly<StepperProps>) {
   const allDone = completedSteps.length > 0 && completedSteps.every(Boolean);
 

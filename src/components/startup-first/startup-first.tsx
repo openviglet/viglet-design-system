@@ -7,39 +7,6 @@ import { GlassCard } from "../ui/glass-card";
 import { PulseRing } from "../ui/pulse-ring";
 import "./startup-first.css";
 
-/**
- * StartupFirst — compound component for the product's first-access /
- * initial-setup screen (shown the first time an admin opens Turing, Dumont or
- * Shio, before any user has been configured).
- * viglet-ds-consumer-pair -- the three that have a first-access screen. The
- * Cloud Console provisions through Cloud, and the Cloud Home and Schools are
- * public surfaces with no admin to set up.
- *
- * Mirrors the {@link Login} composition style so every product can reuse the
- * same palette, animated background and glass card. Content is fully slot-
- * based — consumers compose the steps/fields/actions they need.
- *
- * Example:
- *   <StartupFirst color="#2563eb" colorDark="#60a5fa">
- *     <StartupFirst.Background withOrbs withGrid />
- *     <StartupFirst.Content>
- *       <StartupFirst.Steps current={1} total={3} />
- *       <StartupFirst.Logo><TurLogo size={80} /></StartupFirst.Logo>
- *       <StartupFirst.Title>Welcome to Viglet Turing ES</StartupFirst.Title>
- *       <StartupFirst.Description>
- *         Let's create your first administrator account.
- *       </StartupFirst.Description>
- *       <StartupFirst.Card>
- *         <SetupForm />
- *       </StartupFirst.Card>
- *       <StartupFirst.Actions>
- *         <Button variant="outline">Back</Button>
- *         <Button>Continue</Button>
- *       </StartupFirst.Actions>
- *     </StartupFirst.Content>
- *   </StartupFirst>
- */
-
 interface StartupFirstTheme {
   color?: string;
   colorDark?: string;
@@ -231,6 +198,35 @@ function StartupFirstHint({ icon, children, className, ...rest }: Readonly<Start
   );
 }
 
+/**
+ * The first-access screen an administrator sees before any user exists: the
+ * login screen's backdrop, logo and glass card, with a step count and actions.
+ *
+ * It is composed like {@link Login}, so a product reuses the same palette,
+ * backdrop and card, and its content is all slots: the steps, fields and actions
+ * are the product's. `StartupFirst.Steps` counts screens; `Stepper` is a checklist
+ * within one.
+ *
+ * Example:
+ *   <StartupFirst color="#2563eb" colorDark="#60a5fa">
+ *     <StartupFirst.Background withOrbs withGrid />
+ *     <StartupFirst.Content>
+ *       <StartupFirst.Steps current={1} total={3} />
+ *       <StartupFirst.Logo><ProductLogo size={80} /></StartupFirst.Logo>
+ *       <StartupFirst.Title>Welcome</StartupFirst.Title>
+ *       <StartupFirst.Description>
+ *         Let's create your first administrator account.
+ *       </StartupFirst.Description>
+ *       <StartupFirst.Card>
+ *         <SetupForm />
+ *       </StartupFirst.Card>
+ *       <StartupFirst.Actions>
+ *         <Button variant="outline">Back</Button>
+ *         <Button>Continue</Button>
+ *       </StartupFirst.Actions>
+ *     </StartupFirst.Content>
+ *   </StartupFirst>
+ */
 export const StartupFirst = Object.assign(StartupFirstRoot, {
   Background: StartupFirstBackground,
   Content: StartupFirstContent,

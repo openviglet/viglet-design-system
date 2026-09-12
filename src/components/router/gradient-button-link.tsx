@@ -5,6 +5,12 @@ import { NavLink, type To } from "react-router-dom"
 import { cn } from "@/lib/utils"
 import { gradientButtonVariants } from "../ui/gradient-button"
 
+/**
+ * A router link that looks like a `GradientButton`, with its variants and sizes.
+ *
+ * Clicking it while already on the page it points at reloads that page. For an
+ * action that does not change the route, use `GradientButton` itself.
+ */
 function GradientButtonLink({
     className,
     variant,

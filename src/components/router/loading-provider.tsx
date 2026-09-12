@@ -15,6 +15,10 @@ interface LoadProviderProps {
     children: React.ReactNode;
 }
 
+/**
+ * A page's loading gate: a skeleton until `checkIsNotUndefined` has a value, an
+ * error slate with a retry link when `error` is set, and its children after that.
+ */
 export const LoadProvider = ({
     checkIsNotUndefined,
     error,
