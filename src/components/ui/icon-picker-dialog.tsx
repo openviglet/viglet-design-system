@@ -10,17 +10,18 @@ import { Input } from "@/components/ui/input";
 const COLLECTIONS = ["lucide", "tabler", "mdi", "ph", "solar", "heroicons"];
 const ICONIFY_PREFIXES = COLLECTIONS.join(",");
 
-async function searchIconify(query: string, limit: number): Promise<string[]> {
+async function searchIconify(query: string, limit: number, signal?: AbortSignal): Promise<string[]> {
   try {
     const res = await fetch(
       `https://api.iconify.design/search?query=${encodeURIComponent(query)}&limit=${limit}&prefixes=${ICONIFY_PREFIXES}`,
+      { signal },
     );
     if (res.ok) {
       const data = (await res.json()) as { icons?: string[] };
       return data.icons ?? [];
     }
   } catch {
-    /* ignore — an offline search shows the empty state, not an error */
+    /* ignore — an offline search, or an aborted one, shows the empty state */
   }
   return [];
 }
@@ -95,13 +96,17 @@ export function IconPickerDialog({
    * The suggestion path needs none of this: `suggesting` gates a second run, and
    * this component stays mounted while the dialog closes — only `DialogContent`
    * goes — so that flag holds and two runs cannot overlap.
+   *
+   * VDS115 — and this is a different question from whether the component is
+   * still there. The id guard compares two requests; the signal below is what
+   * stops paying for one whose reader has gone.
    */
   const latestSearch = useRef(0);
   const [activeKeyword, setActiveKeyword] = useState<string | null>(null);
 
-  const searchIcons = useCallback(async (q: string) => {
+  const searchIcons = useCallback(async (q: string, signal: AbortSignal) => {
     const request = ++latestSearch.current;
-    const current = () => request === latestSearch.current;
+    const current = () => request === latestSearch.current && !signal.aborted;
 
     if (!q.trim()) {
       setResults([]);
@@ -109,7 +114,7 @@ export function IconPickerDialog({
     }
     setLoading(true);
     try {
-      const icons = await searchIconify(q, 60);
+      const icons = await searchIconify(q, 60, signal);
       if (current()) setResults(icons);
     } catch {
       if (current()) setResults([]);
@@ -121,12 +126,24 @@ export function IconPickerDialog({
   }, []);
 
   useEffect(() => {
+    const controller = new AbortController();
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => searchIcons(query), 350);
+    debounceRef.current = setTimeout(() => searchIcons(query, controller.signal), 350);
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
+      // The timer covers a search that has not started; this covers one that
+      // has. A host unmounting the picker mid-route-change otherwise left a
+      // request to a third-party API running to completion, discarded.
+      controller.abort();
     };
   }, [query, searchIcons]);
+
+  /**
+   * The suggest pass runs from a click rather than an effect, so its signal is
+   * held here and aborted when the component goes.
+   */
+  const suggestRun = useRef<AbortController>(null);
+  useEffect(() => () => suggestRun.current?.abort(), []);
 
   function handleSelect(iconName: string) {
     onSelect(iconName);
@@ -140,6 +157,9 @@ export function IconPickerDialog({
   async function handleSuggest() {
     if (!suggestKeywords || suggesting) return;
 
+    const run = new AbortController();
+    suggestRun.current = run;
+
     setSuggesting(true);
     setGroups([]);
     setActiveKeyword(null);
@@ -149,14 +169,20 @@ export function IconPickerDialog({
         .slice(0, 5);
       const resolved: KeywordGroup[] = [];
       for (const keyword of keywords) {
-        resolved.push({ keyword: keyword.trim(), icons: await searchIconify(keyword.trim(), 30) });
+        // Checked between keywords as well as passed down: this is a loop of up
+        // to five requests, and the ones not yet started are the cheapest to stop.
+        if (run.signal.aborted) return;
+        resolved.push({
+          keyword: keyword.trim(),
+          icons: await searchIconify(keyword.trim(), 30, run.signal),
+        });
       }
-      setGroups(resolved);
+      if (!run.signal.aborted) setGroups(resolved);
     } catch {
       // A failed suggestion shows the empty state rather than stale results.
-      setGroups([]);
+      if (!run.signal.aborted) setGroups([]);
     } finally {
-      setSuggesting(false);
+      if (!run.signal.aborted) setSuggesting(false);
     }
   }
 

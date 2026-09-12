@@ -2,28 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-### §VDS115 The search nobody cancels
-
-VDS61 gave the icon picker a monotonic request id so a slow response cannot overwrite a
-newer one. That guard compares ids; it says nothing about the component no longer being
-there.
-
-The effect driving the search clears its debounce timer on cleanup and nothing else.
-`searchIconify` takes no signal and passes none to `fetch`. The suggest path has no
-guard at all. So a route change mid-search leaves a request to `api.iconify.design`
-running to completion with its result discarded.
-
-Under React 19 the late `setState` calls are no-ops rather than warnings, which is why
-the suite is quiet about it — the cost is the uncancelled network call and the work
-behind it, on every dialog a user opens and leaves. The nearest existing comment reasons
-about the dialog *closing*, which unmounts the content and not this component, so it
-does not cover the host unmounting the picker.
-
-Acceptance:
-- Both the search and the suggest fetch take an `AbortController` signal.
-- The effect aborts the in-flight request on cleanup, not only the debounce timer.
-- A test unmounts mid-request and asserts the request was aborted.
-
 ### §VDS116 The components the catalogue never shows
 
 VDS6 wired the axe addon so every story is checked for accessibility. Cross-referencing

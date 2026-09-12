@@ -92,6 +92,7 @@
 - ✅ **VDS123** **the command palette takes only nav items and matches them itself, so a product cannot offer its own results** — The palette takes a group the product fills per query, rendered in the order given and never re-ranked, with a pending state (design recorded in `src/bento/bento-command-palette.tsx`).
 - ✅ **VDS113** **BadgeLocale writes a literal undefined class, and three components splice className instead of merging it** — Every className merges through cn(), so an override wins the merge and no element ships a literal undefined class (design recorded in `scripts/eslint/merge-class-name.mjs`).
 - ✅ **VDS114** **GlassCard's color and colorDark props set custom properties its stylesheet never reads** — The glass card's shadow reads what color and colorDark set, in both schemes, and a browser test holds the accent story apart from the default (design recorded in `src/components/ui/glass-card.css`).
+- ✅ **VDS115** **The icon picker's Iconify search runs to completion after the dialog's host unmounts** — Both Iconify paths take an abort signal and the picker aborts what is in flight on unmount, so a route change stops paying for it (design recorded in `src/components/ui/icon-picker-dialog.tsx`).
 
 ## Block B — Bento becomes a design-system layer
 

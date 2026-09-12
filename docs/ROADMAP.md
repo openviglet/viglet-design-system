@@ -2,7 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS115** (deps: —) **The icon picker's Iconify search runs to completion after the dialog's host unmounts** — Nothing cancels the request, so a route change mid-search still pays for a response nobody reads. → §VDS115
 - 📋 **VDS116** (deps: —) **Eight standalone exported components appear in no story, so the axe pass never reaches them** — A published component with no story is absent from the catalogue and outside the only accessibility gate here. → §VDS116
 - 📋 **VDS117** (deps: —) **The root entry re-exports the i18n runtime, so a consumer that never asked for it resolves i18next** — Three consumers take the root barrel and no i18n subpath, yet each carries the locale chunk and two peers. → §VDS117
 - 📋 **VDS118** (deps: —) **The assets subpath has no size fixture, so the inline-asset cap never measures the entry shipping logos** — The cap was written after a 1.24MB logo reached a bundle, and that entry is the one it has never checked. → §VDS118

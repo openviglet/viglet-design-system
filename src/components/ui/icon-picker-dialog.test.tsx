@@ -43,6 +43,21 @@ function heldFetch() {
   return releases
 }
 
+/** The same, keeping every request's signal — VDS115 asserts on those. */
+function heldFetchSignals() {
+  const signals: Array<AbortSignal | undefined> = []
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(
+      (_url: string, init?: RequestInit) =>
+        new Promise<Response>(() => {
+          signals.push(init?.signal ?? undefined)
+        }),
+    ),
+  )
+  return signals
+}
+
 function draw(props: Partial<React.ComponentProps<typeof IconPickerDialog>> = {}) {
   return render(
     <I18nextProvider i18n={i18next}>
@@ -107,5 +122,41 @@ describe("IconPickerDialog", () => {
     await user.click(button)
 
     expect(suggestKeywords).toHaveBeenCalledTimes(1)
+  })
+  // VDS115 — the id guard above says which of two responses is current. It says
+  // nothing about the reader having gone: the effect cleared its debounce timer
+  // and nothing else, so a host unmounting the picker mid-route-change left a
+  // request to a third-party API running to completion with its result
+  // discarded. React 19 makes the late setState a no-op rather than a warning,
+  // which is why the suite was quiet about it — the cost is the network call.
+  it("aborts a search in flight when the picker unmounts", async () => {
+    const signals = heldFetchSignals()
+    const user = userEvent.setup()
+    const { unmount } = draw()
+
+    await user.type(screen.getByRole("textbox"), "arrow")
+    await waitFor(() => expect(signals).toHaveLength(1), { timeout: 2000 })
+    expect(signals[0]!.aborted).toBe(false)
+
+    unmount()
+
+    expect(signals[0]!.aborted).toBe(true)
+  })
+
+  it("aborts the suggestion pass's searches too", async () => {
+    const signals = heldFetchSignals()
+    const user = userEvent.setup()
+    const suggestKeywords = vi
+      .fn<() => Promise<string[]>>()
+      .mockResolvedValue(["model", "brain"])
+
+    const { unmount } = draw({ title: "A model", suggestKeywords })
+
+    await user.click(screen.getByRole("button", { name: /suggest/i }))
+    await waitFor(() => expect(signals).toHaveLength(1), { timeout: 2000 })
+
+    unmount()
+
+    expect(signals[0]!.aborted).toBe(true)
   })
 })
