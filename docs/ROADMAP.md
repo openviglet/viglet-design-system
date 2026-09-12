@@ -4,8 +4,6 @@
 
 - 📋 **VDS77** (deps: cloud-frontend and cloud-console declaring react-hook-form) **react-hook-form is a dependency, so a consumer can get a second copy of the one library here carrying a context** — Two consumers declare no react-hook-form and get it from here, so the peer change is theirs first. → §VDS77
 
-## Block E — The assistant every product shares
-
 ## Non-goals
 
 - **Do not fork a shared component inside a product** The one-line re-export shim is the

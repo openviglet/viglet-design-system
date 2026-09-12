@@ -28,5 +28,3 @@ Acceptance:
 - cloud-frontend and cloud-console declare `react-hook-form` themselves.
 - It is then a peerDependency and a devDependency here, not a dependency.
 - A consumer resolving a different minor still gets exactly one copy.
-
-## Block E — The assistant every product shares
