@@ -46,6 +46,24 @@
     "tour": {
       "replay": "Fazer o tour"
     },
+    "diff": {
+      "added": "Adicionado",
+      "removed": "Removido",
+      "changed": "Alterado",
+      "unchanged": "Sem alteração",
+      "unchangedCount": "{{count}} sem alteração",
+      "created": "Criado nesta versão",
+      "deleted": "Excluído nesta versão",
+      "noChanges": "Nenhum campo mudou",
+      "empty": "Vazio",
+      "addedStart": "adicionado:",
+      "removedStart": "removido:"
+    },
+    "versions": {
+      "label": "Versões",
+      "agent": "Agente",
+      "human": "Pessoa"
+    },
     "filters": {
       "label": "Filtros",
       "search": "Buscar",

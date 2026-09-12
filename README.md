@@ -848,6 +848,16 @@ change the rows:
 <BentoDataTable rows={filtered} selectionScope={JSON.stringify(filters)} … />
 ```
 
+`BentoDiff` compares two versions of structured content field by field, for
+revision history, a review of what an agent changed, or a translation against its
+source. Pass `before`, `after` and the `fields` to compare. A field is `text`
+(compared by word), `rich` (HTML, compared on the blocks it renders, so markup
+alone is no change) or `value` (compared whole). Unchanged fields collapse behind
+a count. A side that is `null` renders the other whole, as a created or deleted
+item. Every change is named in text as well as coloured. `BentoVersionRail` lists
+the revisions (author, person or agent, time) as a listbox a reader picks two
+from, by keyboard or pointer. Neither fetches anything.
+
 `BentoCommandPalette` takes a second group whose items the product supplies per
 query, beside the nav items it matches itself. Pass `onQueryChange` to hear the
 query as typed and `group` to answer it:
@@ -871,7 +881,7 @@ says so rather than showing an empty list that is not empty yet.
 bundling three fixtures through this package's own `exports` map, and fails if a
 bento module, a bento class name or a run of `bento.css`'s selectors reaches a
 consumer that imported only the root entry. `size-budget.json` records what each
-entry costs: today the whole root entry is 91 KB gzipped and `./bento` 27 KB,
+entry costs: today the whole root entry is 91 KB gzipped and `./bento` 30 KB,
 measured with everything the build externalises left out, so the numbers
 describe this package rather than its dependencies. The preset's
 `--vg-bento-tone-*` tokens are deliberately not counted as the layer: they ship

@@ -188,6 +188,7 @@
 - ✅ **VDS137** **no gate measures a consumer's own accent or primary override, only the preset's values** — viglet-ds-page-lint --contrast measures every pair a product's stylesheet re-keys, accent family included, on both grounds, and names the declaring line.
 - ✅ **VDS138** **the layer offers no virtualized, keyboard-operable data table, so consoles hand-roll each list** — BentoDataTable mounts only the visible rows, sorts from headers that announce it, selects ranges from the keyboard or a click, and names every row action.
 - ✅ **VDS139** **the layer has no filter bar or filter chips, so each product composes its own query row** — BentoFilterBar renders declared facets and removable named chips with one change per action, and a table's selectionScope clears a stale selection.
+- ✅ **VDS140** **three planned console surfaces need the same diff and version rail, and the layer offers neither** — The diff and the version rail compare two versions field by field, render a created side as additions, name each change in words, and pick by keyboard.
 
 ## Block G — The package knows one chrome
 

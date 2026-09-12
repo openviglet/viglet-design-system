@@ -32,24 +32,6 @@ so rather than leaving it to be rediscovered.
 
 ## Block F — What a consuming CMS needs from the package next
 
-### §VDS140 One diff for every comparison a curator makes
-
-Shio's round adds revision history with rollback, a review that shows what an agent
-changed field by field, and a translation workspace comparing source and target. All
-three put two versions of structured content side by side, and review of a created page
-has to render the whole thing as additions rather than showing nothing.
-
-Export BentoDiff, taking two values and a field schema and rendering a field-level
-comparison: unchanged fields collapsed, text diffed by word, rich text diffed on its
-rendered blocks rather than its markup, and a created or deleted side rendered as all
-additions or all removals. Pair it with BentoVersionRail, a vertical list of revisions
-with author, actor kind, a human or an agent, and time, from which two are chosen for
-comparison.
-
-Neither fetches anything. Tests assert the created-page case renders content rather than
-an empty panel, that a change is announced by text and not only by colour, and that the
-rail's selection is keyboard operable.
-
 ### §VDS141 The shell owns the region and the way past the rail
 
 VDS125 fixed SubPage nesting a main inside SidebarInset's own, which was the console

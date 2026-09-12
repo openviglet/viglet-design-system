@@ -53,6 +53,13 @@ export {
   type BentoIdentity,
   type BentoShellFormState,
 } from "./bento-entity-shell";
+export {
+  BentoDiff,
+  type BentoDiffField,
+  type BentoDiffFieldKind,
+  type BentoDiffProps,
+  type BentoDiffSide,
+} from "./bento-diff";
 export { BentoEntityTile, type BentoEntityTileProps } from "./bento-entity-tile";
 export {
   BentoFilterBar,
@@ -108,6 +115,7 @@ export {
 export { BentoSection, type BentoSectionProps } from "./bento-section";
 export { BentoStatusMarker, type BentoStatusMarkerProps } from "./bento-status-marker";
 export { BentoTile, type BentoTileProps } from "./bento-tile";
+export { BentoVersionRail, type BentoVersion, type BentoVersionRailProps } from "./bento-version-rail";
 
 export {
   BENTO_TONES,

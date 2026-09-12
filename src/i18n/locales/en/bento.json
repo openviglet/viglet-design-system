@@ -46,6 +46,24 @@
     "tour": {
       "replay": "Take the tour"
     },
+    "diff": {
+      "added": "Added",
+      "removed": "Removed",
+      "changed": "Changed",
+      "unchanged": "Unchanged",
+      "unchangedCount": "{{count}} unchanged",
+      "created": "Created in this version",
+      "deleted": "Deleted in this version",
+      "noChanges": "No field changed",
+      "empty": "Empty",
+      "addedStart": "added:",
+      "removedStart": "removed:"
+    },
+    "versions": {
+      "label": "Versions",
+      "agent": "Agent",
+      "human": "Person"
+    },
     "filters": {
       "label": "Filters",
       "search": "Search",
