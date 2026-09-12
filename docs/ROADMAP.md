@@ -8,16 +8,7 @@
 
 ## Block E — The assistant every product shares
 
-- 📋 **VDS103** (deps: VDS100 ✅) **nothing compares the mascot with the design it was drawn from, so it shipped the wrong colour and over-faceted** — Three defects passed types, lint, 1029 tests, the size budget and axe, and a person holding a screenshot beside the reference is what found all of them. → §VDS103
-
-## Done when — VDS103
-
-- **the avatar draws the same frame twice for the same inputs** the embers derive their
-  arrangement instead of seeding from Math.random, the way VDS54 fixed the formulas
-  backdrop.
-- **a reference image is committed and the test compares against it** the browser
-  project renders the avatar at a fixed state with motion frozen and diffs it, so a
-  colour or facet-count regression fails the run.
+- 📋 **VDS106** (deps: VDS103 ✅) **a mascot defect smaller than 2% of the frame passes the reference-image gate, as the ember layer order does** — The three defects VDS103 was built for include one it measures as under budget, so the layer order that put the sparks on top of the sun would ship again unseen. → §VDS106
 
 ## Done when — VDS104
 
@@ -32,6 +23,13 @@
 - **the gate reports an omitted spoken name, not just a mistyped one** the VDS93 reader
   knows which wrapped primitives supply an English default and fails when this package
   passes none.
+
+## Done when — VDS106
+
+- **the embers drawn over the core fail the gate** Put that layer order back and the
+  comparison is red; put it right and the suite is green.
+- **the core and the space around it are scored apart** Each region carries its own
+  budget, derived from the sphere radius rather than measured off the reference.
 
 ## Non-goals
 

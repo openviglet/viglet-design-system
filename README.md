@@ -341,10 +341,12 @@ through `toast` has nothing to translate:
 | `error` | it failed | the light goes out — it does not turn red |
 | `attention` | something arrived | a ring rises from below |
 
-Three further props shape it rather than drive it: `compact` pulls the camera in
+Four further props shape it rather than drive it: `compact` pulls the camera in
 and drops the pool of light, for a collapsed dock; `unread` holds a slow orbit
 while an answer waits; `activity` is a counter you bump to make the mascot react
-to something smaller than a state change, like a keystroke.
+to something smaller than a state change, like a keystroke; and `seed` fixes the
+field of rising embers. The same props always draw the same sparks, so a product
+that wants a different field per visit passes a changing `seed` itself.
 
 The mascot is decorative (`aria-hidden`) and says nothing a screen reader can
 use — give the surface that wraps it the accessible name. It draws one frame and

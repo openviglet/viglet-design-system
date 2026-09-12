@@ -5,8 +5,8 @@ import { useEffect, useRef, type CSSProperties } from "react";
  *
  * The original design (`docs/design/viglet-avatar-cms.jsx`) builds this in
  * three.js. three is around 170 KB gzipped and this package's whole root entry
- * budget is 86 KB, so the geometry is drawn here instead: an icosahedron
- * subdivided twice is 320 triangles, and flat-shading them into a 2D context is
+ * budget is 86 KB, so the geometry is drawn here instead: an icosahedron at
+ * three's detail 2 is 180 triangles, and flat-shading them into a 2D context is
  * the same picture at the 96-160 px a product renders it at.
  *
  * The mascot is decorative — `aria-hidden`. It says nothing a screen reader can
@@ -242,6 +242,32 @@ const COOLDOWN_FRAMES = 60;
 /** The light along a facet edge. Warm, and faint enough to read as a crease. */
 const SEAM = "rgba(255,214,150,0.34)";
 
+/**
+ * A Lehmer generator, so the ember field is an arrangement rather than a draw.
+ *
+ * `Math.random` stood here — at setup and again on every recycle — so no two
+ * mounts, and no two frames, agreed on where the sparks were. Nothing that
+ * compares two renders could then say anything about this component, which is
+ * how three defects reached a release with types, lint, the whole suite, the
+ * size budget and axe all green (VDS103).
+ *
+ * The formulas backdrop carries its own copy of this (VDS54). It is a separate
+ * build entry that deliberately imports nothing from the rest of the package,
+ * and six lines of arithmetic is a smaller price than the coupling.
+ */
+function seededRandom(seed: number) {
+  // Zero is the generator's fixed point and the state has to stay under the
+  // modulus, so any number a caller passes is folded into the usable range.
+  let s = (Math.abs(Math.trunc(seed)) % 2147483646) + 1;
+  return () => {
+    s = (s * 16807) % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+
+/** The arrangement `docs/design/viglet-avatar-idle.png` was captured from. */
+const EMBER_SEED = 1618033;
+
 interface Ember {
   x: number;
   y: number;
@@ -265,6 +291,13 @@ export interface VigletAvatarProps {
   unread?: boolean;
   /** Freeze on a single frame, for a host that offers its own motion switch. */
   paused?: boolean;
+  /**
+   * Fixes the ember field. Omitted, it is a constant, so the same props always
+   * draw the same sparks — which is what lets a screenshot or a reference image
+   * hold this component. Pass a changing value for a fresh field per visit,
+   * which puts the novelty at the call site where it is visible.
+   */
+  seed?: number;
   className?: string;
   style?: CSSProperties;
 }
@@ -276,6 +309,7 @@ export function VigletAvatar({
   activity = 0,
   unread = false,
   paused = false,
+  seed = EMBER_SEED,
   className,
   style,
 }: Readonly<VigletAvatarProps>) {
@@ -346,11 +380,14 @@ export function VigletAvatar({
     const cx = size / 2;
     const cy = size / 2;
 
+    // One generator for the field and for every recycle after it, so the whole
+    // life of the ember cloud follows from `seed` alone.
+    const random = seededRandom(seed);
     const embers: Ember[] = Array.from({ length: 34 }, () => ({
-      x: (Math.random() - 0.5) * 1.9,
-      y: Math.random() * 2.8 - 0.4,
-      z: (Math.random() - 0.5) * 1.9,
-      speed: 0.05 + Math.random() * 0.09,
+      x: (random() - 0.5) * 1.9,
+      y: random() * 2.8 - 0.4,
+      z: (random() - 0.5) * 1.9,
+      speed: 0.05 + random() * 0.09,
     }));
 
     // The palette the frame is drawn with, eased toward the state's tone rather
@@ -464,10 +501,21 @@ export function VigletAvatar({
 
       const current = stateRef.current;
       const target = PALETTE[current];
-      const elapsed = (now - stateSince.current) / 1000;
-      const sinceActivity = (now - activityAt.current) / 1000;
       const isCompact = compactRef.current;
       const frozen = pausedRef.current || reduced;
+
+      // A frozen avatar draws one frame and stops, so that frame has to be the
+      // state's own picture rather than whichever instant the clock happened to
+      // be at. Every reading of the time is therefore stilled here: the age of
+      // the state, the age of the last activity bump, and the running seconds
+      // the orbit and the working pulse are phased on. What is left is a
+      // function of the props, which is what `docs/design/` holds an image of
+      // and what VDS103's gate compares against.
+      const still = frozen ? 0 : now / 1000;
+      const elapsed = frozen ? 0 : (now - stateSince.current) / 1000;
+      const sinceActivity = frozen
+        ? Number.POSITIVE_INFINITY
+        : (now - activityAt.current) / 1000;
 
       // Ambient motion runs on energy, which the pointer supplies and which
       // decays a second or so after it stops. System events — a state change, an
@@ -478,8 +526,11 @@ export function VigletAvatar({
       if (!frozen) clock += delta * (0.25 + energy * 0.75);
 
       const wantCamera = isCompact ? 7.4 : 9;
-      const settling = Math.abs(camera - wantCamera) > 0.01;
-      camera = lerp(camera, wantCamera, 0.12);
+      const settling = !frozen && Math.abs(camera - wantCamera) > 0.01;
+      // Snapped rather than eased when frozen: a single frame cannot cross a
+      // transition, so easing left a paused avatar that had just collapsed its
+      // dock stuck 12% of the way in and drawing that forever.
+      camera = frozen ? wantCamera : lerp(camera, wantCamera, 0.12);
 
       const busy =
         current !== "idle" ||
@@ -491,9 +542,12 @@ export function VigletAvatar({
 
       /* ---- the frame's tone, eased toward the state's ---- */
 
+      // Same reason as the camera: the sunrise is a sequence of frames, and a
+      // frozen avatar gets one. It arrives at the state's tone instead.
+      const sunrise = frozen ? 1 : 0.06;
       for (let i = 0; i < 3; i += 1) {
-        tone.center[i] = lerp(tone.center[i], target.center[i], 0.06);
-        tone.rim[i] = lerp(tone.rim[i], target.rim[i], 0.06);
+        tone.center[i] = lerp(tone.center[i], target.center[i], sunrise);
+        tone.rim[i] = lerp(tone.rim[i], target.rim[i], sunrise);
       }
 
       let glow = target.glow;
@@ -503,7 +557,7 @@ export function VigletAvatar({
       const heard = sinceActivity < 1.8 ? Math.sin(clamp01(sinceActivity / 1.8) * Math.PI) * 0.14 : 0;
       glow += heard;
 
-      if (current === "working") glow += Math.sin((now / 1000) * 2.2) * 0.06;
+      if (current === "working") glow += Math.sin(still * 2.2) * 0.06;
       if (current === "success") {
         const k = clamp01(elapsed / 1.4);
         swell = 1 + Math.sin((1 - (1 - k) ** 3) * Math.PI) * 0.06;
@@ -513,7 +567,7 @@ export function VigletAvatar({
       }
       if (current === "error") swell = 0.94;
 
-      tone.glow = lerp(tone.glow, glow, 0.08);
+      tone.glow = lerp(tone.glow, glow, frozen ? 1 : 0.08);
       const lit = tone.glow;
 
       if (!frozen) {
@@ -559,8 +613,8 @@ export function VigletAvatar({
       context.restore();
 
       // The orbit: steady while working, a slow low hold while an answer waits.
-      const orbitA = current === "working" ? 0.55 : unreadRef.current ? 0.26 + Math.sin((now / 1000) * 0.8) * 0.07 : 0;
-      const travel = ((now / 1000) * 1.6) % (Math.PI * 2);
+      const orbitA = current === "working" ? 0.55 : unreadRef.current ? 0.26 + Math.sin(still * 0.8) * 0.07 : 0;
+      const travel = (still * 1.6) % (Math.PI * 2);
       const orbitR = 1.5 * scale;
       const orbitW = Math.max(1, size * 0.007);
       const arcW = Math.max(1, size * 0.011);
@@ -586,8 +640,8 @@ export function VigletAvatar({
         ember.y += ember.speed * delta * (0.4 + lit) * drift;
         if (ember.y > 2.4) {
           ember.y = -0.4;
-          ember.x = (Math.random() - 0.5) * 1.9;
-          ember.z = (Math.random() - 0.5) * 1.9;
+          ember.x = (random() - 0.5) * 1.9;
+          ember.z = (random() - 0.5) * 1.9;
         }
         const [px, py] = project(ember.x, ember.y, ember.z, 1);
         const r = Math.max(size * 0.005, 1) * (ember.z > 0 ? 1 : 0.7);
@@ -771,10 +825,12 @@ export function VigletAvatar({
       if (frame) cancelAnimationFrame(frame);
       window.removeEventListener("mousemove", onPointerMove);
     };
-    // `size` rebuilds the canvas backing store, and the rest is read through
-    // refs by the loop this sets up.
+    // `size` rebuilds the canvas backing store and `seed` rebuilds the ember
+    // field; the rest is read through refs by the loop this sets up. Both are
+    // expected to be constants at a call site, so paying a rebuild for them
+    // costs nothing a product will see.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [size]);
+  }, [size, seed]);
 
   return (
     <canvas

@@ -7,10 +7,14 @@ import { VigletAvatar, type VigletAvatarState } from "./viglet-avatar";
 /**
  * The Viglet mascot: a small sun that reports what the system is doing.
  *
- * It is one canvas and no dependency — the faceted core is an icosahedron
- * subdivided twice, flat-shaded into a 2D context. The states are named for the
- * toast kinds, so a product that already reports through `toast` has nothing to
- * translate when it drives the mascot from the same place.
+ * It is one canvas and no dependency — the faceted core is an icosahedron at
+ * three's detail 2, 180 triangles flat-shaded into a 2D context. The states are
+ * named for the toast kinds, so a product that already reports through `toast`
+ * has nothing to translate when it drives the mascot from the same place.
+ *
+ * Nothing here is drawn at random: the ember field follows from `seed`, so the
+ * same props always produce the same picture. Pass a changing `seed` for a
+ * fresh field per visit.
  *
  * The mascot is decorative (`aria-hidden`): whatever wraps it owns the
  * accessible name and the words.
@@ -28,6 +32,7 @@ const meta = {
     compact: { control: "boolean" },
     unread: { control: "boolean" },
     paused: { control: "boolean" },
+    seed: { control: { type: "number" } },
   },
   args: { state: "idle", size: 160 },
 } satisfies Meta<typeof VigletAvatar>;

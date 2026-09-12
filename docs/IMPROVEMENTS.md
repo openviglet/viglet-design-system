@@ -84,31 +84,26 @@ primitive is reported — which is the half no gate holds.
 
 ## Block E — The assistant every product shares
 
-### §VDS103 A gate with a picture on both sides
+### §VDS106 A budget the sparks are too small for
 
-VDS100 shipped a mascot that was the wrong colour and carried 320 facets where the
-design has 180, with every gate green: types, lint, 1029 tests, the size budget, and axe
-over the story in a real browser. Nothing in the suite looks at the picture, so nothing
-could have failed.
+VDS103 put an image on the other side of the mascot and scored the whole frame: the
+fraction of pixels differing from `docs/design/viglet-avatar-idle.png` by more than a
+channel tolerance, against a 2% budget. Putting each of VDS100's three defects back
+gives 16.9% for the display-encoded palette and 6.7% for the 320-facet ball — and, for
+the embers drawn over the core instead of behind it, a figure under the budget. The gate
+does not catch it.
 
-Three defects went through, and each was invisible to a check that reads source rather
-than pixels:
+The budget is not the thing to lower. The reference is written on one machine and read
+on whichever runs CI, and the mascot is a lattice of hairline seams over a sphere, so
+most of its pixels are antialiased edges where two rasterisers legitimately disagree. 2%
+is what buys that headroom.
 
-- the palette reached the tone curve without the sRGB-to-linear round trip, so
-  every lit facet drifted toward cream;
-- `IcosahedronGeometry(r, 2)` was read as two subdivision passes; three's
-  `detail` cuts each edge into `detail + 1`, which is 180 triangles, not 320;
-- the embers drew over the core rather than behind it.
+What is wrong is the denominator. Thirty-four sparks a pixel across are a fraction of a
+percent of a 128-square frame and several percent of the disc the sphere occupies, which
+is where they wrongly appear. So score by region: the disc of the core, and the annulus
+outside it where the halo, the orbit and the embers live, each with its own budget. The
+geometry is already in the component — `unit` is the sphere radius and the centre is the
+frame's — so the regions are derived rather than measured off the picture.
 
-A person holding a screenshot beside the reference found all three.
-
-The machinery for the check mostly exists: there is already a browser project that
-renders every story, and a parity digest that reads computed styles. What has never
-existed is an image on the other side of the comparison, and `docs/design/` now holds
-the original this was derived from.
-
-One thing has to change in the component before any of this can be a gate. The embers
-seed themselves from `Math.random`, so no two frames agree and a pixel comparison would
-be flake by construction — the avatar needs the treatment VDS54 gave the formulas
-backdrop, where the arrangement is derived and a caller that wants novelty passes a
-seed.
+On ship: re-measure the three defects and correct the figures in the test's header
+comment, which states them.

@@ -9,7 +9,9 @@ today and are published to npm with it. What is here describes where something
 came from, is read by people and not by products, and ships to nobody.
 
 Nothing here is imported, built, linted or type-checked. A file may name a
-dependency this package does not have.
+dependency this package does not have — with one exception, noted below: a test
+reads the reference image, because comparing against it is the whole point of
+keeping it.
 
 ## Files
 
@@ -38,3 +40,21 @@ Two things in it are deliberately **not** carried into the package:
 
 Kept verbatim, including its Portuguese comments. Do not tidy it — a file edited
 to match what shipped stops being able to say what changed.
+
+### `viglet-avatar-idle.png`
+
+The other side of the comparison: `VigletAvatar` paused at `idle`, 128 square,
+read straight off its own canvas. This one **is** read by a test —
+`src/components/ui/viglet-avatar.parity.test.tsx` renders the mascot in a real
+browser and compares the pixels with it, which is the check that VDS100's three
+defects went through a green pipeline for want of.
+
+It is a reviewed image, not a generated one. It was written by that test and
+then looked at beside `viglet-avatar-cms.jsx` — the palette per state, and the
+180 facets of `IcosahedronGeometry(0.62, 2)` — before being committed.
+
+**To change it deliberately**, delete it and run the parity project. The test
+writes a new one from that run and fails, so the replacement has to be opened
+and checked against the original before it is committed. Never update it to
+make a red gate green: that is the failure mode this whole mechanism exists to
+prevent.

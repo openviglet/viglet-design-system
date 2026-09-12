@@ -146,3 +146,4 @@
   checked **nothing wraps toast** the bridge reads useSonner, so a product calling sonner from a module that never imported this hook still moves the mascot.
   checked **every toast type maps to a state, and an empty list is idle** a test drives each of sonner's types through the hook and asserts the state, including the return to idle on dismissal.
   checked **the bridge is opt-in and the state prop still wins** a product that sets state by hand keeps that behaviour; the hook is a separate export a caller chooses.
+- ✅ **VDS103** **nothing compares the mascot with the design it was drawn from, so it shipped the wrong colour and over-faceted** — A browser test compares the mascot's pixels with a reviewed image, and its frame now follows from its props (design recorded in `docs/design/README.md`).
