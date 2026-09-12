@@ -101,6 +101,7 @@
 - ✅ **VDS120** **The list of entries needing a use client banner is restated in the gate that checks it** — The build and check-dist read one entry module, so an entry cannot exist unclassified and the banner check covers every one (design recorded in `scripts/lib/entries.mjs`).
 - ✅ **VDS122** **Two packages install this by caret range and are named in no consumer list, so no guard here reads them** — consumers.json names nine, so the Openviglet Website and Viglet Docs are inside every guard that reads it (design recorded in `consumers.json`).
 - ✅ **VDS124** **Nothing in the lint config forbids dangerouslySetInnerHTML, so the next one ships with no gate** — A dangerouslySetInnerHTML anywhere under src fails lint, and the message names the fix rather than the rule (design recorded in `eslint.config.js`).
+- ✅ **VDS126** **The resize handle's grip is selected by panel-group-direction, which v4 renamed, so it never rotates** — The handle reads aria-orientation, so a vertical group divides on a full-width bar with a turned grip (design superseded: v4 writes neither attribute, so the shape was wrong too).
 
 ## Block B — Bento becomes a design-system layer
 

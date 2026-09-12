@@ -29,27 +29,3 @@ together, so each one is true when it lands.
 
 Until then schools is the consumer that does not declare it, and this line is what says
 so rather than leaving it to be rediscovered.
-
-### §VDS126 The attribute the handle still asks for
-
-`ResizableHandle` rotates its grip with
-`[&[data-panel-group-direction=vertical]>div]:rotate-90`. Every other orientation rule
-on the same class list reads `data-[panel-group-orientation=vertical]`, which is the
-attribute react-resizable-panels 4 writes. `direction` is what version 3 wrote.
-
-So in a vertical group the handle is the right shape — one pixel tall, full width,
-because those rules use the current attribute — and the grip inside it is still upright,
-pointing the way a horizontal handle drags. It is the one part of the component that
-says which way this thing moves, and it says the wrong thing.
-
-Nobody met it because nothing rendered a vertical group. The catalogue's own `Vertical`
-story passed `direction="vertical"` — the same renamed prop, one layer up — so it
-rendered horizontally, and VDS119 is what made it vertical and made this visible.
-
-`withHandle` is what draws the grip, so a consumer only sees it when it asked for one.
-Turing's editor is the caller that does.
-
-Acceptance:
-- The grip rotates in a vertical group.
-- No selector in `resizable.tsx` names an attribute this version of the library
-  does not write.

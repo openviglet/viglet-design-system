@@ -2,8 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS126** (deps: —) **The resize handle's grip is selected by panel-group-direction, which v4 renamed, so it never rotates** — A vertical handle draws the grip pointing the way a horizontal one drags, and it is the one part of the component that says which way this moves. → §VDS126
-
 ## Non-goals
 
 - **Do not fork a shared component inside a product** The one-line re-export shim is the
