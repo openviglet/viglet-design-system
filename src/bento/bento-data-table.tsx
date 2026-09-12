@@ -76,6 +76,12 @@ export interface BentoDataTableProps<TRow> {
   /** Given, rows are selectable, and these act on the selection from a bar above the table. */
   selectionActions?: readonly BentoDataTableAction<TRow>[];
   onSelectionChange?: (ids: string[]) => void;
+  /**
+   * What the rows were chosen by, such as a serialised filter. A selection holds
+   * within one scope, and a new one starts with nothing selected, so an action
+   * never lands on rows a filter has since hidden.
+   */
+  selectionScope?: string;
   /** Controlled column layout. Omitted, the table keeps its own. */
   layout?: BentoDataTableLayout;
   onLayoutChange?: (layout: BentoDataTableLayout) => void;
@@ -122,6 +128,7 @@ export function BentoDataTable<TRow extends RowData>({
   rowActions,
   selectionActions,
   onSelectionChange,
+  selectionScope,
   layout,
   onLayoutChange,
   onRowOpen,
@@ -134,6 +141,24 @@ export function BentoDataTable<TRow extends RowData>({
   const [ownLayout, setOwnLayout] = useState<BentoDataTableLayout>({ hidden: [] });
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
   const [anchor, setAnchor] = useState<number | null>(null);
+  const [scope, setScope] = useState(selectionScope);
+
+  // VDS139 — a new scope clears the selection in the same render that shows the
+  // new rows, so no frame offers an action on the old ones.
+  if (scope !== selectionScope) {
+    setScope(selectionScope);
+    setSelected(new Set());
+    setAnchor(null);
+  }
+
+  // The product hears about it after the render, since telling a parent to update
+  // while this table renders is an update React refuses.
+  const lastScope = useRef(selectionScope);
+  useEffect(() => {
+    if (lastScope.current === selectionScope) return;
+    lastScope.current = selectionScope;
+    onSelectionChange?.([]);
+  }, [selectionScope, onSelectionChange]);
   const [focused, setFocused] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
 

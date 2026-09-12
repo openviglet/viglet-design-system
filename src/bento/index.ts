@@ -55,6 +55,16 @@ export {
 } from "./bento-entity-shell";
 export { BentoEntityTile, type BentoEntityTileProps } from "./bento-entity-tile";
 export {
+  BentoFilterBar,
+  EMPTY_FILTERS,
+  type BentoFilterBarProps,
+  type BentoFilterChoiceFacet,
+  type BentoFilterDateFacet,
+  type BentoFilterDateRange,
+  type BentoFilterFacet,
+  type BentoFilterValue,
+} from "./bento-filter-bar";
+export {
   BentoListPage,
   type BentoListPageProps,
   type BentoListLayout,

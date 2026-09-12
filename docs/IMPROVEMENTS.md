@@ -32,25 +32,6 @@ so rather than leaving it to be rediscovered.
 
 ## Block F — What a consuming CMS needs from the package next
 
-### §VDS139 Filters, drawn once
-
-A top-tier content list is filtered more than it is scrolled. Shio's planned query
-vocabulary lets a curator ask for drafts of one type, in one locale, changed this week
-by an agent, and the same questions recur in the review queue, the media library and the
-activity trail. The package has a search input and nothing that renders a structured
-filter, a removable chip or a saved view.
-
-Export BentoFilterBar: a free-text field, a set of typed facets the product declares,
-each rendered as a menu of choices or a date range, the active filters as removable
-chips, and a clear-all. It takes a value and an onChange and owns no state, so the
-product can mirror it into the URL, which is what makes a filtered view deep-linkable.
-Saved views are a slot, not a store.
-
-It depends on DSF10 because the table's selection must clear when a filter changes the
-row set. Tests assert that every chip is a named, removable button, that facets are
-keyboard operable, and that the bar emits one change per user action rather than one per
-keystroke.
-
 ### §VDS140 One diff for every comparison a curator makes
 
 Shio's round adds revision history with rollback, a review that shows what an agent

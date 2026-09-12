@@ -46,6 +46,16 @@
     "tour": {
       "replay": "Take the tour"
     },
+    "filters": {
+      "label": "Filters",
+      "search": "Search",
+      "active": "Active filters",
+      "remove": "Remove filter {{filter}}",
+      "clearAll": "Clear all",
+      "from": "From",
+      "to": "To",
+      "apply": "Apply"
+    },
     "table": {
       "selected": "{{count}} selected",
       "selectionActions": "Actions on the selection",

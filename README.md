@@ -828,6 +828,26 @@ reports `onLayoutChange`, and you store the layout, as you do for `BentoListPage
 />
 ```
 
+`BentoFilterBar` is the query row above a list: a search field, the facets you
+declare (a `choice` of options, single or `multiple`, or a `date` range), the
+active filters as removable chips, and a clear-all. It holds no state. You pass
+`value` and get one `onChange` per action, typing included once it pauses, so the
+value can live in the URL and a filtered view is a link. Pass it to a
+`BentoDataTable` as `selectionScope` too, and a selection clears when the filters
+change the rows:
+
+```tsx
+<BentoFilterBar
+  value={filters}
+  onChange={setFilters}
+  facets={[
+    { id: "state", kind: "choice", label: t("state"), multiple: true, options: states },
+    { id: "updated", kind: "date", label: t("updated") },
+  ]}
+/>
+<BentoDataTable rows={filtered} selectionScope={JSON.stringify(filters)} … />
+```
+
 `BentoCommandPalette` takes a second group whose items the product supplies per
 query, beside the nav items it matches itself. Pass `onQueryChange` to hear the
 query as typed and `group` to answer it:
@@ -851,7 +871,7 @@ says so rather than showing an empty list that is not empty yet.
 bundling three fixtures through this package's own `exports` map, and fails if a
 bento module, a bento class name or a run of `bento.css`'s selectors reaches a
 consumer that imported only the root entry. `size-budget.json` records what each
-entry costs: today the whole root entry is 91 KB gzipped and `./bento` 26 KB,
+entry costs: today the whole root entry is 91 KB gzipped and `./bento` 27 KB,
 measured with everything the build externalises left out, so the numbers
 describe this package rather than its dependencies. The preset's
 `--vg-bento-tone-*` tokens are deliberately not counted as the layer: they ship

@@ -46,6 +46,16 @@
     "tour": {
       "replay": "Fazer o tour"
     },
+    "filters": {
+      "label": "Filtros",
+      "search": "Buscar",
+      "active": "Filtros ativos",
+      "remove": "Remover filtro {{filter}}",
+      "clearAll": "Limpar tudo",
+      "from": "De",
+      "to": "Até",
+      "apply": "Aplicar"
+    },
     "table": {
       "selected": "{{count}} selecionados",
       "selectionActions": "Ações sobre a seleção",

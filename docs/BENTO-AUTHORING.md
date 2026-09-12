@@ -92,6 +92,11 @@ and row actions are a menu of named items. Pass the rows, the columns and the
 actions, and store the column layout it reports. Never build a table from `Table`
 and a scroll container: that is the list every console rebuilt before this one.
 
+Filters over a list are `BentoFilterBar`: a search field, the facets you declare,
+and the active filters as removable chips. It holds no state. Keep its value where
+the URL can hold it, filter your rows with it, and pass the same value to the
+table as `selectionScope`, so a selection never outlives the rows it was made on.
+
 **A form screen with its own hero** is `BentoFormHero` as the first child inside
 the `<form>` it submits. It renders both halves of the morph itself.
 
