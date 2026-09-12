@@ -10,3 +10,4 @@
 
 ## Block G — The package knows one chrome
 
+- ⏸ **VDS146** (deps: VDS145 ✅) **SectionChrome, its provider and hook, and AdaptiveSectionCard's console branch outlive the era they serve** — set aside (Turing and Dumont cutting over (chrome:census)): Once no consumer renders console chrome, every chrome branch is dead code a new component can still copy. → §VDS146

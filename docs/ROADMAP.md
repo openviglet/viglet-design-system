@@ -10,8 +10,7 @@
 
 ## Block G — The package knows one chrome
 
-- 📋 **VDS146** (deps: VDS145 ✅) **SectionChrome, its provider and hook, and AdaptiveSectionCard's console branch outlive the era they serve** — Once no declared consumer renders console chrome, every chrome branch is dead code a new component can still copy, guarded by a non-goal whose reason is spent. → §VDS146
-- 📋 **VDS147** (deps: VDS146) **the console-era router components are still exported after being deprecated** — PageHeader, SubPage, GridList, InternalSidebar and their siblings still ship, so a new screen can still be built on the chrome every consumer is leaving. → §VDS147
+- 📋 **VDS147** (deps: VDS146 ⏸) **the console-era router components are still exported after being deprecated** — PageHeader, SubPage, GridList, InternalSidebar and their siblings still ship, so a new screen can still be built on the chrome every consumer is leaving. → §VDS147
 
 ## Non-goals
 
