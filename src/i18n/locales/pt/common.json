@@ -26,7 +26,10 @@
     "goToPreviousPage": "Ir para a página anterior",
     "goToNextPage": "Ir para a próxima página",
     "stepOf": "Etapa {{index}} de {{count}}",
-    "notifications": "Notificações"
+    "notifications": "Notificações",
+    "readyToSubmit": "Pronto para enviar",
+    "completeAllSteps": "Conclua todas as etapas acima",
+    "closeAppSwitcher": "Fechar o alternador de aplicativos"
   },
   "backendStatus": {
     "offline": "Servidor indisponível. Tentando reconectar...",

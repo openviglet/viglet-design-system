@@ -56,11 +56,19 @@ export function AppSwitcher({
   open,
   onToggle,
   apps,
-  triggerTitle = "Apps",
-  closeLabel = "Close app switcher",
+  triggerTitle,
+  closeLabel,
   showTrigger = true,
   headerHeight = 56,
 }: Readonly<AppSwitcherProps>) {
+  // VDS98 — through `t()` rather than a parameter default. A string default is
+  // just as visible to a reader as JSX text and invisible to the VDS93 gate,
+  // which follows no identifier back to where it was declared. Both of these
+  // were spoken: one as `title`, one as `aria-label`.
+  const { t } = useTranslation();
+  const trigger = triggerTitle ?? t("common.apps");
+  const close = closeLabel ?? t("common.closeAppSwitcher");
+
   const panelStyle = {
     top: `${headerHeight}px`,
     height: `calc(100vh - ${headerHeight}px)`,
@@ -71,7 +79,7 @@ export function AppSwitcher({
       {showTrigger && (
         <button
           type="button"
-          title={triggerTitle}
+          title={trigger}
           onClick={onToggle}
           className={`inline-flex items-center justify-center rounded-full w-9 h-9 transition-colors ${
             open
@@ -89,7 +97,7 @@ export function AppSwitcher({
           className="fixed inset-0 z-40 cursor-default bg-transparent border-none"
           onClick={onToggle}
           onKeyDown={(e) => e.key === "Escape" && onToggle()}
-          aria-label={closeLabel}
+          aria-label={close}
         />
       )}
 

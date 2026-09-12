@@ -4,6 +4,7 @@ import {
   useContext,
   type ReactNode,
 } from "react";
+import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
 // ---------------------------------------------------------------------------
@@ -89,11 +90,17 @@ interface CompletionProps {
 }
 
 function Completion({
-  readyLabel = "Ready to submit",
-  pendingLabel = "Complete all steps above",
+  readyLabel,
+  pendingLabel,
   className,
 }: Readonly<CompletionProps>) {
   const { allDone } = useContext(StepperContext);
+  // VDS98 — through `t()` rather than a parameter default. A string default is
+  // just as visible to a reader as JSX text and invisible to the VDS93 gate,
+  // which follows no identifier back to where it was declared.
+  const { t } = useTranslation();
+  const ready = readyLabel ?? t("common.readyToSubmit");
+  const pending = pendingLabel ?? t("common.completeAllSteps");
 
   return (
     <div className={cn("relative flex items-center gap-4", className)}>
@@ -117,7 +124,7 @@ function Completion({
             : "text-muted-foreground/40",
         )}
       >
-        {allDone ? readyLabel : pendingLabel}
+        {allDone ? ready : pending}
       </span>
     </div>
   );

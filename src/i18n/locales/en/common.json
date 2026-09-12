@@ -26,7 +26,10 @@
     "goToPreviousPage": "Go to previous page",
     "goToNextPage": "Go to next page",
     "stepOf": "Step {{index}} of {{count}}",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "readyToSubmit": "Ready to submit",
+    "completeAllSteps": "Complete all steps above",
+    "closeAppSwitcher": "Close app switcher"
   },
   "backendStatus": {
     "offline": "Server unavailable. Retrying automatically...",

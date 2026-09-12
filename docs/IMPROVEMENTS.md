@@ -29,24 +29,6 @@ Acceptance:
 - It is then a peerDependency and a devDependency here, not a dependency.
 - A consumer resolving a different minor still gets exactly one copy.
 
-### §VDS98 English in a prop default
-
-VDS93 claims no shipped component draws or announces a string outside the bundles, and
-two still do through destructured prop defaults: `Stepper.Completion` (`readyLabel =
-"Ready to submit"`, `pendingLabel = "Complete all steps above"`) and `AppSwitcher`
-(`triggerTitle = "Apps"`, `closeLabel = "Close app switcher"`, used as `title` and
-`aria-label`).
-
-The literals gate cannot see them: it reads JSX text and spoken attributes, and
-`rendered()` follows neither an identifier back to its parameter default nor a literal
-wrapped in `as`, `satisfies` or `!`.
-
-**The fix.** The defaults fall back through `t()` in the body (`common.apps` already
-exists; new keys in both locales), and the gate flags a string default on a
-spoken-looking parameter and unwraps the three type wrappers, with specimens for each.
-
-Found by the adversarial review of VDS93, confirmed by both skeptics.
-
 ### §VDS99 The pairs the contrast gate skips
 
 The adversarial review of VDS92 found the contrast gate weaker than its entry says.

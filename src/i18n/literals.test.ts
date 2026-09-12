@@ -42,6 +42,39 @@ const SPOKEN = new Set([
 /** A child of these is code, not a word: `badge-colorful` writes a stylesheet. */
 const CODE = new Set(["style", "script"])
 
+/**
+ * The words in a prop name that mean it holds something a person reads. VDS98 —
+ * a default is also how a variant, a size, a storage key or a header height is
+ * set, so the sweep over parameter defaults is narrowed by name rather than
+ * flagging every string.
+ *
+ * Matched per camelCase segment, not as a substring: `triggerTitle` is spoken
+ * and `headerHeight` is not, and a plain substring test cannot tell them apart
+ * without knowing where each word begins.
+ */
+const SPOKEN_WORDS = new Set([
+  "alt",
+  "caption",
+  "description",
+  "heading",
+  "label",
+  "message",
+  "placeholder",
+  "subtitle",
+  "text",
+  "title",
+  "tooltip",
+])
+
+const isSpokenProp = (name: string) => {
+  // A capitalised binding is an element or a component, by the convention JSX
+  // itself enforces — `as: Heading = "h2"` sets the tag a section renders, and
+  // "h2" is a word to nobody. Checked before the words, because `Heading` would
+  // otherwise match one.
+  if (/^[A-Z]/.test(name)) return false
+  return name.split(/(?=[A-Z])/).some((part) => SPOKEN_WORDS.has(part.toLowerCase()))
+}
+
 /** An entity is punctuation — the grid's `&lt;` has letters and says none. */
 const hasWord = (text: string) => /\p{L}/u.test(text.replace(/&[a-z]+;|&#\d+;/gi, ""))
 
@@ -54,6 +87,11 @@ const hasWord = (text: string) => /\p{L}/u.test(text.replace(/&[a-z]+;|&#\d+;/gi
 function rendered(expr: ts.Expression | undefined): string[] {
   if (!expr) return []
   if (ts.isParenthesizedExpression(expr)) return rendered(expr.expression)
+  // VDS98 — `"Apps" as const`, `"Apps" satisfies string` and `x!` are the same
+  // literal wearing a coat. Unwrapped here rather than at each call site,
+  // because every reader below asks this one function what a thing says.
+  if (ts.isAsExpression(expr) || ts.isSatisfiesExpression(expr)) return rendered(expr.expression)
+  if (ts.isNonNullExpression(expr)) return rendered(expr.expression)
   if (ts.isStringLiteral(expr) || ts.isNoSubstitutionTemplateLiteral(expr)) return [expr.text]
   if (ts.isTemplateExpression(expr)) return [expr.head.text, ...expr.templateSpans.map((span) => span.literal.text)]
   if (ts.isConditionalExpression(expr)) return [...rendered(expr.whenTrue), ...rendered(expr.whenFalse)]
@@ -95,6 +133,21 @@ function literalsIn(fileName: string, source: string): string[] {
       const init = node.initializer
       const said = ts.isStringLiteral(init) ? [init.text] : ts.isJsxExpression(init) ? rendered(init.expression) : []
       for (const text of said.filter(hasWord)) note(node, `${node.name.getText()}=${text.trim()}`)
+    } else if (ts.isParameter(node) && ts.isObjectBindingPattern(node.name)) {
+      // VDS98 — a word can reach the screen without ever being written in JSX.
+      // `function AppSwitcher({ triggerTitle = "Apps" })` renders English from a
+      // parameter default, and this reader followed no identifier back to where
+      // it was declared, so VDS93's claim was false in two components.
+      //
+      // Only the ones that read as spoken: a default is also how a variant, a
+      // size or a storage key is set, and none of those are words anybody hears.
+      for (const element of node.name.elements) {
+        const name = element.name.getText()
+        if (!isSpokenProp(name)) continue
+        for (const text of rendered(element.initializer).filter(hasWord)) {
+          note(element, `${name}=${text.trim()}`)
+        }
+      }
     }
     // On into attributes too: `icon={<X aria-label="…" />}` is JSX an
     // attribute holds, and its initializer is never content, so nothing is
@@ -131,6 +184,25 @@ describe("a shipped component says nothing the bundles do not hold", () => {
     // Named at the line the words are on, not the tag's.
     expect(specimen(`<p>\n  Displays the mobile sidebar.\n</p>`)).toEqual([`2: "Displays the mobile sidebar."`])
     expect(specimen(`<b>{c && "Idle"}</b>`)).toEqual([`1: "Idle"`])
+
+    // VDS98 — a word reaching the screen from a parameter default, and the three
+    // wrappers a literal can hide behind.
+    const params = (code: string) => literalsIn("specimen.tsx", code)
+
+    expect(params(`function C({ triggerTitle = "Apps" }) { return <b title={triggerTitle} /> }`))
+      .toEqual([`1: "triggerTitle=Apps"`])
+    expect(params(`function C({ readyLabel = "Ready to submit" }) { return <b>{readyLabel}</b> }`))
+      .toEqual([`1: "readyLabel=Ready to submit"`])
+    expect(params(`function C({ closeLabel = "Close" as const }) { return <b aria-label={closeLabel} /> }`))
+      .toEqual([`1: "closeLabel=Close"`])
+    expect(params(`<b aria-label={"Close" satisfies string} />`)).toEqual([`1: "aria-label=Close"`])
+    expect(params(`<b aria-label={x!} />`)).toEqual([])
+
+    // Narrowed by name: a default is also how everything that is not a word is set.
+    expect(params(`function C({ variant = "outline", storageKey = "vite-ui-theme" }) { return <b /> }`)).toEqual([])
+    expect(params(`function C({ headerHeight = 56 }) { return <b /> }`)).toEqual([])
+    expect(params(`function C({ as: Heading = "h2" }) { return <Heading /> }`)).toEqual([])
+    expect(params(`function C({ label = t("common.apps") }) { return <b>{label}</b> }`)).toEqual([])
 
     expect(specimen(`<span className="sr-only">{t("dialog.close", { defaultValue: "Close" })}</span>`)).toEqual([])
     expect(specimen(`<span>&lt;</span>`)).toEqual([])

@@ -73,6 +73,9 @@
 - ✅ **VDS97** **the Toaster region keeps sonner's English name, Notifications, because the package passes it no label** — The notice region says the package's own word, in the reader's language, and a product passing its own still wins.
   checked **the notice region is named in the reader's language** Toaster renders under pt with the bundle's word and no Notifications in the region's accessible name.
   checked **a product's own word still wins** containerAriaLabel goes in before the spread, and a caller passing one is what the region announces.
+- ✅ **VDS98** **Stepper.Completion and AppSwitcher still speak English through prop defaults, which the literals gate never reads** — Both components resolve their words through t(), and the gate now reads a parameter default, so VDS93's claim is true across the package.
+  checked **neither component holds an English prop default** Stepper.Completion and AppSwitcher resolve through t() with the keys in both locales, and a pt render reads Portuguese.
+  checked **the gate reads a parameter default, and the wrappers a literal hides behind** specimens cover a spoken prop default and as, satisfies and non-null, with variant, headerHeight and an element type left alone.
 
 ## Block B — Bento becomes a design-system layer
 
