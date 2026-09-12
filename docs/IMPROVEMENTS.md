@@ -361,3 +361,28 @@ belongs in `consumers.json` with its framework, chrome, accent and entries, and 
 README's count moves with it. If it is not — a site taking one decorative entry may
 genuinely not be — then say so where the next person looks, because the absence
 currently reads as an oversight and cannot be told apart from one.
+
+### §VDS123 A group the product fills
+
+`BentoCommandPalette` takes nav items and filters them with its own matching. That is
+the whole of what a product can put in it: a list known before the dialog opens, ranked
+by a rule the package owns. Anything a product searches for — a record, a document, a
+backlog line — has no way in.
+
+**The workaround is why this is filed.** A product either reimplements the dialog,
+losing the chrome, the keyboard handling and the accessibility work here; or it hands
+over a pre-built list and lets the package's matcher re-rank it. The second is worse
+than it sounds: the product's search already ranked those results by relevance it
+understands, and a client-side match then reorders them by substring. A consumer that
+must not match in the client — one whose results come from an engine owning the query —
+cannot use this component.
+
+**A second group, whose items the product supplies per query.** The palette keeps its
+nav group and its matching for that group, and takes one more: a label, and items the
+product returns for the query as typed. Those are rendered in the order given and never
+re-ranked, because the product asked its own source and that order is the answer.
+Choosing one calls back with the item.
+
+**Asynchronous, because a query leaving the process takes time.** The group says whether
+it is still resolving, so the dialog shows that rather than an empty list that is not
+empty yet.
