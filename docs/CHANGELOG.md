@@ -80,6 +80,7 @@
   checked **an unresolvable token fails instead of passing as white** the muted-on-ground case asserts both values resolve and measures them, with no ?? fallback left in the file.
   checked **the body-text pair is measured on both grounds** pairs() carries background with foreground, and the control assertion names it so a parser that dropped it fails.
   checked **the grounds canvas cannot age past the tokens** its muted hex and ratio are read out of the same arithmetic as the gate, so the next token change fails the run.
+- ✅ **VDS104** **initVigI18n walks only en and pt, so a product passing a third language gets an instance without it** — initVigI18n merges over the union of the languages either side declares, so a product's third language arrives whole (design recorded in `src/i18n/index.ts`).
 
 ## Block B — Bento becomes a design-system layer
 

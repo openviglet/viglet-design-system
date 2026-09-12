@@ -29,31 +29,6 @@ Acceptance:
 - It is then a peerDependency and a devDependency here, not a dependency.
 - A consumer resolving a different minor still gets exactly one copy.
 
-### §VDS104 The language list, not just the key list
-
-`initVigI18n` builds its resources by walking `["en", "pt"]`, the two languages this
-package ships. A product's bundle is only read at those keys, so a product that passes
-`es` or `fr` gets an i18next initialised without it: not a missing translation, but a
-language that does not exist in the instance the call returns.
-
-The loop is the whole of it. Nothing rejects the argument, nothing warns, and the
-function returns normally — the product's own screens then read their fallback language,
-which is the same silent failure VDS94 fixed one level down. VDS94 made the merge per
-key rather than per namespace; this is the same shape one level up, per language rather
-than per key.
-
-`registerVigTranslations` does not have the problem: it adds bundles to a host instance
-the product already initialised with its own languages. Only the door that owns the
-`init` call can lose one.
-
-**The fix is the union.** Walk the languages either side declares, and merge as VDS94
-already merges: a language only one side has arrives whole, and one both have merges
-leaf by leaf with the product winning. `fallbackLng` stays `en`, the one language the
-package can promise is complete.
-
-A test passes a bundle in a third language and asserts both that its keys resolve and
-that the package's `en` is still there to fall back to.
-
 ### §VDS105 The name Radix gives the nav landmark
 
 The pass VDS97 asked for, over the primitives this package wraps, found one more of the

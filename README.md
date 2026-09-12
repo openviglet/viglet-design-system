@@ -171,6 +171,12 @@ does not cost you the package's — `common.save` stays yours and `common.next`
 still resolves to the word this package ships. `registerVigTranslations` never
 replaces a key the host already has, so calling it twice is safe.
 
+**`initVigI18n` takes any language, not only the two this package ships.** Pass
+`es`, `fr` or anything else and it arrives whole; `en` and `pt` still merge leaf
+by leaf with yours. The package's own strings exist in `en` and `pt` only, so
+`fallbackLng` stays `en` and a screen asking for a string the package ships
+reads English under a third language until you translate it yourself.
+
 This used to merge a namespace at a time: a product with its own `common`
 replaced the package's outright, and every string the package asked for under
 that namespace fell back to its English default — in a Portuguese product,

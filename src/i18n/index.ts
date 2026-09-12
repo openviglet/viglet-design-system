@@ -81,16 +81,26 @@ function mergeBundles(ours: Bundle, theirs: Bundle): Bundle {
  *
  * Where a key exists on both sides the product's value wins; where only this
  * package has one, it survives rather than being dropped with its namespace.
+ *
+ * VDS104 — the languages are the union of both sides, not this package's two.
+ *
+ * The loop walked `["en", "pt"]`, so a product passing `es` or `fr` was read at
+ * neither key and got an instance the language simply did not exist in. Nothing
+ * rejected the argument and nothing warned: the call returned normally and the
+ * product's own screens read the fallback language. That is VDS94's failure one
+ * level up — per language rather than per key — and it has the same answer.
  */
 export function initVigI18n(appTranslations?: Record<string, Record<string, unknown>>) {
   const mergedResources: Record<string, { translation: Record<string, unknown> }> = {};
 
-  for (const lang of ["en", "pt"]) {
-    const dsTranslations = vigDesignSystemTranslations[lang as keyof typeof vigDesignSystemTranslations] || {};
-    const appLangTranslations = appTranslations?.[lang] || {};
+  const ours: Record<string, Bundle | undefined> = vigDesignSystemTranslations;
+  const theirs: Record<string, Bundle | undefined> = appTranslations ?? {};
 
+  // A language only one side declares arrives whole; one both declare merges
+  // leaf by leaf, with the product winning.
+  for (const lang of new Set([...Object.keys(ours), ...Object.keys(theirs)])) {
     mergedResources[lang] = {
-      translation: mergeBundles(dsTranslations, appLangTranslations),
+      translation: mergeBundles(ours[lang] ?? {}, theirs[lang] ?? {}),
     };
   }
 
