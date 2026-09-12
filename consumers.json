@@ -35,12 +35,20 @@
     "remembered. `viglet-docs` is also the first consumer on a third framework;",
     "it takes no root entry at all, only `./preset` and the background.",
     "",
-    "`entries` is what each product imports today, read from its source. It is a",
-    "snapshot and will drift; what does not drift is the membership, which is",
-    "what the guards read. Measured over product source only: shio-react's test",
-    "directory greps for `./bento` to census the pages that import it, and",
-    "counting a lint that looks for a subpath as the product taking it would",
-    "record the opposite of what SH887 says."
+    "`entries` is what each product imports, and VDS129 is why that is measured",
+    "rather than copied in. A snapshot drifted exactly as it was expected to: the",
+    "Shio entry listed three of the six subpaths its source takes and still said",
+    "`console`, and five other entries had gained or lost a subpath too, while the",
+    "only guard asked whether a declared entry exists and never whether an",
+    "imported one is declared.",
+    "",
+    "`sourceRoots` says where a product's own source is, relative to its package",
+    "root, so the measure is declared rather than guessed. `viglet-ds-consumer-entries`",
+    "reads them from a consumer's checkout and fails in both directions: a subpath",
+    "imported and not declared, and one declared and imported nowhere. Tests and",
+    "stories inside those roots are skipped, since a census test that greps for a",
+    "subpath is counting pages, not taking the entry. This file ships in the package",
+    "so a consumer can run that from its own suite."
   ],
   "consumers": [
     {
@@ -48,9 +56,10 @@
       "name": "Shio",
       "package": "shio-react",
       "framework": "vite",
-      "chrome": "console",
+      "chrome": "bento",
       "accent": "cool",
-      "entries": [".", "./styles", "./vite"]
+      "sourceRoots": ["src", "vite.config.ts"],
+      "entries": [".", "./bento", "./bento.css", "./i18n", "./router", "./styles", "./vite"]
     },
     {
       "id": "turing",
@@ -59,16 +68,8 @@
       "framework": "vite",
       "chrome": "bento",
       "accent": "cool",
-      "entries": [
-        ".",
-        "./bento",
-        "./bento.css",
-        "./floating-formulas-bg",
-        "./i18n",
-        "./router",
-        "./styles",
-        "./vite"
-      ]
+      "sourceRoots": ["src", "vite.config.ts"],
+      "entries": [".", "./bento", "./bento.css", "./router", "./styles", "./vite"]
     },
     {
       "id": "dumont",
@@ -77,14 +78,8 @@
       "framework": "vite",
       "chrome": "console",
       "accent": "cool",
-      "entries": [
-        ".",
-        "./floating-formulas-bg",
-        "./i18n",
-        "./router",
-        "./styles",
-        "./vite"
-      ]
+      "sourceRoots": ["src", "vite.config.ts"],
+      "entries": [".", "./bento", "./bento.css", "./router", "./styles", "./vite"]
     },
     {
       "id": "cloud-console",
@@ -93,7 +88,8 @@
       "framework": "next",
       "chrome": "console",
       "accent": "cool",
-      "entries": [".", "./i18n", "./styles"]
+      "sourceRoots": ["src", "next.config.ts"],
+      "entries": [".", "./assets", "./i18n", "./styles"]
     },
     {
       "id": "cloud-frontend",
@@ -102,7 +98,8 @@
       "framework": "vite",
       "chrome": "platform-home",
       "accent": "cool",
-      "entries": [".", "./i18n", "./styles", "./vite"]
+      "sourceRoots": ["src", "vite.config.ts"],
+      "entries": [".", "./assets", "./i18n", "./styles", "./vite"]
     },
     {
       "id": "schools",
@@ -111,6 +108,7 @@
       "framework": "next",
       "chrome": "front-door",
       "accent": "cool",
+      "sourceRoots": ["src", "next.config.ts"],
       "entries": [".", "./fonts", "./preset", "./styles"]
     },
     {
@@ -120,7 +118,8 @@
       "framework": "vite",
       "chrome": "bento",
       "accent": "amber",
-      "entries": [".", "./fonts", "./styles"]
+      "sourceRoots": ["src", "vite.config.ts"],
+      "entries": [".", "./bento", "./bento.css", "./fonts", "./i18n", "./styles"]
     },
     {
       "id": "openviglet-website",
@@ -129,6 +128,7 @@
       "framework": "vite",
       "chrome": "marketing-site",
       "accent": "cool",
+      "sourceRoots": ["src", "vite.config.ts"],
       "entries": [".", "./floating-formulas-bg.css", "./preset", "./styles"]
     },
     {
@@ -138,6 +138,7 @@
       "framework": "docusaurus",
       "chrome": "docs-site",
       "accent": "cool",
+      "sourceRoots": ["src", "docusaurus.config.ts"],
       "entries": ["./floating-formulas-bg", "./floating-formulas-bg.css", "./preset"]
     }
   ]

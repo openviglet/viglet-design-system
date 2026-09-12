@@ -11,11 +11,13 @@ component, its variants and its props, rebuilt on each commit to `2026.3`. Look
 there before writing a component: the catalogue is the answer to "does this
 already exist".
 
-The six applications that install this package are the consumers it holds itself
+The nine applications that install this package are the consumers it holds itself
 to, declared in [`consumers.json`](consumers.json) rather than remembered: each
-entry names its framework, its chrome, the accent it renders with and the
-subpaths it takes, and CI refuses prose that names a subset as though it were
-the whole set. An eighth is one entry there, and the checks widen with it.
+entry names its framework, its chrome, the accent it renders with, where its
+source is and the subpaths it takes, and CI refuses prose that names a subset as
+though it were the whole set. A tenth is one entry there, and the checks widen
+with it. The file ships in the package, and a consumer holds its own entry to its
+source with [`viglet-ds-consumer-entries`](#keeping-your-entry-in-the-register-true).
 
 Three are Vite consoles (Turing, Shio, Dumont), one is a Vite platform home
 (the Cloud Home), one is a Vite desktop shell (the Roadkeep GUI), one is a Vite
@@ -111,6 +113,33 @@ Add `--warn` to report without failing while the existing collisions are being
 worked through, and drop it once the count is zero. `--json` prints the findings
 for a bot to read; `--manifest <path>` checks against an export list other than
 the installed one.
+
+## Keeping your entry in the register true
+
+`consumers.json` records the subpaths each product takes, and this package's
+guards read it. A second CLI measures what your source actually imports and
+compares it with your entry there, in both directions. Run it from the product's
+package root, in its own test step:
+
+```bash
+viglet-ds-consumer-entries
+```
+
+It finds your entry by the `name` in your `package.json` (`--consumer <id>`
+names it outright), scans the `sourceRoots` that entry declares, and fails on a
+subpath you import and do not declare, or one you declare and import nowhere:
+
+```
+consumer-entries: shio's source and its entry in consumers.json disagree
+
+  imported, and not declared:
+    ./router  first at src/components/dialog.delete.tsx:17
+```
+
+Tests, stories and comments inside the roots are not counted. A failure means
+the entry here is wrong, so the fix is a change to `consumers.json` in this
+repository. `--json` prints the measurement; `--root <dir>` measures a checkout
+other than the current directory.
 
 ## Setup
 

@@ -14,8 +14,16 @@ const manifest = JSON.parse(readFileSync(join(root, "consumers.json"), "utf8")) 
     framework: "vite" | "next" | "docusaurus"
     chrome: string
     accent: string
+    // VDS129 — where the product's own source is, so its entries are measured
+    // by `viglet-ds-consumer-entries` rather than typed in and left to drift.
+    sourceRoots: string[]
     entries: string[]
   }[]
+}
+const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8")) as {
+  exports: Record<string, unknown>
+  files: string[]
+  bin: Record<string, string>
 }
 
 const NAMES = manifest.consumers.map((c) => c.name)
@@ -80,11 +88,39 @@ describe("the consumer set is declared, not remembered", () => {
       expect(c.package, `${c.id} names no package`).toBeTruthy()
       expect(c.entries.length, `${c.id} imports nothing`).toBeGreaterThan(0)
       // Every entry a consumer names has to be a subpath this package exports.
-      const exports = JSON.parse(readFileSync(join(root, "package.json"), "utf8")).exports
       for (const entry of c.entries) {
-        expect(exports[entry], `${c.id} imports ${entry}, which is not exported`).toBeDefined()
+        expect(pkg.exports[entry], `${c.id} imports ${entry}, which is not exported`).toBeDefined()
       }
     }
+  })
+
+  it("says where each consumer's source is, inside its own checkout", () => {
+    // The converse of the check above is `viglet-ds-consumer-entries`, run from
+    // the consumer's side, and it can only measure what a consumer points it at.
+    // An absolute path or one climbing out of the package would describe this
+    // machine rather than the product.
+    for (const c of manifest.consumers) {
+      expect(c.sourceRoots?.length, `${c.id} declares no sourceRoots`).toBeGreaterThan(0)
+      for (const sourceRoot of c.sourceRoots) {
+        expect(
+          /^(?:[a-zA-Z]:)?[\\/]/.test(sourceRoot) || sourceRoot.split(/[\\/]/).includes(".."),
+          `${c.id} declares ${sourceRoot}, which is not a path inside its package`,
+        ).toBe(false)
+      }
+    }
+  })
+
+  it("ships the register and the bin that measures a consumer against it", () => {
+    // VDS129 — the register was in neither `files` nor `exports`, so the product
+    // it describes could not read its own entry.
+    expect(pkg.files).toContain("consumers.json")
+    expect(pkg.exports["./consumers.json"]).toBe("./consumers.json")
+
+    const bin = pkg.bin["viglet-ds-consumer-entries"]
+    expect(bin, "the bin is not declared").toBe("./scripts/consumer-entries.mjs")
+    expect(pkg.files, "a declared bin that is not in files installs as a dangling link").toContain(
+      bin.replace(/^\.\//, ""),
+    )
   })
 
   it("never names a subset of the consumers as though it were all of them", () => {

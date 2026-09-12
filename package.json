@@ -33,6 +33,7 @@
       "require": "./dist/assets.cjs"
     },
     "./exports.json": "./dist/exports.json",
+    "./consumers.json": "./consumers.json",
     "./styles": "./dist/viglet-design-system.css",
     "./fonts": "./dist/fonts.css",
     "./fonts.css": "./dist/fonts.css",
@@ -62,11 +63,14 @@
   },
   "bin": {
     "viglet-ds-check-duplicates": "./scripts/check-duplicates.mjs",
+    "viglet-ds-consumer-entries": "./scripts/consumer-entries.mjs",
     "viglet-ds-page-reference": "./scripts/page-reference.mjs"
   },
   "files": [
     "dist",
+    "consumers.json",
     "scripts/check-duplicates.mjs",
+    "scripts/consumer-entries.mjs",
     "scripts/page-reference.mjs",
     "docs/BENTO-AUTHORING.md",
     "docs/BENTO-BOUNDARY.md",

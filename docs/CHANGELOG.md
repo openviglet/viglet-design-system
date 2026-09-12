@@ -175,5 +175,7 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
+- ✅ **VDS129** **consumers.json declares three of Shio's six entries and still records its chrome as console** — consumers.json ships with each consumer's sourceRoots, and viglet-ds-consumer-entries fails a consumer whose imports and declared entries differ either way (design recorded in `consumers.json`).
+
 ## Block G — The package knows one chrome
 

@@ -32,26 +32,6 @@ so rather than leaving it to be rediscovered.
 
 ## Block F — What a consuming CMS needs from the package next
 
-### §VDS129 The register is short by half, and its guard checks the direction that held
-
-Shio's product source imports the root, ./bento, ./bento.css, ./styles, ./router and,
-from vite.config.ts, ./vite. The register lists three of them and records the chrome as
-console, two Shio blocks after its console moved to bento. The rationale beside that
-entry also carries a wrong premise: it says counting the test directory would inflate
-the figure, when src holds thirty real importers of ./bento.
-
-The guard in consumers.test.ts asserts that every declared entry is a real subpath.
-Nothing asserts the converse, and nothing can from a consumer's side, because
-consumers.json is in neither files nor exports, so a product cannot read the register
-that governs it.
-
-The fix has four parts. Correct Shio's entry and delete the false sentence. Give each
-consumer a sourceRoots field, so product source is declared rather than guessed. Publish
-the register. And ship a viglet-ds-consumer-entries bin that measures a consumer's
-imports and diffs them against its declaration in both directions, exiting non-zero on
-either. The planted case is a consumer declaring one entry and importing two, and the
-bin must name the undeclared one. Shio's SH943 runs that bin inside its own pnpm test.
-
 ### §VDS130 A dev loop that reaches nothing and says so in a sentence
 
 use-local.mjs --list prints that no 2026.3 checkout depending on the package was found,
