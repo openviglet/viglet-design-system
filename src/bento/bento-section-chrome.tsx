@@ -81,6 +81,11 @@ export interface AdaptiveSectionCardProps {
   variant?: ColorVariant;
   /** Console chrome only — the frosted section does not collapse. */
   defaultOpen?: boolean;
+  /**
+   * Merged onto whichever surface renders. `defaultOpen` above is the prop that
+   * only one chrome has; this one survives the switch, which is the difference
+   * the wrapper exists to hide (VDS111).
+   */
   className?: string;
   children?: ReactNode;
 }
@@ -130,6 +135,7 @@ function AdaptiveSectionCard({
         tone={VARIANT_TONE[variant] ?? "blue"}
         title={header.title}
         description={header.description}
+        className={className}
       >
         {content}
       </BentoFormSection>

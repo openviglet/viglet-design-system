@@ -1,4 +1,7 @@
 import type { ComponentType, ReactNode } from "react";
+
+import { cn } from "@/lib/utils";
+
 import { bentoChipClass, type BentoTone } from "./bento-tones";
 
 export interface BentoFormSectionProps {
@@ -15,6 +18,12 @@ export interface BentoFormSectionProps {
   children: ReactNode;
   /** Optional trailing slot in the header (badges, status pill, etc.). */
   trailing?: ReactNode;
+  /**
+   * Merged onto the frosted surface. A shared form reaches this through
+   * `AdaptiveSectionCard`, whose whole job is that the same node is styled the
+   * same way in either chrome (VDS111).
+   */
+  className?: string;
 }
 
 /**
@@ -35,9 +44,15 @@ export function BentoFormSection({
   children,
   trailing,
   as: Heading = "h2",
+  className,
 }: Readonly<BentoFormSectionProps>) {
   return (
-    <section className="bento-tile bento-glass relative flex flex-col gap-5 overflow-hidden rounded-3xl p-5 md:p-6">
+    <section
+      className={cn(
+        "bento-tile bento-glass relative flex flex-col gap-5 overflow-hidden rounded-3xl p-5 md:p-6",
+        className,
+      )}
+    >
       <header className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <span className={`grid h-10 w-10 place-items-center rounded-2xl text-white shadow-md ${bentoChipClass(tone)}`}>

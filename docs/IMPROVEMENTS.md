@@ -2,28 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-### §VDS111 The class the chrome switch swallows
-
-`AdaptiveSectionCard` exists so a shared form does not have to know which chrome is
-rendering it. It destructures `className` and forwards it on the `SectionCard` branch
-only; the bento branch builds a `BentoFormSection`, whose props interface declares no
-`className` at all, so that class list is fixed.
-
-The result is that a form styled through the wrapper keeps its styling in a console and
-loses it the moment the same component renders under bento — the single difference the
-wrapper was written to hide. Nothing warns: `defaultOpen` is explicitly documented as
-"Console chrome only", but `className` carries no such note, so a caller has every
-reason to expect it to survive the switch.
-
-This sits inside the migration the non-goals protect. Shio renders both chromes for the
-length of that migration, so a shared form being styled identically under each is the
-property that makes the parallel route reviewable.
-
-Acceptance:
-- `BentoFormSection` accepts `className` and merges it.
-- The bento branch of `AdaptiveSectionCard` forwards `className`.
-- A test renders the same node under both chromes and asserts the class survives each.
-
 ### §VDS112 What the barrel forgot to re-export
 
 Six names are exported from their component files, used in the catalogue, and reachable

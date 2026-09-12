@@ -2,7 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS111** (deps: —) **AdaptiveSectionCard drops className under bento chrome, the one switch it exists to hide** — A shared form styled through the wrapper loses that styling the moment a console renders it in the other chrome. → §VDS111
 - 📋 **VDS112** (deps: —) **Three Popover parts, useSidebarOptional and SectionCard's variant type reach no published subpath** — The catalogue demonstrates parts a consumer cannot import, and the hook written for a remote host is unreachable. → §VDS112
 - 📋 **VDS113** (deps: —) **BadgeLocale writes a literal undefined class, and three components splice className instead of merging it** — Every callsite omitting the optional prop ships the broken class, and an override cannot win a merge that never runs. → §VDS113
 - 📋 **VDS114** (deps: —) **GlassCard's color and colorDark props set custom properties its stylesheet never reads** — The accent story renders identically to the default, so a documented prop and the example proving it are both inert. → §VDS114

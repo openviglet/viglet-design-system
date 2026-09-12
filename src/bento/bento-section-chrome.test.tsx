@@ -78,6 +78,29 @@ describe("one form, two chromes", () => {
     expect(screen.getByLabelText("Endpoint")).toHaveValue("https://example.test")
   })
 
+  // VDS111 — the class list was forwarded on the console branch only, so a form
+  // styled through the wrapper lost that styling under the one chrome the
+  // wrapper exists to hide. Written as one node rendered twice for that reason:
+  // asserting each branch separately is what let them differ.
+  it("carries className through either chrome", () => {
+    const styled = (
+      <AdaptiveSectionCard variant="violet" className="lg:col-span-2">
+        <AdaptiveSectionCard.Header icon={IconCpu2} title="Connection" />
+        <AdaptiveSectionCard.Content>x</AdaptiveSectionCard.Content>
+      </AdaptiveSectionCard>
+    )
+
+    const consoleRender = inChrome("console", styled)
+    expect(consoleRender.container.querySelector(".lg\\:col-span-2")).toBeInTheDocument()
+    consoleRender.unmount()
+
+    const bentoRender = inChrome("bento", styled)
+    const frosted = bentoRender.container.querySelector(".bento-glass")
+    // Merged onto the frosted surface, not instead of it.
+    expect(frosted).toHaveClass("lg:col-span-2")
+    expect(frosted).toHaveClass("bento-tile")
+  })
+
   it("maps the variant to a tone, including the two with no tone of their own", () => {
     const cyan = inChrome(
       "bento",
