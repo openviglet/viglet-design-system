@@ -97,8 +97,8 @@ export const ActionsMenu: Story = {
   render: () => (
     <BentoActionsMenu
       actions={[
-        { label: "Duplicate", icon: IconCpu2, onSelect: () => {} },
-        { label: "Delete", icon: IconTrash, onSelect: () => {}, tone: "destructive" },
+        { id: "item.duplicate", label: "Duplicate", icon: IconCpu2, onSelect: () => {} },
+        { id: "item.delete", label: "Delete", icon: IconTrash, onSelect: () => {}, tone: "destructive" },
       ]}
     />
   ),

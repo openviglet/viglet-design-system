@@ -32,25 +32,6 @@ so rather than leaving it to be rediscovered.
 
 ## Block F — What a consuming CMS needs from the package next
 
-### §VDS142 A console verb with a name
-
-Shio's first design law says every capability lands on the agent surface before the
-console, and its conformance tests classify manifest features and mutating paths. They
-cannot see a console action, because an action is a menu item with a label key and an
-onSelect closure. The agent side names every verb: an op on shio_write, a tool, a batch
-operation.
-
-BentoActionsMenuItem and the entity shell's action slots gain a required id, typed as a
-string the product declares, and render it as a data attribute. The package attaches no
-meaning to it; it only guarantees that every action reaching the DOM carries a stable
-name.
-
-That is enough for a consumer to build the census: Shio can walk its declared console
-actions and assert each id maps to an agent op or a classified exception, the same
-Reason-with-a-falsifier shape its two conformance gates use. The change is breaking for
-consumers that pass no id, so it ships with a codemod-free deprecation path: a missing
-id warns in development for one release, then fails type-checking.
-
 ### §VDS143 Busy is not disabled
 
 The package's buttons and the entity shell's save controls mark a pending action by
@@ -106,6 +87,20 @@ reads a list of the components still undescribed, fails when a component outside
 list has no summary, and fails when a listed one has gained a summary and was not
 removed from the list. A new component then arrives described or does not build, and the
 list only shrinks.
+
+### §VDS152 The deprecation ends
+
+BentoActionsMenuItem.id shipped optional, with a warning outside production for an item
+that has none, so a product that upgrades is told before it breaks. The deprecation only
+means something if it ends: until the field is required, a new action without a name
+type-checks, renders and escapes every census that reads data-action-id.
+
+Once one release has carried the warning, make id required on BentoActionsMenuItem,
+which BentoEntityShell's extraActions and the data table's row actions already pass
+through, and delete warnWithoutId and its test. The change note in the ledger names the
+release that warned. Before shipping, run viglet-ds-check-duplicates and a type-check in
+each declared consumer's checkout, or read their source, and list any menu still built
+without ids, so the breaking release is not the first they hear of it.
 
 ## Block G — The package knows one chrome
 

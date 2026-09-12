@@ -233,8 +233,8 @@ describe("BentoActionsMenu", () => {
     draw(
       <BentoActionsMenu
         actions={[
-          { label: "Duplicate", icon: IconCpu2, onSelect: vi.fn() },
-          { label: "Delete", icon: IconCpu2, onSelect, tone: "destructive" },
+          { id: "item.duplicate", label: "Duplicate", icon: IconCpu2, onSelect: vi.fn() },
+          { id: "item.delete", label: "Delete", icon: IconCpu2, onSelect, tone: "destructive" },
         ]}
       />,
     )
@@ -249,12 +249,47 @@ describe("BentoActionsMenu", () => {
   it("marks a destructive action so it reads as one", async () => {
     const user = userEvent.setup()
 
-    draw(<BentoActionsMenu actions={[{ label: "Delete", icon: IconCpu2, onSelect: vi.fn(), tone: "destructive" }]} />)
+    draw(<BentoActionsMenu actions={[{ id: "item.delete", label: "Delete", icon: IconCpu2, onSelect: vi.fn(), tone: "destructive" }]} />)
 
     await user.click(screen.getAllByRole("button")[0])
     const item = within(await screen.findByRole("menu")).getByText("Delete")
 
     expect(item.closest(".bento-item-danger")).toBeInTheDocument()
+  })
+
+  // VDS142 — a console verb a census can match to an agent verb.
+  it("puts each action's id on its menu item, for a census to read", async () => {
+    const user = userEvent.setup()
+    draw(
+      <BentoActionsMenu
+        actions={[
+          { id: "post.duplicate", label: "Duplicate", icon: IconCpu2, onSelect: vi.fn() },
+          { id: "post.delete", label: "Delete", icon: IconCpu2, onSelect: vi.fn(), tone: "destructive" },
+        ]}
+      />,
+    )
+
+    await user.click(screen.getAllByRole("button")[0])
+    const items = within(await screen.findByRole("menu")).getAllByRole("menuitem")
+    expect(items.map((item) => item.getAttribute("data-action-id"))).toEqual(["post.duplicate", "post.delete"])
+  })
+
+  it("warns once, outside production, about an action with no id", async () => {
+    const user = userEvent.setup()
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {})
+    const { rerender } = draw(<BentoActionsMenu actions={[{ label: "Archive without id", icon: IconCpu2, onSelect: vi.fn() }]} />)
+    rerender(
+      <I18nextProvider i18n={i18next}>
+        <MemoryRouter>
+          <BentoActionsMenu actions={[{ label: "Archive without id", icon: IconCpu2, onSelect: vi.fn() }]} />
+        </MemoryRouter>
+      </I18nextProvider>,
+    )
+    await user.click(screen.getAllByRole("button")[0])
+
+    const calls = warn.mock.calls.filter(([message]) => String(message).includes('"Archive without id" has no id'))
+    expect(calls).toHaveLength(1)
+    warn.mockRestore()
   })
 })
 

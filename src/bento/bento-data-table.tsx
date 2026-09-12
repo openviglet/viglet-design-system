@@ -516,6 +516,7 @@ export function BentoDataTable<TRow extends RowData>({
                         <BentoActionsMenu
                           triggerLabel={t("bento.table.rowActions", { defaultValue: "Actions for {{row}}", row: name })}
                           actions={rowActions.map((action) => ({
+                            id: action.id,
                             label: action.label,
                             icon: action.icon,
                             tone: action.tone,

@@ -287,6 +287,7 @@ export function BentoEntityShell<TEntity extends BentoEntityLike>({
     ...(extraActions ?? []),
     ...(onDelete && !readOnly
       ? [{
+          id: "entity.delete",
           label: t("forms.formActions.delete"),
           icon: IconTrash,
           tone: "destructive" as const,
