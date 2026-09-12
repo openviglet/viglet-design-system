@@ -33,6 +33,7 @@
       "require": "./dist/assets.cjs"
     },
     "./exports.json": "./dist/exports.json",
+    "./catalogue.json": "./dist/catalogue.json",
     "./consumers.json": "./consumers.json",
     "./styles": "./dist/viglet-design-system.css",
     "./fonts": "./dist/fonts.css",
@@ -64,6 +65,7 @@
   "bin": {
     "viglet-ds-check-duplicates": "./scripts/check-duplicates.mjs",
     "viglet-ds-consumer-entries": "./scripts/consumer-entries.mjs",
+    "viglet-ds-mcp": "./scripts/mcp.mjs",
     "viglet-ds-page-lint": "./scripts/page-lint.mjs",
     "viglet-ds-page-reference": "./scripts/page-reference.mjs"
   },
@@ -72,6 +74,7 @@
     "consumers.json",
     "scripts/check-duplicates.mjs",
     "scripts/consumer-entries.mjs",
+    "scripts/mcp.mjs",
     "scripts/page-lint.mjs",
     "scripts/page-reference.mjs",
     "docs/BENTO-AUTHORING.md",
@@ -83,7 +86,7 @@
   ],
   "scripts": {
     "dev": "vite build --watch",
-    "build": "tsc -b && node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && vite build && node -e \"require('fs').cpSync('src/styles/preset.css','dist/preset.css')\" && node scripts/build-fonts.mjs && node scripts/emit-exports.mjs && node scripts/check-dist.mjs && node scripts/check-exports.mjs && node scripts/check-size.mjs",
+    "build": "tsc -b && node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && vite build && node -e \"require('fs').cpSync('src/styles/preset.css','dist/preset.css')\" && node scripts/build-fonts.mjs && node scripts/emit-exports.mjs && node scripts/emit-catalogue.mjs && node scripts/check-dist.mjs && node scripts/check-exports.mjs && node scripts/check-catalogue.mjs && node scripts/check-size.mjs",
     "check:dist": "node scripts/check-dist.mjs",
     "check:size": "node scripts/check-size.mjs",
     "typecheck": "tsc -b --force && tsc -p .storybook/tsconfig.json --noEmit",

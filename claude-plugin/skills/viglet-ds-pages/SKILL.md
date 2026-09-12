@@ -1,30 +1,20 @@
 ---
 name: viglet-ds-pages
-description: Building or changing a page with @viglet/viglet-design-system/bento -- the shell, the three page shapes, the panel, and which tokens a product claims. Use when writing a screen, adding a region to one, or choosing between two components of the bento layer, and before the first screen rather than after the fifth.
+description: Building or changing a page with @viglet/viglet-design-system/bento -- the shell, the three page shapes, the panel, and which tokens a product claims. Use when writing a screen, adding a region to one, or choosing between two components of the package, and before the first screen rather than after the fifth.
 ---
 
 # Pages in the Viglet design system
 
-This skill arrives with the `viglet-ds` plugin, so it updates when the plugin does and no
-copy of it lives in this repository. The plugin is written against the package range in its
-`package.json` (`supportedPackage`); on a release outside it, the contract below may describe
-components the installed package does not have.
+The contract and the catalogue come from the `viglet-ds` MCP server, which reads the
+package this repository has installed, so what it says matches that release.
 
-## Read first
-
-- **[authoring.md](authoring.md)** -- the contract. The shell and who owns each region, the
-  three page shapes, the panel, colour and the tokens a product claims, i18n, accessibility,
-  responsive, tests.
-- **[boundary.md](boundary.md)** -- which components are the shared layer and which stay in a
-  product, and why.
-
-## And look at
-
-The artboards: the contract drawn, every region of a page with an ownership key, the reading
-column, what `--primary` reaches, the page shapes, the panel, and both grounds with their
-ratios. `viglet-ds-page-reference` writes them into this repository (`docs/design/vds-*.dc.html`
-unless it was given `--canvas-dir`). With this plugin enabled it writes the artboards and
-leaves the skill to the plugin. An artboard opens in a browser straight from the file tree.
+- **Which component does a job**: `find_component` with the job in plain words. Then
+  `read_component` for the one you pick: what it is for, its props, the contract sections
+  that govern it, and an import to start from. Do this before writing a component.
+- **The contract**: read the resource `viglet-ds://authoring` before the first screen (the
+  shell and who owns each region, the page shapes, colour, i18n, accessibility), and
+  `viglet-ds://boundary` for what the shared layer holds and what stays in a product.
+- **Tokens**: `viglet-ds://tokens`.
 
 ## Two rules that are easy to get wrong
 
@@ -32,15 +22,10 @@ leaves the skill to the plugin. An artboard opens in a browser straight from the
 - A product claims `--primary` through the four `--vg-primary-*-base` inputs at `:root`,
   never by setting `--vg-primary` itself, which would key the dark ground to the light value.
 
-`viglet-ds-page-lint <dir>` fails on either one, naming the file and line.
+`viglet-ds-page-lint <dir>` fails on either one. `/viglet-ds-check` runs every check the
+package ships. A write that declares a name the package exports is denied, with the import
+to use instead.
 
-## Before writing a component
-
-Check that the package does not already export it. The plugin denies a write that declares a
-name the package exports and names the import to use instead. A deliberate copy says why in
-the file: `// viglet-ds-allow-duplicate <Name> -- <reason>`.
-
-## Checking
-
-`/viglet-ds-check` runs the package's own checks against this repository and reports what
-fails.
+If the server does not answer, the installed package predates it or is outside the range in
+the plugin's `package.json` (`supportedPackage`). The same documents are in
+`node_modules/@viglet/viglet-design-system/docs/`.

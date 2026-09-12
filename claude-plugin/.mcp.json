@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "viglet-ds": {
+      "command": "npx",
+      "args": ["--no-install", "viglet-ds-mcp"]
+    }
+  }
+}

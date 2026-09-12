@@ -1,12 +1,15 @@
 # viglet-ds — the Viglet Design System plugin for Claude Code
 
 For a repository that installs `@viglet/viglet-design-system`. It gives an agent session
-three things the npm package cannot:
+four things the npm package alone does not:
 
-- **The page contract as a skill.** `viglet-ds-pages` loads by name when a session builds or
-  changes a bento page: the shell and who owns each region, the three page shapes, the panel,
-  and the tokens a product claims. It updates when the plugin does, so no copy of it lives in
-  your repository.
+- **A catalogue it can ask.** The `viglet-ds` MCP server answers `find_component` (which
+  components do a job) and `read_component` (one component's purpose, props, the contract
+  sections that govern it, and an import to start from). The page contract, the boundary and
+  the token reference are resources it reads when it needs them. The server runs from the
+  package your repository installed, so its answers match that release.
+- **A skill that points at it.** `viglet-ds-pages` loads by name when a session builds or
+  changes a page, and sends it to the catalogue and the contract instead of carrying a copy.
 - **`/viglet-ds-check`.** Runs the package's own checks against the working tree: duplicates,
   the page lint, the vendored artboards and your entry in the package's register. It reports
   what fails and fixes nothing without asking.
@@ -34,6 +37,9 @@ To enable it for everyone working in a repository, commit it in `.claude/setting
   "enabledPlugins": { "viglet-ds@viglet-design-system": true }
 }
 ```
+
+The server is started with `npx --no-install viglet-ds-mcp`, so it needs the package
+installed in the repository and never downloads one.
 
 ## The artboards stay on disk
 

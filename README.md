@@ -176,10 +176,20 @@ other than the current directory.
 ## Using it from Claude Code
 
 This repository publishes a Claude Code plugin, `viglet-ds`, for a product that
-installs the package. It loads the page contract as a skill by name, adds
-`/viglet-ds-check` to run the CLIs above against the working tree, and denies a
-write that declares a component the package already exports, naming the import
-to use instead.
+installs the package. It serves the component catalogue over MCP, loads a skill
+that points a session at it, adds `/viglet-ds-check` to run the CLIs above
+against the working tree, and denies a write that declares a component the
+package already exports, naming the import to use instead.
+
+The catalogue server is a bin of its own, `viglet-ds-mcp`, so any MCP client can
+start it from a product's install. It has two tools: `find_component` ranks the
+components that do a job, and `read_component` returns one component's purpose,
+props, the contract sections that govern it and an import to start from. The
+authoring contract, the boundary and the token reference are resources
+(`viglet-ds://authoring`, `viglet-ds://boundary`, `viglet-ds://tokens`). The data
+is `dist/catalogue.json`, generated at build time from the declarations you
+compile against and also exported as `./catalogue.json`. A component's purpose is
+its own doc comment, so a component without one is found by name and props alone.
 
 ```
 /plugin marketplace add openviglet/viglet-design-system
@@ -810,7 +820,7 @@ correct rather than a leak. The subpath is for a consumer who wants only that
 background.
 
 Every subpath in the table above is also **imported, required and type-checked
-as you would use it** on each build: one fixture pulls all sixteen through the
+as you would use it** on each build: one fixture pulls all seventeen through the
 real `exports` map, a CommonJS probe requires the seven that offer it, and a
 generated TypeScript probe imports a value from each typed entry and uses it —
 so a `types` field resolving to the wrong declarations fails here rather than

@@ -5,7 +5,6 @@ import { join, resolve } from "node:path"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
 
 import { contentAfter, withinRange } from "../claude-plugin/hooks/duplicate-guard.mjs"
-import { COPIES } from "./sync-claude-plugin.mjs"
 
 // VDS135 — the design system as a Claude Code plugin.
 //
@@ -79,22 +78,36 @@ describe("the plugin's manifests", () => {
     }
   })
 
-  it("give the check command every bin the package ships", () => {
+  // VDS136 — the catalogue server, started from the consumer's own install.
+  it("wire the MCP server to the bin the package ships", () => {
+    const server = json(join(plugin, ".mcp.json")).mcpServers["viglet-ds"]
+    expect(server, "the skill names the server viglet-ds").toBeDefined()
+    const bins = Object.keys(json(join(root, "package.json")).bin)
+    expect(bins).toContain(server.args.at(-1))
+    // Never fetched from the registry: the server has to describe the release
+    // the product installed, not whichever is newest.
+    expect(server.args).toContain("--no-install")
+  })
+
+  it("give the check command every check bin the package ships", () => {
     const text = readFileSync(join(plugin, "commands", "viglet-ds-check.md"), "utf8")
     expect(frontmatter(text).description).toBeTruthy()
-    // A bin added to the package and not to the command is a check no session runs.
-    for (const bin of Object.keys(json(join(root, "package.json")).bin)) {
+    // A check added to the package and not to the command is a check no session
+    // runs. The server is served by .mcp.json, not run as a check.
+    const served = new Set(Object.values(json(join(plugin, ".mcp.json")).mcpServers).map((s) => (s as { args: string[] }).args.at(-1)))
+    for (const bin of Object.keys(json(join(root, "package.json")).bin).filter((b) => !served.has(b))) {
       expect(text, `the check command does not run ${bin}`).toContain(bin)
     }
     expect(text).toMatch(/Do not fix anything without asking/)
   })
 
-  it("carry the page contract verbatim", () => {
-    for (const [from, to] of COPIES) {
-      expect(
-        readFileSync(join(root, to), "utf8") === readFileSync(join(root, from), "utf8"),
-        `${to} differs from ${from}; run node scripts/sync-claude-plugin.mjs`,
-      ).toBe(true)
+  it("keep the skill a pointer at the server, not a copy of the contract", () => {
+    // The contract used to travel as two copied documents. The server reads the
+    // installed package's own, so a copy here would be the one that drifts.
+    expect(readdirSync(join(plugin, "skills", "viglet-ds-pages"))).toEqual(["SKILL.md"])
+    const skill = readFileSync(join(plugin, "skills", "viglet-ds-pages", "SKILL.md"), "utf8")
+    for (const pointer of ["find_component", "read_component", "viglet-ds://authoring", "viglet-ds://boundary"]) {
+      expect(skill).toContain(pointer)
     }
   })
 
@@ -114,14 +127,12 @@ describe("the plugin's manifests", () => {
 
   it("ship no internal task id in what the plugin itself writes", () => {
     // Everything under claude-plugin/ goes to installations with no access to this
-    // roadmap, where an id reads as a term the reader is missing. The two copies
-    // are the package's own documents, already published on npm, and are theirs.
-    const copies = new Set(COPIES.map(([, to]) => join(root, to)))
+    // roadmap, where an id reads as a term the reader is missing.
     const walk = (dir: string): string[] =>
       readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
         entry.isDirectory() ? walk(join(dir, entry.name)) : [join(dir, entry.name)],
       )
-    for (const file of walk(plugin).filter((f) => !copies.has(f))) {
+    for (const file of walk(plugin)) {
       expect(readFileSync(file, "utf8").match(/VDS\d+/g) ?? [], file).toEqual([])
     }
   })

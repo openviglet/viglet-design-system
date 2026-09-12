@@ -32,25 +32,6 @@ so rather than leaving it to be rediscovered.
 
 ## Block F — What a consuming CMS needs from the package next
 
-### §VDS136 A catalogue an agent can ask
-
-An agent building a Shio screen today decides between BentoPanel and
-AdaptiveSectionCard, or between the dock and a toast, by reading dist type declarations
-and the stories. exports.json tells it a name exists and nothing about what it is for,
-what it must not be used for, or which contract rule governs it.
-
-The plugin from DSF7 wires an MCP server generated from the installed dist, never
-hand-written. Tools stay few because a tool list is paid on every turn: find a component
-by job, and read one component's props, rules and example. The bulk text, the authoring
-contract, the boundary and the token reference, is exposed as resources rather than
-tools.
-
-The token case must be made honestly or not at all, since this is only a win if the
-vendored skill shrinks to a pointer. So the task lands with a budget file in the shape
-Shio uses, measuring the tool list, the per-call cost of a lookup, and the skill it
-replaces. A generation test fails when an exported component has no catalogue entry, so
-the catalogue cannot fall behind the barrel.
-
 ### §VDS137 Contrast measured where a product re-keys
 
 BENTO-AUTHORING tells a product to claim --primary through the four base inputs and
@@ -199,6 +180,24 @@ dialog reads the same set, so what it lists is what is bound. The tests assert t
 hook ignores a key typed into an input, a textarea, a select or a contenteditable, and
 that the dialog's rows are the hook's bindings. Whether / belongs in the set is the one
 choice to settle while building it.
+
+### §VDS150 Purposes the catalogue can read
+
+dist/catalogue.json takes a component's purpose from the doc comment on its own
+declaration, and writes an empty summary where there is none rather than inventing one.
+Measured at the build that shipped the catalogue: 45 of 237 components are described.
+find_component ranks the other 192 by name, prop names and the contract sections that
+name them, which works for BentoPanel and fails for a job worded differently from the
+component's name. read_component answers them with no description at all.
+
+Two parts. First, write the missing comments, first sentence as the purpose and a
+sentence on what not to use it for where a sibling does that job, starting with the
+bento layer and the components the contract names, since those are the ones an agent is
+sent to choose between. Second, a ratchet so the count cannot fall back: check-catalogue
+reads a list of the components still undescribed, fails when a component outside that
+list has no summary, and fails when a listed one has gained a summary and was not
+removed from the list. A new component then arrives described or does not build, and the
+list only shrinks.
 
 ## Block G — The package knows one chrome
 

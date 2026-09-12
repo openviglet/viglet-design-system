@@ -1,7 +1,7 @@
 {
   "name": "viglet-ds",
   "version": "2026.3.0",
-  "description": "Build pages with @viglet/viglet-design-system from Claude Code: the page contract as a skill every session loads by name, a check command that runs the package's own gates on the working tree, and a hook that names the shared import when a component file declares one the package already exports.",
+  "description": "Build pages with @viglet/viglet-design-system from Claude Code: a component catalogue and the page contract served over MCP from the installed package, a skill that points at them, a check command that runs the package's own gates on the working tree, and a hook that names the shared import when a component file declares one the package already exports.",
   "author": {
     "name": "Viglet Team",
     "url": "https://github.com/openviglet"
