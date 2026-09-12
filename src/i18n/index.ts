@@ -8,6 +8,7 @@ import enBento from "./locales/en/bento.json";
 import enCommon from "./locales/en/common.json";
 import enDialog from "./locales/en/dialog.json";
 import enForms from "./locales/en/forms.json";
+import enLanguage from "./locales/en/language.json";
 import enNav from "./locales/en/nav.json";
 import enSidebar from "./locales/en/sidebar.json";
 import enTheme from "./locales/en/theme.json";
@@ -18,6 +19,7 @@ import ptBento from "./locales/pt/bento.json";
 import ptCommon from "./locales/pt/common.json";
 import ptDialog from "./locales/pt/dialog.json";
 import ptForms from "./locales/pt/forms.json";
+import ptLanguage from "./locales/pt/language.json";
 import ptNav from "./locales/pt/nav.json";
 import ptSidebar from "./locales/pt/sidebar.json";
 import ptTheme from "./locales/pt/theme.json";
@@ -29,6 +31,7 @@ export const vigDesignSystemTranslations = {
     ...enCommon,
     ...enDialog,
     ...enForms,
+    ...enLanguage,
     ...enNav,
     ...enSidebar,
     ...enTheme,
@@ -39,6 +42,7 @@ export const vigDesignSystemTranslations = {
     ...ptCommon,
     ...ptDialog,
     ...ptForms,
+    ...ptLanguage,
     ...ptNav,
     ...ptSidebar,
     ...ptTheme,

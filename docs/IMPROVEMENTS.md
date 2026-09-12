@@ -29,24 +29,6 @@ Acceptance:
 - It is then a peerDependency and a devDependency here, not a dependency.
 - A consumer resolving a different minor still gets exactly one copy.
 
-### §VDS95 The switcher's own name
-
-`LanguageSwitcher` names its button `t("language.toggle", "Change language")`, and no
-locale here ships a `language` namespace. VDS51 reads the namespace list off the
-bundles, so it files `language.toggle` beside `llm.title` and `home.title` as a word the
-product must supply, and passes.
-
-That test's rule is right for those two: a component asking for the product's own noun.
-It is wrong here. The switcher is this package's component naming itself, and nothing
-about a product changes what the button does. roadkeep-gui found it from the consumer
-side (its RG116) and ships `language.toggle` in its own bundle to stop the English;
-every other product still reads "Change language" in Portuguese.
-
-**The fix** ships `language.toggle` in `en` and `pt`, which moves `language` into the
-owned namespaces VDS51 reads, so the test then holds both locales to it. A consumer that
-already supplies the key keeps its own word once the merge is deep, which is why this
-follows the merge line rather than preceding it.
-
 ### §VDS96 The word the boot loader says first
 
 The boot loader is HTML the Vite plugin writes into `index.html`: it runs before any

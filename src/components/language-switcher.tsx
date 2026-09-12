@@ -42,7 +42,7 @@ export function LanguageSwitcher({
       <DropdownMenuTrigger asChild>
         <GradientButton variant="outline" size="sm">
           <Languages className="h-[1.2rem] w-[1.2rem]" />
-          <span className="sr-only">{t("language.toggle", "Change language")}</span>
+          <span className="sr-only">{t("language.toggle")}</span>
         </GradientButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

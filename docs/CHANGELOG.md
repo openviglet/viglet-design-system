@@ -63,6 +63,9 @@
 - ✅ **VDS94** **a product with its own common namespace loses every string the package ships under it, and reads English** — A product that ships its own common keeps its words and the package's: both doors merge key by key, with the product winning at the leaf.
   checked **a product's own namespace keeps the package's siblings** both doors are driven with a bundle owning common.save, and common.next still resolves to the package's word.
   checked **registering twice never overwrites a host key** addResourceBundle runs with overwrite off, and a second registerVigTranslations leaves the host's value in place.
+- ✅ **VDS95** **the LanguageSwitcher names itself with a key no locale ships, so its button says Change language in every product** — The switcher names itself from the bundles, so a Portuguese product hears Portuguese instead of Change language.
+  checked **the switcher's name ships in both locales** language.toggle is in en and pt, so VDS51 holds the namespace and the component asks with no inline default.
+  checked **a Portuguese product hears Portuguese** the button is rendered under pt and its accessible name is the bundle's word, not Change language.
 
 ## Block B — Bento becomes a design-system layer
 
