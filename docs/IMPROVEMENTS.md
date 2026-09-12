@@ -29,23 +29,6 @@ Acceptance:
 - It is then a peerDependency and a devDependency here, not a dependency.
 - A consumer resolving a different minor still gets exactly one copy.
 
-### §VDS96 The word the boot loader says first
-
-The boot loader is HTML the Vite plugin writes into `index.html`: it runs before any
-bundle, so it cannot ask i18next for anything. Its status region is named
-`aria-label="Loading ${title}"`, and the options take a title, a subtitle and colours
-but no word for loading. A screen reader opening a Portuguese product hears English
-first, before the app it is waiting for can say a word.
-
-VDS93's gate reads JSX and never sees it: this is a template string in a `.ts` file.
-
-**Two ways out, and the plugin should take both.** A `loadingLabel` option lets a
-product that ships one language say it at build time. For one that ships several, the
-inline script already runs before paint and can read `navigator.language`, so the plugin
-can take a small per-language map and set the label from it, falling back to the option.
-Either way the words come from the product's config and not from this file, and a test
-over the emitted HTML asserts no English is left in it when a label is given.
-
 ### §VDS97 The name sonner gives the notice region
 
 The package's `Toaster` wraps sonner and passes it no `containerAriaLabel`, so the

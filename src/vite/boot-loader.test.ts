@@ -31,6 +31,9 @@ function transform(options: Partial<VigletBootLoaderOptions>, html = HTML): Tran
 const styleOf = (t: Transformed) =>
   t.tags.find((tag) => tag.tag === "style")?.children ?? ""
 
+const scriptOf = (t: Transformed) =>
+  t.tags.find((tag) => tag.tag === "script")?.children ?? ""
+
 afterEach(() => {
   vi.restoreAllMocks()
 })
@@ -154,6 +157,63 @@ describe("vigletBootLoader", () => {
       transform({})
 
       expect(warn).not.toHaveBeenCalled()
+    })
+  })
+
+  // VDS96 — the loader runs before any bundle, so it cannot ask i18next for a
+  // word. Its status region was named `Loading <title>` in the HTML itself, and
+  // a screen reader opening a Portuguese product heard English before the app it
+  // was waiting for could say anything. The VDS93 literals gate reads JSX and
+  // never saw it: this is a template string in a .ts file.
+  describe("the word the loader says first", () => {
+    const labelOf = (html: string) =>
+      /<div id="viglet-boot-loader"[^>]*aria-label="([^"]*)"/.exec(html)?.[1]
+
+    it("keeps the English default for a product that supplies nothing", () => {
+      // Four consumers predate the option. Defaulting is the difference between
+      // an upgrade and silently relabelling their loaders.
+      expect(labelOf(transform({}).html)).toBe("Loading Viglet Turing ES")
+    })
+
+    it("says the product's own phrase when it supplies one", () => {
+      const { html } = transform({ loadingLabel: "Carregando o Viglet Turing ES" })
+
+      expect(labelOf(html)).toBe("Carregando o Viglet Turing ES")
+      expect(html).not.toContain("Loading Viglet Turing ES")
+    })
+
+    it("escapes it, like every other option that reaches the HTML", () => {
+      const { html } = transform({ loadingLabel: `Carregando <b>"Turing"</b>` })
+
+      expect(html).not.toContain("<b>")
+      expect(labelOf(html)).toContain("&lt;b&gt;")
+    })
+
+    it("emits no language picker when the product gave no map", () => {
+      expect(scriptOf(transform({}))).not.toContain("navigator.language")
+    })
+
+    it("picks by language tag, then by its primary subtag", () => {
+      const script = scriptOf(
+        transform({ loadingLabels: { "pt-BR": "Carregando", pt: "A carregar", en: "Loading" } }),
+      )
+
+      expect(script).toContain("navigator.language")
+      expect(script).toContain(`"pt-BR":"Carregando"`)
+      expect(script).toContain(`tag.split("-")[0]`)
+      // It sets the attribute rather than rewriting the region.
+      expect(script).toContain(`setAttribute("aria-label", label)`)
+    })
+
+    it("still writes a build-time label beside the map, for scripting off", () => {
+      // The map only improves on the HTML; a reader without scripting keeps
+      // whatever the build wrote, so that must never be left empty.
+      const { html } = transform({
+        loadingLabel: "Carregando o Turing",
+        loadingLabels: { en: "Loading Turing" },
+      })
+
+      expect(labelOf(html)).toBe("Carregando o Turing")
     })
   })
 

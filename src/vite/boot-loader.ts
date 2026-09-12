@@ -52,6 +52,35 @@ export interface VigletBootLoaderOptions {
    */
   testFlag?: string;
   /**
+   * Accessible name for the loader's status region — the whole phrase, not a
+   * word slotted into one. Default: `"Loading <title>"`.
+   *
+   * The loader is HTML written at build time and runs before any bundle, so it
+   * cannot ask i18next for anything; without this the first thing a screen
+   * reader hears in a Portuguese product is English. It is the complete label
+   * rather than a `loading` word plus the title, because where the product's
+   * name falls in the sentence is not the same in every language.
+   *
+   * ```ts
+   * vigletBootLoader({ …, loadingLabel: "Carregando o Viglet Turing ES" });
+   * ```
+   */
+  loadingLabel?: string;
+  /**
+   * Accessible names per language, for a product that ships more than one.
+   *
+   * The inline script already runs before paint, so it can read
+   * `navigator.language` and set the label from this map. Keys are language
+   * tags: an exact match wins (`"pt-BR"`), then the primary subtag (`"pt"`).
+   * Nothing matching leaves {@link loadingLabel} — or the English default —
+   * standing, which is also what a reader gets with scripting off.
+   *
+   * ```ts
+   * vigletBootLoader({ …, loadingLabels: { en: "Loading Turing", pt: "Carregando o Turing" } });
+   * ```
+   */
+  loadingLabels?: Record<string, string>;
+  /**
    * HTML comment that the plugin replaces with the boot-loader markup. Put
    * it inside `<div id="root">` in your `index.html` (or `marketing.html`).
    *
@@ -101,6 +130,8 @@ export function vigletBootLoader(options: VigletBootLoaderOptions): Plugin {
     storageKey = "vite-ui-theme",
     testFlag = "__VIGLET_LOADING_TEST__",
     placeholder = "<!--viglet-boot-loader-->",
+    loadingLabel,
+    loadingLabels,
   } = options;
 
   // Refused rather than defaulted. `color` reaches the gradients raw while its
@@ -122,7 +153,22 @@ export function vigletBootLoader(options: VigletBootLoaderOptions): Plugin {
     );
   }
 
-  const ctx = { pfx: prefix, title, subtitle, color, colorDark, rgb, rgbDark, storageKey, testFlag };
+  const ctx: Ctx = {
+    pfx: prefix,
+    title,
+    subtitle,
+    color,
+    colorDark,
+    rgb,
+    rgbDark,
+    storageKey,
+    testFlag,
+    // VDS96 — the English stays only where the product supplied nothing. Every
+    // consumer taking this plugin predates the option, so defaulting is the
+    // difference between an upgrade and a silent relabelling of four products.
+    loadingLabel: loadingLabel ?? `Loading ${title}`,
+    loadingLabels,
+  };
   const styleTag = renderStyle(ctx);
   const scriptBody = renderScript(ctx);
   const markup = renderMarkup(ctx);
@@ -209,6 +255,10 @@ interface Ctx {
   rgbDark: string;
   storageKey: string;
   testFlag: string;
+  /** The status region's accessible name as it is written into the HTML. */
+  loadingLabel: string;
+  /** Names per language tag for the inline script to choose from, or none. */
+  loadingLabels?: Record<string, string>;
 }
 
 function renderStyle({ pfx, color, colorDark, rgb }: Ctx): string {
@@ -360,10 +410,32 @@ function renderStyle({ pfx, color, colorDark, rgb }: Ctx): string {
   `.trim();
 }
 
-function renderScript({ pfx, storageKey, testFlag }: Ctx): string {
+function renderScript({ pfx, storageKey, testFlag, loadingLabels }: Ctx): string {
+  // VDS96 — the label the reader's own language asks for, chosen before paint.
+  //
+  // The element is in the body and this runs in the head, so the swap waits for
+  // DOMContentLoaded. That is not a race worth avoiding: the build-time label is
+  // already correct HTML, this only improves on it, and nothing announces a
+  // status region before the document has parsed. A reader with scripting off
+  // keeps the build-time label, which is why that one is never left empty.
+  const labelSwap = loadingLabels
+    ? `
+      try {
+        var labels = ${JSON.stringify(loadingLabels)};
+        var tag = String(navigator.language || "");
+        var label = labels[tag] || labels[tag.split("-")[0]];
+        if (label) {
+          document.addEventListener("DOMContentLoaded", function () {
+            var region = document.getElementById(${JSON.stringify(pfx + "-boot-loader")});
+            if (region) region.setAttribute("aria-label", label);
+          });
+        }
+      } catch (e) { /* ignore */ }`
+    : "";
+
   // IIFE so it runs synchronously in the head without polluting globals.
   return `
-    (function () {
+    (function () {${labelSwap}
       try {
         var stored = localStorage.getItem(${JSON.stringify(storageKey)});
         var prefersLight = stored === "light"
@@ -391,9 +463,9 @@ function renderScript({ pfx, storageKey, testFlag }: Ctx): string {
   `.trim();
 }
 
-function renderMarkup({ pfx, title, subtitle }: Ctx): string {
+function renderMarkup({ pfx, title, subtitle, loadingLabel }: Ctx): string {
   return `
-<div id="${pfx}-boot-loader" role="status" aria-live="polite" aria-label="Loading ${escapeHtml(title)}">
+<div id="${pfx}-boot-loader" role="status" aria-live="polite" aria-label="${escapeHtml(loadingLabel)}">
   <div class="${pfx}-boot-stage">
     <div class="${pfx}-boot-ring"></div>
     <div class="${pfx}-boot-ring delay-1"></div>

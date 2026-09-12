@@ -177,6 +177,14 @@ that namespace fell back to its English default — in a Portuguese product,
 silently. If you worked around it by renaming a namespace or copying the
 package's keys into yours, you can stop.
 
+**One string lands before any of this.** The boot loader from
+`@viglet/viglet-design-system/vite` is HTML written at build time and paints
+before a bundle runs, so it cannot ask i18next for anything. Its status region is
+named `"Loading <title>"` unless you say otherwise — pass `loadingLabel` for the
+phrase in your language, or `loadingLabels` (a language tag to a phrase) for a
+product that ships several, which the loader's inline script picks from
+`navigator.language`.
+
 ### 3. Setup providers
 
 ```tsx

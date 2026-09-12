@@ -3,7 +3,6 @@
 ## Block A — The gate the design system never had
 
 - 📋 **VDS77** (deps: cloud-frontend and cloud-console declaring react-hook-form) **react-hook-form is a dependency, so a consumer can get a second copy of the one library here carrying a context** — Two consumers declare no react-hook-form and get it from here, so the peer change is theirs first. → §VDS77
-- 📋 **VDS96** (deps: —) **the boot loader names its status region Loading in English, before any bundle can say otherwise** — It is HTML the plugin writes at build time, its options take no word for loading, and the VDS93 gate reads JSX and never sees it. → §VDS96
 - 📋 **VDS97** (deps: —) **the Toaster region keeps sonner's English name, Notifications, because the package passes it no label** — The English is a dependency default rather than a literal here, so VDS93 cannot see it, and a screen reader says it in every product. → §VDS97
 - 📋 **VDS98** (deps: VDS93 ✅) **Stepper.Completion and AppSwitcher still speak English through prop defaults, which the literals gate never reads** — The gate reads JSX text and spoken attributes and follows no identifier back to its parameter default, so VDS93's claim is false in two components. → §VDS98
 - 📋 **VDS99** (deps: VDS92 ✅) **the contrast gate passes on an unreadable ground and never measures foreground on background** — A null ground is measured as white and the body-text pair is filtered out, and the grounds canvas still draws the muted value VDS92 replaced. → §VDS99

@@ -66,6 +66,10 @@
 - ✅ **VDS95** **the LanguageSwitcher names itself with a key no locale ships, so its button says Change language in every product** — The switcher names itself from the bundles, so a Portuguese product hears Portuguese instead of Change language.
   checked **the switcher's name ships in both locales** language.toggle is in en and pt, so VDS51 holds the namespace and the component asks with no inline default.
   checked **a Portuguese product hears Portuguese** the button is rendered under pt and its accessible name is the bundle's word, not Change language.
+- ✅ **VDS96** **the boot loader names its status region Loading in English, before any bundle can say otherwise** — The loader's status region takes its words from the product: one phrase, or a per-language map its inline script picks from before paint.
+  checked **a product can name the region in its own language** loadingLabel is written into the emitted HTML and no English is left in it, asserted over the transform output.
+  checked **a multilingual product picks by the reader's language** loadingLabels emits a picker reading navigator.language, exact tag then primary subtag, and the build-time label stands for scripting off.
+  checked **the four consumers already on it are not relabelled** with no option the region keeps Loading <title>, so the change is an upgrade rather than a silent rename.
 
 ## Block B — Bento becomes a design-system layer
 
