@@ -94,6 +94,7 @@
 - ✅ **VDS114** **GlassCard's color and colorDark props set custom properties its stylesheet never reads** — The glass card's shadow reads what color and colorDark set, in both schemes, and a browser test holds the accent story apart from the default (design recorded in `src/components/ui/glass-card.css`).
 - ✅ **VDS115** **The icon picker's Iconify search runs to completion after the dialog's host unmounts** — Both Iconify paths take an abort signal and the picker aborts what is in flight on unmount, so a route change stops paying for it (design recorded in `src/components/ui/icon-picker-dialog.tsx`).
 - ✅ **VDS125** **SubPage nests a main landmark inside SidebarInset's own, so every console entity page has two** — SubPage's inner box is a div, so the console entity shell has one main landmark and it is the inset's.
+- ✅ **VDS116** **Eight standalone exported components appear in no story, so the axe pass never reaches them** — Fourteen components have a story, so the axe pass reaches every component file, and a test names one no story reaches (design recorded in `scripts/story-coverage.test.ts`).
 
 ## Block B — Bento becomes a design-system layer
 

@@ -2,29 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-### §VDS116 The components the catalogue never shows
-
-VDS6 wired the axe addon so every story is checked for accessibility. Cross-referencing
-`dist/exports.json` against the 68 story files shows 40 exported components named in no
-story.
-
-Most of the 40 are compound sub-parts a parent story already renders — a
-`SidebarMenuSubItem` is exercised by the sidebar story whether or not it has one of its
-own, and giving each a story would buy coverage the suite already has. Eight are
-standalone components a product would import directly and nothing renders anywhere:
-`IconPickerDialog`, `BentoPanel`, `BlankSlate`, `GridList`, `DialogDelete`,
-`PageHeader`, `SubPage` and `InternalSidebar`.
-
-Each of those eight is outside the only accessibility gate the suite runs, and absent
-from the catalogue that exists so a product author finds a component instead of
-rebuilding it — which is what `BentoPanel`'s own doc comment says it was written to
-stop.
-
-Acceptance:
-- The eight standalone components each have a story rendering their default shape.
-- The axe pass covers them.
-- A gate reports a newly exported standalone component that no story renders.
-
 ### §VDS117 The i18n runtime on the root entry
 
 `src/index.ts` re-exports the `./i18n` subpath's runtime — `registerVigTranslations`,
