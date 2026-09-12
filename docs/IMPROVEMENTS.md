@@ -29,3 +29,31 @@ together, so each one is true when it lands.
 
 Until then schools is the consumer that does not declare it, and this line is what says
 so rather than leaving it to be rediscovered.
+
+### §VDS128 The site the workflow cannot create
+
+`pages.yml` builds the catalogue and hands it to `actions/configure-pages`, which asks
+GitHub for the site and is told `Not Found`. It then tries to create one, with
+`enablement: true`, and is refused: `Resource not accessible by integration`. The
+workflow's `GITHUB_TOKEN` cannot create a Pages site; only a repository admin can turn
+it on.
+
+So the deploy has nowhere to go. `https://openviglet.github.io/viglet-design-system/`
+returns 404 today, and the README points a product author at it from its second
+paragraph.
+
+VDS127 fixed the half of this that was code: the build itself raised `ENOENT` and never
+reached this step, which is what hid it. The catalogue now builds in CI and fails one
+step later, on a setting.
+
+This is VDS4's claim unmet rather than a new idea. That line said the catalogue is
+"published nowhere a product author can open", and shipped the workflow that would
+publish it — the workflow is right and the site was never created.
+
+**What it waits for**: Settings → Pages → Source: *GitHub Actions*, on
+`openviglet/viglet-design-system`. One setting, by someone with admin. The next push to
+`2026.3` then deploys, and `configure-pages` stops trying to create what already exists.
+
+Acceptance:
+- `https://openviglet.github.io/viglet-design-system/` serves the catalogue.
+- The Pages workflow completes both jobs, build and deploy.
