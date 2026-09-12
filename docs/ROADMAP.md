@@ -3,7 +3,6 @@
 ## Block A — The gate the design system never had
 
 - 📋 **VDS77** (deps: cloud-frontend and cloud-console declaring react-hook-form) **react-hook-form is a dependency, so a consumer can get a second copy of the one library here carrying a context** — Two consumers declare no react-hook-form and get it from here, so the peer change is theirs first. → §VDS77
-- 📋 **VDS99** (deps: VDS92 ✅) **the contrast gate passes on an unreadable ground and never measures foreground on background** — A null ground is measured as white and the body-text pair is filtered out, and the grounds canvas still draws the muted value VDS92 replaced. → §VDS99
 - 📋 **VDS104** (deps: VDS94 ✅) **initVigI18n walks only en and pt, so a product passing a third language gets an instance without it** — Nothing rejects the argument and nothing warns, so the product's own screens quietly read the fallback language instead. → §VDS104
 - 📋 **VDS105** (deps: VDS97 ✅) **the NavigationMenu landmark keeps Radix's hardcoded Main, so a screen reader hears English in every product** — The pass VDS97 asked for found one more of its shape, and no gate can see a spoken name this package omits rather than mistypes. → §VDS105
 

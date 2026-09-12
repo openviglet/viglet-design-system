@@ -83,12 +83,28 @@ const light = tokensUnder(preset, ":root")
 /** Dark overrides what it redeclares and inherits the rest, as the cascade does. */
 const dark = new Map([...light, ...tokensUnder(preset, '[data-theme="dark"]')])
 
-/** Every `--vg-X` that has a `--vg-X-foreground`, which is what the preset calls a pair. */
+/**
+ * Every `--vg-X` that has a `--vg-X-foreground`, plus the page itself.
+ *
+ * VDS99 — the page was the one pair nothing measured. `--vg-foreground` is body
+ * text, and stripping the suffix leaves `--vg`, which no preset declares, so the
+ * filter below dropped it in both grounds: the most-rendered colour combination
+ * in the package went unchecked while the gate reported a clean sweep. Its
+ * surface is `--vg-background`, a name the pattern cannot derive and has to be
+ * told.
+ */
 function pairs(tokens: Map<string, string>): [surface: string, foreground: string][] {
-  return [...tokens.keys()]
+  const derived = [...tokens.keys()]
     .filter((name) => name.startsWith("--vg-") && name.endsWith("-foreground"))
     .map((foreground) => [foreground.slice(0, -"-foreground".length), foreground] as [string, string])
     .filter(([surface]) => tokens.has(surface))
+
+  const page: [string, string][] =
+    tokens.has("--vg-background") && tokens.has("--vg-foreground")
+      ? [["--vg-background", "--vg-foreground"]]
+      : []
+
+  return [...page, ...derived]
 }
 
 describe.each([
@@ -99,7 +115,7 @@ describe.each([
     // The control: a parser that matched nothing would pass the ratio check over
     // no pairs at all.
     expect(pairs(tokens).map(([surface]) => surface)).toEqual(
-      expect.arrayContaining(["--vg-card", "--vg-muted", "--vg-popover", "--vg-secondary"]),
+      expect.arrayContaining(["--vg-background", "--vg-card", "--vg-muted", "--vg-popover", "--vg-secondary"]),
     )
   })
 
@@ -109,7 +125,9 @@ describe.each([
 
     expect(behind, `${surface} does not resolve to an oklch() literal`).not.toBeNull()
     expect(front, `${foreground} does not resolve to an oklch() literal`).not.toBeNull()
-    const measured = ratio(front ?? 0, behind ?? 0)
+    // Measured off the asserted values, not off a fallback: `?? 0` stood here,
+    // so a token that stopped resolving was measured as black and could pass.
+    const measured = ratio(front!, behind!)
     expect(measured, `${foreground} on ${surface} is ${measured.toFixed(2)}:1`).toBeGreaterThanOrEqual(AA_TEXT)
   })
 
@@ -118,6 +136,58 @@ describe.each([
     // on the ground, not on a muted panel.
     const ground = luminance(resolveToken(tokens, tokens.get("--vg-background") ?? ""))
     const muted = luminance(resolveToken(tokens, tokens.get("--vg-muted-foreground") ?? ""))
-    expect(ratio(muted ?? 0, ground ?? 1)).toBeGreaterThanOrEqual(AA_TEXT)
+
+    // VDS99 — `ratio(muted ?? 0, ground ?? 1)` measured an unresolvable ground as
+    // white, so on the light ground this case passed having measured nothing at
+    // all, against the rule the file states two lines up.
+    expect(ground, "--vg-background does not resolve to an oklch() literal").not.toBeNull()
+    expect(muted, "--vg-muted-foreground does not resolve to an oklch() literal").not.toBeNull()
+
+    const measured = ratio(muted!, ground!)
+    expect(
+      measured,
+      `--vg-muted-foreground on --vg-background is ${measured.toFixed(2)}:1`,
+    ).toBeGreaterThanOrEqual(AA_TEXT)
+  })
+})
+
+/**
+ * VDS99 — the canvas is a claim about the tokens, so it is held to them.
+ *
+ * `docs/reference/grounds.dc.html` draws the light ground and labels the muted
+ * pair with its ratio. VDS92 changed the token and the canvas kept drawing
+ * `#737373` at `4.73:1` — a reference page stating a number the package had
+ * stopped shipping, which is worse than one that states none.
+ *
+ * Read out of the same arithmetic as the gate above rather than typed in, so the
+ * next change to the token fails here instead of quietly ageing the page.
+ */
+describe("VDS99: the grounds canvas draws what the tokens say", () => {
+  const canvas = readFileSync(
+    resolve(srcDir, "..", "docs", "reference", "grounds.dc.html"),
+    "utf8",
+  )
+
+  /** Linear luminance to the sRGB byte a browser paints. */
+  const byte = (linear: number) => {
+    const encoded = linear <= 0.0031308 ? 12.92 * linear : 1.055 * linear ** (1 / 2.4) - 0.055
+    return Math.round(encoded * 255)
+  }
+
+  const mutedLinear = luminance(resolveToken(light, light.get("--vg-muted-foreground") ?? ""))
+  const groundLinear = luminance(resolveToken(light, light.get("--vg-background") ?? ""))
+
+  it("draws muted text in the colour the token resolves to", () => {
+    expect(mutedLinear).not.toBeNull()
+    const hex = byte(mutedLinear!).toString(16).padStart(2, "0")
+
+    expect(canvas, `--vg-muted-foreground paints #${hex}${hex}${hex}`).toContain(`#${hex}${hex}${hex}`)
+  })
+
+  it("labels the pair with the ratio the gate measures", () => {
+    expect(groundLinear).not.toBeNull()
+    const measured = ratio(mutedLinear!, groundLinear!).toFixed(2)
+
+    expect(canvas, `muted on the ground measures ${measured}:1`).toContain(`${measured}:1`)
   })
 })

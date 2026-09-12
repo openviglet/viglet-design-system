@@ -29,18 +29,6 @@ Acceptance:
 - It is then a peerDependency and a devDependency here, not a dependency.
 - A consumer resolving a different minor still gets exactly one copy.
 
-### §VDS99 The pairs the contrast gate skips
-
-The adversarial review of VDS92 found the contrast gate weaker than its entry says.
-
-- **Muted on the page** is measured as `ratio(muted ?? 0, ground ?? 1)`: an `--vg-background` that stops resolving to an `oklch()` literal is measured as white, and on the light ground the case passes having measured nothing — against the file's own rule that an unreadable value fails.
-- **Foreground on background** is never measured: `pairs()` strips `-foreground` to find the surface, `--vg-foreground` maps to `--vg`, which does not exist, and the body-text pair is filtered out in both grounds.
-- `docs/reference/grounds.dc.html` still draws light muted text at `#737373` and labels it 4.73:1, the value VDS92 replaced.
-
-**The fix.** Not-null assertions before measuring, the ground pair added explicitly and
-to the control assertion, and the canvas redrawn at `oklch(0.52 0 0)` with the ratio the
-test computes.
-
 ### §VDS104 The language list, not just the key list
 
 `initVigI18n` builds its resources by walking `["en", "pt"]`, the two languages this

@@ -76,6 +76,10 @@
 - ✅ **VDS98** **Stepper.Completion and AppSwitcher still speak English through prop defaults, which the literals gate never reads** — Both components resolve their words through t(), and the gate now reads a parameter default, so VDS93's claim is true across the package.
   checked **neither component holds an English prop default** Stepper.Completion and AppSwitcher resolve through t() with the keys in both locales, and a pt render reads Portuguese.
   checked **the gate reads a parameter default, and the wrappers a literal hides behind** specimens cover a spoken prop default and as, satisfies and non-null, with variant, headerHeight and an element type left alone.
+- ✅ **VDS99** **the contrast gate passes on an unreadable ground and never measures foreground on background** — The gate measures the body-text pair on both grounds, fails an unreadable token instead of reading it as white, and the canvas is held to the same arithmetic.
+  checked **an unresolvable token fails instead of passing as white** the muted-on-ground case asserts both values resolve and measures them, with no ?? fallback left in the file.
+  checked **the body-text pair is measured on both grounds** pairs() carries background with foreground, and the control assertion names it so a parser that dropped it fails.
+  checked **the grounds canvas cannot age past the tokens** its muted hex and ratio are read out of the same arithmetic as the gate, so the next token change fails the run.
 
 ## Block B — Bento becomes a design-system layer
 
