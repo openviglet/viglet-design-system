@@ -70,6 +70,13 @@ export function BentoInlineEdit({
   const [draft, setDraft] = useState(value);
   const [saving, setSaving] = useState(false);
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
+  const displayRef = useRef<HTMLButtonElement>(null);
+  // VDS156 — the save in flight, read synchronously. The input stays mounted and
+  // live while onSave runs, so an Enter followed by a Tab reached commit twice and
+  // the product received the same value twice before it could update `value`.
+  const inFlight = useRef(false);
+  // Whether leaving edit mode should put focus back on the display button.
+  const refocus = useRef(false);
 
   // External value changes (e.g. mutation finished) reset the draft when we are
   // not actively editing — otherwise we would overwrite in-progress text.
@@ -88,22 +95,38 @@ export function BentoInlineEdit({
     if (editing && inputRef.current) {
       inputRef.current.focus();
       inputRef.current.select();
+    } else if (!editing && refocus.current) {
+      refocus.current = false;
+      displayRef.current?.focus();
     }
   }, [editing]);
 
+  /**
+   * Leave edit mode. Focus goes back to the display button only when it is still
+   * in the field: an Enter or an Escape, whose input is about to unmount and would
+   * drop focus to the body. A commit on blur has already been left for somewhere
+   * else, and pulling focus back there would undo the reader's Tab.
+   */
+  function finish() {
+    refocus.current = inputRef.current !== null && document.activeElement === inputRef.current;
+    setEditing(false);
+  }
+
   async function commit() {
+    if (inFlight.current) return;
     const next = draft.trim();
     if (next === value) {
-      setEditing(false);
+      finish();
       return;
     }
     if (!next && !placeholder) {
       // Refuse to save empty when there's no placeholder — keeps the
       // page from rendering a blank title. Bounce back to the original.
       setDraft(value);
-      setEditing(false);
+      finish();
       return;
     }
+    inFlight.current = true;
     setSaving(true);
     try {
       await onSave(next);
@@ -120,14 +143,15 @@ export function BentoInlineEdit({
       // already owns the toast.
       setDraft(value);
     } finally {
+      inFlight.current = false;
       setSaving(false);
-      setEditing(false);
+      finish();
     }
   }
 
   function cancel() {
     setDraft(value);
-    setEditing(false);
+    finish();
   }
 
   // Live-commit path for "new entity" flows: keep local draft in sync AND
@@ -169,18 +193,19 @@ export function BentoInlineEdit({
     isEmpty
       ? "border-dashed border-border/70 hover:border-foreground/40"
       : "border-transparent hover:border-border/60 focus-visible:border-border/80",
-    saving && "opacity-60",
   );
   const editClass = cn(sharedClass, "bento-editing");
 
   if (!editing) {
     return (
+      // No busy state here: saving and editing clear in the same update, so this
+      // button never renders while a save runs. The field carries aria-busy.
       <button
+        ref={displayRef}
         type="button"
         onClick={() => setEditing(true)}
         className={cn(displayClass, "text-left", className)}
         aria-label={ariaLabel ?? t("forms.formActions.edit")}
-        disabled={saving}
       >
         {value || (
           <span className="text-muted-foreground/80">{placeholder ?? "—"}</span>
@@ -215,6 +240,7 @@ export function BentoInlineEdit({
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         aria-label={ariaLabel}
+        aria-busy={saving || undefined}
         rows={3}
         className={cn(editClass, "resize-none py-0.5 leading-snug", className)}
       />
@@ -230,6 +256,7 @@ export function BentoInlineEdit({
       onKeyDown={handleKeyDown}
       placeholder={placeholder}
       aria-label={ariaLabel}
+      aria-busy={saving || undefined}
       className={cn(editClass, "h-auto px-0 py-0 shadow-none focus-visible:ring-0", className)}
     />
   );

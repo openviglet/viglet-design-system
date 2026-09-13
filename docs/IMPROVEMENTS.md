@@ -46,30 +46,6 @@ release that warned. Before shipping, run viglet-ds-check-duplicates and a type-
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
 
-### §VDS156 An inline edit that loses its place and saves twice
-
-VDS153's design asked for BentoInlineEdit's display button to trade disabled={saving}
-for aria-disabled. Reading the component, that button never renders while a save runs:
-commit sets saving and awaits onSave with the input still mounted, and saving and
-editing both clear in the same batched update when it settles. The attribute is dead,
-and the defects are elsewhere.
-
-First, a keyboard commit drops focus. Enter commits, the save settles, editing turns
-false and the focused input unmounts, so focus falls to the body at the moment the new
-value lands. The display button that replaces it should take focus back when the edit
-began from it or from the keyboard.
-
-Second, a commit can run twice. While onSave is pending the input stays editable and its
-blur handler is still commit, so pressing Enter and then tabbing away calls onSave a
-second time with the same value, before the product has had the chance to update it.
-
-Guard commit with a ref for the save in flight, so a second call returns at once, and
-mark the input aria-busy while it runs. After a commit that the keyboard started, return
-focus to the display button. Remove the dead disabled and opacity branches in the same
-change. A jsdom test holds the single onSave call. A parity test holds the focus: in a
-browser, press Enter in the field, settle the save, and read that the display button is
-focused.
-
 ## Block G — The package knows one chrome
 
 ### §VDS146 Removing the switch, and the non-goal that kept it

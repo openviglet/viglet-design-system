@@ -4,8 +4,6 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS156** (deps: —) **an inline edit committed with Enter drops focus when it settles, and a blur while it saves commits a second time** — Enter unmounts the focused input once the save lands, and the input stays live while onSave is pending, so tabbing away calls it again. → §VDS156
-
 ## Block G — The package knows one chrome
 
 - 📋 **VDS147** (deps: VDS146 ⏸) **the console-era router components are still exported after being deprecated** — PageHeader, SubPage, GridList, InternalSidebar and their siblings still ship, so a new screen can still be built on the chrome every consumer is leaving. → §VDS147
