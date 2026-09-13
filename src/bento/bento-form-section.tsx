@@ -19,12 +19,21 @@ export interface BentoFormSectionProps {
   /** Optional trailing slot in the header (badges, status pill, etc.). */
   trailing?: ReactNode;
   /**
-   * Merged onto the frosted surface. A shared form reaches this through
-   * `AdaptiveSectionCard`, whose whole job is that the same node is styled the
-   * same way in either chrome (VDS111).
+   * Merged onto the frosted surface, not applied instead of it. A form written
+   * against the console's compound API reaches this through
+   * `AdaptiveSectionCard`, which used to forward it on one branch only — so a
+   * styled form lost its styling under one of the two chromes (VDS111).
    */
   className?: string;
 }
+
+/**
+ * The frosted surface itself, as a class list rather than a second copy of one.
+ * `AdaptiveSectionCard` renders a section whose header it cannot read, and a
+ * pasted class list is the one a change to this surface never reaches.
+ */
+export const BENTO_FORM_SURFACE =
+  "bento-tile bento-glass relative flex flex-col gap-5 overflow-hidden rounded-3xl p-5 md:p-6";
 
 /**
  * Frosted-glass section wrapper for Bento forms — the form-page
@@ -47,12 +56,7 @@ export function BentoFormSection({
   className,
 }: Readonly<BentoFormSectionProps>) {
   return (
-    <section
-      className={cn(
-        "bento-tile bento-glass relative flex flex-col gap-5 overflow-hidden rounded-3xl p-5 md:p-6",
-        className,
-      )}
-    >
+    <section className={cn(BENTO_FORM_SURFACE, className)}>
       <header className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <span className={`grid h-10 w-10 place-items-center rounded-2xl text-white shadow-md ${bentoChipClass(tone)}`}>

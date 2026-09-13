@@ -4,12 +4,11 @@
 
 - 📋 **VDS157** (deps: —) **a tooltip's provider-delay parity test fails only when the whole suite is loaded** — it passes alone and failed two of four full runs, so the suite's red is noise and a real regression in the delay would read as the same flake. → §VDS157
 - 📋 **VDS158** (deps: —) **the README's component lists are typed by hand, and the App Components one omits seven exports** — AppSwitcher, ErrorBoundary and five more are shipped and unlisted, so the front door reads as the whole surface while being a subset. → §VDS158
+- 📋 **VDS159** (deps: —) **AdaptiveSectionCard silently drops any child that is not its Header or its Content** — A footer, a banner or a second Content renders nothing with no warning, and losing fields is the failure hardest to catch in review. → §VDS159
 
 ## Block F — What a consuming CMS needs from the package next
 
 ## Block G — The package knows one chrome
-
-- 📋 **VDS146** (deps: VDS145 ✅) **SectionChrome, its provider and hook, and AdaptiveSectionCard's console branch outlive the era they serve** — Once no consumer renders console chrome, every chrome branch is dead code a new component can still copy. → §VDS146
 
 ## Done when — VDS157
 
@@ -22,6 +21,12 @@
 
 - **A gate reads the README's lists and the exported surface together** it fails on a
   name shipped and unlisted, and on one listed after it stopped being exported.
+
+## Done when — VDS159
+
+- **A child the adapter does not claim still renders inside the frosted section** A
+  sibling that is neither Header, StaticHeader nor Content appears in the output in
+  source order, asserted beside the recognised shape rather than instead of it.
 
 ## Non-goals
 
@@ -37,6 +42,3 @@
 - **No product data in the package** Routes, entity names and nav surfaces belong to the
   product; the package exports the palette and the schema, never the array, or a Shio
   console ends up offering Turing routes.
-- **Do not make bento the only chrome this package knows** The chrome census still
-  measures console-era chrome in two consumers, recorded as mixed in consumers.json, so
-  a shared form must still be able to say which chrome it is in.

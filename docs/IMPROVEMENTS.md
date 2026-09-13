@@ -75,6 +75,32 @@ A curated subset is a defensible thing for a front door to be, but then it has t
 so, and the gate becomes a cap on what may be omitted rather than an equality. Deciding
 which of the two this section is, is the first half of the work.
 
+### §VDS159 The children the adapter never reads
+
+`AdaptiveSectionCard` reads its children once, looking for two things: a `Header` (or
+`StaticHeader`) whose props become the frosted section's heading, and a `Content` whose
+children become the fields. Everything else is discarded. A footer node, a second
+`Content`, a conditional banner between the header and the fields — each renders
+nothing, and nothing says so.
+
+This was survivable while the console branch existed: a section the adapter could not
+read fell through to `SectionCard`, which rendered every child it was given. VDS146
+removed that branch. The header-less case now keeps its children on the frosted surface,
+but the header-present case still drops every sibling that is not `Content` — so the gap
+narrowed to one shape and lost its fallback at the same time.
+
+It is the shape `BentoPanel`'s own test describes: a component that silently declines,
+found by a browser probe reading computed style rather than by review or `tsc`. Neither
+catches this one either. `children` is `ReactNode`, so any node type-checks, and a story
+renders what its author remembered to write.
+
+The adapter should render what it was given rather than only what it recognised: the
+fields from `Content`, plus any sibling it did not claim, in source order inside the
+same section. A `Header` or `StaticHeader` is the one child consumed rather than
+rendered, since its props became the heading. What proves it is an assertion that an
+unclaimed sibling survives — the assertion a test written only against the recognised
+shape never makes.
+
 ## Block F — What a consuming CMS needs from the package next
 
 ### §VDS152 The deprecation ends
@@ -92,23 +118,3 @@ each declared consumer's checkout, or read their source, and list any menu still
 without ids, so the breaking release is not the first they hear of it.
 
 ## Block G — The package knows one chrome
-
-### §VDS146 Removing the switch, and the non-goal that kept it
-
-The chrome switch was the right tool for a migration: one component rendering two looks
-from one set of fields, so a page could move between shells without its form being
-rewritten. With the migration over in every consumer the census reads, the switch has no
-second value to choose. What stays is SectionChrome, SectionCardChromeProvider,
-useSectionChrome, the console branch inside AdaptiveSectionCard and BentoFormSection,
-and the tests asserting both halves.
-
-Dead branches in a shared package are not harmless. A new component copying the adapter
-pattern inherits a chrome parameter that means nothing, and a consumer reading the
-barrel learns there are two chromes when there is one.
-
-This task lands only when DSG1 reads zero console consumers, which in today's numbers
-means after Dumont's own cutover. It removes the type, the provider, the hook and every
-console branch, keeps AdaptiveSectionCard only if it still differs from
-BentoFormSection, and drops the non-goal about bento being the only chrome. The
-consumers.json chrome vocabulary loses the console value in the same commit, so the
-census cannot be satisfied by a declaration nobody measured.

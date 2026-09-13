@@ -89,7 +89,8 @@ interface SectionCardProps {
  *
  * Compose `SectionCard.Header`, or `SectionCard.StaticHeader` for one that does
  * not collapse, and `SectionCard.Content`. A bento form groups its fields in
- * `BentoFormSection`, and `AdaptiveSectionCard` renders either from this markup.
+ * `BentoFormSection`; `AdaptiveSectionCard` reads this same markup and renders
+ * that, which is how a form written here moved without being rewritten.
  */
 function SectionCard({ variant = "blue", defaultOpen = true, children, className }: Readonly<SectionCardProps>) {
   const [open, setOpen] = useState(defaultOpen);

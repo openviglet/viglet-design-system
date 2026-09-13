@@ -207,3 +207,7 @@
   checked **No published subpath resolves any of the eleven console-era names** the guard reads dist/exports.json and the router barrel, so a re-export fails a test rather than a review
   checked **The chrome census runs green, every consumer at zero console-era imports** that reading, not a promise, is what the non-goal waited on, so consumers.json records the chrome each product now renders
   checked **The non-goal holding the removal is retired rather than reworded** its condition came true, so the list stops binding work it was written to delay
+- ✅ **VDS146** **SectionChrome, its provider and hook, and AdaptiveSectionCard's console branch outlive the era they serve** — One chrome is left, so AdaptiveSectionCard renders the compound markup as a bento section and the provider, hook and type are gone (design recorded in `src/bento/bento-section-chrome.tsx`).
+  checked **No type, export or branch in the package names a chrome other than bento** The bento barrel exports neither SectionChrome, SectionCardChromeProvider nor useSectionChrome, and no source file reads a chrome value.
+  checked **AdaptiveSectionCard still renders every child it is given** A section whose header the adapter cannot read keeps its fields on the frosted surface instead of losing them, which is the failure hardest to notice.
+  checked **The census reads a console-era import as a regression, not a declaration** No consumer can declare console or mixed to make chrome-census green; a console-era name counted in any source file is a finding on its own.

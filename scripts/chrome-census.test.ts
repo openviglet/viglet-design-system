@@ -45,45 +45,57 @@ describe("measuring a consumer", () => {
   })
 })
 
-describe("holding the chrome field to the measurement", () => {
+describe("reading a console-era import as a regression", () => {
+  // VDS146 — `console` and `mixed` left the vocabulary with the era they named.
+  // The components are gone from the package, so no declaration agrees with a
+  // file still importing one: the count alone is the finding.
   const consumer = (chrome: string, entries: string[]) => ({ id: "fixture", chrome, entries })
   const some = { scanned: 3, files: { SubPageHeader: 2 }, total: 2 }
   const none = { scanned: 3, files: {}, total: 0 }
 
-  it("calls a consumer that takes console-era chrome console, or mixed when it takes bento too", () => {
-    expect(chromeFinding(consumer("console", ["."]), some)).toBeNull()
-    expect(chromeFinding(consumer("mixed", [".", "./bento"]), some)).toBeNull()
-    expect(chromeFinding(consumer("bento", [".", "./bento"]), some)).toMatch(/declared "bento".*declare it "mixed"/)
-    expect(chromeFinding(consumer("console", [".", "./bento"]), some)).toMatch(/declare it "mixed"/)
+  it("reports a counted console-era name whatever the consumer declares", () => {
+    for (const chrome of ["console", "mixed", "bento", "platform-console"]) {
+      expect(chromeFinding(consumer(chrome, [".", "./bento"]), some)).toMatch(
+        /takes console-era chrome in 2 source file\(s\) \(SubPageHeader 2\)/,
+      )
+    }
   })
 
-  it("refuses console or mixed for a consumer that takes none", () => {
-    expect(chromeFinding(consumer("console", ["."]), none)).toMatch(/no source file takes console-era chrome/)
-    expect(chromeFinding(consumer("mixed", ["./bento"]), none)).toMatch(/no source file/)
-    expect(chromeFinding(consumer("bento", ["./bento"]), none)).toBeNull()
-    expect(chromeFinding(consumer("docs-site", ["./preset"]), none)).toBeNull()
+  it("names what a product author searches for: the import, not the declaration", () => {
+    const finding = chromeFinding(consumer("bento", ["."]), some)
+    expect(finding).toContain("SubPageHeader")
+    expect(finding).not.toContain("declare it")
   })
 
-  it("reports which consumers are still on console-era chrome, and which it could not measure", () => {
+  it("says nothing about a consumer that takes none, whatever chrome it renders", () => {
+    for (const chrome of ["bento", "docs-site", "platform-home", "console"]) {
+      expect(chromeFinding(consumer(chrome, ["./bento"]), none)).toBeNull()
+    }
+  })
+
+  it("lists the consumers it measured on the era, and which it could not measure", () => {
     write("package.json", "{}")
     write("src/app/a.page.tsx", `import { PageHeader } from "${PKG}/router"\n`)
     const register = {
       consumers: [
-        { id: "measured", chrome: "console", entries: ["."], sourceRoots: ["src"], checkout },
+        { id: "measured", chrome: "bento", entries: ["."], sourceRoots: ["src"], checkout },
         { id: "away", chrome: "bento", entries: ["./bento"], sourceRoots: ["src"], offMachine: true },
       ],
     }
 
     const result = census(register, root, "2026.3")
-    expect(result.rows.map((r: { id: string; finding: string | null }) => [r.id, r.finding])).toEqual([["measured", null]])
+    expect(result.rows.map((r: { id: string; finding: string | null }) => r.finding)).toHaveLength(1)
+    expect(result.rows[0].finding).toMatch(/PageHeader 1/)
     expect(result.notMeasured).toEqual(["away"])
+    // A consumer nobody measured is never on this list — which is why the
+    // summary line prints how many were measured beside it.
     expect(result.consoles).toEqual(["measured"])
   })
 })
 
 // A developer's machine has the checkouts; CI has only this repository.
 describe.skipIf(Boolean(process.env.CI))("the register on this machine", () => {
-  it("declares every consumer's chrome the way its source measures", () => {
+  it("finds no consumer reaching for a component the console era took with it", () => {
     const register = JSON.parse(readFileSync(join(root, "consumers.json"), "utf8"))
     const line = JSON.parse(readFileSync(join(root, "package.json"), "utf8")).version.split(".").slice(0, 2).join(".")
     const result = census(register, root, line)

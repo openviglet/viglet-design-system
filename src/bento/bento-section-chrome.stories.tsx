@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { IconCpu2, IconShieldLock } from "@tabler/icons-react";
 
-import { AdaptiveSectionCard, SectionCardChromeProvider } from "./bento-section-chrome";
+import { AdaptiveSectionCard } from "./bento-section-chrome";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 /**
- * One form, two chromes. The markup below is written once and rendered twice —
- * as the console's collapsible cards and as the frosted bento sections — which
- * is what lets a product migrate a heavy form behind a parallel route without
- * forking its field logic.
+ * The console's compound form markup — a `Header` child and a `Content` child —
+ * rendered as frosted bento sections. It is what let a product migrate a heavy
+ * form without forking its field logic, and what lets one stay written that way
+ * now the migration is over.
  */
 const meta = {
   title: "Bento/AdaptiveSectionCard",
@@ -21,7 +21,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** Written once, rendered in both stories below without a character changing. */
 function SharedForm() {
   return (
     <>
@@ -47,31 +46,24 @@ function SharedForm() {
   );
 }
 
-export const ConsoleChrome: Story = {
-  render: () => (
-    <div className="flex max-w-2xl flex-col gap-4">
-      <SectionCardChromeProvider chrome="console">
-        <SharedForm />
-      </SectionCardChromeProvider>
-    </div>
-  ),
-};
-
-export const BentoChrome: Story = {
-  render: () => (
-    <div className="flex max-w-2xl flex-col gap-4">
-      <SectionCardChromeProvider chrome="bento">
-        <SharedForm />
-      </SectionCardChromeProvider>
-    </div>
-  ),
-};
-
-/** No provider at all: the frosted section, since bento is the default and a console consumer declares console at its root. */
-export const NoProvider: Story = {
+export const Default: Story = {
   render: () => (
     <div className="flex max-w-2xl flex-col gap-4">
       <SharedForm />
+    </div>
+  ),
+};
+
+/** A section built some other way: no header to read, so the surface renders and the children stay. */
+export const NoHeader: Story = {
+  render: () => (
+    <div className="flex max-w-2xl flex-col gap-4">
+      <AdaptiveSectionCard>
+        <div className="grid gap-2">
+          <Label htmlFor="freeform">Written without the compound markup</Label>
+          <Input id="freeform" placeholder="still on the frosted surface" />
+        </div>
+      </AdaptiveSectionCard>
     </div>
   ),
 };

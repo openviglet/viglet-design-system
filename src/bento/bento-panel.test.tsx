@@ -10,6 +10,10 @@ import { BentoPanel } from "./index";
  * the console card *under the bento shell*, and neither review, nor `tsc`, nor a census saw it.
  * What found it was a browser probe reading `backdrop-filter` off computed style.
  *
+ * VDS146 removed that console branch, so a heading-less `AdaptiveSectionCard` now keeps the form
+ * section's surface. This stays the component for a frosted box that is not part of a form: it
+ * carries no padding of its own and takes the save bar's radius, which a form section does not.
+ *
  * So the assertion that matters here is that the frosted class is actually on the element. A test
  * that only checked the children render would have passed against the very component that caused
  * the defect.

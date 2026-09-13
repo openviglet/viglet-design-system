@@ -449,7 +449,9 @@ is gone: `pnpm chrome:census` counts, per consumer checked out beside this
 repository, the source files taking a console-era component — directly or
 through a re-export shim — and it reads zero across all nine, so the eleven
 components below were removed. The **[bento layer](#the-bento-layer)** is what
-remains.
+remains, and with one chrome left there is nothing to choose between: the
+`SectionCardChromeProvider` that used to declare which one a page rendered in
+went with them.
 
 Each row is a swap rather than a rename: the replacement takes its own props,
 and the note says where the two differ.
@@ -844,13 +846,20 @@ reports `onLayoutChange`, and you store the layout, as you do for `BentoListPage
 />
 ```
 
-`AdaptiveSectionCard` is one form section markup for both chromes: the frosted
-bento section by default, and the console's collapsible card beneath
-`<SectionCardChromeProvider chrome="console">`. **The default is bento as of this
-release.** It used to be console, which made every migrated product wrap its
-routes in a bento provider. A product still on console-era chrome now adds the
-console provider once, at its root. `pnpm chrome:census` lists which products
-those are, and `useSectionChrome()` reads the chrome in effect.
+`AdaptiveSectionCard` renders the console's compound form markup — a `Header`
+child and a `Content` child — as a frosted bento section, so a form written that
+way moves without being rewritten. That compound API is the whole difference
+from `BentoFormSection`, which takes the same icon, title and description as
+props. A section whose header it cannot read keeps the frosted surface and all
+of its children; a frosted box that is not part of a form is `BentoPanel`.
+
+**`SectionCardChromeProvider`, `useSectionChrome`, the `SectionChrome` type and
+the `defaultOpen` prop were removed in this release.** They picked between the
+console card and the frosted section, and every consumer finished its cutover —
+so every remaining call site passed `chrome="bento"`, the value it would have got
+anyway. Delete the provider and the hook; the sections beneath render as they
+already did. A `useSectionChrome()` call that drove a product's own branch can be
+replaced by the bento arm of that branch.
 
 **Give every `BentoActionsMenu` item an `id`**, a stable name for the verb such as
 `"post.delete"`, and the same for `BentoEntityShell`'s `extraActions`. It is

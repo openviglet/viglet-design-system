@@ -4,7 +4,7 @@
 //   pnpm chrome:census            # every consumer checked out on this machine
 //   pnpm chrome:census --json     # the measurement, for a script
 //
-// Two non-goals wait on "every console cuts over": keep the console-era exports,
+// Two non-goals waited on "every console cuts over": keep the console-era exports,
 // and keep more than one chrome. That condition was the `chrome` field in
 // consumers.json, typed by hand, so nobody could tell when it came true: the
 // register called a product `console` after it had moved, and `bento` while it
@@ -13,14 +13,15 @@
 // So the field is measured. For each consumer checked out here, its declared
 // `sourceRoots` are read and every file taking a console-era name (the swap table
 // in scripts/lib/console-era.mjs) is counted, whether it imports the name from
-// the package or from a one-line shim that re-exports it. Then:
+// the package or from a one-line shim that re-exports it.
 //
-//   console-era files > 0   chrome must be `console`, or `mixed` for a consumer
-//                           that also takes ./bento
-//   console-era files = 0   chrome must be neither
-//
-// The cutover the non-goals wait for is then a reading: no consumer declared
-// `console` or `mixed`, with this census green.
+// The reading came in: zero across all nine. VDS147 removed the eleven components
+// and VDS146 the chrome switch, which retired both non-goals — and with them the
+// `console` and `mixed` values, since there is no longer a chrome for a consumer
+// to declare itself still on. So a counted console-era import is now a finding on
+// its own rather than something a declaration can agree with. The census outlives
+// the era on purpose: it is what catches one of those names coming back, in a
+// consumer, where this repository's own removal guard cannot see it.
 
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs"
 import { dirname, join, resolve } from "node:path"
@@ -93,25 +94,19 @@ export function measureConsumer(checkout, sourceRoots) {
   return { scanned: texts.length, files, total }
 }
 
-/** What a consumer's measured use says its chrome must be, or null where the declaration holds. */
+/**
+ * What a consumer's measured use says, or null where it takes nothing from the
+ * console era. There is no chrome left to declare instead: the names below were
+ * removed from the package, so a file still importing one is reaching for
+ * something that is gone, and no value of `chrome` agrees with that.
+ */
 export function chromeFinding(consumer, measured) {
-  const declared = consumer.chrome
-  const takesBento = (consumer.entries ?? []).includes("./bento")
-  if (measured.total > 0) {
-    const expected = takesBento ? "mixed" : "console"
-    if (declared !== expected) {
-      const names = Object.entries(measured.files)
-        .sort((a, b) => b[1] - a[1])
-        .map(([name, count]) => `${name} ${count}`)
-        .join(", ")
-      return `${consumer.id} is declared "${declared}" and ${measured.total} source file import(s) take console-era chrome (${names}); declare it "${expected}"`
-    }
-    return null
-  }
-  if (declared === "console" || declared === "mixed") {
-    return `${consumer.id} is declared "${declared}" and no source file takes console-era chrome; declare the chrome it renders`
-  }
-  return null
+  if (measured.total === 0) return null
+  const names = Object.entries(measured.files)
+    .sort((a, b) => b[1] - a[1])
+    .map(([name, count]) => `${name} ${count}`)
+    .join(", ")
+  return `${consumer.id} takes console-era chrome in ${measured.total} source file(s) (${names}); the console era was removed — README's swap table names what each one became`
 }
 
 export function census(register, repoRoot, line) {
@@ -123,7 +118,10 @@ export function census(register, repoRoot, line) {
   return {
     rows,
     notMeasured: [...missing.map((m) => m.consumer.id), ...offMachine.map((o) => o.consumer.id)],
-    consoles: register.consumers.filter((c) => c.chrome === "console" || c.chrome === "mixed").map((c) => c.id),
+    // Measured, not declared: `console` and `mixed` left the vocabulary with the
+    // era, so the only thing left that can put a consumer on this list is a
+    // console-era name counted in its own source.
+    consoles: rows.filter((row) => row.total > 0).map((row) => row.id),
   }
 }
 
@@ -142,9 +140,14 @@ function main() {
       console.log(`  ${row.id.padEnd(20)} ${row.chrome.padEnd(15)} ${String(row.total).padStart(4)} console-era file import(s)${names ? `  (${names})` : ""}`)
     }
     if (result.notMeasured.length > 0) console.log(`  not measured here: ${result.notMeasured.join(", ")}`)
-    console.log(
-      `\nchrome-census: ${result.consoles.length === 0 ? "no consumer renders console-era chrome" : `still on console-era chrome: ${result.consoles.join(", ")}`}`,
-    )
+    // The count is part of the reading. "No consumer renders console-era chrome"
+    // is also what a machine with nothing checked out would print, and that is a
+    // sentence about this machine rather than about the products.
+    const reading =
+      result.consoles.length === 0
+        ? `none of the ${result.rows.length} measured here render console-era chrome`
+        : `still on console-era chrome: ${result.consoles.join(", ")}`
+    console.log(`\nchrome-census: ${reading}`)
     for (const finding of findings) console.error(`  - ${finding}`)
   }
   process.exit(findings.length > 0 ? 1 : 0)

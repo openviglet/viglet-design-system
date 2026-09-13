@@ -1,21 +1,17 @@
 import { render, screen } from "@testing-library/react"
 import { IconCpu2 } from "@tabler/icons-react"
 import i18next from "i18next"
-import type { ReactElement, ReactNode } from "react"
+import type { ReactElement } from "react"
 import { I18nextProvider, initReactI18next } from "react-i18next"
 import { beforeAll, describe, expect, it } from "vitest"
 
-import {
-  AdaptiveSectionCard,
-  SectionCardChromeProvider,
-  useSectionChrome,
-} from "./index"
+import { AdaptiveSectionCard } from "./index"
 
-// The point is one form and two chromes. A product migrating behind a parallel
-// route renders its largest forms in both eras at once, and the alternative to
-// this adapter is forking them — two copies of real field logic, drifting. So
-// what is asserted is that the *same* markup produces both, and that neither
-// branch loses anything on the way.
+// The adapter used to render one form in two chromes, and what is left of it is
+// one translation: the console's compound markup — a Header child and a Content
+// child — read off and rendered as a frosted bento section. So what is asserted
+// is that every part of that markup arrives, and that a section the adapter
+// cannot read keeps its children anyway.
 
 beforeAll(async () => {
   if (!i18next.isInitialized) {
@@ -27,7 +23,7 @@ beforeAll(async () => {
   }
 })
 
-/** Written once. Rendered below in both chromes, unchanged. */
+/** The console's compound markup, unchanged from the era that wrote it. */
 function SharedSection() {
   return (
     <AdaptiveSectionCard variant="violet">
@@ -42,71 +38,44 @@ function SharedSection() {
 
 const draw = (ui: ReactElement) => render(<I18nextProvider i18n={i18next}>{ui}</I18nextProvider>)
 
-const inChrome = (chrome: "console" | "bento", children: ReactNode) =>
-  draw(<SectionCardChromeProvider chrome={chrome}>{children}</SectionCardChromeProvider>)
-
-describe("one form, two chromes", () => {
-  // VDS145 — the default belongs to the chrome that is staying. A login, setup or
-  // not-found page renders under no provider, and took the console look while
-  // console was the default.
-  it("renders the frosted section with no provider at all", () => {
+describe("compound markup, one chrome", () => {
+  // VDS146 — there is no provider to render under any more. VDS145 had already
+  // made bento the default, which is what left every provider in every consumer
+  // declaring the value it would have got anyway.
+  it("renders the frosted section, with the header read off the markup", () => {
     const { container } = draw(<SharedSection />)
-
-    expect(screen.getByText("Connection")).toBeInTheDocument()
-    expect(screen.getByLabelText("Endpoint")).toBeInTheDocument()
-    expect(container.querySelector(".bento-glass")).toBeInTheDocument()
-  })
-
-  it("renders the console card under a console provider", () => {
-    const { container } = inChrome("console", <SharedSection />)
-
-    expect(container.querySelector(".bento-glass")).not.toBeInTheDocument()
-  })
-
-  it("renders the frosted section under a bento provider — same markup", () => {
-    const { container } = inChrome("bento", <SharedSection />)
 
     expect(container.querySelector(".bento-glass")).toBeInTheDocument()
     expect(screen.getByText("Connection")).toBeInTheDocument()
     expect(screen.getByText("Where to reach it")).toBeInTheDocument()
   })
 
-  it("keeps the fields, and exactly one copy of them, in either chrome", () => {
-    const consoleRender = inChrome("console", <SharedSection />)
-    expect(consoleRender.container.querySelectorAll("#endpoint")).toHaveLength(1)
-    consoleRender.unmount()
+  it("keeps the fields, and exactly one copy of them", () => {
+    const { container } = draw(<SharedSection />)
 
-    const bentoRender = inChrome("bento", <SharedSection />)
-    expect(bentoRender.container.querySelectorAll("#endpoint")).toHaveLength(1)
+    expect(container.querySelectorAll("#endpoint")).toHaveLength(1)
     expect(screen.getByLabelText("Endpoint")).toHaveValue("https://example.test")
   })
 
   // VDS111 — the class list was forwarded on the console branch only, so a form
   // styled through the wrapper lost that styling under the one chrome the
-  // wrapper exists to hide. Written as one node rendered twice for that reason:
-  // asserting each branch separately is what let them differ.
-  it("carries className through either chrome", () => {
-    const styled = (
+  // wrapper exists to hide. The branch it was dropped on is gone; what the
+  // wrapper must still do is merge rather than replace.
+  it("merges className onto the frosted surface rather than replacing it", () => {
+    const { container } = draw(
       <AdaptiveSectionCard variant="violet" className="lg:col-span-2">
         <AdaptiveSectionCard.Header icon={IconCpu2} title="Connection" />
         <AdaptiveSectionCard.Content>x</AdaptiveSectionCard.Content>
-      </AdaptiveSectionCard>
+      </AdaptiveSectionCard>,
     )
 
-    const consoleRender = inChrome("console", styled)
-    expect(consoleRender.container.querySelector(".lg\\:col-span-2")).toBeInTheDocument()
-    consoleRender.unmount()
-
-    const bentoRender = inChrome("bento", styled)
-    const frosted = bentoRender.container.querySelector(".bento-glass")
-    // Merged onto the frosted surface, not instead of it.
+    const frosted = container.querySelector(".bento-glass")
     expect(frosted).toHaveClass("lg:col-span-2")
     expect(frosted).toHaveClass("bento-tile")
   })
 
   it("maps the variant to a tone, including the two with no tone of their own", () => {
-    const cyan = inChrome(
-      "bento",
+    const cyan = draw(
       <AdaptiveSectionCard variant="cyan">
         <AdaptiveSectionCard.Header icon={IconCpu2} title="Cyan" />
         <AdaptiveSectionCard.Content>x</AdaptiveSectionCard.Content>
@@ -115,8 +84,7 @@ describe("one form, two chromes", () => {
     expect(cyan.container.querySelector(".bento-tone-blue")).toBeInTheDocument()
     cyan.unmount()
 
-    const orange = inChrome(
-      "bento",
+    const orange = draw(
       <AdaptiveSectionCard variant="orange">
         <AdaptiveSectionCard.Header icon={IconCpu2} title="Orange" />
         <AdaptiveSectionCard.Content>x</AdaptiveSectionCard.Content>
@@ -126,8 +94,7 @@ describe("one form, two chromes", () => {
   })
 
   it("accepts a static header as well as a collapsible one", () => {
-    const { container } = inChrome(
-      "bento",
+    const { container } = draw(
       <AdaptiveSectionCard>
         <AdaptiveSectionCard.StaticHeader icon={IconCpu2} title="Fixed" />
         <AdaptiveSectionCard.Content>body</AdaptiveSectionCard.Content>
@@ -138,46 +105,19 @@ describe("one form, two chromes", () => {
     expect(screen.getByText("Fixed")).toBeInTheDocument()
   })
 
-  it("falls back to the console card rather than dropping content it cannot read", () => {
-    // A section built some other way has no header to lift, and losing its
-    // fields silently would be the hardest failure here to notice.
-    const { container } = inChrome(
-      "bento",
-      <AdaptiveSectionCard>
+  it("keeps the children of a section whose header it cannot read", () => {
+    // This used to fall through to the console card. There is no second chrome
+    // to fall back to, and dropping the fields silently would be the failure
+    // here that is hardest to notice — so the surface renders without a header.
+    const { container } = draw(
+      <AdaptiveSectionCard className="lg:col-span-2">
         <div>hand-rolled body</div>
       </AdaptiveSectionCard>,
     )
 
     expect(screen.getByText("hand-rolled body")).toBeInTheDocument()
-    expect(container.querySelector(".bento-glass")).not.toBeInTheDocument()
-  })
-})
-
-describe("useSectionChrome", () => {
-  function Probe() {
-    return <span data-testid="chrome">{useSectionChrome()}</span>
-  }
-
-  it("reports bento when nothing declared one", () => {
-    draw(<Probe />)
-
-    expect(screen.getByTestId("chrome")).toHaveTextContent("bento")
-  })
-
-  it("reports what the nearest provider declared", () => {
-    inChrome("bento", <Probe />)
-
-    expect(screen.getByTestId("chrome")).toHaveTextContent("bento")
-  })
-
-  it("lets an inner provider win, so one page can hold both", () => {
-    inChrome(
-      "bento",
-      <SectionCardChromeProvider chrome="console">
-        <Probe />
-      </SectionCardChromeProvider>,
-    )
-
-    expect(screen.getByTestId("chrome")).toHaveTextContent("console")
+    const frosted = container.querySelector(".bento-glass")
+    expect(frosted).toBeInTheDocument()
+    expect(frosted).toHaveClass("lg:col-span-2")
   })
 })
