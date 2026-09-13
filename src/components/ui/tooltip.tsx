@@ -4,21 +4,29 @@ import * as TooltipPrimitive from "@radix-ui/react-tooltip"
 import { cn } from "@/lib/utils"
 
 /**
- * Sets how long a pointer rests before the tooltips beneath it open.
+ * Whether a `TooltipProvider` of this package is above. Radix keeps its own
+ * provider context to itself, so this is how a `Tooltip` knows not to mount one.
+ */
+const TooltipProvided = React.createContext(false)
+
+/**
+ * Sets how long a pointer rests before the tooltips beneath it open, with no delay
+ * unless `delayDuration` says otherwise.
  *
- * Each `Tooltip` mounts its own provider with no delay and reads that one, so a
- * provider placed around a `Tooltip` does not change its delay.
+ * A `Tooltip` needs none above it and mounts its own when there is none.
  */
 function TooltipProvider({
   delayDuration = 0,
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Provider>) {
   return (
-    <TooltipPrimitive.Provider
-      data-slot="tooltip-provider"
-      delayDuration={delayDuration}
-      {...props}
-    />
+    <TooltipProvided value={true}>
+      <TooltipPrimitive.Provider
+        data-slot="tooltip-provider"
+        delayDuration={delayDuration}
+        {...props}
+      />
+    </TooltipProvided>
   )
 }
 
@@ -31,11 +39,13 @@ function TooltipProvider({
 function Tooltip({
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Root>) {
-  return (
-    <TooltipProvider>
-      <TooltipPrimitive.Root data-slot="tooltip" {...props} />
-    </TooltipProvider>
-  )
+  // VDS154 — this used to wrap every root in a provider of its own, whose zero
+  // delay was the nearest and so the one Radix read. A provider placed above it,
+  // like the nav rail's 200ms, set a delay nothing reached. Upstream shadcn does
+  // the same, which is why it read as deliberate.
+  const provided = React.useContext(TooltipProvided)
+  const root = <TooltipPrimitive.Root data-slot="tooltip" {...props} />
+  return provided ? root : <TooltipProvider>{root}</TooltipProvider>
 }
 
 /**

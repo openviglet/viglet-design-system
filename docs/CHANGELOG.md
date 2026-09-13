@@ -195,6 +195,7 @@
 - ✅ **VDS149** **each product hand-rolls the palette trigger and its keyboard shortcuts, and the two bindings already differ** — Products bind the palette and guide through useBentoShellShortcuts and BentoPaletteTrigger; the dialog lists that one set, including /, so the guide shows only keys that work.
 - ✅ **VDS150** **192 of 237 exported components carry no doc comment, so find_component can match them only by name and props** — Every exported component has a doc comment whose first sentence is its purpose, and check-catalogue fails a new component without one, with catalogue-undescribed.txt now empty.
 - ✅ **VDS153** **the list page's layout editor disables its buttons while it saves, so the pressed button drops focus** — The layout editor marks the pressed control loading and the rest aria-disabled while a write runs, so focus stays put and a second press reaches nothing.
+- ✅ **VDS154** **a TooltipProvider delay never reaches a Tooltip, because each Tooltip mounts its own provider with no delay** — A Tooltip mounts its own provider only when no TooltipProvider is above it, so a provided delay such as the nav rail's 200ms reaches every tooltip under it.
 
 ## Block G — The package knows one chrome
 

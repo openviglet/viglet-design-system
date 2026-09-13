@@ -4,7 +4,6 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS154** (deps: —) **a TooltipProvider delay never reaches a Tooltip, because each Tooltip mounts its own provider with no delay** — The nav rail asks for a 200ms delay so a pointer crossing it does not flash every label, and gets none. → §VDS154
 - 📋 **VDS155** (deps: —) **five doc comments open with a fix note or a caveat, which the catalogue then serves as the component's purpose** — find_component shows BadgeColorful as a sentence about markup safety and NavigationMenu as one about its landmark, so neither says what it is for. → §VDS155
 - 📋 **VDS156** (deps: —) **an inline edit committed with Enter drops focus when it settles, and a blur while it saves commits a second time** — Enter unmounts the focused input once the save lands, and the input stays live while onSave is pending, so tabbing away calls it again. → §VDS156
 

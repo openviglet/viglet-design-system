@@ -46,28 +46,6 @@ release that warned. Before shipping, run viglet-ds-check-duplicates and a type-
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
 
-### §VDS154 A provided tooltip delay that nothing reads
-
-Tooltip in src/components/ui/tooltip.tsx wraps its Radix root in a TooltipProvider of
-its own, whose delayDuration defaults to 0. Radix reads the nearest provider, so that
-inner one always wins, and a provider a product or a component places around its
-tooltips sets a delay nothing reads. BentoNavRail wraps the rail in TooltipProvider
-delayDuration={200} so a pointer travelling down the rail does not flash every label on
-the way; every label still opens at once. The pattern came from upstream shadcn, which
-is why it looks deliberate.
-
-Build the fix in the Tooltip wrapper, not in the rail. TooltipProvider sets a small
-context of its own beside the Radix one, and Tooltip mounts its inner provider only when
-that context is absent, so a lone Tooltip keeps working with no provider and a provided
-delay reaches every tooltip under it. The rejected alternative is a delayDuration prop
-on every Tooltip, which puts the same number on each call site and leaves the provider
-documented as doing something it does not.
-
-A browser test in the parity project holds it: a Tooltip under a provider with a delay
-is not open immediately after hover and is open after the delay, and a Tooltip with no
-provider opens at once. Update the TooltipProvider doc comment, which currently records
-the defect as the behaviour.
-
 ### §VDS155 First sentences that are not purposes
 
 VDS150 put a doc comment on every exported component, and check-catalogue now fails a
