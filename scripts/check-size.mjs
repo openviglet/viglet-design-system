@@ -101,6 +101,26 @@ export const FIXTURES = {
     bentoExpected: true,
   },
   /**
+   * VDS147 — the entry the console era left.
+   *
+   * Eleven components went, and nothing was measuring the entry they went from,
+   * so the removal could be undone by a re-export and cost nothing anybody saw.
+   * The recorded number is what notices it coming back.
+   *
+   * `bentoExpected: false` is the other half, and it is about the three that
+   * stayed: `LoadProvider` draws its own error slate rather than borrowing
+   * `BentoEmptyState`, because `bento.css` is opt-in and a consumer taking only
+   * `./router` and `./styles` would get an unstyled one. That is a decision a
+   * one-line import can reverse silently; this is what refuses it.
+   */
+  router: {
+    source: [
+      `import * as router from "${PKG}/router";`,
+      "globalThis.__vdsProbe = Object.keys(router).length;",
+    ].join("\n"),
+    bentoExpected: false,
+  },
+  /**
    * VDS118 — the artwork, measured on the entry that ships it.
    *
    * `MAX_INLINE_ASSET` exists because VDS40 found the root entry was 96% four

@@ -166,12 +166,16 @@ const shown = (file: string) => relative(root, file).replaceAll("\\", "/")
 
 describe("every exported name reaches a published subpath", () => {
   it("follows a rename back to the file it came from", () => {
-    // Non-vacuous, and the specific shape that made a name-matching reader wrong.
-    const routerBarrel = surfaceOf(join(root, "src/components/router/index.ts"))
-    const gridList = join(root, "src/components/router/grid.list.tsx")
+    // Non-vacuous, and the specific shape that made a name-matching reader
+    // wrong. It used to be the router barrel's `ItemActionProps as
+    // VigGridItemActionProps`, which left with `GridList` in VDS147; the ui
+    // barrel renames on the way out for the same reason, so the shape survives
+    // its first example.
+    const uiBarrel = surfaceOf(join(root, "src/components/ui/index.ts"))
+    const sectionCard = join(root, "src/components/ui/section-card.tsx")
 
-    expect(declaredIn(gridList)).toContain("ItemActionProps")
-    expect(routerBarrel.get("VigGridItemActionProps")).toBe(originOf(gridList, "ItemActionProps"))
+    expect(declaredIn(sectionCard)).toContain("colorVariants")
+    expect(uiBarrel.get("sectionCardColorVariants")).toBe(originOf(sectionCard, "colorVariants"))
   })
 
   // VDS148 — the timeout is sized for the loaded suite, not a quiet machine.

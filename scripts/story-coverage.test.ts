@@ -17,8 +17,8 @@ import { describe, expect, it } from "vitest"
  *
  * **Reached, not named.** Most exported components are compound sub-parts or
  * pieces a parent assembles: a `SidebarMenuSubItem` is exercised by the
- * sidebar's story, and `NavMain` by `InternalSidebar`'s, whether or not either
- * has one of its own. Axe checks what a story *renders*, so the question is
+ * sidebar's story, and `BentoNavRail`'s rows by the shell's, whether or not
+ * either has one of its own. Axe checks what a story *renders*, so the question is
  * reachability — which module graph a story pulls in — and not which names its
  * source happens to spell.
  *

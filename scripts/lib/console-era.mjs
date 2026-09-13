@@ -1,9 +1,14 @@
 /**
- * The console page vocabulary, and the bento export a new page should reach for
- * instead. This is the swap table the README publishes, held as data so the
- * deprecation guard in src/components/router/console-era.test.ts and the chrome
- * census in scripts/chrome-census.mjs read one list: a second copy is the one a
- * new deprecation never reaches.
+ * The console page vocabulary, and the bento export a page reaches for instead.
+ * This is the swap table the README publishes, held as data so the removal
+ * guard in src/components/router/console-era.test.ts and the chrome census in
+ * scripts/chrome-census.mjs read one list: a second copy is the one a rename
+ * never reaches.
+ *
+ * VDS147 removed all eleven, so this is now a table of names that are gone. It
+ * outlives them on purpose: the census still counts a consumer reaching for one,
+ * and the guard still asserts that none of them came back. A name here is the
+ * one thing a product author can search for and be told where it went.
  *
  * `Page` and `PageContent` name no single export as their replacement: the page
  * frame is `BentoShell`, which a product composes with its own rail and header
@@ -27,6 +32,7 @@ export const CONSOLE_ERA = {
 
 /**
  * Exports from the same barrel that are *not* console-era: the bento layer
- * imports them itself, so marking them deprecated would deprecate bento.
+ * imports them itself, so removing them would remove part of bento. Since
+ * VDS147 they are the whole of `./router`.
  */
 export const ERA_NEUTRAL = ["DialogDelete", "LoadProvider", "GradientButtonLink"]

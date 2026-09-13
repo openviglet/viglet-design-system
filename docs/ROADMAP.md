@@ -2,11 +2,26 @@
 
 ## Block A — The gate the design system never had
 
+- 📋 **VDS157** (deps: —) **a tooltip's provider-delay parity test fails only when the whole suite is loaded** — it passes alone and failed two of four full runs, so the suite's red is noise and a real regression in the delay would read as the same flake. → §VDS157
+- 📋 **VDS158** (deps: —) **the README's component lists are typed by hand, and the App Components one omits seven exports** — AppSwitcher, ErrorBoundary and five more are shipped and unlisted, so the front door reads as the whole surface while being a subset. → §VDS158
+
 ## Block F — What a consuming CMS needs from the package next
 
 ## Block G — The package knows one chrome
 
-- 📋 **VDS147** (deps: VDS146 ⏸) **the console-era router components are still exported after being deprecated** — PageHeader, SubPage, GridList, InternalSidebar and their siblings still ship, so a new screen can still be built on the chrome every consumer is leaving. → §VDS147
+- 📋 **VDS146** (deps: VDS145 ✅) **SectionChrome, its provider and hook, and AdaptiveSectionCard's console branch outlive the era they serve** — Once no consumer renders console chrome, every chrome branch is dead code a new component can still copy. → §VDS146
+
+## Done when — VDS157
+
+- **The delay assertion no longer rests on a fixed sleep** it measures the interval
+  across the hover or drives it with a fake clock, so a loaded runner cannot move it.
+- **The full suite runs green three times in a row** a flake is fixed only when the run
+  that caught it stops catching it.
+
+## Done when — VDS158
+
+- **A gate reads the README's lists and the exported surface together** it fails on a
+  name shipped and unlisted, and on one listed after it stopped being exported.
 
 ## Non-goals
 
@@ -25,6 +40,3 @@
 - **Do not make bento the only chrome this package knows** The chrome census still
   measures console-era chrome in two consumers, recorded as mixed in consumers.json, so
   a shared form must still be able to say which chrome it is in.
-- **Do not remove the console-era exports before every console cuts over** Cutover is a
-  reading, not a promise: pnpm chrome:census holds each consumer's chrome to its source,
-  and a removal waits until no entry in consumers.json says console or mixed.

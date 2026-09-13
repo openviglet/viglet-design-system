@@ -1,7 +1,53 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { IconAlertTriangleFilled } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
-import { BlankSlate } from "./blank-slate";
+import { GradientButtonLink } from "./gradient-button-link";
+
+/**
+ * The error slate, exactly as `BlankSlate` drew it.
+ *
+ * VDS147 removed the console-era exports, and this was their last caller inside
+ * the package. The markup lives here rather than on a subpath because nothing
+ * else may reach for it, and it is a copy rather than a `BentoEmptyState`
+ * because this component ships on `./router`: the bento look is in `bento.css`,
+ * which is opt-in, so borrowing it would leave a consumer taking only `./styles`
+ * with an unstyled error. A page that wants the bento look renders
+ * `BentoEmptyState` itself.
+ */
+function ErrorSlate({
+    title,
+    description,
+    buttonText,
+    urlNew,
+}: Readonly<{ title: string; description: string; buttonText: string; urlNew?: string }>) {
+    return (
+        <div className="flex items-center justify-center px-6 py-16">
+            <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-border/50 bg-card/80 backdrop-blur-sm shadow-xl">
+                <div className="relative flex flex-col items-center text-center px-8 py-12 space-y-6">
+                    <div className="relative">
+                        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[var(--vg-accent-surface-strong)] to-[var(--vg-accent-surface-strong)] blur-xl animate-pulse" />
+                        <div className="relative inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br vg-accent-solid shadow-lg shadow-[var(--vg-accent-line)] ring-4 ring-[var(--vg-accent-surface)]">
+                            <IconAlertTriangleFilled className="text-white" size={30} />
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
+                        <p className="text-sm text-muted-foreground leading-relaxed max-w-xs mx-auto">
+                            {description}
+                        </p>
+                    </div>
+
+                    {urlNew && (
+                        <GradientButtonLink size="lg" to={urlNew}>
+                            {buttonText}
+                        </GradientButtonLink>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}
 
 interface LoadProviderProps {
     /**
@@ -29,8 +75,7 @@ export const LoadProvider = ({
 
     if (error) {
         return (
-            <BlankSlate
-                icon={IconAlertTriangleFilled}
+            <ErrorSlate
                 title={t("common.errorLoading")}
                 description={error}
                 buttonText={t("common.tryAgain")}

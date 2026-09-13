@@ -41,7 +41,8 @@ export interface BentoUserMenuProps {
  *
  * It reads the user from `UserProvider`, which has to be mounted above it. The
  * Radix DropdownMenu primitives are the console's, and the surface and items take
- * the frosted bento look and its spring easing. It replaces the console's `NavUser`.
+ * the frosted bento look and its spring easing. It replaced `NavUser`, which left
+ * with the console era in VDS147.
  */
 export function BentoUserMenu({
   accountRoute,

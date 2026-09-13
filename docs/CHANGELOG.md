@@ -203,3 +203,7 @@
 
 - ✅ **VDS144** **nothing measures which consumers still render console chrome, so the cutover a non-goal waits on is unobservable** — pnpm chrome:census measures each consumer's console-era imports through shims and holds its chrome to them, and the register now says turing and dumont are mixed.
 - ✅ **VDS145** **the section-chrome context defaults to console, so a bento consumer wraps every route in a provider to escape it** — Section chrome now defaults to bento: a consumer still on console chrome adds <SectionCardChromeProvider chrome="console"> once at its root, as the census names.
+- ✅ **VDS147** **the console-era router components are still exported after being deprecated** — `./router` now holds only the three exports the bento layer imports; the eleven console-era components are gone and the census reads zero across nine consumers (design recorded in `README.md`).
+  checked **No published subpath resolves any of the eleven console-era names** the guard reads dist/exports.json and the router barrel, so a re-export fails a test rather than a review
+  checked **The chrome census runs green, every consumer at zero console-era imports** that reading, not a promise, is what the non-goal waited on, so consumers.json records the chrome each product now renders
+  checked **The non-goal holding the removal is retired rather than reworded** its condition came true, so the list stops binding work it was written to delay

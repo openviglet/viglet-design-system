@@ -30,6 +30,51 @@ together, so each one is true when it lands.
 Until then schools is the consumer that does not declare it, and this line is what says
 so rather than leaving it to be rediscovered.
 
+### §VDS157 The tooltip delay parity test, under load
+
+`src/components/ui/tooltip.parity.test.tsx` sleeps 150ms after the hover and asserts the
+bubble is not shown yet, then polls for it. That is the shape of the assertion VDS154
+needed: a provider's delay reaches the tooltips under it, so something must fail while
+the delay is still running.
+
+The 150ms is the part that does not hold. It is a fixed sleep sized for an idle machine,
+and the browser project runs beside 159 other test files: across four full runs of the
+suite during VDS147 it failed twice at `expect(bubbleShown()) .toBe(false)` — the bubble
+was already up — and passed three times out of three when run alone. So the failure
+carries no information either way, which is worse than no test: a delay that genuinely
+stopped reaching the tooltip would print the same line everyone has learned to re-run.
+
+The repair is the one VDS148 made to a timeout one directory over: stop sizing a
+constant for a machine that is not the one running it. Read the clock across the hover
+instead of sleeping against it — assert the bubble appeared no earlier than the
+provider's delay, measured from the event — or drive the delay with fake timers so the
+wait is not real at all. Either way the assertion stays what VDS154 wrote it to be, and
+stops being a race with the rest of the suite.
+
+### §VDS158 The README's lists, against the surface it ships
+
+`## What's Included` is where a product author looks first, and both its lists are typed
+by hand. The UI Primitives one is accurate today — 41 names under a heading that says
+41. The App Components one is not: it names ten, while `src/components/index.ts` exports
+`AppSwitcher`, `BackendStatusBanner`, `BackendStatusProvider`, `ErrorBoundary`,
+`LanguageSwitcher`, `ModeToggleSidebar` and `VigletAppSwitcher` too, and
+`src/components/login` and `src/components/startup-first` export their own compounds
+beside them. It also carried a parenthesised count of 23 that matched neither its own
+list nor the export set; VDS147 removed the count rather than guessing a new one, which
+leaves the list wrong and no longer claiming a total.
+
+Nothing checks either list, which is why one drifted and the other happens to be right.
+The package already knows the answer: `dist/exports.json` is the surface per entry,
+emitted every build, and `check-catalogue` already holds a generated artefact to it. The
+same shape fits here — read the names out of the README's lists, compare them against
+the entry they claim to describe, and fail on a name shipped and unlisted. The reverse
+direction matters as much: a name listed and no longer exported is what a removal like
+VDS147 leaves behind.
+
+A curated subset is a defensible thing for a front door to be, but then it has to say
+so, and the gate becomes a cap on what may be omitted rather than an equality. Deciding
+which of the two this section is, is the first half of the work.
+
 ## Block F — What a consuming CMS needs from the package next
 
 ### §VDS152 The deprecation ends
@@ -67,23 +112,3 @@ console branch, keeps AdaptiveSectionCard only if it still differs from
 BentoFormSection, and drops the non-goal about bento being the only chrome. The
 consumers.json chrome vocabulary loses the console value in the same commit, so the
 census cannot be satisfied by a declaration nobody measured.
-
-### §VDS147 The console-era exports, retired
-
-src/components/router still carries the console era's page vocabulary: PageHeader,
-SubPage, SubPageHeader, StickyPageHeader, GridList, InternalSidebar, NavMain, NavUser,
-Page, PageContent and BlankSlate. They were deprecated rather than removed because they
-rendered live screens in every console, and the non-goal about console-era exports holds
-removal until every console cuts over.
-
-With DSG1's census as the condition and DSG3's switch gone, that condition is finally a
-number rather than a belief. Remove the components, their stories and tests, and their
-entries from the published exports, and let the size and exports gates record the entry
-shrinking. Anything still worth keeping from them, a sticky title or a blank slate, has
-a bento counterpart or becomes one first as its own line, per the non-goal against
-redesigning a component while moving it.
-
-The assertion is the exports gate itself: none of the eleven names resolves from any
-published subpath, and the census, run once more, still reads zero. The standing
-non-goal is then closed rather than edited, with the census recorded as what satisfied
-it.

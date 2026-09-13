@@ -1,18 +1,7 @@
-export { BlankSlate } from "./blank-slate";
+// The console-era page vocabulary left here in VDS147, once the census read
+// zero across every consumer. What remains is era-neutral: the bento layer
+// imports all three itself. `scripts/lib/console-era.mjs` still names what went,
+// so the census can tell a product that reaches for one of them where it moved.
 export { DialogDelete, type VigBlockedByItem } from "./dialog.delete";
 export { GradientButtonLink } from "./gradient-button-link";
-export { GridList, type ItemActionProps as VigGridItemActionProps } from "./grid.list";
-export {
-  InternalSidebar,
-  type InternalSidebarCount,
-  type NavMainItem,
-} from "./internal.sidebar";
 export { LoadProvider } from "./loading-provider";
-export { NavMain } from "./nav-main";
-export { NavUser } from "./nav-user";
-export { Page } from "./page";
-export { PageContent } from "./page-content";
-export { PageHeader } from "./page-header";
-export { StickyPageHeader } from "./sticky.page.header";
-export { SubPage } from "./sub.page";
-export { SubPageHeader } from "./sub.page.header";

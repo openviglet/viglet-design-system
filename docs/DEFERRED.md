@@ -9,5 +9,3 @@
 - ⏸ **VDS152** (deps: VDS142 ✅) **an actions-menu item without an id still type-checks, so the one-release deprecation never ends** — set aside (a release that carried the missing-id warning): Until the type requires it, a new console verb can reach the DOM with no name for a census to match. → §VDS152
 
 ## Block G — The package knows one chrome
-
-- ⏸ **VDS146** (deps: VDS145 ✅) **SectionChrome, its provider and hook, and AdaptiveSectionCard's console branch outlive the era they serve** — set aside (Turing and Dumont cutting over (chrome:census)): Once no consumer renders console chrome, every chrome branch is dead code a new component can still copy. → §VDS146

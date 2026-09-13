@@ -91,8 +91,8 @@ viglet-ds-check-duplicates src
 It fails, naming the import that replaces each local copy:
 
 ```
-src/components/page-header.tsx:18  declares PageHeader
-    replace it with:  import { PageHeader } from "@viglet/viglet-design-system/router"
+src/components/bento-hero.tsx:18  declares BentoHero
+    replace it with:  import { BentoHero } from "@viglet/viglet-design-system/bento"
 ```
 
 One-line re-export shims are the sanctioned pattern and are skipped. When a
@@ -438,16 +438,23 @@ import {
 ```
 
 A page's chrome — its header, its list, its sidebar — comes from the
-[bento layer](#the-bento-layer) rather than from here. Read the next section
-before reaching for `PageHeader`, `GridList` or `InternalSidebar`.
+[bento layer](#the-bento-layer). It is the only page vocabulary this package
+ships; if you are upgrading from a release that still had `PageHeader`,
+`GridList` or `InternalSidebar`, read the next section.
 
-### Two eras, and which one a new page should use
+### Moving off the console era
 
-This package exports two complete page vocabularies. The **console era** is what some consumers still ship pages on; the **[bento layer](#the-bento-layer)** is the current one. Every console-era export is marked `@deprecated` in its own types, so an editor strikes it through and offers the swap.
+This package used to export two complete page vocabularies. The **console era**
+is gone: `pnpm chrome:census` counts, per consumer checked out beside this
+repository, the source files taking a console-era component — directly or
+through a re-export shim — and it reads zero across all nine, so the eleven
+components below were removed. The **[bento layer](#the-bento-layer)** is what
+remains.
 
-Nothing is being removed yet. `pnpm chrome:census` counts, per consumer checked out beside this repository, the source files still taking a console-era component, directly or through a re-export shim, and holds each entry's `chrome` in `consumers.json` to that count: `console`, `mixed` for a consumer that takes the bento layer too, or neither at zero. The removal waits until no entry says `console` or `mixed`, and gets its own roadmap line rather than arriving as a side effect of this notice, so existing pages keep working and need no rush.
+Each row is a swap rather than a rename: the replacement takes its own props,
+and the note says where the two differ.
 
-| Console era | Use instead | |
+| Removed | Use instead | |
 |---|---|---|
 | `PageHeader` | `BentoHero` | Same title/subtitle/icon, plus a tone — the chip follows the product accent. |
 | `SubPageHeader` | `BentoHero` | With `BentoBackLink` for the back target and `BentoActionsMenu` for the menu. |
@@ -460,7 +467,7 @@ Nothing is being removed yet. `pnpm chrome:census` counts, per consumer checked 
 | `SubPage` | `BentoEntityShell` | Renders through a render prop, so the shell never learns what an entity is. |
 | `Page`, `PageContent` | `BentoShell` | Takes the rail, the header's two edges and the page; it owns `main` and the reading column, so a page sets no width. |
 
-`DialogDelete`, `LoadProvider` and `GradientButtonLink` are **not** console-era — the bento layer uses them itself, and they are not deprecated.
+`DialogDelete`, `LoadProvider` and `GradientButtonLink` were never console-era — the bento layer uses them itself, and they are the whole of `./router` now.
 
 ### The mascot
 
@@ -683,11 +690,11 @@ import type {
 
 Accordion, Avatar, Badge, Breadcrumb, Button, Card, Checkbox, Dialog, Drawer, DropdownMenu, Form, FormActions, FormItemTwoColumns, GradientButton, GradientSwitch, HoverCard, Input, Label, NavigationMenu, Pagination, Popover, Progress, Resizable, SectionCard, Select, Separator, Sheet, Sidebar, Skeleton, Slider, Sonner (Toaster), Stepper, Switch, Table, Tabs, Textarea, Toggle, ToggleGroup, Tooltip, VigletAssistant ([the dock](#the-assistant-dock)), VigletAvatar ([the mascot](#the-mascot))
 
-### App Components (23 components)
+### App Components
 
 AppFooter, BadgeColorful, BadgeLocale, DialogDelete, GradientButtonLink, LanguageSelect, LoadProvider, ModeToggle, NavSecondary, ThemeProvider
 
-Console-era, `@deprecated`, still exported — see [the swap table](#two-eras-and-which-one-a-new-page-should-use): BlankSlate, GridList, InternalSidebar, NavMain, NavUser, Page, PageContent, PageHeader, StickyPageHeader, SubPage, SubPageHeader
+Removed with the console era — see [where each one went](#moving-off-the-console-era): BlankSlate, GridList, InternalSidebar, NavMain, NavUser, Page, PageContent, PageHeader, StickyPageHeader, SubPage, SubPageHeader
 
 ### Hooks
 

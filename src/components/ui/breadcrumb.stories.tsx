@@ -1,5 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Slash } from "lucide-react";
+import { Fragment } from "react";
+
+import { BreadcrumbProvider, useBreadcrumb } from "@/contexts/breadcrumb.context";
+import { useSubPageBreadcrumb } from "@/hooks/use-sub-page-breadcrumb";
 
 import {
   Breadcrumb,
@@ -61,6 +65,53 @@ export const WithEllipsis: Story = {
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
+  ),
+};
+
+/**
+ * The trail as a page actually assembles it: `BreadcrumbProvider` holds it,
+ * `useSubPageBreadcrumb` pushes a level from whichever component knows it — a
+ * detail panel that has just loaded its entity, say — and the header reads the
+ * items back. The console-era `SubPage` used to wire these three together; a
+ * bento page composes them itself, which is why they are shown together here.
+ */
+function Trail() {
+  const { items } = useBreadcrumb();
+  return (
+    <Breadcrumb>
+      <BreadcrumbList>
+        {items.map((item, index) => (
+          // The separator is a sibling of the item, not a child: both render an
+          // `<li>`, and nesting them is invalid list markup.
+          <Fragment key={item.label}>
+            <BreadcrumbItem>
+              {item.href && index < items.length - 1 ? (
+                <BreadcrumbLink href={item.href}>{item.label}</BreadcrumbLink>
+              ) : (
+                <BreadcrumbPage>{item.label}</BreadcrumbPage>
+              )}
+            </BreadcrumbItem>
+            {index < items.length - 1 && <BreadcrumbSeparator />}
+          </Fragment>
+        ))}
+      </BreadcrumbList>
+    </Breadcrumb>
+  );
+}
+
+function DetailPanel() {
+  useSubPageBreadcrumb([{ label: "Users", href: "/users" }, { label: "admin" }]);
+  return <p className="text-sm text-muted-foreground">The panel that pushed the last two levels.</p>;
+}
+
+export const FromTheProvider: Story = {
+  render: () => (
+    <BreadcrumbProvider>
+      <div className="space-y-3">
+        <Trail />
+        <DetailPanel />
+      </div>
+    </BreadcrumbProvider>
   ),
 };
 
