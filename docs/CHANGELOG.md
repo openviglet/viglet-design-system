@@ -196,6 +196,7 @@
 - ✅ **VDS150** **192 of 237 exported components carry no doc comment, so find_component can match them only by name and props** — Every exported component has a doc comment whose first sentence is its purpose, and check-catalogue fails a new component without one, with catalogue-undescribed.txt now empty.
 - ✅ **VDS153** **the list page's layout editor disables its buttons while it saves, so the pressed button drops focus** — The layout editor marks the pressed control loading and the rest aria-disabled while a write runs, so focus stays put and a second press reaches nothing.
 - ✅ **VDS154** **a TooltipProvider delay never reaches a Tooltip, because each Tooltip mounts its own provider with no delay** — A Tooltip mounts its own provider only when no TooltipProvider is above it, so a provided delay such as the nav rail's 200ms reaches every tooltip under it.
+- ✅ **VDS155** **five doc comments open with a fix note or a caveat, which the catalogue then serves as the component's purpose** — BadgeColorful, NavigationMenu, Toaster, BentoStatusMarker and UserAvatar open with what each is for, and the note each opened with follows as a later paragraph.
 
 ## Block G — The package knows one chrome
 

@@ -7,8 +7,8 @@ import { cn } from "@/lib/utils"
  * A round avatar frame holding an `AvatarImage` and the `AvatarFallback` shown
  * until the image loads.
  *
- * For a person's initials with no picture, `UserAvatar` is already built; the
- * Viglet mascot is `VigletAvatar`.
+ * A person's avatar, with their picture or their initials, is already built as
+ * `UserAvatar`, and the Viglet mascot is `VigletAvatar`.
  */
 function Avatar({
   className,

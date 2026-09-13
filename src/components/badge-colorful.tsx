@@ -11,6 +11,10 @@ interface BadgeColorfulProps {
 }
 
 /**
+ * A badge for an entity's name, in a colour hashed from that name, so the same
+ * entity wears the same colour everywhere it is listed. Given `href`, a click hands
+ * it to `onClick`, which is how a product navigates to the entity.
+ *
  * `text` is an entity name out of the consumer's own content — `dialog.delete`
  * passes `usage.name` straight in — so nothing here may treat it as markup or
  * as a selector. It is rendered as a text node, and the per-instance colour it

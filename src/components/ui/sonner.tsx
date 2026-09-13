@@ -10,9 +10,13 @@ import { useTranslation } from "react-i18next"
 import { toast, Toaster as Sonner, type ToasterProps } from "sonner"
 
 /**
- * VDS97 — the region every notice lands in, named by this package.
+ * The region toast notices appear in: mount it once at the app's root, then call
+ * `toast()` from anywhere, on sonner, themed to the light or dark ground.
  *
- * Passing sonner no `containerAriaLabel` leaves it announcing its own default,
+ * A notice a product reports through the assistant dock is a `VigletAssistant`
+ * report instead, which keeps a read state and a time.
+ *
+ * VDS97 — the region every notice lands in, named by this package. Passing sonner no `containerAriaLabel` leaves it announcing its own default,
  * `Notifications`, in every product and every language. VDS93 cannot see that
  * and should not: there is no literal here to find. The English belongs to a
  * dependency, and the omission is the defect — which is the shape worth

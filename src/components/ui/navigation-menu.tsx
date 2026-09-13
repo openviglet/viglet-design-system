@@ -7,9 +7,13 @@ import { useTranslation } from "react-i18next"
 import { cn } from "@/lib/utils"
 
 /**
- * VDS105 — the landmark names itself, in the reader's language.
+ * A horizontal site navigation bar whose entries open panels of links, on the
+ * Radix primitive, composed with `NavigationMenuList`, `NavigationMenuItem`,
+ * `NavigationMenuTrigger` and `NavigationMenuContent`.
  *
- * Radix renders this root as a `nav` carrying a hardcoded `aria-label="Main"`,
+ * A bento console navigates with `BentoNavRail` and the command palette instead.
+ *
+ * VDS105 — the landmark names itself, in the reader's language. Radix renders this root as a `nav` carrying a hardcoded `aria-label="Main"`,
  * so passing none left the landmark announced as "Main" in every product and
  * every language — English a dependency wrote, exactly as sonner's
  * `Notifications` was. VDS93 cannot see it and should not: there is no literal

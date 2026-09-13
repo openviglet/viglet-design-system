@@ -15,8 +15,11 @@ export interface BentoStatusMarkerProps {
 }
 
 /**
- * Small status chip surfacing the two save-state cues the Bento detail pages
- * carry (restored parity with the pre-redesign sticky header):
+ * A small chip in a bento hero's eyebrow saying a form cannot be saved yet or has
+ * unsaved changes.
+ *
+ * It carries the two save-state cues the bento detail pages kept from the console's
+ * sticky header:
  *
  *   - `titleMissing` → a red "Title required" blocker (Save is also disabled).
  *   - `dirty`        → an amber "Unsaved changes" cue with a pulsing dot.

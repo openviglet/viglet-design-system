@@ -58,7 +58,8 @@ export function getUserInitials({
 }
 
 /**
- * UserAvatar — a neutral, brand-agnostic avatar showing user initials.
+ * A person's round avatar: their picture when `src` is given, their initials
+ * otherwise, in neutral colours no brand re-keys.
  *
  * Compatible with both Keycloak OIDC profiles (given_name/family_name claims)
  * and Spring Boot native users (firstName/lastName fields). Falls back to a

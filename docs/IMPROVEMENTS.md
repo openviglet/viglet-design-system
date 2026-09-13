@@ -46,23 +46,6 @@ release that warned. Before shipping, run viglet-ds-check-duplicates and a type-
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
 
-### §VDS155 First sentences that are not purposes
-
-VDS150 put a doc comment on every exported component, and check-catalogue now fails a
-component without one. It cannot judge whether the first sentence says what the
-component is for, and five of the comments written before it do not.
-
-BadgeColorful opens with why its text is never treated as markup. NavigationMenu and
-Toaster open with the fix that named their landmark, which the catalogue's readable pass
-reduces to a lowercase fragment. BentoStatusMarker's first sentence ends in a colon, so
-its summary stops mid-list. UserAvatar repeats its own name before saying what it is.
-
-Rewrite each first sentence as the purpose, keeping the note that was there as a later
-paragraph, since each one records a real decision. Then rebuild and read the five
-through find_component. A mechanical check is not part of this: whether a sentence names
-a purpose is a reading, and a rule that a summary starts with a capital would fail the
-many correct comments that open with a roadmap id.
-
 ### §VDS156 An inline edit that loses its place and saves twice
 
 VDS153's design asked for BentoInlineEdit's display button to trade disabled={saving}
