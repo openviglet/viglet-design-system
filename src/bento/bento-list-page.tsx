@@ -375,7 +375,19 @@ function BentoListEditor<T>({
   const { t } = useTranslation();
   const [draft, setDraft] = useState<ResolvedBentoItem<T>[]>(resolved);
 
-  const busy = layout.saving ?? false;
+  // VDS153 — which write is in flight, so that button shows it. The product's
+  // `saving` still marks every control busy, and this covers a product that
+  // passes no flag at all: a second press while the first write runs used to
+  // reach the product twice.
+  const [pressed, setPressed] = useState<"reset" | "global" | "save" | null>(null);
+  const busy = (layout.saving ?? false) || pressed !== null;
+
+  // Busy is not disabled (VDS143): a disabled button leaves the tab order, so the
+  // one just pressed from the keyboard would drop focus while the layout persists.
+  // The pressed control says it is loading, the rest are unavailable for now, and
+  // all four stay where the reader left them.
+  const control = (which: "reset" | "global" | "save" | "cancel") =>
+    busy && pressed === which ? { loading: true } : { "aria-disabled": busy || undefined };
 
   const [failed, setFailed] = useState(false);
 
@@ -388,8 +400,9 @@ function BentoListEditor<T>({
   // the panel simply sat there, which reads as an unresponsive button rather
   // than a refused save. A product that wants to report the failure itself still
   // can, by catching inside its own callback: this only runs when nothing did.
-  const run = (write: (() => Promise<unknown> | void) | undefined) => async () => {
+  const run = (which: "reset" | "global" | "save", write: (() => Promise<unknown> | void) | undefined) => async () => {
     if (!write) return;
+    setPressed(which);
     setFailed(false);
     try {
       await write();
@@ -397,6 +410,8 @@ function BentoListEditor<T>({
     } catch (err) {
       console.error("Failed to save the bento layout", err);
       setFailed(true);
+    } finally {
+      setPressed(null);
     }
   };
 
@@ -433,10 +448,10 @@ function BentoListEditor<T>({
             variant="ghost"
             size="sm"
             className="gap-2"
-            disabled={busy}
-            onClick={run(layout.onReset)}
+            {...control("reset")}
+            onClick={run("reset", layout.onReset)}
           >
-            <IconArrowBackUp size={16} />
+            {pressed !== "reset" && <IconArrowBackUp size={16} />}
             {t("bento.layout.reset", { defaultValue: "Reset to default" })}
           </Button>
         )}
@@ -445,24 +460,24 @@ function BentoListEditor<T>({
             variant="outline"
             size="sm"
             className="gap-2"
-            disabled={busy}
-            onClick={run(() => layout.onSaveGlobal?.(entries))}
+            {...control("global")}
+            onClick={run("global", () => layout.onSaveGlobal?.(entries))}
           >
-            <IconUsers size={16} />
+            {pressed !== "global" && <IconUsers size={16} />}
             {t("bento.layout.saveGlobal", { defaultValue: "Set as default for everyone" })}
           </Button>
         )}
-        <Button variant="ghost" size="sm" className="gap-2" disabled={busy} onClick={onClose}>
+        <Button variant="ghost" size="sm" className="gap-2" {...control("cancel")} onClick={onClose}>
           <IconX size={16} />
           {t("common.cancel", { defaultValue: "Cancel" })}
         </Button>
         <Button
           size="sm"
           className="gap-2"
-          disabled={busy}
-          onClick={run(() => layout.onSave(entries))}
+          {...control("save")}
+          onClick={run("save", () => layout.onSave(entries))}
         >
-          <IconDeviceFloppy size={16} />
+          {pressed !== "save" && <IconDeviceFloppy size={16} />}
           {t("bento.layout.save", { defaultValue: "Save layout" })}
         </Button>
         {failed && (

@@ -46,22 +46,6 @@ release that warned. Before shipping, run viglet-ds-check-duplicates and a type-
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
 
-### §VDS153 The layout editor keeps its place too
-
-VDS143 gave Button and GradientButton a loading state that keeps focus, and moved the
-save controls of BentoFormHero, BentoSaveBar and BentoEntityShell onto it. The layout
-editor in BentoListPage still marks its own save in flight with disabled={busy} on all
-four of its buttons: reset, set as default for everyone, cancel and save layout. A
-reader who presses Save layout from the keyboard loses focus as the layout persists, the
-defect VDS143 fixed one component over, and bento-list-page.test.tsx asserts the
-disabled attribute that causes it.
-
-Pass loading={busy} to the button that was pressed and aria-disabled to the other three
-while it runs, so none leaves the tab order, and change the test to assert aria-busy,
-focus kept, and a second press ignored. BentoInlineEdit disables its display button
-while a commit is saving; since focus has already left the field by then, give it
-aria-disabled with the same treatment rather than the attribute.
-
 ### §VDS154 A provided tooltip delay that nothing reads
 
 Tooltip in src/components/ui/tooltip.tsx wraps its Radix root in a TooltipProvider of
@@ -100,6 +84,30 @@ paragraph, since each one records a real decision. Then rebuild and read the fiv
 through find_component. A mechanical check is not part of this: whether a sentence names
 a purpose is a reading, and a rule that a summary starts with a capital would fail the
 many correct comments that open with a roadmap id.
+
+### §VDS156 An inline edit that loses its place and saves twice
+
+VDS153's design asked for BentoInlineEdit's display button to trade disabled={saving}
+for aria-disabled. Reading the component, that button never renders while a save runs:
+commit sets saving and awaits onSave with the input still mounted, and saving and
+editing both clear in the same batched update when it settles. The attribute is dead,
+and the defects are elsewhere.
+
+First, a keyboard commit drops focus. Enter commits, the save settles, editing turns
+false and the focused input unmounts, so focus falls to the body at the moment the new
+value lands. The display button that replaces it should take focus back when the edit
+began from it or from the keyboard.
+
+Second, a commit can run twice. While onSave is pending the input stays editable and its
+blur handler is still commit, so pressing Enter and then tabbing away calls onSave a
+second time with the same value, before the product has had the chance to update it.
+
+Guard commit with a ref for the save in flight, so a second call returns at once, and
+mark the input aria-busy while it runs. After a commit that the keyboard started, return
+focus to the display button. Remove the dead disabled and opacity branches in the same
+change. A jsdom test holds the single onSave call. A parity test holds the focus: in a
+browser, press Enter in the field, settle the save, and read that the display button is
+focused.
 
 ## Block G — The package knows one chrome
 

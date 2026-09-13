@@ -4,9 +4,9 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS153** (deps: VDS143 ✅) **the list page's layout editor disables its buttons while it saves, so the pressed button drops focus** — Save layout, cancel, reset and set-as-default each take disabled={busy}, the pattern VDS143 replaced in the form hero, save bar and entity shell. → §VDS153
 - 📋 **VDS154** (deps: —) **a TooltipProvider delay never reaches a Tooltip, because each Tooltip mounts its own provider with no delay** — The nav rail asks for a 200ms delay so a pointer crossing it does not flash every label, and gets none. → §VDS154
 - 📋 **VDS155** (deps: —) **five doc comments open with a fix note or a caveat, which the catalogue then serves as the component's purpose** — find_component shows BadgeColorful as a sentence about markup safety and NavigationMenu as one about its landmark, so neither says what it is for. → §VDS155
+- 📋 **VDS156** (deps: —) **an inline edit committed with Enter drops focus when it settles, and a blur while it saves commits a second time** — Enter unmounts the focused input once the save lands, and the input stays live while onSave is pending, so tabbing away calls it again. → §VDS156
 
 ## Block G — The package knows one chrome
 

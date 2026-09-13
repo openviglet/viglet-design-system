@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react"
+import { act, render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { IconCpu2 } from "@tabler/icons-react"
 import i18next from "i18next"
@@ -309,12 +309,60 @@ describe("the customise affordance", () => {
     expect(onReset).toHaveBeenCalledTimes(1)
   })
 
-  it("disables the controls while a write is in flight", async () => {
+  // VDS153 — busy is not disabled. A disabled control leaves the tab order, so
+  // the one a keyboard reader just pressed would drop focus while the layout
+  // persists; the browser half of that is measured in the parity test.
+  it("marks every control unavailable while the product says a write is in flight, and keeps them in the tab order", async () => {
     const user = userEvent.setup()
-    list({ listId: "llm", layout: layout({ saving: true }) })
+    const onSave = vi.fn()
+    list({ listId: "llm", layout: layout({ saving: true, onSave }) })
 
     await user.click(screen.getByRole("button", { name: /customize/i }))
+    const save = screen.getByRole("button", { name: /save/i })
+    const cancel = screen.getByRole("button", { name: /cancel/i })
 
-    expect(screen.getByRole("button", { name: /save/i })).toBeDisabled()
+    for (const button of [save, cancel]) {
+      expect(button).not.toBeDisabled()
+      expect(button).toHaveAttribute("aria-disabled", "true")
+    }
+    await user.click(save)
+    expect(onSave).not.toHaveBeenCalled()
+  })
+
+  it("shows the pressed control loading and ignores every control until its write settles", async () => {
+    const user = userEvent.setup()
+    let settle!: () => void
+    const onSave = vi.fn(() => new Promise<void>((resolve) => (settle = resolve)))
+    const onReset = vi.fn()
+    list({
+      listId: "llm",
+      layout: layout({
+        onSave,
+        onReset,
+        data: { listId: "llm", source: "USER", canEditGlobal: false, entries: [] },
+      }),
+    })
+
+    await user.click(screen.getByRole("button", { name: /customize/i }))
+    const save = screen.getByRole("button", { name: /save/i })
+    await user.click(save)
+
+    expect(save).toHaveAttribute("aria-busy", "true")
+    expect(save).not.toBeDisabled()
+    const reset = screen.getByRole("button", { name: /reset/i })
+    const cancel = screen.getByRole("button", { name: /cancel/i })
+    expect(reset).toHaveAttribute("aria-disabled", "true")
+    expect(reset).not.toHaveAttribute("aria-busy")
+
+    // A second save, a reset and a cancel all land on a write still running.
+    await user.click(save)
+    await user.click(reset)
+    await user.click(cancel)
+    expect(onSave).toHaveBeenCalledTimes(1)
+    expect(onReset).not.toHaveBeenCalled()
+    expect(screen.getByRole("button", { name: /save/i })).toBeInTheDocument()
+
+    await act(async () => settle())
+    expect(screen.queryByRole("button", { name: /save/i })).not.toBeInTheDocument()
   })
 })
