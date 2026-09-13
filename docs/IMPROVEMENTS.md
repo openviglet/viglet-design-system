@@ -30,27 +30,6 @@ together, so each one is true when it lands.
 Until then schools is the consumer that does not declare it, and this line is what says
 so rather than leaving it to be rediscovered.
 
-### §VDS157 The tooltip delay parity test, under load
-
-`src/components/ui/tooltip.parity.test.tsx` sleeps 150ms after the hover and asserts the
-bubble is not shown yet, then polls for it. That is the shape of the assertion VDS154
-needed: a provider's delay reaches the tooltips under it, so something must fail while
-the delay is still running.
-
-The 150ms is the part that does not hold. It is a fixed sleep sized for an idle machine,
-and the browser project runs beside 159 other test files: across four full runs of the
-suite during VDS147 it failed twice at `expect(bubbleShown()) .toBe(false)` — the bubble
-was already up — and passed three times out of three when run alone. So the failure
-carries no information either way, which is worse than no test: a delay that genuinely
-stopped reaching the tooltip would print the same line everyone has learned to re-run.
-
-The repair is the one VDS148 made to a timeout one directory over: stop sizing a
-constant for a machine that is not the one running it. Read the clock across the hover
-instead of sleeping against it — assert the bubble appeared no earlier than the
-provider's delay, measured from the event — or drive the delay with fake timers so the
-wait is not real at all. Either way the assertion stays what VDS154 wrote it to be, and
-stops being a race with the rest of the suite.
-
 ### §VDS158 The README's lists, against the surface it ships
 
 `## What's Included` is where a product author looks first, and both its lists are typed

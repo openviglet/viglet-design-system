@@ -105,6 +105,9 @@
 - ✅ **VDS127** **The catalogue build copies into dist, which a fresh checkout has not got, so Pages has failed 35 times running** — The catalogue build carries neither plugin that writes to dist, so it builds on a checkout that has none (design recorded in `.storybook/main.ts`).
 - ✅ **VDS128** **GitHub Pages was never enabled, so the catalogue deploys nowhere and the README's link 404s** — Pages is enabled with the Actions source, so the catalogue deploys and openviglet.github.io/viglet-design-system serves it.
 - ✅ **VDS148** **the exported-surface gate runs under the 5s default timeout and times out whenever the full suite is loaded** — The surface gate carries a timeout sized for the loaded suite, so it fails on an unreachable export and never on contention.
+- ✅ **VDS157** **a tooltip's provider-delay parity test fails only when the whole suite is loaded** — The delay is timed from whichever end of the hover a busy machine cannot push across the bound, so a red run means the delay (design recorded in `src/components/ui/tooltip.parity.test.tsx`).
+  checked **The delay assertion no longer rests on a fixed sleep** it measures the interval across the hover or drives it with a fake clock, so a loaded runner cannot move it.
+  checked **The full suite runs green three times in a row** a flake is fixed only when the run that caught it stops catching it.
 
 ## Block B — Bento becomes a design-system layer
 

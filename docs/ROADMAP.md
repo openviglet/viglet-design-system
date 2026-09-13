@@ -2,20 +2,12 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS157** (deps: —) **a tooltip's provider-delay parity test fails only when the whole suite is loaded** — it passes alone and failed two of four full runs, so the suite's red is noise and a real regression in the delay would read as the same flake. → §VDS157
 - 📋 **VDS158** (deps: —) **the README's component lists are typed by hand, and the App Components one omits seven exports** — AppSwitcher, ErrorBoundary and five more are shipped and unlisted, so the front door reads as the whole surface while being a subset. → §VDS158
 - 📋 **VDS159** (deps: —) **AdaptiveSectionCard silently drops any child that is not its Header or its Content** — A footer, a banner or a second Content renders nothing with no warning, and losing fields is the failure hardest to catch in review. → §VDS159
 
 ## Block F — What a consuming CMS needs from the package next
 
 ## Block G — The package knows one chrome
-
-## Done when — VDS157
-
-- **The delay assertion no longer rests on a fixed sleep** it measures the interval
-  across the hover or drives it with a fake clock, so a loaded runner cannot move it.
-- **The full suite runs green three times in a row** a flake is fixed only when the run
-  that caught it stops catching it.
 
 ## Done when — VDS158
 
