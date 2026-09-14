@@ -103,7 +103,7 @@
       "chrome": "bento",
       "accent": "cool",
       "sourceRoots": ["src", "vite.config.ts"],
-      "entries": [".", "./bento", "./bento.css", "./router", "./styles", "./vite"]
+      "entries": [".", "./bento", "./bento.css", "./i18n", "./router", "./styles", "./vite"]
     },
     {
       "id": "dumont",
@@ -114,7 +114,7 @@
       "chrome": "bento",
       "accent": "cool",
       "sourceRoots": ["src", "vite.config.ts"],
-      "entries": [".", "./bento", "./bento.css", "./router", "./styles", "./vite"]
+      "entries": [".", "./bento", "./bento.css", "./i18n", "./router", "./styles", "./vite"]
     },
     {
       "id": "cloud-console",
