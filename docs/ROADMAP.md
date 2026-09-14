@@ -2,17 +2,9 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS162** (deps: —) **two parity tests went red together in one full run and nothing kept the message** — Both pass alone and the suite is green seven runs of eight, so the browser stalling reads as two unrelated regressions nobody can act on. → §VDS162
-
 ## Block F — What a consuming CMS needs from the package next
 
 ## Block G — The package knows one chrome
-
-## Done when — VDS162
-
-- **A red parity run says which wait expired** The failure output of a parity test
-  survives the run that produced it, so a stall is read as a stall rather than as two
-  regressions.
 
 ## Non-goals
 

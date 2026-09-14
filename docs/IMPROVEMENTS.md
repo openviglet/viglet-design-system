@@ -30,28 +30,27 @@ together, so each one is true when it lands.
 Until then schools is the consumer that does not declare it, and this line is what says
 so rather than leaving it to be rediscovered.
 
-### §VDS162 The red nobody can read
+### §VDS163 The tooltip red, and what a recurrence has to say
 
-One full run of the suite turned two `parity (chromium)` files red together: the tooltip
-delay test and the inline-edit focus test. Both passed alone straight afterwards, and
-the suite has run green seven times out of eight since. The message was not captured,
-which is itself the finding — a failure nobody can read is one nobody can act on.
+One full run turned `tooltip.parity.test.tsx` red on "waits for the delay a provider
+above it sets", in the same run that reddened the inline-edit focus test. It has passed
+in every full run since — eight of nine — and passes alone every time.
 
-Two at once, in one project, is what makes this worth a line. VDS157 replaced a fixed
-sleep in one file with a lower bound measured from before the pointer moves, which a
-busy machine can only make larger; VDS153 and VDS156 did comparable work on the other.
-So the red is unlikely to be either assertion and much more likely to be the deadline
-around it: every wait here is a timeout against one shared browser, and when that
-browser stalls, each test waiting on it runs out at once.
+VDS162 explained the inline-edit half: a focus assertion with no wait. This half has no
+such explanation. Its assertion is a lower bound on elapsed time measured from before
+the pointer moves, and load can only make that number larger, so the red was not the
+delay being wrong. What is left is the wait around it — `expect.poll` for the bubble, on
+a four-second deadline. For that to expire, the tooltip never opened at all, which means
+the hover never reached Radix.
 
-That is the same defect VDS157 named one level down: a constant sized for a machine
-other than the one running it. The difference is that it now sits in the harness rather
-than in an assertion, where no single test can fix it.
+A headless page losing focus would explain both files at once: `activeElement` falls
+back to the body, and a pointer no longer over the trigger sends no enter. That is a
+candidate, not a finding. Nothing measured it.
 
-What is needed first is the message. A reporter that keeps the failure output of a
-parity run — or a retry that records what it retried rather than hiding it — turns one
-unreproducible red into a report naming which wait expired. Sizing anything before that
-is guessing at which number was wrong.
+So this waits for a recurrence with its output kept. What the next one has to say is
+which of the two expired — the poll, or the hover before it — and whether the page still
+had focus. Raising the deadline before that is guessing at which number was wrong, and
+would only make a stalled run take longer to say the same nothing.
 
 ## Block F — What a consuming CMS needs from the package next
 

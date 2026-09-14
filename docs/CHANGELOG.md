@@ -116,6 +116,8 @@
   checked **A component in its own module is never covered by another name's prefix** check-readme reads each value's declaring module, so a ButtonGroup beside Button in the lists is a finding until it is listed.
 - ✅ **VDS161** **the README inventory covers one published entry of seven, and no list describes the bento layer** — Every entry that ships a component is held to the inventory, and the bento layer has the list it never had: 231 components across four subpaths (design recorded in `scripts/check-readme.mjs`).
   checked **Every entry that ships a component vocabulary has a list a gate reads** check-readme holds ./bento to its own list the way it holds the root entry, and a component added there fails the build until it is named.
+- ✅ **VDS162** **the inline-edit parity tests read document.activeElement without waiting for the browser to apply it** — The inline-edit tests poll for focus to arrive rather than reading past it, so a slow browser is slow and not a lost focus (design recorded in `src/bento/bento-inline-edit.parity.test.tsx`).
+  checked **A focus assertion waits for the browser instead of reading past it** The inline-edit parity tests poll document.activeElement, so a slow run is slow rather than a report that the component lost focus.
 
 ## Block B — Bento becomes a design-system layer
 
