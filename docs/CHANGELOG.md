@@ -114,6 +114,8 @@
   checked **A child the adapter does not claim still renders inside the frosted section** A sibling that is neither Header, StaticHeader nor Content appears in the output in source order, asserted beside the recognised shape rather than instead of it.
 - ✅ **VDS160** **check-readme covers a name by prefix, so a component whose name extends a listed one passes unlisted** — The family rule reads the module a value was declared in, so a component in its own file is never covered by a listed name it happens to extend (design recorded in `scripts/check-readme.mjs`).
   checked **A component in its own module is never covered by another name's prefix** check-readme reads each value's declaring module, so a ButtonGroup beside Button in the lists is a finding until it is listed.
+- ✅ **VDS161** **the README inventory covers one published entry of seven, and no list describes the bento layer** — Every entry that ships a component is held to the inventory, and the bento layer has the list it never had: 231 components across four subpaths (design recorded in `scripts/check-readme.mjs`).
+  checked **Every entry that ships a component vocabulary has a list a gate reads** check-readme holds ./bento to its own list the way it holds the root entry, and a component added there fails the build until it is named.
 
 ## Block B — Bento becomes a design-system layer
 

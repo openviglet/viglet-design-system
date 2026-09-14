@@ -2,18 +2,11 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS161** (deps: —) **the README inventory covers one published entry of seven, and no list describes the bento layer** — An author adding ./bento has nowhere that answers what is in it, and a component added there is named where no gate reads. → §VDS161
 - 📋 **VDS162** (deps: —) **two parity tests went red together in one full run and nothing kept the message** — Both pass alone and the suite is green seven runs of eight, so the browser stalling reads as two unrelated regressions nobody can act on. → §VDS162
 
 ## Block F — What a consuming CMS needs from the package next
 
 ## Block G — The package knows one chrome
-
-## Done when — VDS161
-
-- **Every entry that ships a component vocabulary has a list a gate reads** check-readme
-  holds ./bento to its own list the way it holds the root entry, and a component added
-  there fails the build until it is named.
 
 ## Done when — VDS162
 

@@ -37,8 +37,8 @@ export declare function ships(
   exported: ReadonlySet<string>,
 ): boolean
 
-export declare function findings(
-  sections: readonly ReadmeList[],
+export declare function componentEntries(
   exports: ExportedSurface,
-  entry?: string,
-): string[]
+): [subpath: string, names: string[]][]
+
+export declare function findings(sections: readonly ReadmeList[], exports: ExportedSurface): string[]

@@ -2,7 +2,16 @@ import { existsSync, readFileSync } from "node:fs"
 import { join, resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 
-import { covered, findings, inventory, moduleOf, namesIn, ships } from "./check-readme.mjs"
+import {
+  componentEntries,
+  covered,
+  findings,
+  inventory,
+  moduleOf,
+  namesIn,
+  ships,
+  type ExportedSurface,
+} from "./check-readme.mjs"
 
 // VDS158 — the README's inventory against the surface it describes. The gate
 // itself runs in `npm run build`, where `dist/exports.json` has just been
@@ -167,9 +176,28 @@ describe("holding the lists to the surface", () => {
 
   it("counts a name shipped from another subpath as shipped", () => {
     // The App Components list names three that come from `./router`, and says so
-    // in the sentence under it. Listed-and-unshipped is about a name that is
-    // gone, not about which subpath it arrives on.
+    // in the sentence under it. Which list a name is under is a judgement; what
+    // this catches is a component in no list at all.
     expect(findings(listing(["Accordion", "DialogDelete"]), surface(["Accordion"], ["DialogDelete"]))).toEqual([])
+  })
+
+  it("holds every entry that ships a component, not only the root", () => {
+    // VDS161 — ./bento publishes its own vocabulary, and the inventory read as
+    // the whole package while covering one entry of seven.
+    expect(findings(listing(["Accordion"]), surface(["Accordion"], ["BentoShell"]))).toEqual([
+      'BentoShell is exported from "./router" and no list names it',
+    ])
+  })
+
+  it("leaves out an entry that ships no component at all", () => {
+    // ./assets ships artwork and ./vite a plugin. Neither is named here: each
+    // drops out by exporting no PascalCase value, so a new subpath is covered
+    // without this file being edited.
+    const shipped: ExportedSurface = surface(["Accordion"])
+    shipped.entries["./assets"] = { values: ["vigletLogoUrl", "turingLogoUrl"], declaredIn: {} }
+
+    expect(findings(listing(["Accordion"]), shipped)).toEqual([])
+    expect(componentEntries(shipped).map(([subpath]) => subpath)).toEqual(["."])
   })
 
   it("holds a heading's count to the list under it", () => {

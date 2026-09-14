@@ -147,24 +147,41 @@ export function ships(name, declaredIn, exported) {
 }
 
 /**
- * What the README and the surface disagree about. `entry` is the one the lists
- * describe; a listed name is shipped if any entry exports it, since the README
- * says where a subpath's own names come from in its own prose.
+ * Every published entry that ships a component, as `[subpath, names]`.
+ *
+ * VDS161 — derived rather than listed, so a subpath added tomorrow is covered
+ * without anyone editing this. `./assets` ships artwork, `./i18n` a runtime and
+ * `./vite` a plugin: none of them a component an author picks between, and each
+ * drops out by exporting no PascalCase value rather than by being named here.
  */
-export function findings(sections, exports, entry = ".") {
+export function componentEntries(exports) {
+  return Object.entries(exports.entries)
+    .map(([subpath, one]) => [subpath, (one.values ?? []).filter((name) => COMPONENT.test(name))])
+    .filter(([, names]) => names.length > 0)
+}
+
+/**
+ * What the README and the surface disagree about.
+ *
+ * A name is covered by being written down somewhere in `What's Included`, not by
+ * being under the heading that fits it best: which list a component belongs in
+ * is a judgement, and the defect being caught is a component in no list at all.
+ */
+export function findings(sections, exports) {
   const problems = []
   const listed = new Set(sections.flatMap((section) => section.names).filter((name) => COMPONENT.test(name)))
   const shipped = new Set(Object.values(exports.entries).flatMap((one) => one.values))
-  const described = (exports.entries[entry]?.values ?? []).filter((name) => COMPONENT.test(name))
   // Every entry's, so a name listed here and declared under another subpath is
   // still read as the family it belongs to rather than as a stray prefix.
   const declaredIn = Object.assign({}, ...Object.values(exports.entries).map((one) => one.declaredIn ?? {}))
+  const described = componentEntries(exports)
+  const total = described.reduce((sum, [, names]) => sum + names.length, 0)
 
   if (listed.size < FEWEST_LISTED) {
     problems.push(`only ${listed.size} name(s) were read out of the README's lists, so the reader is broken, not the README`)
   }
-  if (described.length < FEWEST_EXPORTED) {
-    problems.push(`only ${described.length} component(s) were read out of ${entry}, so exports.json was not the surface`)
+  if (total < FEWEST_EXPORTED) {
+    problems.push(`only ${total} component(s) were read out of ${described.length} entry(s), so exports.json was not the surface`)
   }
   if (problems.length > 0) return problems
 
@@ -173,9 +190,11 @@ export function findings(sections, exports, entry = ".") {
   // the whole surface. The hooks and the contexts are a chosen few out of far
   // more camelCase exports than anyone would want listed, so they are held only
   // to existing — which is the half a removal breaks.
-  for (const name of described) {
-    if (!covered(name, listed, declaredIn)) {
-      problems.push(`${name} is exported from "${entry}" and no list names it`)
+  for (const [subpath, names] of described) {
+    for (const name of names) {
+      if (!covered(name, listed, declaredIn)) {
+        problems.push(`${name} is exported from "${subpath}" and no list names it`)
+      }
     }
   }
   for (const section of sections) {
@@ -196,6 +215,7 @@ function main() {
   const readme = readFileSync(join(root, "README.md"), "utf8")
   const exports = JSON.parse(readFileSync(join(root, "dist", "exports.json"), "utf8"))
   const sections = inventory(readme)
+  const entries = componentEntries(exports)
   const problems = findings(sections, exports)
 
   if (problems.length > 0) {
@@ -206,9 +226,10 @@ function main() {
   }
 
   const listed = new Set(sections.flatMap((section) => section.names))
+  const counted = entries.reduce((sum, [, names]) => sum + names.length, 0)
   console.log(
-    `check-readme: ${sections.length} list(s) naming ${listed.size} component(s), ` +
-      `every name in the root entry accounted for — clean.`,
+    `check-readme: ${sections.length} list(s) naming ${listed.size} name(s), ` +
+      `${counted} component(s) across ${entries.map(([subpath]) => subpath).join(", ")} accounted for — clean.`,
   )
 }
 

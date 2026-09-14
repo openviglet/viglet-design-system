@@ -30,32 +30,6 @@ together, so each one is true when it lands.
 Until then schools is the consumer that does not declare it, and this line is what says
 so rather than leaving it to be rediscovered.
 
-### §VDS161 The six entries the inventory does not reach
-
-`## What's Included` reads as the package's inventory, and `check-readme` holds it to
-one entry of seven. `./bento` publishes more components than the root does, and the
-README describes them in prose, with no list anything can check. The other five entries
-have sections and no list either.
-
-That is the shape VDS158 closed one level down: a heading that reads as the whole while
-covering a part. An author who adds `./bento` to their imports has nowhere in the README
-that answers what is in it, and a bento component added tomorrow is named in no place a
-gate reads.
-
-The prose is not the defect. A section explaining how `BentoShell`, `BentoHero` and the
-rail compose a page is worth more than a list of names, and replacing it with one would
-lose the half that teaches. What is missing is the list beside it — the inventory
-`check-readme` can hold, the way the root entry now has one.
-
-So: a list under the heading that already describes each entry shipping components, and
-`check-readme` reading the other entries of `dist/exports.json` rather than only `.`.
-Its `findings` takes the entry as an argument already, so that half is a loop.
-
-Settle first which entries earn a list. `./bento` plainly does. `./assets` publishes
-artwork, `./vite` a plugin and `./i18n` a runtime — none of them components an author
-picks between — so the check belongs to the entries shipping a component vocabulary, not
-to all seven.
-
 ### §VDS162 The red nobody can read
 
 One full run of the suite turned two `parity (chromium)` files red together: the tooltip
