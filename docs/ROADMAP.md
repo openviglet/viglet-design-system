@@ -2,7 +2,22 @@
 
 ## Block A — The gate the design system never had
 
+- 📋 **VDS165** (deps: —) **the chrome census counts nothing for a console-era name imported under an alias** — Turing imported SubPage as SharedSubPage, the census read zero on the reading VDS147 removed it on, and Turing's build broke on 2026.3.11. → §VDS165
+- 📋 **VDS166** (deps: —) **the census test walks nine checkouts under a five-second default and timed out once on a cold disk** — Every assertion held and the next two runs passed, so the census gate reads as flaky while it is only slow. → §VDS166
+
 ## Block F — What a consuming CMS needs from the package next
+
+## Done when — VDS165
+
+- **A console-era name imported under an alias counts as taken** A fixture holding only
+  an aliased import measures one file, not zero, and the shim-follow case still counts
+  its pages.
+
+## Done when — VDS166
+
+- **The register census case is sized for the loaded suite** Its timeout carries a
+  comment giving the measured cold and warm walk, and the case passes beside the other
+  script tests on a cold disk.
 
 ## Non-goals
 

@@ -52,6 +52,52 @@ which of the two expired — the poll, or the hover before it — and whether th
 had focus. Raising the deadline before that is guessing at which number was wrong, and
 would only make a stalled run take longer to say the same nothing.
 
+### §VDS165 The alias the census reads past
+
+`measureConsumer` makes two passes. The first collects the console-era names a consumer
+can reach, adding each import clause's *alias*; the second counts files importing a
+reachable name, reading each clause's *original* name. For `import { SubPage } from
+"…/router"` the two agree. For `import { SubPage as SharedSubPage } from "…/router"` the
+first pass records `SharedSubPage`, the second asks for `SubPage`, and the file counts
+as nothing.
+
+That is not hypothetical. Turing's `components/sub.page.tsx` bound a density onto the
+package's `SubPage` exactly that way, and the census read zero console-era imports
+across all nine consumers — the reading VDS147 removed eleven components on. Turing's
+build broke on the file the day it moved to 2026.3.11. Nothing imported the shim, so it
+was deleted rather than ported, but the reading was wrong and the next alias will be
+wrong the same way.
+
+A direct import of the same name elsewhere in the consumer hides it: the unaliased
+clause puts `SubPage` in the reachable set, and the aliased file then matches. So a
+fixture holding both passes, and only an aliased import on its own reproduces it,
+measuring zero.
+
+The fix is to count a file when any clause imports a console-era name from the package,
+aliased or not, and keep the alias set for what it is for — following a shim's re-export
+into the pages that take it. The fixture that proves it is the aliased import alone.
+
+### §VDS166 The census walk and its deadline
+
+`chrome-census.test.ts` holds the real register to the real checkouts where a machine
+has them: it walks the declared source roots of all nine consumers — Turing's alone is
+over seven hundred files — and it runs under Vitest's default five-second timeout.
+
+On a warm filesystem that is plenty. The first run after the checkouts had been
+reinstalled failed that case while running beside two other script test files, and the
+next two runs of the same three files passed with no change in between. Nothing in the
+assertion moved; the walk outran the deadline.
+
+This is the shape VDS148 fixed one file over, where importing `vite.config.ts` took ten
+times longer beside the browser project than alone: a constant sized for a quiet
+machine, failing with every assertion intact. It is also a gate that reads as flaky
+while it is really slow, which is the reading that teaches people to re-run a red census
+instead of reading it.
+
+The repair is VDS148's: size the case for the loaded suite, with a comment saying what
+the walk costs and why, rather than widening it until it stops failing today. Measuring
+the walk once cold and once warm gives the number the comment should carry.
+
 ## Block F — What a consuming CMS needs from the package next
 
 ### §VDS152 The deprecation ends
