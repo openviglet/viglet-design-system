@@ -2,23 +2,31 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS158** (deps: —) **the README's component lists are typed by hand, and the App Components one omits seven exports** — AppSwitcher, ErrorBoundary and five more are shipped and unlisted, so the front door reads as the whole surface while being a subset. → §VDS158
 - 📋 **VDS159** (deps: —) **AdaptiveSectionCard silently drops any child that is not its Header or its Content** — A footer, a banner or a second Content renders nothing with no warning, and losing fields is the failure hardest to catch in review. → §VDS159
+- 📋 **VDS160** (deps: —) **check-readme covers a name by prefix, so a component whose name extends a listed one passes unlisted** — Button covers a ButtonGroup nobody wrote down, which is the omission the gate was built to catch. → §VDS160
+- 📋 **VDS161** (deps: —) **the README inventory covers one published entry of seven, and no list describes the bento layer** — An author adding ./bento has nowhere that answers what is in it, and a component added there is named where no gate reads. → §VDS161
 
 ## Block F — What a consuming CMS needs from the package next
 
 ## Block G — The package knows one chrome
-
-## Done when — VDS158
-
-- **A gate reads the README's lists and the exported surface together** it fails on a
-  name shipped and unlisted, and on one listed after it stopped being exported.
 
 ## Done when — VDS159
 
 - **A child the adapter does not claim still renders inside the frosted section** A
   sibling that is neither Header, StaticHeader nor Content appears in the output in
   source order, asserted beside the recognised shape rather than instead of it.
+
+## Done when — VDS160
+
+- **A component in its own module is never covered by another name's prefix**
+  check-readme reads each value's declaring module, so a ButtonGroup beside Button in
+  the lists is a finding until it is listed.
+
+## Done when — VDS161
+
+- **Every entry that ships a component vocabulary has a list a gate reads** check-readme
+  holds ./bento to its own list the way it holds the root entry, and a component added
+  there fails the build until it is named.
 
 ## Non-goals
 

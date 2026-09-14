@@ -108,6 +108,8 @@
 - ✅ **VDS157** **a tooltip's provider-delay parity test fails only when the whole suite is loaded** — The delay is timed from whichever end of the hover a busy machine cannot push across the bound, so a red run means the delay (design recorded in `src/components/ui/tooltip.parity.test.tsx`).
   checked **The delay assertion no longer rests on a fixed sleep** it measures the interval across the hover or drives it with a fake clock, so a loaded runner cannot move it.
   checked **The full suite runs green three times in a row** a flake is fixed only when the run that caught it stops catching it.
+- ✅ **VDS158** **the README's component lists are typed by hand, and the App Components one omits seven exports** — check-readme holds every What's Included list to dist/exports.json in both directions, and the fifteen components the front door omitted are named (design recorded in `scripts/check-readme.mjs`).
+  checked **A gate reads the README's lists and the exported surface together** it fails on a name shipped and unlisted, and on one listed after it stopped being exported.
 
 ## Block B — Bento becomes a design-system layer
 

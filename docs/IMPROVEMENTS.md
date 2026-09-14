@@ -30,30 +30,6 @@ together, so each one is true when it lands.
 Until then schools is the consumer that does not declare it, and this line is what says
 so rather than leaving it to be rediscovered.
 
-### §VDS158 The README's lists, against the surface it ships
-
-`## What's Included` is where a product author looks first, and both its lists are typed
-by hand. The UI Primitives one is accurate today — 41 names under a heading that says
-41. The App Components one is not: it names ten, while `src/components/index.ts` exports
-`AppSwitcher`, `BackendStatusBanner`, `BackendStatusProvider`, `ErrorBoundary`,
-`LanguageSwitcher`, `ModeToggleSidebar` and `VigletAppSwitcher` too, and
-`src/components/login` and `src/components/startup-first` export their own compounds
-beside them. It also carried a parenthesised count of 23 that matched neither its own
-list nor the export set; VDS147 removed the count rather than guessing a new one, which
-leaves the list wrong and no longer claiming a total.
-
-Nothing checks either list, which is why one drifted and the other happens to be right.
-The package already knows the answer: `dist/exports.json` is the surface per entry,
-emitted every build, and `check-catalogue` already holds a generated artefact to it. The
-same shape fits here — read the names out of the README's lists, compare them against
-the entry they claim to describe, and fail on a name shipped and unlisted. The reverse
-direction matters as much: a name listed and no longer exported is what a removal like
-VDS147 leaves behind.
-
-A curated subset is a defensible thing for a front door to be, but then it has to say
-so, and the gate becomes a cap on what may be omitted rather than an equality. Deciding
-which of the two this section is, is the first half of the work.
-
 ### §VDS159 The children the adapter never reads
 
 `AdaptiveSectionCard` reads its children once, looking for two things: a `Header` (or
@@ -79,6 +55,56 @@ same section. A `Header` or `StaticHeader` is the one child consumed rather than
 rendered, since its props became the heading. What proves it is an assertion that an
 unclaimed sibling survives — the assertion a test written only against the recognised
 shape never makes.
+
+### §VDS160 The family rule, and the component it hides
+
+`check-readme` covers an export when a listed name is its own, or is one it continues on
+a capital: `Accordion` covers `AccordionItem`, `Sidebar` covers twenty parts. Without
+that the lists would name 196 exports rather than 78, and a compound's parts are not
+what a product author chooses between.
+
+But a prefix is not a family. `Button` covers a `ButtonGroup` nobody listed, `Input` an
+`InputMask`, `Table` a `TableVirtual` — each a component an author would look for by
+name, each admitted by the gate written to stop exactly that. `ModeToggleSidebar` was
+already in that position: its own component rather than a part of `ModeToggle`, listed
+today only because a person noticed it while the rule did not.
+
+What makes a part a part is where it is declared. `CardHeader` lives in `card.tsx`
+beside `Card`; a `ButtonGroup` worth listing would get a module of its own. So the rule
+wants to be: a name is covered by a family head only when the two are declared in the
+same source file. That answer already exists here — `scripts/exported-surface.test.ts`
+maps every published name back to its declaring module — and is not being asked.
+
+`dist/exports.json` carries no origin, which is why a prefix stood in for one. Either
+that emit grows a field naming each value's declaring module, or the gate reads what
+`exported-surface` builds from source. The first keeps `check-readme` a reader of one
+generated artefact, which is what makes it cheap enough to run in the build.
+
+### §VDS161 The six entries the inventory does not reach
+
+`## What's Included` reads as the package's inventory, and `check-readme` holds it to
+one entry of seven. `./bento` publishes more components than the root does, and the
+README describes them in prose, with no list anything can check. The other five entries
+have sections and no list either.
+
+That is the shape VDS158 closed one level down: a heading that reads as the whole while
+covering a part. An author who adds `./bento` to their imports has nowhere in the README
+that answers what is in it, and a bento component added tomorrow is named in no place a
+gate reads.
+
+The prose is not the defect. A section explaining how `BentoShell`, `BentoHero` and the
+rail compose a page is worth more than a list of names, and replacing it with one would
+lose the half that teaches. What is missing is the list beside it — the inventory
+`check-readme` can hold, the way the root entry now has one.
+
+So: a list under the heading that already describes each entry shipping components, and
+`check-readme` reading the other entries of `dist/exports.json` rather than only `.`.
+Its `findings` takes the entry as an argument already, so that half is a loop.
+
+Settle first which entries earn a list. `./bento` plainly does. `./assets` publishes
+artwork, `./vite` a plugin and `./i18n` a runtime — none of them components an author
+picks between — so the check belongs to the entries shipping a component vocabulary, not
+to all seven.
 
 ## Block F — What a consuming CMS needs from the package next
 

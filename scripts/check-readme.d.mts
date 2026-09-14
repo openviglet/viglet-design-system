@@ -1,0 +1,27 @@
+/** The shapes `check-readme.mjs` exports, for the TypeScript that imports it. */
+
+export interface ReadmeList {
+  /** The `###` heading the list sits under, as written. */
+  heading: string
+  names: string[]
+  /** The count the heading claims in parentheses, where it claims one. */
+  claimed: number | null
+}
+
+export interface ExportedSurface {
+  entries: Record<string, { values: string[] }>
+}
+
+export declare function namesIn(item: string): string[]
+
+export declare function inventory(readme: string): ReadmeList[]
+
+export declare function covered(name: string, listed: ReadonlySet<string>): boolean
+
+export declare function ships(name: string, exported: ReadonlySet<string>): boolean
+
+export declare function findings(
+  sections: readonly ReadmeList[],
+  exports: ExportedSurface,
+  entry?: string,
+): string[]

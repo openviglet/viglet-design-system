@@ -688,13 +688,15 @@ import type {
 
 ## What's Included
 
-### UI Primitives (41 components)
+### UI Primitives (48 components)
 
-Accordion, Avatar, Badge, Breadcrumb, Button, Card, Checkbox, Dialog, Drawer, DropdownMenu, Form, FormActions, FormItemTwoColumns, GradientButton, GradientSwitch, HoverCard, Input, Label, NavigationMenu, Pagination, Popover, Progress, Resizable, SectionCard, Select, Separator, Sheet, Sidebar, Skeleton, Slider, Sonner (Toaster), Stepper, Switch, Table, Tabs, Textarea, Toggle, ToggleGroup, Tooltip, VigletAssistant ([the dock](#the-assistant-dock)), VigletAvatar ([the mascot](#the-mascot))
+Accordion, Avatar, Badge, Breadcrumb, Button, Card, Checkbox, Dialog, Drawer, DropdownMenu, FloatingFormulasBg, Form, FormActions, FormItemTwoColumns, GlassCard, GradientButton, GradientSwitch, HoverCard, IconPickerDialog, Input, Label, NavigationMenu, Pagination, Popover, Progress, PulseRing, Resizable, SectionCard, Select, Separator, Sheet, Sidebar, Skeleton, Slider, Stepper, StickySaveBar, Switch, Table, Tabs, Textarea, Toaster (sonner), Toggle, ToggleGroup, Tooltip, UserAvatar, UserMenu, VigletAssistant ([the dock](#the-assistant-dock)), VigletAvatar ([the mascot](#the-mascot))
 
-### App Components
+### App Components (19 components)
 
-AppFooter, BadgeColorful, BadgeLocale, DialogDelete, GradientButtonLink, LanguageSelect, LoadProvider, ModeToggle, NavSecondary, ThemeProvider
+AppFooter, AppSwitcher, BackendStatusBanner, BackendStatusProvider, BadgeColorful, BadgeLocale, DialogDelete, ErrorBoundary, GradientButtonLink, LanguageSelect, LanguageSwitcher, LoadProvider, Login, ModeToggle, ModeToggleSidebar, NavSecondary, StartupFirst, ThemeProvider, VigletAppSwitcher
+
+`DialogDelete`, `GradientButtonLink` and `LoadProvider` are imported from `@viglet/viglet-design-system/router`; every other name above comes from the package root. `Login` and `StartupFirst` are compounds — each is a root with named parts on it, the way `Card` is.
 
 Removed with the console era — see [where each one went](#moving-off-the-console-era): BlankSlate, GridList, InternalSidebar, NavMain, NavUser, Page, PageContent, PageHeader, StickyPageHeader, SubPage, SubPageHeader
 
