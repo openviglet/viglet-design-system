@@ -8,5 +8,3 @@
 ## Block F — What a consuming CMS needs from the package next
 
 - ⏸ **VDS152** (deps: VDS142 ✅) **an actions-menu item without an id still type-checks, so the one-release deprecation never ends** — set aside (a release that carried the missing-id warning): Until the type requires it, a new console verb can reach the DOM with no name for a census to match. → §VDS152
-
-## Block G — The package knows one chrome

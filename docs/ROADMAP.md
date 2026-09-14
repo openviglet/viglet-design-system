@@ -4,8 +4,6 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-## Block G — The package knows one chrome
-
 ## Non-goals
 
 - **Do not fork a shared component inside a product** The one-line re-export shim is the

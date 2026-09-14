@@ -4,14 +4,15 @@ import { useState } from "react";
 import { DialogDelete } from "./dialog.delete";
 
 /**
- * The console delete confirmation (VDS116 — it had no story, so the axe pass
- * never reached a dialog every product opens).
+ * The delete confirmation every product opens (VDS116 — it had no story, so the
+ * axe pass never reached it).
  *
- * Console-era and `@deprecated`, like the rest of this block: still exported and
- * still supported until the consoles cut over.
+ * It shares a directory with the console era and was never part of it: the bento
+ * layer uses this itself, and with the eleven console-era components gone it is
+ * one of the three exports left under `./router`.
  */
 const meta = {
-  title: "Console/DialogDelete",
+  title: "App/DialogDelete",
   component: DialogDelete,
   tags: ["autodocs"],
   parameters: { layout: "fullscreen" },

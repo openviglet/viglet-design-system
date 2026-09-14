@@ -67,5 +67,3 @@ through, and delete warnWithoutId and its test. The change note in the ledger na
 release that warned. Before shipping, run viglet-ds-check-duplicates and a type-check in
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
-
-## Block G — The package knows one chrome
