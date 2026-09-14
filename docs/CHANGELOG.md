@@ -118,6 +118,8 @@
   checked **Every entry that ships a component vocabulary has a list a gate reads** check-readme holds ./bento to its own list the way it holds the root entry, and a component added there fails the build until it is named.
 - ✅ **VDS162** **the inline-edit parity tests read document.activeElement without waiting for the browser to apply it** — The inline-edit tests poll for focus to arrive rather than reading past it, so a slow browser is slow and not a lost focus (design recorded in `src/bento/bento-inline-edit.parity.test.tsx`).
   checked **A focus assertion waits for the browser instead of reading past it** The inline-edit parity tests poll document.activeElement, so a slow run is slow rather than a report that the component lost focus.
+- ✅ **VDS164** **a sonner removal timer outlives the hook test's jsdom environment and fails the run with every test green** — The hook test waits sonner's own exit delay after its last dismissal, so no removal timer outlives the jsdom environment (design recorded in `src/hooks/use-assistant-notifications.test.tsx`).
+  checked **No sonner timer runs after the hook test's environment is gone** The file waits sonner's own exit delay after its last dismissal, read from the build, and the full suite reports no unhandled error.
 
 ## Block B — Bento becomes a design-system layer
 
