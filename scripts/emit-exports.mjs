@@ -15,7 +15,7 @@
 // exports separated from values.
 
 import { readFileSync, writeFileSync } from "node:fs"
-import { dirname, join, resolve } from "node:path"
+import { dirname, join, resolve, sep } from "node:path"
 import { fileURLToPath } from "node:url"
 import ts from "typescript"
 
@@ -61,6 +61,31 @@ const manifest = {
   entries: {},
 }
 
+const distPrefix = dist + sep
+
+/**
+ * VDS160 — the module a value was declared in, relative to `dist` and without
+ * its extension, so `Card` and `CardHeader` both read `components/ui/card`.
+ *
+ * A name alone cannot say whether two exports are one component or two.
+ * `check-readme` was covering `AccordionItem` with `Accordion` on a prefix,
+ * which reads a `ButtonGroup` as part of `Button` and lets a whole component go
+ * unlisted. Being declared together is what makes a compound a compound, and
+ * the declaration files already know it.
+ *
+ * A value re-exported from a dependency — `toast` from sonner, `i18n` from
+ * i18next — has no module here and is left out rather than given a path outside
+ * the package, which no reader could compare against another.
+ */
+function moduleOf(symbol) {
+  const resolved = symbol.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(symbol) : symbol
+  const declared = resolved.getDeclarations()?.[0]?.getSourceFile()?.fileName
+  if (!declared) return null
+  const full = resolve(declared)
+  if (!full.startsWith(distPrefix)) return null
+  return full.slice(distPrefix.length).split(sep).join("/").replace(/\.d\.ts$/, "")
+}
+
 let total = 0
 for (const [subpath, declarationFile] of Object.entries(entries)) {
   const source = program.getSourceFile(declarationFile)
@@ -76,10 +101,18 @@ for (const [subpath, declarationFile] of Object.entries(entries)) {
 
   const values = []
   const types = []
+  const declaredIn = {}
   for (const symbol of checker.getExportsOfModule(moduleSymbol)) {
     const resolved =
       symbol.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(symbol) : symbol
-    ;(resolved.flags & VALUE_FLAGS ? values : types).push(symbol.getName())
+    const name = symbol.getName()
+    if (resolved.flags & VALUE_FLAGS) {
+      values.push(name)
+      const module = moduleOf(symbol)
+      if (module) declaredIn[name] = module
+    } else {
+      types.push(name)
+    }
   }
 
   values.sort()
@@ -90,6 +123,9 @@ for (const [subpath, declarationFile] of Object.entries(entries)) {
     specifier: subpath === "." ? pkg.name : `${pkg.name}/${subpath.replace(/^\.\//, "")}`,
     values,
     types,
+    // Value name -> the module that declared it, for a reader asking whether two
+    // exported names are one component's parts or two components (VDS160).
+    declaredIn: Object.fromEntries(Object.entries(declaredIn).sort(([a], [b]) => a.localeCompare(b))),
   }
 }
 

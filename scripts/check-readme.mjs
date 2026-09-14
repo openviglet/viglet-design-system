@@ -103,23 +103,47 @@ export function inventory(readme) {
   return sections
 }
 
-/** Whether `part` continues `family` as one of its members: `Accordion` → `AccordionItem`. */
+/** Whether `part` continues `family` on a capital: `Accordion` → `AccordionItem`. */
 const partOf = (part, family) =>
   part.length > family.length && part.startsWith(family) && /[A-Z]/.test(part[family.length])
 
-/** Whether some listed name is this export's own name, or the family it belongs to. */
-export function covered(name, listed) {
-  return listed.has(name) || [...listed].some((family) => partOf(name, family))
+/**
+ * The module a listed name stands for, or null where it stands for nothing.
+ *
+ * VDS160 — a name alone cannot say whether two exports are one component or
+ * two, and reading them by prefix let a whole component hide behind a listed
+ * one: `Button` covering a `ButtonGroup` nobody wrote down is the omission this
+ * gate exists to catch. Being declared together is what makes a compound a
+ * compound, and `declaredIn` carries that from the build.
+ *
+ * A name is usually its own export and answers with its own module. `Resizable`
+ * is the other case — a family with three parts and no export of its own — and
+ * it stands for their module only where they all agree on one. Parts that
+ * disagree are two families sharing a prefix, which is the thing being caught.
+ */
+export function moduleOf(name, declaredIn) {
+  if (declaredIn[name]) return declaredIn[name]
+  const parts = Object.keys(declaredIn).filter((value) => partOf(value, name))
+  if (parts.length === 0) return null
+  const [first] = parts
+  return parts.every((value) => declaredIn[value] === declaredIn[first]) ? declaredIn[first] : null
+}
+
+/** Whether some listed name is this export's own name, or the family it was declared in. */
+export function covered(name, listed, declaredIn) {
+  if (listed.has(name)) return true
+  const module = declaredIn[name]
+  if (!module) return false
+  return [...listed].some((family) => partOf(name, family) && moduleOf(family, declaredIn) === module)
 }
 
 /**
- * Whether some export is this listed name, or a member of the family it heads —
- * `covered` read the other way. A list names `Resizable`, which is a family with
- * three parts and no export of its own, and that is a heading doing its job
- * rather than a name that went missing.
+ * Whether a listed name still names something — `covered` read the other way.
+ * A heading standing over a family that is gone is what a removal like VDS147
+ * leaves behind, and it is the one direction a name with no module can fail.
  */
-export function ships(name, exported) {
-  return exported.has(name) || [...exported].some((value) => partOf(value, name))
+export function ships(name, declaredIn, exported) {
+  return exported.has(name) || moduleOf(name, declaredIn) !== null
 }
 
 /**
@@ -132,6 +156,9 @@ export function findings(sections, exports, entry = ".") {
   const listed = new Set(sections.flatMap((section) => section.names).filter((name) => COMPONENT.test(name)))
   const shipped = new Set(Object.values(exports.entries).flatMap((one) => one.values))
   const described = (exports.entries[entry]?.values ?? []).filter((name) => COMPONENT.test(name))
+  // Every entry's, so a name listed here and declared under another subpath is
+  // still read as the family it belongs to rather than as a stray prefix.
+  const declaredIn = Object.assign({}, ...Object.values(exports.entries).map((one) => one.declaredIn ?? {}))
 
   if (listed.size < FEWEST_LISTED) {
     problems.push(`only ${listed.size} name(s) were read out of the README's lists, so the reader is broken, not the README`)
@@ -147,11 +174,15 @@ export function findings(sections, exports, entry = ".") {
   // more camelCase exports than anyone would want listed, so they are held only
   // to existing — which is the half a removal breaks.
   for (const name of described) {
-    if (!covered(name, listed)) problems.push(`${name} is exported from "${entry}" and no list names it`)
+    if (!covered(name, listed, declaredIn)) {
+      problems.push(`${name} is exported from "${entry}" and no list names it`)
+    }
   }
   for (const section of sections) {
     for (const name of section.names) {
-      if (!ships(name, shipped)) problems.push(`${section.heading} names ${name}, which no entry exports`)
+      if (!ships(name, declaredIn, shipped)) {
+        problems.push(`${section.heading} names ${name}, which no entry exports`)
+      }
     }
     if (section.claimed !== null && section.claimed !== section.names.length) {
       problems.push(`${section.heading} lists ${section.names.length} name(s), and its heading claims ${section.claimed}`)

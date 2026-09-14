@@ -112,6 +112,8 @@
   checked **A gate reads the README's lists and the exported surface together** it fails on a name shipped and unlisted, and on one listed after it stopped being exported.
 - ✅ **VDS159** **AdaptiveSectionCard silently drops any child that is not its Header or its Content** — AdaptiveSectionCard renders every child in source order: the Header becomes the heading, the Content gives up its wrapper, the rest stands (design recorded in `src/bento/bento-section-chrome.tsx`).
   checked **A child the adapter does not claim still renders inside the frosted section** A sibling that is neither Header, StaticHeader nor Content appears in the output in source order, asserted beside the recognised shape rather than instead of it.
+- ✅ **VDS160** **check-readme covers a name by prefix, so a component whose name extends a listed one passes unlisted** — The family rule reads the module a value was declared in, so a component in its own file is never covered by a listed name it happens to extend (design recorded in `scripts/check-readme.mjs`).
+  checked **A component in its own module is never covered by another name's prefix** check-readme reads each value's declaring module, so a ButtonGroup beside Button in the lists is a finding until it is listed.
 
 ## Block B — Bento becomes a design-system layer
 

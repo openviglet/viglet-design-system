@@ -30,30 +30,6 @@ together, so each one is true when it lands.
 Until then schools is the consumer that does not declare it, and this line is what says
 so rather than leaving it to be rediscovered.
 
-### §VDS160 The family rule, and the component it hides
-
-`check-readme` covers an export when a listed name is its own, or is one it continues on
-a capital: `Accordion` covers `AccordionItem`, `Sidebar` covers twenty parts. Without
-that the lists would name 196 exports rather than 78, and a compound's parts are not
-what a product author chooses between.
-
-But a prefix is not a family. `Button` covers a `ButtonGroup` nobody listed, `Input` an
-`InputMask`, `Table` a `TableVirtual` — each a component an author would look for by
-name, each admitted by the gate written to stop exactly that. `ModeToggleSidebar` was
-already in that position: its own component rather than a part of `ModeToggle`, listed
-today only because a person noticed it while the rule did not.
-
-What makes a part a part is where it is declared. `CardHeader` lives in `card.tsx`
-beside `Card`; a `ButtonGroup` worth listing would get a module of its own. So the rule
-wants to be: a name is covered by a family head only when the two are declared in the
-same source file. That answer already exists here — `scripts/exported-surface.test.ts`
-maps every published name back to its declaring module — and is not being asked.
-
-`dist/exports.json` carries no origin, which is why a prefix stood in for one. Either
-that emit grows a field naming each value's declaring module, or the gate reads what
-`exported-surface` builds from source. The first keeps `check-readme` a reader of one
-generated artefact, which is what makes it cheap enough to run in the build.
-
 ### §VDS161 The six entries the inventory does not reach
 
 `## What's Included` reads as the package's inventory, and `check-readme` holds it to
@@ -79,6 +55,29 @@ Settle first which entries earn a list. `./bento` plainly does. `./assets` publi
 artwork, `./vite` a plugin and `./i18n` a runtime — none of them components an author
 picks between — so the check belongs to the entries shipping a component vocabulary, not
 to all seven.
+
+### §VDS162 The red nobody can read
+
+One full run of the suite turned two `parity (chromium)` files red together: the tooltip
+delay test and the inline-edit focus test. Both passed alone straight afterwards, and
+the suite has run green seven times out of eight since. The message was not captured,
+which is itself the finding — a failure nobody can read is one nobody can act on.
+
+Two at once, in one project, is what makes this worth a line. VDS157 replaced a fixed
+sleep in one file with a lower bound measured from before the pointer moves, which a
+busy machine can only make larger; VDS153 and VDS156 did comparable work on the other.
+So the red is unlikely to be either assertion and much more likely to be the deadline
+around it: every wait here is a timeout against one shared browser, and when that
+browser stalls, each test waiting on it runs out at once.
+
+That is the same defect VDS157 named one level down: a constant sized for a machine
+other than the one running it. The difference is that it now sits in the harness rather
+than in an assertion, where no single test can fix it.
+
+What is needed first is the message. A reporter that keeps the failure output of a
+parity run — or a retry that records what it retried rather than hiding it — turns one
+unreproducible red into a report naming which wait expired. Sizing anything before that
+is guessing at which number was wrong.
 
 ## Block F — What a consuming CMS needs from the package next
 
