@@ -50,10 +50,10 @@ export interface AdaptiveSectionCardProps {
  * ```
  *
  * It reads the icon, title and description off the `Header` (or `StaticHeader`)
- * child and the fields off the `Content` child, so a form written against the
- * console's compound API renders in the bento language without being rewritten.
- * That compound API is the whole difference from `BentoFormSection`, which takes
- * the same three as props.
+ * child and unwraps the `Content` child, so a form written against the console's
+ * compound API renders in the bento language without being rewritten. Every
+ * other child renders where it was written. That compound API is the whole
+ * difference from `BentoFormSection`, which takes the same three as props.
  *
  * It used to pick between two chromes off a provider, which is what let one form
  * live in two consoles at once while a product migrated behind a parallel route.
@@ -66,22 +66,35 @@ function AdaptiveSectionCard({
   children,
 }: Readonly<AdaptiveSectionCardProps>) {
   let header: HeaderLikeProps | undefined;
-  let content: ReactNode;
   Children.forEach(children, (child) => {
     if (!isValidElement(child)) return;
     const { type } = child as ReactElement;
     if (type === SectionCard.Header || type === SectionCard.StaticHeader) {
-      header = (child as ReactElement<HeaderLikeProps>).props;
-    } else if (type === SectionCard.Content) {
-      content = (child as ReactElement<{ children?: ReactNode }>).props.children;
+      header ??= (child as ReactElement<HeaderLikeProps>).props;
     }
+  });
+
+  // Everything the adapter was given, in the order it was given. A `Header` is
+  // consumed rather than rendered, since its props became the heading above; a
+  // `Content` gives up its wrapper and its fields take its place; anything else
+  // is a child this does not recognise and renders untouched (VDS159). Reading
+  // only the two it knows is what used to drop a footer, a banner between the
+  // header and the fields, or a second `Content`, with nothing to say so.
+  const body = Children.map(children, (child) => {
+    if (!isValidElement(child)) return child;
+    const { type } = child as ReactElement;
+    if (type === SectionCard.Header || type === SectionCard.StaticHeader) return null;
+    if (type === SectionCard.Content) {
+      return (child as ReactElement<{ children?: ReactNode }>).props.children;
+    }
+    return child;
   });
 
   // A section built some other way has no header to lift. It keeps the frosted
   // surface and all of its children, because losing its fields silently is the
   // failure here that would be hardest to notice.
   if (!header) {
-    return <section className={cn(BENTO_FORM_SURFACE, className)}>{children}</section>;
+    return <section className={cn(BENTO_FORM_SURFACE, className)}>{body}</section>;
   }
 
   return (
@@ -92,7 +105,7 @@ function AdaptiveSectionCard({
       description={header.description}
       className={className}
     >
-      {content}
+      {body}
     </BentoFormSection>
   );
 }

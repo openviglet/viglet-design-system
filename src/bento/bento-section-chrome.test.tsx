@@ -105,6 +105,58 @@ describe("compound markup, one chrome", () => {
     expect(screen.getByText("Fixed")).toBeInTheDocument()
   })
 
+  // VDS159 — the adapter used to read its children for two things and discard
+  // the rest, so a footer, a banner or a second Content rendered nothing and
+  // nothing said so. `children` is ReactNode, so tsc agrees with either, and a
+  // story shows what its author remembered to write.
+  it("renders a sibling it does not recognise, beside the fields it does", () => {
+    const { container } = draw(
+      <AdaptiveSectionCard>
+        <AdaptiveSectionCard.Header icon={IconCpu2} title="Connection" />
+        <p>a banner between the header and the fields</p>
+        <AdaptiveSectionCard.Content>
+          <label htmlFor="endpoint">Endpoint</label>
+          <input id="endpoint" />
+        </AdaptiveSectionCard.Content>
+        <footer>a footer under them</footer>
+      </AdaptiveSectionCard>,
+    )
+
+    expect(screen.getByText("a banner between the header and the fields")).toBeInTheDocument()
+    expect(screen.getByLabelText("Endpoint")).toBeInTheDocument()
+    expect(screen.getByText("a footer under them")).toBeInTheDocument()
+
+    // In the order they were written, which a set of separate assertions would
+    // not catch: the banner is what sits between the heading and the fields.
+    const written = [...container.querySelectorAll("p, label, footer")].map((node) => node.tagName)
+    expect(written).toEqual(["P", "LABEL", "FOOTER"])
+  })
+
+  it("keeps both halves when a section was written with two Contents", () => {
+    draw(
+      <AdaptiveSectionCard>
+        <AdaptiveSectionCard.Header icon={IconCpu2} title="Connection" />
+        <AdaptiveSectionCard.Content>
+          <p>first</p>
+        </AdaptiveSectionCard.Content>
+        <AdaptiveSectionCard.Content>
+          <p>second</p>
+        </AdaptiveSectionCard.Content>
+      </AdaptiveSectionCard>,
+    )
+
+    expect(screen.getByText("first")).toBeInTheDocument()
+    expect(screen.getByText("second")).toBeInTheDocument()
+  })
+
+  it("consumes the header rather than rendering it twice", () => {
+    // Its props became the heading, so rendering it as well would put the title
+    // on the page twice — which is the way "render every child" goes wrong.
+    draw(<SharedSection />)
+
+    expect(screen.getAllByText("Connection")).toHaveLength(1)
+  })
+
   it("keeps the children of a section whose header it cannot read", () => {
     // This used to fall through to the console card. There is no second chrome
     // to fall back to, and dropping the fields silently would be the failure

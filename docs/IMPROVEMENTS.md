@@ -30,32 +30,6 @@ together, so each one is true when it lands.
 Until then schools is the consumer that does not declare it, and this line is what says
 so rather than leaving it to be rediscovered.
 
-### §VDS159 The children the adapter never reads
-
-`AdaptiveSectionCard` reads its children once, looking for two things: a `Header` (or
-`StaticHeader`) whose props become the frosted section's heading, and a `Content` whose
-children become the fields. Everything else is discarded. A footer node, a second
-`Content`, a conditional banner between the header and the fields — each renders
-nothing, and nothing says so.
-
-This was survivable while the console branch existed: a section the adapter could not
-read fell through to `SectionCard`, which rendered every child it was given. VDS146
-removed that branch. The header-less case now keeps its children on the frosted surface,
-but the header-present case still drops every sibling that is not `Content` — so the gap
-narrowed to one shape and lost its fallback at the same time.
-
-It is the shape `BentoPanel`'s own test describes: a component that silently declines,
-found by a browser probe reading computed style rather than by review or `tsc`. Neither
-catches this one either. `children` is `ReactNode`, so any node type-checks, and a story
-renders what its author remembered to write.
-
-The adapter should render what it was given rather than only what it recognised: the
-fields from `Content`, plus any sibling it did not claim, in source order inside the
-same section. A `Header` or `StaticHeader` is the one child consumed rather than
-rendered, since its props became the heading. What proves it is an assertion that an
-unclaimed sibling survives — the assertion a test written only against the recognised
-shape never makes.
-
 ### §VDS160 The family rule, and the component it hides
 
 `check-readme` covers an export when a listed name is its own, or is one it continues on

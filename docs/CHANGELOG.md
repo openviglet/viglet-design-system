@@ -110,6 +110,8 @@
   checked **The full suite runs green three times in a row** a flake is fixed only when the run that caught it stops catching it.
 - ✅ **VDS158** **the README's component lists are typed by hand, and the App Components one omits seven exports** — check-readme holds every What's Included list to dist/exports.json in both directions, and the fifteen components the front door omitted are named (design recorded in `scripts/check-readme.mjs`).
   checked **A gate reads the README's lists and the exported surface together** it fails on a name shipped and unlisted, and on one listed after it stopped being exported.
+- ✅ **VDS159** **AdaptiveSectionCard silently drops any child that is not its Header or its Content** — AdaptiveSectionCard renders every child in source order: the Header becomes the heading, the Content gives up its wrapper, the rest stands (design recorded in `src/bento/bento-section-chrome.tsx`).
+  checked **A child the adapter does not claim still renders inside the frosted section** A sibling that is neither Header, StaticHeader nor Content appears in the output in source order, asserted beside the recognised shape rather than instead of it.
 
 ## Block B — Bento becomes a design-system layer
 
