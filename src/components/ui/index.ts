@@ -44,6 +44,7 @@ export { Skeleton } from "./skeleton";
 export { StickySaveBar } from "./sticky-save-bar";
 export type { StickySaveBarProps, StickySaveBarVariant } from "./sticky-save-bar";
 export { Slider } from "./slider";
+export { Tree, treeFromPaths, type TreeNode, type TreeProps } from "./tree";
 export { toast, Toaster } from "./sonner";
 export { Stepper } from "./stepper";
 export { Switch } from "./switch";

@@ -213,6 +213,7 @@
 - ✅ **VDS154** **a TooltipProvider delay never reaches a Tooltip, because each Tooltip mounts its own provider with no delay** — A Tooltip mounts its own provider only when no TooltipProvider is above it, so a provided delay such as the nav rail's 200ms reaches every tooltip under it.
 - ✅ **VDS155** **five doc comments open with a fix note or a caveat, which the catalogue then serves as the component's purpose** — BadgeColorful, NavigationMenu, Toaster, BentoStatusMarker and UserAvatar open with what each is for, and the note each opened with follows as a later paragraph.
 - ✅ **VDS156** **an inline edit committed with Enter drops focus when it settles, and a blur while it saves commits a second time** — An inline edit saves once however it is left, and focus returns to its display button after Enter or Escape but stays where a Tab took it.
+- ✅ **VDS167** **no component draws a folder hierarchy, so a consumer that needs one hand-rolls the branching and its keyboard** — A Tree renders nodes a consumer supplies, owning the branching, the roles and levels and the arrow keys, with treeFromPaths beside it (design recorded in `src/components/ui/tree.tsx`).
 
 ## Block G — The package knows one chrome
 

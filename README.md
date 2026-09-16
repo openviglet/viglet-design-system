@@ -688,9 +688,9 @@ import type {
 
 ## What's Included
 
-### UI Primitives (48 components)
+### UI Primitives (49 components)
 
-Accordion, Avatar, Badge, Breadcrumb, Button, Card, Checkbox, Dialog, Drawer, DropdownMenu, FloatingFormulasBg, Form, FormActions, FormItemTwoColumns, GlassCard, GradientButton, GradientSwitch, HoverCard, IconPickerDialog, Input, Label, NavigationMenu, Pagination, Popover, Progress, PulseRing, Resizable, SectionCard, Select, Separator, Sheet, Sidebar, Skeleton, Slider, Stepper, StickySaveBar, Switch, Table, Tabs, Textarea, Toaster (sonner), Toggle, ToggleGroup, Tooltip, UserAvatar, UserMenu, VigletAssistant ([the dock](#the-assistant-dock)), VigletAvatar ([the mascot](#the-mascot))
+Accordion, Avatar, Badge, Breadcrumb, Button, Card, Checkbox, Dialog, Drawer, DropdownMenu, FloatingFormulasBg, Form, FormActions, FormItemTwoColumns, GlassCard, GradientButton, GradientSwitch, HoverCard, IconPickerDialog, Input, Label, NavigationMenu, Pagination, Popover, Progress, PulseRing, Resizable, SectionCard, Select, Separator, Sheet, Sidebar, Skeleton, Slider, Stepper, StickySaveBar, Switch, Table, Tabs, Textarea, Toaster (sonner), Toggle, ToggleGroup, Tooltip, Tree, UserAvatar, UserMenu, VigletAssistant ([the dock](#the-assistant-dock)), VigletAvatar ([the mascot](#the-mascot))
 
 ### App Components (19 components)
 
