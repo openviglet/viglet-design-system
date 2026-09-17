@@ -14,7 +14,15 @@ import { GradientButton } from "./gradient-button"
  * Save and loses their place as the result is announced. So the claim is tested
  * in a browser, first against a button that does disable, to show the
  * measurement sees the loss, then against `loading`.
+ *
+ * The loss is not synchronous. Since Chromium 153 the focus fixup waits for the
+ * next rendering update, so straight after `act` the disabled button still holds
+ * focus and the control reads no loss. Both readings are taken after two animation
+ * frames, which a whole rendering update has run inside of: the control then sees
+ * the loss, and `loading` keeps focus through the step that would have dropped it.
  */
+
+const nextFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()))
 
 function SaveButton({ mode }: Readonly<{ mode: "disabled" | "loading" }>) {
   const [pending, setPending] = useState(false)
@@ -35,6 +43,8 @@ async function pressAndSettle(mode: "disabled" | "loading") {
   button.focus()
   expect(document.activeElement).toBe(button)
   await act(async () => button.click())
+  await nextFrame()
+  await nextFrame()
   const focused = document.activeElement
   unmount()
   return { button, focused }
