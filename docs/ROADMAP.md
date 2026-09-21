@@ -7,6 +7,10 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
+- 📋 **VDS168** (deps: —) **BentoDiff compares a source file word by word with no line numbers, and past its ceiling draws it as a rewrite** — An agent's change under review is most often a file, which every review tool reads by line, and VDS140 promised one comparison for every place. → §VDS168
+- 📋 **VDS169** (deps: VDS168) **a lines comparison draws one column, so a file cannot be read before and after side by side as VS Code shows it** — A reviewer at a wide screen reads the original beside the change, and aligning the two is the part a product would get wrong alone. → §VDS169
+- 📋 **VDS170** (deps: —) **no component marks an item in a list as created, changed or deleted, so each product draws its own letter and tint** — The list and the comparison it opens should agree on what a change looks like, and BentoDiff already owns those words and tints. → §VDS170
+
 ## Done when — VDS165
 
 - **A console-era name imported under an alias counts as taken** A fixture holding only
@@ -18,6 +22,33 @@
 - **The register census case is sized for the loaded suite** Its timeout carries a
   comment giving the measured cold and warm walk, and the case passes beside the other
   script tests on a cold disk.
+
+## Done when — VDS168
+
+- **One edit in a long file draws one numbered hunk, not a rewrite** A 5,000-line file
+  with one line changed draws that pair word by word, both numbers beside it, three
+  lines around it and the rest folded; past the ceiling the field says it did not
+  compare.
+- **A created or deleted file draws whole, numbered on its one side** A null before
+  draws every line added under the created sentence and a null after every line removed
+  under the deleted one, each marked in text as well as tinted.
+
+## Done when — VDS169
+
+- **Split keeps the unchanged lines level on both sides** A hunk that removes two lines
+  and adds five draws five rows with the left padded, and the next unchanged line sits
+  on one row in both columns, each with its own number.
+- **Split under the container width draws as inline** A BentoDiff in a narrow container
+  asked for split draws the same rows inline, measured on the container and not the
+  window.
+
+## Done when — VDS170
+
+- **BentoDiff's field chip is BentoChangeMark** FieldRow renders the exported mark, so a
+  list and the comparison it opens show one word and one tint for each state.
+- **A compact mark says its word, not its letter** The letter's accessible name and
+  tooltip are the full word in en and pt, and a locale that sets its own letter key
+  draws that letter.
 
 ## Non-goals
 

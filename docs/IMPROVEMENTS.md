@@ -113,3 +113,77 @@ through, and delete warnWithoutId and its test. The change note in the ledger na
 release that warned. Before shipping, run viglet-ds-check-duplicates and a type-check in
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
+
+### §VDS168 A file compared by line
+
+VDS140 gave the products one comparison, and roadkeep-gui now needs it for a source file
+a Claude Code session changed, the original against the file now. `BentoDiff` has no
+kind for that. A `text` field is one wrapped paragraph compared word by word, with no
+line numbers, and `diffTokens` gives up past 400,000 cells, which a file of some forty
+lines reaches; the field then draws the whole before removed and the whole after added,
+which reads as a rewrite.
+
+**A `lines` kind beside `text`, `rich` and `value`.** The value is a string split on
+line breaks. The common head and tail are trimmed before `diffTokens` runs, so the
+ceiling bounds the changed middle and not the file: one edit in a 5,000-line file is a
+few cells. Past it, the field says the comparison was not made.
+
+**Drawn as a file is read.** Monospace rows: the old number, the new number, a `+` or
+`−` in text, then the line, in the tints `Added` and `Removed` already use. A removed
+line followed by an added one is compared word by word inside, as an edited `rich`
+paragraph is. Three unchanged lines stay around each change and the rest fold behind a
+button naming how many. The field scrolls sideways, not the page, and Tab reaches it. A
+missing side draws whole, numbered on one side, under the existing created or deleted
+sentence.
+
+No highlighting: a grammar per language is a parser the package would own for everyone.
+
+### §VDS169 The original beside the change
+
+VS Code opens a changed file side by side: the original on the left, the file now on the
+right, unchanged lines level with each other. VDS168's `lines` kind draws one column,
+which suits a narrow sheet and loses the reading a reviewer at a wide one expects.
+
+**A `layout` prop, `"inline"` by default.** `"split"` applies to `lines` fields and is
+ignored by the others, which have no rows to align. The product owns the switch, as VS
+Code's editor toolbar does: `BentoDiff` draws either and keeps no state for it.
+
+**Aligned by row, not by scrolling.** Each hunk becomes rows of two cells. Removed lines
+fill the left and added lines the right, paired in order; where one side runs longer the
+other gets an empty hatched cell, so the unchanged lines after the hunk stay level. A
+pair is compared word by word on both sides. Each column carries its own numbers, and
+the fold between hunks spans both.
+
+**Lines wrap in split.** Two unwrapped columns need two sideways scrollbars kept in
+step, a synchronised scroll the package would own and a keyboard reader cannot follow.
+Wrapped, a row is as tall as its longer cell and the alignment holds.
+
+**Narrow falls back.** Under a container width, read with a container query because a
+sheet is narrower than the window, split draws as inline: two columns of a few words
+each are harder to read than one.
+
+### §VDS170 One mark for created, changed and deleted
+
+`BentoDiff` names each field's state in a chip, Added, Removed, Changed or Unchanged,
+tinted by the `bento-status` classes. A list of what changed needs the same words one
+level up: roadkeep-gui lists the files an agent touched in the VDS167 `Tree` and is
+about to mark each created, changed or deleted, as VS Code's source-control list does
+with a letter. Drawn by the product, that mark picks its own colours and words, and the
+list disagrees with the comparison it opens about what a change looks like, which VDS140
+exists to prevent.
+
+**`BentoChangeMark`, the chip lifted out of `FieldRow`.** `state` takes the chip's four
+values; its words are the `bento.diff.*` keys the chip already reads, in both
+catalogues, and its tints the same classes. `FieldRow` draws it, so the two cannot
+drift.
+
+**A letter where a row is narrow.** `compact` draws one letter, git's `A`, `M` or `D` by
+default and a key of its own per locale, with the word as its accessible name and
+tooltip. A letter is an abbreviation, so the name is what a screen reader says and what
+a pointer reads.
+
+**The `Tree` needs nothing.** A node's `label` is a `ReactNode`, so a product puts the
+mark at the row's end. Striking a deleted item's name is the product's to draw: the mark
+does not reach into the label.
+
+Three states and nothing else cross the prop: no file, no path, no product's data.
