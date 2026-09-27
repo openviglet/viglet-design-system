@@ -701,9 +701,9 @@ AppFooter, AppSwitcher, BackendStatusBanner, BackendStatusProvider, BadgeColorfu
 
 `DialogDelete`, `GradientButtonLink` and `LoadProvider` are imported from `@viglet/viglet-design-system/router`; every other name above comes from the package root. `Login` and `StartupFirst` are compounds — each is a root with named parts on it, the way `Card` is.
 
-### Bento Layer (32 components)
+### Bento Layer (33 components)
 
-AdaptiveSectionCard, BentoActionsMenu, BentoBackLink, BentoBackToTop, BentoChangeMark, BentoCommandPalette, BentoCountTile, BentoDataTable, BentoDiff, BentoEmptyState, BentoEntityShell, BentoEntityTile, BentoFilterBar, BentoFormHero, BentoFormSection, BentoHero, BentoHeroIconPicker, BentoInlineEdit, BentoListPage, BentoNavRail, BentoPaletteTrigger, BentoPanel, BentoSaveBar, BentoScrollSaveBar, BentoSection, BentoShell, BentoShortcutsDialog, BentoStatusMarker, BentoTile, BentoTileGrid, BentoUserMenu, BentoVersionRail
+AdaptiveSectionCard, BentoActionsMenu, BentoBackLink, BentoBackToTop, BentoCalendar, BentoChangeMark, BentoCommandPalette, BentoCountTile, BentoDataTable, BentoDiff, BentoEmptyState, BentoEntityShell, BentoEntityTile, BentoFilterBar, BentoFormHero, BentoFormSection, BentoHero, BentoHeroIconPicker, BentoInlineEdit, BentoListPage, BentoNavRail, BentoPaletteTrigger, BentoPanel, BentoSaveBar, BentoScrollSaveBar, BentoSection, BentoShell, BentoShortcutsDialog, BentoStatusMarker, BentoTile, BentoTileGrid, BentoUserMenu, BentoVersionRail
 
 All from `@viglet/viglet-design-system/bento`, with `@viglet/viglet-design-system/bento.css` beside it. [The bento layer](#the-bento-layer) is what each one is for and how a page composes them; this is the inventory.
 
@@ -915,6 +915,13 @@ and tooltip. A side that is `null` renders the other whole, as a created or dele
 item. Every change is named in text as well as coloured. `BentoVersionRail` lists
 the revisions (author, person or agent, time) as a listbox a reader picks two
 from, by keyboard or pointer. Neither fetches anything.
+
+`BentoCalendar` draws a month or a week of `entries` (`id`, `start`, `label`, an
+optional `tone`) in the `timeZone` you pass. Given `onEntryMove(id, start)`, an
+entry can be dragged onto another day and keeps its time of day. The same move
+works from the keyboard: Enter enters a day, Space picks the entry up, the arrows
+choose a day and Enter drops it. `onRangeChange` reports the period shown, so you
+can load its entries, and `onEntrySelect` opens one. It fetches nothing.
 
 `BentoCommandPalette` takes a second group whose items the product supplies per
 query, beside the nav items it matches itself. Pass `onQueryChange` to hear the

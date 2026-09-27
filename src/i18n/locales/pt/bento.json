@@ -70,6 +70,19 @@
       "addedStart": "adicionado:",
       "removedStart": "removido:"
     },
+    "calendar": {
+      "previous": "Anterior",
+      "next": "Próximo",
+      "today": "Hoje",
+      "views": "Visualização",
+      "month": "Mês",
+      "week": "Semana",
+      "entries": "{{count}} agendado(s)",
+      "moveHint": "Espaço pega este item para movê-lo: as setas escolhem um dia, Enter solta e Esc cancela.",
+      "picked": "{{label}} pego. Escolha um dia e pressione Enter.",
+      "moved": "{{label}} movido para {{day}}.",
+      "cancelled": "{{label}} devolvido."
+    },
     "versions": {
       "label": "Versões",
       "agent": "Agente",

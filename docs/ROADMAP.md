@@ -3,10 +3,10 @@
 ## Block A — The gate the design system never had
 
 - 📋 **VDS176** (deps: —) **story tests render without Tailwind utilities, so axe checks contrast on unstyled text at the default size** — The stories project loads no tailwindcss plugin, so the a11y gate passes what the catalogue fails and no story can assert layout. → §VDS176
+- 📋 **VDS177** (deps: —) **the README test reads a stale dist/exports.json, so listing a new component fails npm test until a build runs** — The gate order runs tests before the build, so every commit adding an export goes red on a README that is right. → §VDS177
 
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS172** (deps: —) **no component draws a month or week calendar, so a scheduled-content page can only be a list** — Shio's Scheduled page wants month and week views with drag to reschedule (SH1082), and a grid built in a product is a copy. → §VDS172
 - 📋 **VDS173** (deps: —) **the contract has no two-pane page shape, so a form and its preview cannot be read side by side** — Two Shio pages want one, the editor's live preview and the translation workspace (SH1094), and a shape is the contract's decision. → §VDS173
 - 📋 **VDS174** (deps: —) **BentoDataTable takes no selection in, so a page cannot select every row or invert the selection** — Its layout is controlled beside onLayoutChange but selection is not, so Shio removed select-all and invert from its table view (SH1148). → §VDS174
 - 📋 **VDS175** (deps: —) **the plugin's MCP server cannot start where the package is installed in a workspace, not at the root** — npx --no-install at the project root answers E404 in Shio, Turing and Dumont, which install the package one level down (SH944). → §VDS175
@@ -15,6 +15,11 @@
 
 - **Story tests render with the Tailwind utilities the catalogue has** A story's axe
   pass then measures the text a product author sees.
+
+## Done when — VDS177
+
+- **Adding and listing a component passes npm test before a build** A fixture checkout
+  with a stale dist, or a surface read from source, shows the README test green.
 
 ## Non-goals
 

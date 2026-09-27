@@ -229,6 +229,8 @@
   checked **A compact mark says its word, not its letter** The letter's accessible name and tooltip are the full word in en and pt, and a locale that sets its own letter key draws that letter.
 - ✅ **VDS171** **VigletAssistant cannot quiet its mascot, because it does not pass VigletAvatar's paused prop through** — VigletAssistant takes paused: the avatar holds one frame and the caption arrives whole instead of typed, still announced by the live region.
   checked **A paused dock holds its mascot still and still reports** The avatar schedules no frame and the caption arrives whole and announced, asserted in viglet-assistant.test.tsx.
+- ✅ **VDS172** **no component draws a month or week calendar, so a scheduled-content page can only be a list** — BentoCalendar draws a month or week of entries in a given zone; an entry drags or moves by keyboard to another day, keeping its time (design recorded in `src/bento/bento-calendar.tsx`).
+  checked **A keyboard move reaches onEntryMove with the time of day kept** bento-calendar.test.tsx drives the pick-up, the arrows and the drop, across a change of offset too, and axe runs both stories.
 
 ## Block G — The package knows one chrome
 

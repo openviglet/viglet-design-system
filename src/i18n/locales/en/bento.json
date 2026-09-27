@@ -70,6 +70,19 @@
       "addedStart": "added:",
       "removedStart": "removed:"
     },
+    "calendar": {
+      "previous": "Previous",
+      "next": "Next",
+      "today": "Today",
+      "views": "View",
+      "month": "Month",
+      "week": "Week",
+      "entries": "{{count}} scheduled",
+      "moveHint": "Space picks this up to move it: the arrow keys choose a day, Enter drops it and Escape cancels.",
+      "picked": "Picked up {{label}}. Choose a day and press Enter.",
+      "moved": "Moved {{label}} to {{day}}.",
+      "cancelled": "Put {{label}} back."
+    },
     "versions": {
       "label": "Versions",
       "agent": "Agent",

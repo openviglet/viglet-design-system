@@ -74,6 +74,25 @@ commit, since a gate turned on red is one people learn to re-run. Once it is gre
 play function in `bento-diff.stories.tsx` can assert that split draws as inline in a
 28rem container, which VDS169 could only pin by class name.
 
+### §VDS177 The README test and a stale dist
+
+`scripts/check-readme.test.ts` ends with a block that holds the real README against
+`dist/exports.json`, skipped when there is no `dist`. It is not skipped when `dist` is
+there but stale, and the gate order this project documents runs `npm test` before `npm
+run build`. So the commit that adds a component and lists it in the README fails the
+suite: the README names an export the old `dist` does not have. The failure reads as a
+README defect, and it clears only after a build that the test itself never asks for.
+
+VDS172 hit it with `BentoCalendar`. VDS69 fixed the same shape in another test, which
+failed on every clean checkout because it read `dist`.
+
+The build already runs `check-readme.mjs` against a `dist` it has just emitted, so this
+block adds nothing the build lacks, apart from a false red between the two steps. Two
+repairs would work. Skip the block when `dist/exports.json` is older than the newest
+file under `src/`, and name the skip. Or derive the surface from source, as
+`exported-surface.test.ts` does, so the reading never depends on a build. The second
+keeps the check honest on a clean checkout as well, and matches VDS69's choice.
+
 ## Block F — What a consuming CMS needs from the package next
 
 ### §VDS152 The deprecation ends
@@ -89,26 +108,6 @@ through, and delete warnWithoutId and its test. The change note in the ledger na
 release that warned. Before shipping, run viglet-ds-check-duplicates and a type-check in
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
-
-### §VDS172 A bento calendar over caller-supplied entries
-
-No export of 2026.3.12 draws a date grid. Shio's Scheduled page (SH991) lists scheduled
-publications as an agenda, and its design asked for a month and a week view with
-rescheduling by dragging an entry to another day (SH1082). Building that grid inside
-Shio is the second copy the duplicate gate exists to refuse. It is also the component
-whose keyboard and screen-reader behaviour most needs checking once, in one place: arrow
-keys across days, a focus that survives a month change, and a drop that is announced.
-
-What a consumer needs is a bento-shaped calendar, not a date picker:
-- month and week views over caller-supplied entries (`id`, `start`, `label`, an optional
-  tone);
-- a `timeZone` the grid renders in, since the page states the reader's zone;
-- `onEntryMove(id, newStart)` that keeps the entry's time of day when dropped on a day;
-- a keyboard path to the same move, so dragging is never the only way.
-
-Entries come in and moves go out; the product owns the data and the write. The assertion
-drives a keyboard move and reads the `onEntryMove` call, and axe stays clean in both
-views.
 
 ### §VDS173 A two-pane page shape
 
