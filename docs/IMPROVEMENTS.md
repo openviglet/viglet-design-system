@@ -109,29 +109,6 @@ release that warned. Before shipping, run viglet-ds-check-duplicates and a type-
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
 
-### §VDS173 A two-pane page shape
-
-The authoring contract names three page shapes, and none has two panes read side by
-side. The primitives exist (`ResizablePanelGroup`, `ResizablePanel`, `ResizableHandle`),
-but a shape is more than primitives. It settles who owns the column, what the reading
-width is inside each pane, and what happens at phone width, and those are the decisions
-the contract exists to make once.
-
-Two Shio pages want it now. The post editor's live preview (SH1094) sits as a card under
-the form, so reading the page means scrolling away from the fields that change it. The
-translation workspace (SH1061) wants source and target side by side.
-
-Three things the shape has to settle:
-- **The ratio**: the user drags it, and the shape remembers it per viewer. Browser
-  storage is honest for that, since it is a convenience and not content.
-- **Phone width**: two panes become one with a switch between them. The second pane
-  never silently disappears.
-- **Which pane scrolls**: each pane scrolls on its own, under one hero and one save bar
-  that span both.
-
-The assertion renders the shape at desktop and phone widths and reads two regions, then
-one with a labelled switch.
-
 ### §VDS174 BentoDataTable takes a controlled selectedIds
 
 `BentoDataTable` reports its selection through `onSelectionChange` and takes none in.
@@ -172,3 +149,22 @@ The skill's fallback should name the path it found, or say how to find one.
 
 The assertion is the server answering `initialize` when started from a workspace-root
 fixture that installs the package one level down.
+
+### §VDS178 The fourth shape on the canvas
+
+`docs/BENTO-AUTHORING.md` closes by pointing at `docs/reference/`: eight artboards, one
+per decision, for when "a sentence here is clear and you still cannot picture the page
+it describes". VDS173 made the two-pane screen the contract's fourth page shape, and the
+contract, the README and both skill texts now say four. The canvas still draws three.
+Its page-shapes artboard text in `docs/reference/canvas.json` reads "one of three shapes
+plus data", and no artboard shows `BentoSplitPage`.
+
+The two-pane shape is the one that most needs a drawing. What the contract decides is
+spatial: the hero and the save bar span both panes, each pane scrolls within the height
+under them, the handle sits between the panes, and at phone width a switch replaces the
+second pane. A sentence states all four, but only a picture shows a reader where each
+one sits.
+
+The repair is to add the shape to the page-shapes artboard with the same hand as the
+other three, desktop and phone, and to correct the artboard's count. If the canvas has a
+generator, add the shape there so a rebuild keeps it.

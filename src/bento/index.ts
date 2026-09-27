@@ -62,6 +62,7 @@ export {
   type BentoDiffSide,
 } from "./bento-diff";
 export { BentoChangeMark, type BentoChangeMarkProps, type BentoChangeState } from "./bento-change-mark";
+export { BentoSplitPage, type BentoSplitPageProps } from "./bento-split-page";
 export {
   BentoCalendar,
   type BentoCalendarEntry,

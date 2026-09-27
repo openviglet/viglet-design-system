@@ -1,6 +1,6 @@
 ---
 name: viglet-ds-pages
-description: Building or changing a page with @viglet/viglet-design-system/bento -- the shell, the three page shapes, the panel, and which tokens a product claims. Use when writing a screen, adding a region to one, or choosing between two components of the package, and before the first screen rather than after the fifth.
+description: Building or changing a page with @viglet/viglet-design-system/bento -- the shell, the four page shapes, the panel, and which tokens a product claims. Use when writing a screen, adding a region to one, or choosing between two components of the package, and before the first screen rather than after the fifth.
 ---
 
 # Pages in the Viglet design system

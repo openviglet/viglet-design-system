@@ -68,7 +68,7 @@ const REFERENCE = join(payload, "docs", "reference")
 function orientation(dir, artboards) {
   return `---
 name: viglet-ds-pages
-description: Building or changing a page with @viglet/viglet-design-system/bento -- the shell, the three page shapes, the panel, and which tokens a product claims. Load before the first screen, and before adding a region to one.
+description: Building or changing a page with @viglet/viglet-design-system/bento -- the shell, the four page shapes, the panel, and which tokens a product claims. Load before the first screen, and before adding a region to one.
 vds-version: ${version}
 ---
 
@@ -81,7 +81,7 @@ a correction belongs in the package so every consumer gets it.
 ## Read first
 
 - **[authoring.md](authoring.md)** -- the contract. The shell and who owns each region, the
-  three page shapes, the panel, colour and the tokens a product claims, i18n, accessibility,
+  four page shapes, the panel, colour and the tokens a product claims, i18n, accessibility,
   responsive, tests. Read it before the first screen, not after the fifth.
 - **[boundary.md](boundary.md)** -- which components are the shared layer and which stay in
   a product, and why.

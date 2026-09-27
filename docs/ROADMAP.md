@@ -7,9 +7,9 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS173** (deps: —) **the contract has no two-pane page shape, so a form and its preview cannot be read side by side** — Two Shio pages want one, the editor's live preview and the translation workspace (SH1094), and a shape is the contract's decision. → §VDS173
 - 📋 **VDS174** (deps: —) **BentoDataTable takes no selection in, so a page cannot select every row or invert the selection** — Its layout is controlled beside onLayoutChange but selection is not, so Shio removed select-all and invert from its table view (SH1148). → §VDS174
 - 📋 **VDS175** (deps: —) **the plugin's MCP server cannot start where the package is installed in a workspace, not at the root** — npx --no-install at the project root answers E404 in Shio, Turing and Dumont, which install the package one level down (SH944). → §VDS175
+- 📋 **VDS178** (deps: —) **the reference canvas draws three page shapes, so the two-pane shape has no picture of where each region sits** — The contract points a reader at docs/reference when a sentence is clear and the page is not, and the split is the most spatial shape. → §VDS178
 
 ## Done when — VDS176
 
@@ -20,6 +20,11 @@
 
 - **Adding and listing a component passes npm test before a build** A fixture checkout
   with a stale dist, or a surface read from source, shows the README test green.
+
+## Done when — VDS178
+
+- **The page-shapes artboard draws BentoSplitPage at desktop and phone width** Reading
+  docs/reference/canvas.json shows four shapes, and its text says four.
 
 ## Non-goals
 

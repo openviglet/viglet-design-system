@@ -231,6 +231,8 @@
   checked **A paused dock holds its mascot still and still reports** The avatar schedules no frame and the caption arrives whole and announced, asserted in viglet-assistant.test.tsx.
 - ✅ **VDS172** **no component draws a month or week calendar, so a scheduled-content page can only be a list** — BentoCalendar draws a month or week of entries in a given zone; an entry drags or moves by keyboard to another day, keeping its time (design recorded in `src/bento/bento-calendar.tsx`).
   checked **A keyboard move reaches onEntryMove with the time of day kept** bento-calendar.test.tsx drives the pick-up, the arrows and the drop, across a change of offset too, and axe runs both stories.
+- ✅ **VDS173** **the contract has no two-pane page shape, so a form and its preview cannot be read side by side** — BentoSplitPage is the fourth page shape: two panes scrolling on their own with a remembered ratio, one pane and a switch at phone width (design recorded in `docs/BENTO-AUTHORING.md`).
+  checked **Two regions at desktop width, one pane and a labelled switch on a phone** bento-split-page.test.tsx renders both widths, and the phone test keeps a typed value across the switch.
 
 ## Block G — The package knows one chrome
 

@@ -75,7 +75,7 @@ Anything past them — a tenant, a review count — belongs to the surface that 
 
 ## 2. Structure — thin config, not bespoke pages
 
-There are three page shapes. Almost every screen is one of them plus data.
+There are four page shapes. Almost every screen is one of them plus data.
 
 **A detail screen** is `BentoEntityShell` wrapping a form. The shell owns the
 identity hero, the save-bar morph and the delete flow; the form is a render prop
@@ -101,6 +101,16 @@ table as `selectionScope`, so a selection never outlives the rows it was made on
 
 **A form screen with its own hero** is `BentoFormHero` as the first child inside
 the `<form>` it submits. It renders both halves of the morph itself.
+
+**A two-pane screen**, such as a form beside its live preview or a source beside its
+translation, is `BentoSplitPage` under the page's one hero, on a route that passes
+`column="wide"`. Pass the two panes and a label for each. Each pane scrolls on its own,
+so the fields and what they change stay in view together, and the hero and the save bar
+span both. The reader drags the ratio, and `storageKey` remembers it per viewer. At
+phone width the panes become one with a labelled switch, and neither unmounts, so a form
+keeps what was typed while its preview is shown. Never lay two panes out with a grid of
+your own: who scrolls, the reading width and the phone fallback are what this shape
+decides once.
 
 **A frosted box with arbitrary content** — a stats strip, a toolbar, a listing,
 a message — is `BentoPanel`. It is the one container in this layer with **no

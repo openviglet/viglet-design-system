@@ -70,6 +70,9 @@
       "addedStart": "added:",
       "removedStart": "removed:"
     },
+    "split": {
+      "switch": "Show"
+    },
     "calendar": {
       "previous": "Previous",
       "next": "Next",

@@ -701,9 +701,9 @@ AppFooter, AppSwitcher, BackendStatusBanner, BackendStatusProvider, BadgeColorfu
 
 `DialogDelete`, `GradientButtonLink` and `LoadProvider` are imported from `@viglet/viglet-design-system/router`; every other name above comes from the package root. `Login` and `StartupFirst` are compounds — each is a root with named parts on it, the way `Card` is.
 
-### Bento Layer (33 components)
+### Bento Layer (34 components)
 
-AdaptiveSectionCard, BentoActionsMenu, BentoBackLink, BentoBackToTop, BentoCalendar, BentoChangeMark, BentoCommandPalette, BentoCountTile, BentoDataTable, BentoDiff, BentoEmptyState, BentoEntityShell, BentoEntityTile, BentoFilterBar, BentoFormHero, BentoFormSection, BentoHero, BentoHeroIconPicker, BentoInlineEdit, BentoListPage, BentoNavRail, BentoPaletteTrigger, BentoPanel, BentoSaveBar, BentoScrollSaveBar, BentoSection, BentoShell, BentoShortcutsDialog, BentoStatusMarker, BentoTile, BentoTileGrid, BentoUserMenu, BentoVersionRail
+AdaptiveSectionCard, BentoActionsMenu, BentoBackLink, BentoBackToTop, BentoCalendar, BentoChangeMark, BentoCommandPalette, BentoCountTile, BentoDataTable, BentoDiff, BentoEmptyState, BentoEntityShell, BentoEntityTile, BentoFilterBar, BentoFormHero, BentoFormSection, BentoHero, BentoHeroIconPicker, BentoInlineEdit, BentoListPage, BentoNavRail, BentoPaletteTrigger, BentoPanel, BentoSaveBar, BentoScrollSaveBar, BentoSection, BentoShell, BentoShortcutsDialog, BentoSplitPage, BentoStatusMarker, BentoTile, BentoTileGrid, BentoUserMenu, BentoVersionRail
 
 All from `@viglet/viglet-design-system/bento`, with `@viglet/viglet-design-system/bento.css` beside it. [The bento layer](#the-bento-layer) is what each one is for and how a page composes them; this is the inventory.
 
@@ -923,6 +923,12 @@ works from the keyboard: Enter enters a day, Space picks the entry up, the arrow
 choose a day and Enter drops it. `onRangeChange` reports the period shown, so you
 can load its entries, and `onEntrySelect` opens one. It fetches nothing.
 
+`BentoSplitPage` is the two-pane page shape: a form beside its preview, or a source
+beside its translation, under one hero. Pass `primary`, `secondary` and a label for
+each. Each pane scrolls on its own, the reader drags the ratio, and `storageKey`
+remembers it per viewer. At phone width it becomes one pane with a labelled switch,
+and neither pane unmounts.
+
 `BentoCommandPalette` takes a second group whose items the product supplies per
 query, beside the nav items it matches itself. Pass `onQueryChange` to hear the
 query as typed and `group` to answer it:
@@ -1003,7 +1009,7 @@ something the bundle did not deliver; `scripts/externals.test.ts` now fails if
 anything externalised as a peer is declared a dependency again.
 
 [docs/BENTO-AUTHORING.md](docs/BENTO-AUTHORING.md) is the contract for writing a
-bento page: the three page shapes, what the package will not hold for you, and
+bento page: the four page shapes, what the package will not hold for you, and
 the colour, i18n, accessibility and layout rules that keep two consoles looking
 like the same product. Read it before the first screen, not after the fifth.
 
@@ -1015,7 +1021,7 @@ put that offer in every console.
 [docs/reference/](docs/reference/) is the same contract drawn: eight artboards,
 one per decision that makes two products built from this package stop looking
 like one — the header's set, who owns the reading column, what `--primary`
-reaches, the three page shapes, the panel, and both grounds with their ratios.
+reaches, the four page shapes, the panel, and both grounds with their ratios.
 The catalogue proves a component; these prove the arrangement.
 
 ## Contributing
