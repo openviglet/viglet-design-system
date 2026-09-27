@@ -174,6 +174,71 @@ describe("BentoDiff lines", () => {
     expect(rows("remove").map(numbers)[0]).toEqual(["1", ""])
   })
 
+  describe("split", () => {
+    // VDS169 — the original beside the change, as VS Code opens a changed file.
+    const split = () => document.querySelector<HTMLTableElement>('table[data-layout="split"]')!
+    const cells = (row: HTMLTableRowElement) => [...row.cells].map((cell) => cell.textContent)
+
+    it("keeps the unchanged lines level on both sides of a hunk that grew", () => {
+      const before = "one\ntwo\nthree\nfour\n"
+      const after = "one\nTWO\nextra a\nextra b\nthree\nfour\n"
+      draw(<BentoDiff before={{ file: before }} after={{ file: after }} fields={SOURCE} layout="split" />)
+
+      const trs = [...split().tBodies[0].rows]
+      expect(trs.map(cells)).toEqual([
+        ["1", " ", "one", "1", " ", "one"],
+        // The pair is compared word by word on both sides...
+        ["2", "−", "removed: two", "2", "+", "added: TWO"],
+        // ...and where the right runs longer the left is a hatched cell.
+        ["", "3", "+", "added: extra a"],
+        ["", "4", "+", "added: extra b"],
+        // So the line after the hunk is level, each column carrying its own number.
+        ["3", " ", "three", "5", " ", "three"],
+        ["4", " ", "four", "6", " ", "four"],
+      ])
+      expect(trs[2].cells[0]).toHaveAttribute("data-empty")
+    })
+
+    it("folds between hunks across both columns, sharing the inline layout's folds", async () => {
+      const user = userEvent.setup()
+      draw(<BentoDiff before={{ file: file(40) }} after={{ file: file(40, [0, "first"]) }} fields={SOURCE} layout="split" />)
+
+      const toggles = screen.getAllByRole("button", { name: "36 unchanged lines" })
+      // One fold in each layout, only one of which a container query shows.
+      expect(toggles).toHaveLength(2)
+      const splitFold = split().querySelector("button")!
+      expect(splitFold.closest("td")).toHaveAttribute("colspan", "6")
+
+      await user.click(splitFold)
+      for (const toggle of toggles) expect(toggle).toHaveAttribute("aria-expanded", "true")
+    })
+
+    it("draws as inline under the container width, and a lines field alone takes the layout", () => {
+      draw(
+        <BentoDiff
+          before={{ title: "Old", file: "a\n" }}
+          after={{ title: "New", file: "b\n" }}
+          fields={[{ id: "title", label: "Title" }, ...SOURCE]}
+          layout="split"
+        />,
+      )
+      const region = screen.getByRole("region", { name: "src/app.ts" })
+      expect(region.className).toContain("@container/diff")
+      const inline = region.querySelector('table[data-layout="inline"]')!
+      expect(inline.className).toContain("@3xl/diff:hidden")
+      expect(split().className).toMatch(/(^|\s)hidden(\s|$)/)
+      expect(split().className).toContain("@3xl/diff:table")
+      // A text field has no rows to align.
+      expect(field("Title").querySelector("table")).toBeNull()
+    })
+
+    it("draws one table in the default layout", () => {
+      draw(<BentoDiff before={{ file: "a\n" }} after={{ file: "b\n" }} fields={SOURCE} />)
+      expect(document.querySelectorAll("table")).toHaveLength(1)
+      expect(split()).toBeNull()
+    })
+  })
+
   it("says the comparison was not made past the ceiling on the changed middle", () => {
     draw(<BentoDiff before={{ file: file(1000) }} after={{ file: file(1000).replaceAll("const", "let") }} fields={SOURCE} />)
     expect(screen.getByText("Too many lines changed to compare them here")).toBeInTheDocument()

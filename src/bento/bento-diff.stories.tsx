@@ -96,3 +96,32 @@ export const SourceFile: Story = {
     />
   ),
 };
+
+/**
+ * The same file with the original beside the change, unchanged lines level with
+ * each other. The product owns the switch; `BentoDiff` keeps no state for it.
+ */
+export const SourceFileSplit: Story = {
+  render: () => (
+    <BentoDiff
+      before={{ file: ORIGINAL }}
+      after={{ file: CHANGED }}
+      fields={[{ id: "file", label: "src/steps.ts", kind: "lines" }]}
+      layout="split"
+    />
+  ),
+};
+
+/** Split in a sheet narrower than 48rem draws inline: two columns of a few words each read worse than one. */
+export const SourceFileSplitNarrow: Story = {
+  render: () => (
+    <div style={{ width: "28rem" }}>
+      <BentoDiff
+        before={{ file: ORIGINAL }}
+        after={{ file: CHANGED }}
+        fields={[{ id: "file", label: "src/steps.ts", kind: "lines" }]}
+        layout="split"
+      />
+    </div>
+  ),
+};

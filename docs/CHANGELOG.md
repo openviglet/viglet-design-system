@@ -221,6 +221,9 @@
 - ✅ **VDS168** **BentoDiff compares a source file word by word with no line numbers, and past its ceiling draws it as a rewrite** — BentoDiff takes a lines kind: numbered monospace rows, a sign beside the tint, words compared inside an edited line, and three lines of context around each change.
   checked **One edit in a long file draws one numbered hunk, not a rewrite** A 5,000-line file with one line changed draws that pair word by word, both numbers beside it, three lines around it and the rest folded; past the ceiling the field says it did not compare.
   checked **A created or deleted file draws whole, numbered on its one side** A null before draws every line added under the created sentence and a null after every line removed under the deleted one, each marked in text as well as tinted.
+- ✅ **VDS169** **a lines comparison draws one column, so a file cannot be read before and after side by side as VS Code shows it** — BentoDiff takes layout split: a lines field draws the original beside the change, rows aligned with hatched cells, lines wrapped, and falls back to inline under 48rem.
+  checked **Split keeps the unchanged lines level on both sides** A hunk that removes two lines and adds five draws five rows with the left padded, and the next unchanged line sits on one row in both columns, each with its own number.
+  checked **Split under the container width draws as inline** A BentoDiff in a narrow container asked for split draws the same rows inline, measured on the container and not the window.
 
 ## Block G — The package knows one chrome
 

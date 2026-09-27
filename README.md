@@ -902,7 +902,9 @@ source. Pass `before`, `after` and the `fields` to compare. A field is `text`
 (compared by word), `rich` (HTML, compared on the blocks it renders, so markup
 alone is no change), `lines` (a source file, compared by line and drawn in numbered
 monospace rows, with the unchanged stretches between changes folded) or `value`
-(compared whole). Unchanged fields collapse behind a count. A side that is `null` renders the other whole, as a created or deleted
+(compared whole). Unchanged fields collapse behind a count. `layout="split"` draws a
+`lines` field with the original beside the change and unchanged lines level with
+each other. Below 48rem of the comparison's own width it falls back to one column. A side that is `null` renders the other whole, as a created or deleted
 item. Every change is named in text as well as coloured. `BentoVersionRail` lists
 the revisions (author, person or agent, time) as a listbox a reader picks two
 from, by keyboard or pointer. Neither fetches anything.

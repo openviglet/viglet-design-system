@@ -2,24 +2,16 @@
 
 ## Block A — The gate the design system never had
 
+- 📋 **VDS176** (deps: —) **story tests render without Tailwind utilities, so axe checks contrast on unstyled text at the default size** — The stories project loads no tailwindcss plugin, so the a11y gate passes what the catalogue fails and no story can assert layout. → §VDS176
+
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS169** (deps: VDS168 ✅) **a lines comparison draws one column, so a file cannot be read before and after side by side as VS Code shows it** — A reviewer at a wide screen reads the original beside the change, and aligning the two is the part a product would get wrong alone. → §VDS169
 - 📋 **VDS170** (deps: —) **no component marks an item in a list as created, changed or deleted, so each product draws its own letter and tint** — The list and the comparison it opens should agree on what a change looks like, and BentoDiff already owns those words and tints. → §VDS170
 - 📋 **VDS171** (deps: —) **VigletAssistant cannot quiet its mascot, because it does not pass VigletAvatar's paused prop through** — Shio's per-curator quiet-mascot preference (SH971) has nowhere to go, and re-wrapping the dock is a copy the duplicate gate refuses. → §VDS171
 - 📋 **VDS172** (deps: —) **no component draws a month or week calendar, so a scheduled-content page can only be a list** — Shio's Scheduled page wants month and week views with drag to reschedule (SH1082), and a grid built in a product is a copy. → §VDS172
 - 📋 **VDS173** (deps: —) **the contract has no two-pane page shape, so a form and its preview cannot be read side by side** — Two Shio pages want one, the editor's live preview and the translation workspace (SH1094), and a shape is the contract's decision. → §VDS173
 - 📋 **VDS174** (deps: —) **BentoDataTable takes no selection in, so a page cannot select every row or invert the selection** — Its layout is controlled beside onLayoutChange but selection is not, so Shio removed select-all and invert from its table view (SH1148). → §VDS174
 - 📋 **VDS175** (deps: —) **the plugin's MCP server cannot start where the package is installed in a workspace, not at the root** — npx --no-install at the project root answers E404 in Shio, Turing and Dumont, which install the package one level down (SH944). → §VDS175
-
-## Done when — VDS169
-
-- **Split keeps the unchanged lines level on both sides** A hunk that removes two lines
-  and adds five draws five rows with the left padded, and the next unchanged line sits
-  on one row in both columns, each with its own number.
-- **Split under the container width draws as inline** A BentoDiff in a narrow container
-  asked for split draws the same rows inline, measured on the container and not the
-  window.
 
 ## Done when — VDS170
 
@@ -28,6 +20,11 @@
 - **A compact mark says its word, not its letter** The letter's accessible name and
   tooltip are the full word in en and pt, and a locale that sets its own letter key
   draws that letter.
+
+## Done when — VDS176
+
+- **Story tests render with the Tailwind utilities the catalogue has** A story's axe
+  pass then measures the text a product author sees.
 
 ## Non-goals
 

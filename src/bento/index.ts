@@ -57,6 +57,7 @@ export {
   BentoDiff,
   type BentoDiffField,
   type BentoDiffFieldKind,
+  type BentoDiffLayout,
   type BentoDiffProps,
   type BentoDiffSide,
 } from "./bento-diff";

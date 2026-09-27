@@ -52,6 +52,28 @@ which of the two expired — the poll, or the hover before it — and whether th
 had focus. Raising the deadline before that is guessing at which number was wrong, and
 would only make a stalled run take longer to say the same nothing.
 
+### §VDS176 The story tests draw without the utilities
+
+The `stories` project in `vitest.config.ts` runs every story in Chromium for axe, and
+lists `storybookTest()` as its only plugin. The `parity` project beside it adds
+`tailwindcss()`, and the Storybook catalogue gets it from `vite.config.ts`, but the
+story tests get neither. `src/styles/index.css` loads, `@import "tailwindcss"` and all,
+and no utility is generated from it.
+
+VDS169 found it. A play function reading `getComputedStyle` found no `.hidden` rule in
+any stylesheet, and the axe failure VDS168 hit measured the text inside a `text-xs`
+table at 16px. So axe checks contrast on text at the browser default size, with no
+utility colour, spacing or `sr-only` applied. It passes what the catalogue would fail,
+and fails what it would pass. Nothing that depends on layout, such as a container query,
+a hidden element or a truncation, can be asserted in a story at all.
+
+The repair is adding `tailwindcss()` to the stories project, as the parity project does.
+Expect it to surface findings in stories that have passed on unstyled markup: each is a
+real contrast or name failure the gate never saw, and fixing them belongs in the same
+commit, since a gate turned on red is one people learn to re-run. Once it is green, a
+play function in `bento-diff.stories.tsx` can assert that split draws as inline in a
+28rem container, which VDS169 could only pin by class name.
+
 ## Block F — What a consuming CMS needs from the package next
 
 ### §VDS152 The deprecation ends
@@ -67,30 +89,6 @@ through, and delete warnWithoutId and its test. The change note in the ledger na
 release that warned. Before shipping, run viglet-ds-check-duplicates and a type-check in
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
-
-### §VDS169 The original beside the change
-
-VS Code opens a changed file side by side: the original on the left, the file now on the
-right, unchanged lines level with each other. VDS168's `lines` kind draws one column,
-which suits a narrow sheet and loses the reading a reviewer at a wide one expects.
-
-**A `layout` prop, `"inline"` by default.** `"split"` applies to `lines` fields and is
-ignored by the others, which have no rows to align. The product owns the switch, as VS
-Code's editor toolbar does: `BentoDiff` draws either and keeps no state for it.
-
-**Aligned by row, not by scrolling.** Each hunk becomes rows of two cells. Removed lines
-fill the left and added lines the right, paired in order; where one side runs longer the
-other gets an empty hatched cell, so the unchanged lines after the hunk stay level. A
-pair is compared word by word on both sides. Each column carries its own numbers, and
-the fold between hunks spans both.
-
-**Lines wrap in split.** Two unwrapped columns need two sideways scrollbars kept in
-step, a synchronised scroll the package would own and a keyboard reader cannot follow.
-Wrapped, a row is as tall as its longer cell and the alignment holds.
-
-**Narrow falls back.** Under a container width, read with a container query because a
-sheet is narrower than the window, split draws as inline: two columns of a few words
-each are harder to read than one.
 
 ### §VDS170 One mark for created, changed and deleted
 

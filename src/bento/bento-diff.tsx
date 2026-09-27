@@ -33,7 +33,15 @@ export interface BentoDiffProps {
   fields: readonly BentoDiffField[];
   /** Open the unchanged fields instead of collapsing them. */
   showUnchanged?: boolean;
+  /**
+   * How a `lines` field is drawn: one column, or the original beside the change
+   * with unchanged lines level. Other kinds have no rows to align and ignore it.
+   * Split falls back to inline where the comparison is narrower than 48rem.
+   */
+  layout?: BentoDiffLayout;
 }
+
+export type BentoDiffLayout = "inline" | "split";
 
 type Part = { op: "same" | "add" | "remove"; text: string };
 
@@ -110,7 +118,7 @@ type FieldState = "added" | "removed" | "changed" | "unchanged";
  * removals rather than as an empty panel. A change is named in text as well as
  * coloured, so it reads the same without colour. It fetches nothing.
  */
-export function BentoDiff({ before, after, fields, showUnchanged = false }: Readonly<BentoDiffProps>) {
+export function BentoDiff({ before, after, fields, showUnchanged = false, layout = "inline" }: Readonly<BentoDiffProps>) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(showUnchanged);
 
@@ -160,7 +168,7 @@ export function BentoDiff({ before, after, fields, showUnchanged = false }: Read
       <dl className="m-0 flex flex-col gap-3">
         {changed.map((row) => (
           <FieldRow key={row.field.id} label={row.field.label} status={statusText[row.state]} state={row.state}>
-            <FieldChange row={row} />
+            <FieldChange row={row} layout={layout} />
           </FieldRow>
         ))}
       </dl>
@@ -225,11 +233,15 @@ function FieldRow({
 
 function FieldChange({
   row,
-}: Readonly<{ row: { field: BentoDiffField; a: unknown; b: unknown; kind: BentoDiffFieldKind; state: FieldState } }>) {
+  layout,
+}: Readonly<{
+  row: { field: BentoDiffField; a: unknown; b: unknown; kind: BentoDiffFieldKind; state: FieldState };
+  layout: BentoDiffLayout;
+}>) {
   const { t } = useTranslation();
   const { field, a, b, kind, state } = row;
 
-  if (kind === "lines") return <LinesChange label={field.label} before={asText(a)} after={asText(b)} />;
+  if (kind === "lines") return <LinesChange label={field.label} before={asText(a)} after={asText(b)} layout={layout} />;
 
   if (kind === "value") {
     const show = (value: unknown) => (field.format ? field.format(value) : asText(value));
@@ -353,25 +365,52 @@ function lineRows(before: string, after: string): LineRow[] | null {
   return rows;
 }
 
-type LineSegment = { fold: false; rows: LineRow[] } | { fold: true; at: number; rows: LineRow[] };
+/** One row of the split layout. `null` is the hatched cell left where the other side of a change runs longer. */
+type SplitRow = { left: LineRow | null; right: LineRow | null };
 
-/** The rows split into what is shown and the unchanged runs folded away from every change. */
-function foldLines(rows: readonly LineRow[]): LineSegment[] {
-  const near = new Array<boolean>(rows.length).fill(false);
-  rows.forEach((row, i) => {
-    if (row.op === "same") return;
-    for (let k = Math.max(0, i - CONTEXT); k <= Math.min(rows.length - 1, i + CONTEXT); k++) near[k] = true;
-  });
-  const segments: LineSegment[] = [];
+/** The rows paired into two columns: each change's removed lines beside its added ones, in order. */
+function splitRows(rows: readonly LineRow[]): SplitRow[] {
+  const out: SplitRow[] = [];
   let i = 0;
   while (i < rows.length) {
+    if (rows[i].op === "same") {
+      out.push({ left: rows[i], right: rows[i] });
+      i++;
+      continue;
+    }
+    const removed: LineRow[] = [];
+    const added: LineRow[] = [];
+    for (; i < rows.length && rows[i].op !== "same"; i++) (rows[i].op === "remove" ? removed : added).push(rows[i]);
+    for (let k = 0; k < Math.max(removed.length, added.length); k++) {
+      out.push({ left: removed[k] ?? null, right: added[k] ?? null });
+    }
+  }
+  return out;
+}
+
+type Segment<T> = { fold: false; items: T[] } | { fold: true; key: string; items: T[] };
+
+/**
+ * The rows split into what is shown and the unchanged runs folded away from every
+ * change. A fold is keyed by its first line's numbers, so both layouts name the
+ * same fold the same way and one opened in either stays open in the other.
+ */
+function foldLines<T>(items: readonly T[], changed: (item: T) => boolean, key: (item: T) => string): Segment<T>[] {
+  const near = new Array<boolean>(items.length).fill(false);
+  items.forEach((item, i) => {
+    if (!changed(item)) return;
+    for (let k = Math.max(0, i - CONTEXT); k <= Math.min(items.length - 1, i + CONTEXT); k++) near[k] = true;
+  });
+  const segments: Segment<T>[] = [];
+  let i = 0;
+  while (i < items.length) {
     const start = i;
     const shown = near[i];
-    while (i < rows.length && near[i] === shown) i++;
-    const run = rows.slice(start, i);
+    while (i < items.length && near[i] === shown) i++;
+    const run = items.slice(start, i);
     // A fold of one line takes the room the line would.
-    if (shown || run.length === 1) segments.push({ fold: false, rows: run });
-    else segments.push({ fold: true, at: start, rows: run });
+    if (shown || run.length === 1) segments.push({ fold: false, items: run });
+    else segments.push({ fold: true, key: key(run[0]), items: run });
   }
   return segments;
 }
@@ -382,10 +421,21 @@ function foldLines(rows: readonly LineRow[]): LineSegment[] {
  * between two changes folded behind a count. The field scrolls sideways rather
  * than the page, and takes focus so a keyboard can scroll it. No highlighting: a
  * grammar per language is a parser the package would own for everyone.
+ *
+ * VDS169 — split draws the original beside the change, aligned by row rather than
+ * by scrolling: lines wrap, so a row is as tall as its longer cell and two columns
+ * never need scrollbars kept in step. Under 48rem of the comparison's own width
+ * (a container query, since a sheet is narrower than the window) it draws inline,
+ * as two columns of a few words each read worse than one.
  */
-function LinesChange({ label, before, after }: Readonly<{ label: string; before: string; after: string }>) {
+function LinesChange({
+  label,
+  before,
+  after,
+  layout,
+}: Readonly<{ label: string; before: string; after: string; layout: BentoDiffLayout }>) {
   const { t } = useTranslation();
-  const [unfolded, setUnfolded] = useState<ReadonlySet<number>>(new Set());
+  const [unfolded, setUnfolded] = useState<ReadonlySet<string>>(new Set());
   const rows = lineRows(before, after);
 
   if (rows === null) {
@@ -399,72 +449,150 @@ function LinesChange({ label, before, after }: Readonly<{ label: string; before:
     return <p className="m-0 text-sm text-muted-foreground">{t("bento.diff.empty", { defaultValue: "Empty" })}</p>;
   }
 
-  const toggle = (at: number) => {
+  const toggle = (key: string) => {
     const next = new Set(unfolded);
-    if (!next.delete(at)) next.add(at);
+    if (!next.delete(key)) next.add(key);
     setUnfolded(next);
   };
+
+  /** A folded run, drawn as a row spanning the table, then its lines where it is open. */
+  function fold<T>(segment: Segment<T> & { fold: true }, span: number, draw: (item: T) => ReactNode): ReactNode[] {
+    const open = unfolded.has(segment.key);
+    return [
+      <tr key={`fold-${segment.key}`}>
+        <td colSpan={span} className="bg-muted/40 px-2">
+          <button
+            type="button"
+            aria-expanded={open ? "true" : "false"}
+            onClick={() => toggle(segment.key)}
+            className="inline-flex items-center gap-1 rounded-md font-sans text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
+          >
+            <IconChevronRight size={12} aria-hidden="true" className={cn("transition-transform", open && "rotate-90")} />
+            {t("bento.diff.unchangedLines", { defaultValue: "{{count}} unchanged lines", count: segment.items.length })}
+          </button>
+        </td>
+      </tr>,
+      ...(open ? segment.items.map(draw) : []),
+    ];
+  }
+
+  const inline = (className?: string) => (
+    <table data-layout="inline" className={cn("min-w-full border-collapse font-mono text-xs leading-5", className)}>
+      <tbody>
+        {foldLines(rows, (row) => row.op !== "same", rowKey).map((segment) => {
+          const draw = (row: LineRow) => <LineRowView key={rowKey(row)} row={row} />;
+          return segment.fold ? fold(segment, 4, draw) : segment.items.map(draw);
+        })}
+      </tbody>
+    </table>
+  );
+
+  const split = (className: string) => (
+    <table data-layout="split" className={cn("w-full table-fixed border-collapse font-mono text-xs leading-5", className)}>
+      <colgroup>
+        <col className="w-14" />
+        <col className="w-5" />
+        <col />
+        <col className="w-14" />
+        <col className="w-5" />
+        <col />
+      </colgroup>
+      <tbody>
+        {foldLines(splitRows(rows), (pair) => pair.left?.op !== "same", splitKey).map((segment) => {
+          const draw = (pair: SplitRow) => <SplitRowView key={splitKey(pair)} pair={pair} />;
+          return segment.fold ? fold(segment, 6, draw) : segment.items.map(draw);
+        })}
+      </tbody>
+    </table>
+  );
 
   return (
     <section
       aria-label={label}
       // A scroll container is reached by Tab so a keyboard can scroll it sideways.
       tabIndex={0}
-      className="overflow-x-auto rounded-md border border-border/60 focus-visible:outline-2 focus-visible:outline-ring"
+      className="@container/diff overflow-x-auto rounded-md border border-border/60 focus-visible:outline-2 focus-visible:outline-ring"
     >
-      <table className="min-w-full border-collapse font-mono text-xs leading-5">
-        <tbody>
-          {foldLines(rows).map((segment) => {
-            if (!segment.fold) return segment.rows.map((row) => <LineRowView key={rowKey(row)} row={row} />);
-            const open = unfolded.has(segment.at);
-            return [
-              <tr key={`fold-${segment.at}`}>
-                <td colSpan={4} className="bg-muted/40 px-2">
-                  <button
-                    type="button"
-                    aria-expanded={open ? "true" : "false"}
-                    onClick={() => toggle(segment.at)}
-                    className="inline-flex items-center gap-1 rounded-md font-sans text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
-                  >
-                    <IconChevronRight size={12} aria-hidden="true" className={cn("transition-transform", open && "rotate-90")} />
-                    {t("bento.diff.unchangedLines", { defaultValue: "{{count}} unchanged lines", count: segment.rows.length })}
-                  </button>
-                </td>
-              </tr>,
-              ...(open ? segment.rows.map((row) => <LineRowView key={rowKey(row)} row={row} />) : []),
-            ];
-          })}
-        </tbody>
-      </table>
+      {layout === "split" ? (
+        <>
+          {inline("@3xl/diff:hidden")}
+          {split("hidden @3xl/diff:table")}
+        </>
+      ) : (
+        inline()
+      )}
     </section>
   );
 }
 
 const rowKey = (row: LineRow) => `${row.old ?? ""}:${row.new ?? ""}`;
+const splitKey = (pair: SplitRow) => `${pair.left?.old ?? ""}:${pair.right?.new ?? ""}`;
 
-function LineRowView({ row }: Readonly<{ row: LineRow }>) {
-  const sign = { same: " ", add: "+", remove: "−" }[row.op];
-  let content: ReactNode = row.text;
+const tintOf = (row: LineRow) =>
+  cn(row.op === "add" && "bento-status bento-status-on", row.op === "remove" && "bento-status bento-status-error");
+
+/** A line's text, its changed words marked where it is paired with its other side. */
+function lineContent(row: LineRow): ReactNode {
   if (row.parts) {
-    content = row.parts.map((part, k) => {
+    return row.parts.map((part, k) => {
       if (part.op === "add") return <Added key={k}>{part.text}</Added>;
       if (part.op === "remove") return <Removed key={k}>{part.text}</Removed>;
       return <span key={k}>{part.text}</span>;
     });
-  } else if (row.op !== "same") {
-    content = <LineMark op={row.op}>{row.text}</LineMark>;
   }
-  const tint = cn(row.op === "add" && "bento-status bento-status-on", row.op === "remove" && "bento-status bento-status-error");
+  return row.op === "same" ? row.text : <LineMark op={row.op}>{row.text}</LineMark>;
+}
+
+const SIGN = { same: " ", add: "+", remove: "−" } as const;
+const NUMBER = "select-none px-2 text-right align-top text-muted-foreground tabular-nums";
+
+function LineRowView({ row }: Readonly<{ row: LineRow }>) {
+  const tint = tintOf(row);
   return (
     <tr data-op={row.op}>
-      <td className={cn("w-px select-none px-2 text-right text-muted-foreground tabular-nums", tint)}>{row.old}</td>
-      <td className={cn("w-px select-none px-2 text-right text-muted-foreground tabular-nums", tint)}>{row.new}</td>
+      <td className={cn("w-px", NUMBER, tint)}>{row.old}</td>
+      <td className={cn("w-px", NUMBER, tint)}>{row.new}</td>
       <td aria-hidden="true" className={cn("w-px select-none pr-1", tint)}>
-        {sign}
+        {SIGN[row.op]}
       </td>
       {/* An edited line tints its changed words and not the line under them: two tints stacked lose contrast. */}
-      <td className={cn("whitespace-pre pr-3", !row.parts && tint)}>{content}</td>
+      <td className={cn("whitespace-pre pr-3", !row.parts && tint)}>{lineContent(row)}</td>
     </tr>
+  );
+}
+
+function SplitRowView({ pair }: Readonly<{ pair: SplitRow }>) {
+  return (
+    <tr data-op={pair.left?.op === "same" ? "same" : "change"}>
+      <SplitSide row={pair.left} number={pair.left?.old} />
+      <SplitSide row={pair.right} number={pair.right?.new} right />
+    </tr>
+  );
+}
+
+/** One column of a split row, or the hatched cell standing in for a line the other side added or removed. */
+function SplitSide({ row, number, right = false }: Readonly<{ row: LineRow | null; number?: number; right?: boolean }>) {
+  if (row === null) {
+    return (
+      <td
+        colSpan={3}
+        data-empty=""
+        className={cn(
+          "[background-image:repeating-linear-gradient(-45deg,var(--color-border)_0_1px,transparent_0_6px)]",
+          right && "border-l border-border/60",
+        )}
+      />
+    );
+  }
+  const tint = tintOf(row);
+  return (
+    <>
+      <td className={cn(NUMBER, tint, right && "border-l border-border/60")}>{number}</td>
+      <td aria-hidden="true" className={cn("select-none align-top", tint)}>
+        {SIGN[row.op]}
+      </td>
+      <td className={cn("whitespace-pre-wrap pr-3 [overflow-wrap:anywhere]", !row.parts && tint)}>{lineContent(row)}</td>
+    </>
   );
 }
 
