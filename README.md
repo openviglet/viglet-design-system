@@ -900,8 +900,9 @@ change the rows:
 revision history, a review of what an agent changed, or a translation against its
 source. Pass `before`, `after` and the `fields` to compare. A field is `text`
 (compared by word), `rich` (HTML, compared on the blocks it renders, so markup
-alone is no change) or `value` (compared whole). Unchanged fields collapse behind
-a count. A side that is `null` renders the other whole, as a created or deleted
+alone is no change), `lines` (a source file, compared by line and drawn in numbered
+monospace rows, with the unchanged stretches between changes folded) or `value`
+(compared whole). Unchanged fields collapse behind a count. A side that is `null` renders the other whole, as a created or deleted
 item. Every change is named in text as well as coloured. `BentoVersionRail` lists
 the revisions (author, person or agent, time) as a listbox a reader picks two
 from, by keyboard or pointer. Neither fetches anything.

@@ -76,3 +76,23 @@ export const RevisionHistory: Story = {
 export const CreatedPage: Story = {
   render: () => <BentoDiff before={null} after={CONTENT.v1} fields={FIELDS} />,
 };
+
+const ORIGINAL = Array.from({ length: 60 }, (_, i) => `export const step${i + 1} = () => run(${i + 1});`).join("\n");
+const CHANGED = ORIGINAL.replace("run(12);", "run(12, { retry: true });").replace(
+  "export const step40 = () => run(40);",
+  "export const step40 = () => run(40);\nexport const step40b = () => run(40, { dryRun: true });",
+);
+
+/**
+ * A source file an agent changed, compared by line: numbered rows, a sign beside
+ * the tint, and the unchanged stretches between the two changes folded.
+ */
+export const SourceFile: Story = {
+  render: () => (
+    <BentoDiff
+      before={{ file: ORIGINAL }}
+      after={{ file: CHANGED }}
+      fields={[{ id: "file", label: "src/steps.ts", kind: "lines" }]}
+    />
+  ),
+};

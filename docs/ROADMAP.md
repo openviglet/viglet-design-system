@@ -4,24 +4,13 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS168** (deps: —) **BentoDiff compares a source file word by word with no line numbers, and past its ceiling draws it as a rewrite** — An agent's change under review is most often a file, which every review tool reads by line, and VDS140 promised one comparison for every place. → §VDS168
-- 📋 **VDS169** (deps: VDS168) **a lines comparison draws one column, so a file cannot be read before and after side by side as VS Code shows it** — A reviewer at a wide screen reads the original beside the change, and aligning the two is the part a product would get wrong alone. → §VDS169
+- 📋 **VDS169** (deps: VDS168 ✅) **a lines comparison draws one column, so a file cannot be read before and after side by side as VS Code shows it** — A reviewer at a wide screen reads the original beside the change, and aligning the two is the part a product would get wrong alone. → §VDS169
 - 📋 **VDS170** (deps: —) **no component marks an item in a list as created, changed or deleted, so each product draws its own letter and tint** — The list and the comparison it opens should agree on what a change looks like, and BentoDiff already owns those words and tints. → §VDS170
 - 📋 **VDS171** (deps: —) **VigletAssistant cannot quiet its mascot, because it does not pass VigletAvatar's paused prop through** — Shio's per-curator quiet-mascot preference (SH971) has nowhere to go, and re-wrapping the dock is a copy the duplicate gate refuses. → §VDS171
 - 📋 **VDS172** (deps: —) **no component draws a month or week calendar, so a scheduled-content page can only be a list** — Shio's Scheduled page wants month and week views with drag to reschedule (SH1082), and a grid built in a product is a copy. → §VDS172
 - 📋 **VDS173** (deps: —) **the contract has no two-pane page shape, so a form and its preview cannot be read side by side** — Two Shio pages want one, the editor's live preview and the translation workspace (SH1094), and a shape is the contract's decision. → §VDS173
 - 📋 **VDS174** (deps: —) **BentoDataTable takes no selection in, so a page cannot select every row or invert the selection** — Its layout is controlled beside onLayoutChange but selection is not, so Shio removed select-all and invert from its table view (SH1148). → §VDS174
 - 📋 **VDS175** (deps: —) **the plugin's MCP server cannot start where the package is installed in a workspace, not at the root** — npx --no-install at the project root answers E404 in Shio, Turing and Dumont, which install the package one level down (SH944). → §VDS175
-
-## Done when — VDS168
-
-- **One edit in a long file draws one numbered hunk, not a rewrite** A 5,000-line file
-  with one line changed draws that pair word by word, both numbers beside it, three
-  lines around it and the rest folded; past the ceiling the field says it did not
-  compare.
-- **A created or deleted file draws whole, numbered on its one side** A null before
-  draws every line added under the created sentence and a null after every line removed
-  under the deleted one, each marked in text as well as tinted.
 
 ## Done when — VDS169
 

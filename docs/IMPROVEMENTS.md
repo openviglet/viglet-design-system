@@ -68,30 +68,6 @@ release that warned. Before shipping, run viglet-ds-check-duplicates and a type-
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
 
-### §VDS168 A file compared by line
-
-VDS140 gave the products one comparison, and roadkeep-gui now needs it for a source file
-a Claude Code session changed, the original against the file now. `BentoDiff` has no
-kind for that. A `text` field is one wrapped paragraph compared word by word, with no
-line numbers, and `diffTokens` gives up past 400,000 cells, which a file of some forty
-lines reaches; the field then draws the whole before removed and the whole after added,
-which reads as a rewrite.
-
-**A `lines` kind beside `text`, `rich` and `value`.** The value is a string split on
-line breaks. The common head and tail are trimmed before `diffTokens` runs, so the
-ceiling bounds the changed middle and not the file: one edit in a 5,000-line file is a
-few cells. Past it, the field says the comparison was not made.
-
-**Drawn as a file is read.** Monospace rows: the old number, the new number, a `+` or
-`−` in text, then the line, in the tints `Added` and `Removed` already use. A removed
-line followed by an added one is compared word by word inside, as an edited `rich`
-paragraph is. Three unchanged lines stay around each change and the rest fold behind a
-button naming how many. The field scrolls sideways, not the page, and Tab reaches it. A
-missing side draws whole, numbered on one side, under the existing created or deleted
-sentence.
-
-No highlighting: a grammar per language is a parser the package would own for everyone.
-
 ### §VDS169 The original beside the change
 
 VS Code opens a changed file side by side: the original on the left, the file now on the

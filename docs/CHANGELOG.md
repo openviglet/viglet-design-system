@@ -218,6 +218,9 @@
 - ✅ **VDS155** **five doc comments open with a fix note or a caveat, which the catalogue then serves as the component's purpose** — BadgeColorful, NavigationMenu, Toaster, BentoStatusMarker and UserAvatar open with what each is for, and the note each opened with follows as a later paragraph.
 - ✅ **VDS156** **an inline edit committed with Enter drops focus when it settles, and a blur while it saves commits a second time** — An inline edit saves once however it is left, and focus returns to its display button after Enter or Escape but stays where a Tab took it.
 - ✅ **VDS167** **no component draws a folder hierarchy, so a consumer that needs one hand-rolls the branching and its keyboard** — A Tree renders nodes a consumer supplies, owning the branching, the roles and levels and the arrow keys, with treeFromPaths beside it (design recorded in `src/components/ui/tree.tsx`).
+- ✅ **VDS168** **BentoDiff compares a source file word by word with no line numbers, and past its ceiling draws it as a rewrite** — BentoDiff takes a lines kind: numbered monospace rows, a sign beside the tint, words compared inside an edited line, and three lines of context around each change.
+  checked **One edit in a long file draws one numbered hunk, not a rewrite** A 5,000-line file with one line changed draws that pair word by word, both numbers beside it, three lines around it and the rest folded; past the ceiling the field says it did not compare.
+  checked **A created or deleted file draws whole, numbered on its one side** A null before draws every line added under the created sentence and a null after every line removed under the deleted one, each marked in text as well as tinted.
 
 ## Block G — The package knows one chrome
 

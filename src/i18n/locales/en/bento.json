@@ -57,6 +57,8 @@
       "changed": "Changed",
       "unchanged": "Unchanged",
       "unchangedCount": "{{count}} unchanged",
+      "unchangedLines": "{{count}} unchanged lines",
+      "tooLarge": "Too many lines changed to compare them here",
       "created": "Created in this version",
       "deleted": "Deleted in this version",
       "noChanges": "No field changed",

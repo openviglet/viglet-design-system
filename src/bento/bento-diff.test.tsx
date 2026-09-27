@@ -119,6 +119,68 @@ describe("BentoDiff", () => {
   })
 })
 
+describe("BentoDiff lines", () => {
+  // VDS168 — a source file compared by line, as a review tool reads one.
+  const SOURCE: BentoDiffField[] = [{ id: "file", label: "src/app.ts", kind: "lines" }]
+  const file = (count: number, edit?: [number, string]) =>
+    Array.from({ length: count }, (_, i) => (edit && edit[0] === i ? edit[1] : `const line${i + 1} = ${i + 1}`)).join("\n") + "\n"
+  const rows = (op: string) => [...document.querySelectorAll(`tr[data-op="${op}"]`)] as HTMLTableRowElement[]
+  const numbers = (row: HTMLTableRowElement) => [...row.cells].slice(0, 2).map((cell) => cell.textContent)
+
+  it("draws one edit in a long file as one numbered hunk, not a rewrite", async () => {
+    const user = userEvent.setup()
+    draw(<BentoDiff before={{ file: file(5000) }} after={{ file: file(5000, [2499, "const line2500 = 0"]) }} fields={SOURCE} />)
+
+    const [removed] = rows("remove")
+    const [added] = rows("add")
+    expect(rows("remove")).toHaveLength(1)
+    expect(rows("add")).toHaveLength(1)
+    expect(numbers(removed)).toEqual(["2500", ""])
+    expect(numbers(added)).toEqual(["", "2500"])
+    // The sign is in text beside the tint, and the edit inside the line is a word diff.
+    expect(removed.cells[2]).toHaveTextContent("−")
+    expect(removed.querySelector("del")).toHaveTextContent("2500")
+    expect(added.querySelector("ins")).toHaveTextContent("0")
+    // Three unchanged lines on either side, the rest folded behind a count.
+    expect(rows("same")).toHaveLength(6)
+    expect(numbers(rows("same")[0])).toEqual(["2497", "2497"])
+    const before = screen.getByRole("button", { name: "2496 unchanged lines" })
+    expect(screen.getByRole("button", { name: "2497 unchanged lines" })).toHaveAttribute("aria-expanded", "false")
+
+    await user.click(before)
+    expect(before).toHaveAttribute("aria-expanded", "true")
+    expect(rows("same")).toHaveLength(6 + 2496)
+    expect(numbers(rows("same")[0])).toEqual(["1", "1"])
+  })
+
+  it("keeps the field scrolling sideways and reachable by Tab", () => {
+    draw(<BentoDiff before={{ file: "a\n" }} after={{ file: "b\n" }} fields={SOURCE} />)
+    const region = screen.getByRole("region", { name: "src/app.ts" })
+    expect(region).toHaveAttribute("tabindex", "0")
+    expect(region.className).toContain("overflow-x-auto")
+  })
+
+  it("draws a created or a deleted file whole, numbered on its one side", () => {
+    const { unmount } = draw(<BentoDiff before={null} after={{ file: file(40) }} fields={SOURCE} />)
+    expect(screen.getByText("Created in this version")).toBeInTheDocument()
+    expect(rows("add")).toHaveLength(40)
+    expect(rows("add").map(numbers).at(-1)).toEqual(["", "40"])
+    expect(screen.queryByRole("button", { name: /unchanged lines/ })).not.toBeInTheDocument()
+    unmount()
+
+    draw(<BentoDiff before={{ file: file(40) }} after={null} fields={SOURCE} />)
+    expect(screen.getByText("Deleted in this version")).toBeInTheDocument()
+    expect(rows("remove")).toHaveLength(40)
+    expect(rows("remove").map(numbers)[0]).toEqual(["1", ""])
+  })
+
+  it("says the comparison was not made past the ceiling on the changed middle", () => {
+    draw(<BentoDiff before={{ file: file(1000) }} after={{ file: file(1000).replaceAll("const", "let") }} fields={SOURCE} />)
+    expect(screen.getByText("Too many lines changed to compare them here")).toBeInTheDocument()
+    expect(rows("add")).toHaveLength(0)
+  })
+})
+
 describe("BentoVersionRail", () => {
   const VERSIONS: BentoVersion[] = [
     { id: "v3", author: "Drafting agent", actor: "agent", at: "2026-09-12T10:00:00Z", summary: "Rewrote the summary" },

@@ -57,6 +57,8 @@
       "changed": "Alterado",
       "unchanged": "Sem alteração",
       "unchangedCount": "{{count}} sem alteração",
+      "unchangedLines": "{{count}} linhas sem alteração",
+      "tooLarge": "Linhas alteradas demais para comparar aqui",
       "created": "Criado nesta versão",
       "deleted": "Excluído nesta versão",
       "noChanges": "Nenhum campo mudou",
