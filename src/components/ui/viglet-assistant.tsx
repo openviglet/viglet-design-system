@@ -96,6 +96,12 @@ export interface VigletAssistantProps {
    * `BentoShell`'s `dock` slot it is in flow already: the shell owns the corner.
    */
   inline?: boolean;
+  /**
+   * Hold the mascot still and type no caption, for a person who asked for a quiet
+   * dock. What it says still arrives, whole, and is still announced.
+   * `prefers-reduced-motion` does the same for the whole system.
+   */
+  paused?: boolean;
   className?: string;
 }
 
@@ -140,17 +146,17 @@ function prefersReducedMotion() {
  * Mount this with `key={text}` — a new sentence is a new caption, which is what
  * resets the reveal without an effect writing state on the way past.
  */
-function Caption({ text, className }: Readonly<{ text: string; className?: string }>) {
+function Caption({ text, still = false, className }: Readonly<{ text: string; still?: boolean; className?: string }>) {
   const [shown, setShown] = useState(0);
 
   useEffect(() => {
     const total = text.length;
     if (total === 0) return;
 
-    // Reduced motion still gets the sentence, just not the performance. Set from
-    // a timer rather than in the effect body so the first commit is the same one
-    // every other reader gets.
-    if (prefersReducedMotion()) {
+    // Reduced motion, or a dock the product paused, still gets the sentence, just
+    // not the performance. Set from a timer rather than in the effect body so the
+    // first commit is the same one every other reader gets.
+    if (still || prefersReducedMotion()) {
       const id = setTimeout(() => setShown(total), 0);
       return () => clearTimeout(id);
     }
@@ -168,7 +174,7 @@ function Caption({ text, className }: Readonly<{ text: string; className?: strin
       });
     }, step);
     return () => clearInterval(id);
-  }, [text]);
+  }, [text, still]);
 
   return (
     <span className={className}>
@@ -226,6 +232,7 @@ export function VigletAssistant({
   onDismiss,
   activity = 0,
   inline = false,
+  paused = false,
   className,
 }: Readonly<VigletAssistantProps>) {
   const { t, i18n } = useTranslation();
@@ -317,6 +324,7 @@ export function VigletAssistant({
         <Caption
           key={said}
           text={said}
+          still={paused}
           className="pointer-events-none absolute bottom-11 right-[7.75rem] w-max max-w-[min(23rem,calc(100vw-9rem))] text-right text-sm font-semibold leading-snug text-foreground drop-shadow-sm"
         />
       )}
@@ -334,6 +342,7 @@ export function VigletAssistant({
             compact={!isOpen}
             unread={pending}
             activity={activity}
+            paused={paused}
             size={isOpen ? 76 : 132}
           />
           {!isOpen && count > 0 && (
@@ -356,6 +365,7 @@ export function VigletAssistant({
               <Caption
                 key={said}
                 text={said}
+                still={paused}
                 className="text-xs leading-snug text-muted-foreground"
               />
             )}

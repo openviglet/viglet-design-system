@@ -227,6 +227,8 @@
 - ✅ **VDS170** **no component marks an item in a list as created, changed or deleted, so each product draws its own letter and tint** — BentoChangeMark draws the diff's field chip for any list, same words and tints; compact draws git's letter, the word its name (design recorded in `src/bento/bento-change-mark.tsx`).
   checked **BentoDiff's field chip is BentoChangeMark** FieldRow renders the exported mark, so a list and the comparison it opens show one word and one tint for each state.
   checked **A compact mark says its word, not its letter** The letter's accessible name and tooltip are the full word in en and pt, and a locale that sets its own letter key draws that letter.
+- ✅ **VDS171** **VigletAssistant cannot quiet its mascot, because it does not pass VigletAvatar's paused prop through** — VigletAssistant takes paused: the avatar holds one frame and the caption arrives whole instead of typed, still announced by the live region.
+  checked **A paused dock holds its mascot still and still reports** The avatar schedules no frame and the caption arrives whole and announced, asserted in viglet-assistant.test.tsx.
 
 ## Block G — The package knows one chrome
 

@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react"
+import { act, render, screen } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import { readFileSync, readdirSync } from "node:fs"
 import { join, resolve } from "node:path"
@@ -133,6 +133,56 @@ describe("VigletAssistant", () => {
 
     expect(screen.getByRole("status")).toHaveTextContent(caption)
     expect(container.querySelector("[aria-hidden='true']")).toBeTruthy()
+  })
+
+  describe("paused", () => {
+    // VDS171 — a person asked for a quiet dock: the mascot holds still and the
+    // caption arrives whole, while what it says is still announced.
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it("holds the mascot on one frame", () => {
+      const frames = vi.spyOn(window, "requestAnimationFrame")
+      const { unmount } = render(<VigletAssistant paused />)
+      // A paused avatar draws once and schedules nothing after.
+      expect(frames).not.toHaveBeenCalled()
+      unmount()
+
+      render(<VigletAssistant />)
+      expect(frames).toHaveBeenCalled()
+    })
+
+    it("shows the caption whole, with no caret, and still announces it", () => {
+      vi.useFakeTimers()
+      const caption = "governanca published at 14:02."
+      const { container, rerender } = render(<VigletAssistant paused caption={caption} />)
+      act(() => {
+        vi.advanceTimersByTime(0)
+      })
+      const typed = () => container.querySelector("[aria-hidden='true']:not(canvas)")!
+      expect(typed()).toHaveTextContent(caption)
+      expect(container.querySelector(".motion-safe\\:animate-pulse")).toBeNull()
+      expect(screen.getByRole("status")).toHaveTextContent(caption)
+
+      // A new sentence keeps reporting the same way.
+      rerender(<VigletAssistant paused caption="Two pages failed to publish." />)
+      act(() => {
+        vi.advanceTimersByTime(0)
+      })
+      expect(typed()).toHaveTextContent("Two pages failed to publish.")
+      expect(screen.getByRole("status")).toHaveTextContent("Two pages failed to publish.")
+    })
+
+    it("types the caption when not paused", () => {
+      vi.useFakeTimers()
+      const caption = "governanca published at 14:02."
+      const { container } = render(<VigletAssistant caption={caption} />)
+      act(() => {
+        vi.advanceTimersByTime(0)
+      })
+      expect(container.querySelector("[aria-hidden='true']:not(canvas)")!.textContent).not.toBe(caption)
+    })
   })
 
   it("can be driven from outside, and reports its own attempts to move", async () => {

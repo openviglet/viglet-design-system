@@ -90,26 +90,6 @@ release that warned. Before shipping, run viglet-ds-check-duplicates and a type-
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
 
-### §VDS171 VigletAssistant forwards paused to its avatar
-
-`VigletAvatar` takes `paused` and stops its motion while keeping its state readable, and
-`PulseRing` does the same. `VigletAssistant` renders the avatar for its dock and
-forwards `state`, `activity` and `unread`, but not `paused`. So a product that wants to
-quiet the mascot has no way to say so short of re-implementing the dock around a bare
-avatar, which the duplicate gate refuses.
-
-Shio needs this for SH971. A curator who is presenting their screen, or who simply finds
-the motion distracting, sets a per-person preference that the mascot stays still. The
-caption and the aria-live announcement keep reporting as before; only the animation
-stops. `prefers-reduced-motion` is the system-wide half of that, and this prop is the
-per-product, per-person half.
-
-The change is a `paused?: boolean` prop on `VigletAssistantProps`, forwarded to the
-avatar and to any pulse the dock draws itself. It defaults to `false`, so nothing
-changes for existing consumers. The assertion renders the dock with `paused` and reads
-that the avatar received it and that no animation class is running, while the caption
-still updates.
-
 ### §VDS172 A bento calendar over caller-supplied entries
 
 No export of 2026.3.12 draws a date grid. Shio's Scheduled page (SH991) lists scheduled

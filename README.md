@@ -530,7 +530,10 @@ import { VigletAssistant } from "@viglet/viglet-design-system";
 contract — the endpoint, the prompt and the key stay in your product. Leaving
 `onSend` off is how you turn the chat off: the composer is not rendered at all
 and the dock becomes a place the system reports from, which is what a product
-that only wants notification feedback should mount.
+that only wants notification feedback should mount. Pass `paused` for a person
+who asked for a quiet dock: the mascot holds still and the caption appears whole
+instead of being typed, while it is still announced. `prefers-reduced-motion`
+does the same system-wide.
 
 A message may carry one `action`, so an answer can offer something to do with
 it — the label is your copy, already translated:

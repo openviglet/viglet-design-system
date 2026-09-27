@@ -88,6 +88,19 @@ export const StatusOnly: Story = {
   ),
 };
 
+/**
+ * `paused`: a person asked for a quiet dock. The mascot holds one frame and the
+ * caption arrives whole instead of being typed, while it is still announced.
+ */
+export const Paused: Story = {
+  args: { paused: true, state: "attention", caption: "Mariana Lopes, Lumen Arquitetura. Source: site form." },
+  render: (args) => (
+    <Stage>
+      <Dock {...args} />
+    </Stage>
+  ),
+};
+
 /** An answer is waiting behind a collapsed dock: a slow, low orbit. */
 export const Unread: Story = {
   args: { unread: true, caption: "I found three pages with no meta description." },

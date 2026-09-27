@@ -6,7 +6,6 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS171** (deps: —) **VigletAssistant cannot quiet its mascot, because it does not pass VigletAvatar's paused prop through** — Shio's per-curator quiet-mascot preference (SH971) has nowhere to go, and re-wrapping the dock is a copy the duplicate gate refuses. → §VDS171
 - 📋 **VDS172** (deps: —) **no component draws a month or week calendar, so a scheduled-content page can only be a list** — Shio's Scheduled page wants month and week views with drag to reschedule (SH1082), and a grid built in a product is a copy. → §VDS172
 - 📋 **VDS173** (deps: —) **the contract has no two-pane page shape, so a form and its preview cannot be read side by side** — Two Shio pages want one, the editor's live preview and the translation workspace (SH1094), and a shape is the contract's decision. → §VDS173
 - 📋 **VDS174** (deps: —) **BentoDataTable takes no selection in, so a page cannot select every row or invert the selection** — Its layout is controlled beside onLayoutChange but selection is not, so Shio removed select-all and invert from its table view (SH1148). → §VDS174
