@@ -2,8 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS166** (deps: —) **the census test walks nine checkouts under a five-second default and timed out once on a cold disk** — Every assertion held and the next two runs passed, so the census gate reads as flaky while it is only slow. → §VDS166
-
 ## Block F — What a consuming CMS needs from the package next
 
 - 📋 **VDS168** (deps: —) **BentoDiff compares a source file word by word with no line numbers, and past its ceiling draws it as a rewrite** — An agent's change under review is most often a file, which every review tool reads by line, and VDS140 promised one comparison for every place. → §VDS168
@@ -14,12 +12,6 @@
 - 📋 **VDS173** (deps: —) **the contract has no two-pane page shape, so a form and its preview cannot be read side by side** — Two Shio pages want one, the editor's live preview and the translation workspace (SH1094), and a shape is the contract's decision. → §VDS173
 - 📋 **VDS174** (deps: —) **BentoDataTable takes no selection in, so a page cannot select every row or invert the selection** — Its layout is controlled beside onLayoutChange but selection is not, so Shio removed select-all and invert from its table view (SH1148). → §VDS174
 - 📋 **VDS175** (deps: —) **the plugin's MCP server cannot start where the package is installed in a workspace, not at the root** — npx --no-install at the project root answers E404 in Shio, Turing and Dumont, which install the package one level down (SH944). → §VDS175
-
-## Done when — VDS166
-
-- **The register census case is sized for the loaded suite** Its timeout carries a
-  comment giving the measured cold and warm walk, and the case passes beside the other
-  script tests on a cold disk.
 
 ## Done when — VDS168
 

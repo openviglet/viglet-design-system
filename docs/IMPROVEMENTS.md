@@ -52,27 +52,6 @@ which of the two expired — the poll, or the hover before it — and whether th
 had focus. Raising the deadline before that is guessing at which number was wrong, and
 would only make a stalled run take longer to say the same nothing.
 
-### §VDS166 The census walk and its deadline
-
-`chrome-census.test.ts` holds the real register to the real checkouts where a machine
-has them: it walks the declared source roots of all nine consumers — Turing's alone is
-over seven hundred files — and it runs under Vitest's default five-second timeout.
-
-On a warm filesystem that is plenty. The first run after the checkouts had been
-reinstalled failed that case while running beside two other script test files, and the
-next two runs of the same three files passed with no change in between. Nothing in the
-assertion moved; the walk outran the deadline.
-
-This is the shape VDS148 fixed one file over, where importing `vite.config.ts` took ten
-times longer beside the browser project than alone: a constant sized for a quiet
-machine, failing with every assertion intact. It is also a gate that reads as flaky
-while it is really slow, which is the reading that teaches people to re-run a red census
-instead of reading it.
-
-The repair is VDS148's: size the case for the loaded suite, with a comment saying what
-the walk costs and why, rather than widening it until it stops failing today. Measuring
-the walk once cold and once warm gives the number the comment should carry.
-
 ## Block F — What a consuming CMS needs from the package next
 
 ### §VDS152 The deprecation ends

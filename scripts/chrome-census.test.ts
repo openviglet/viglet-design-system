@@ -113,7 +113,12 @@ describe("reading a console-era import as a regression", () => {
 
 // A developer's machine has the checkouts; CI has only this repository.
 describe.skipIf(Boolean(process.env.CI))("the register on this machine", () => {
-  it("finds no consumer reaching for a component the console era took with it", () => {
+  // VDS166 — the timeout is sized for a cold disk under the loaded suite, as
+  // VDS148 sized its neighbour. The walk reads every source root of nine
+  // checkouts (Turing's alone is over seven hundred files): about 150ms warm and
+  // 240ms beside the other script tests, but it outran the 5s default on the
+  // first run after the checkouts were reinstalled, with every assertion intact.
+  it("finds no consumer reaching for a component the console era took with it", { timeout: 30_000 }, () => {
     const register = JSON.parse(readFileSync(join(root, "consumers.json"), "utf8"))
     const line = JSON.parse(readFileSync(join(root, "package.json"), "utf8")).version.split(".").slice(0, 2).join(".")
     const result = census(register, root, line)
