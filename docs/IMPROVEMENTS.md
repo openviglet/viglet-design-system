@@ -109,26 +109,6 @@ release that warned. Before shipping, run viglet-ds-check-duplicates and a type-
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
 
-### §VDS174 BentoDataTable takes a controlled selectedIds
-
-`BentoDataTable` reports its selection through `onSelectionChange` and takes none in.
-The same component's column `layout` **is** controlled beside `onLayoutChange`, so one
-of the two was finished and the other was not.
-
-Shio hit the gap in its content browser (SH1142, SH1148). The list view has had "select
-every post in this folder" and "invert" since long before the table view existed. In the
-table view the page cannot set the selection, so those two controls would tick nothing,
-and Shio removed them rather than leave them inert. The page's set and the table's
-ticked rows can only agree by habit today. Remounting the table with a `key` is not a
-fix: it virtualises the rows of a four-thousand-post folder, and a remount throws that
-window away on every click.
-
-The change is `selectedIds?: string[]`. When it is given, the table is controlled: it
-renders exactly those rows as ticked and reports changes through `onSelectionChange`
-without keeping its own copy. When it is absent, the table behaves as it does now. The
-assertion passes a set from outside, reads the ticked rows, then changes the set and
-reads them again with no remount.
-
 ### §VDS175 The plugin finds a workspace installation
 
 Measured in Shio after it enabled `viglet-ds` (SH944). The plugin's `.mcp.json` starts

@@ -75,6 +75,13 @@ export interface BentoDataTableProps<TRow> {
   rowActions?: readonly BentoDataTableAction<TRow>[];
   /** Given, rows are selectable, and these act on the selection from a bar above the table. */
   selectionActions?: readonly BentoDataTableAction<TRow>[];
+  /**
+   * Controlled selection, by row id. Given, the table ticks exactly these rows and
+   * reports every change through `onSelectionChange` without keeping a copy, so a
+   * page can select every row or invert the selection. Omitted, the table keeps
+   * its own.
+   */
+  selectedIds?: readonly string[];
   onSelectionChange?: (ids: string[]) => void;
   /**
    * What the rows were chosen by, such as a serialised filter. A selection holds
@@ -127,6 +134,7 @@ export function BentoDataTable<TRow extends RowData>({
   getRowLabel,
   rowActions,
   selectionActions,
+  selectedIds,
   onSelectionChange,
   selectionScope,
   layout,
@@ -139,17 +147,26 @@ export function BentoDataTable<TRow extends RowData>({
   const { t } = useTranslation();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [ownLayout, setOwnLayout] = useState<BentoDataTableLayout>({ hidden: [] });
-  const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
+  const [ownSelected, setOwnSelected] = useState<ReadonlySet<string>>(new Set());
   const [anchor, setAnchor] = useState<number | null>(null);
   const [scope, setScope] = useState(selectionScope);
+  // The controlled set a scope change made stale, read as empty until the product
+  // answers the clear below with a new one.
+  const [staleIds, setStaleIds] = useState<readonly string[] | undefined>(undefined);
 
   // VDS139 — a new scope clears the selection in the same render that shows the
   // new rows, so no frame offers an action on the old ones.
   if (scope !== selectionScope) {
     setScope(selectionScope);
-    setSelected(new Set());
+    setOwnSelected(new Set());
+    setStaleIds(selectedIds);
     setAnchor(null);
   }
+
+  // VDS174 — controlled like `layout`: the product's set is the one drawn.
+  const controlledSet = useMemo(() => new Set(selectedIds ?? []), [selectedIds]);
+  let selected: ReadonlySet<string> = ownSelected;
+  if (selectedIds !== undefined) selected = selectedIds === staleIds ? new Set() : controlledSet;
 
   // The product hears about it after the render, since telling a parent to update
   // while this table renders is an update React refuses.
@@ -214,7 +231,7 @@ export function BentoDataTable<TRow extends RowData>({
   }, [current, first]);
 
   function select(next: ReadonlySet<string>) {
-    setSelected(next);
+    if (selectedIds === undefined) setOwnSelected(next);
     onSelectionChange?.([...next]);
   }
 

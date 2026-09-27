@@ -86,6 +86,43 @@ export const FiveThousandRows: Story = {
   render: () => <PostsTable />,
 };
 
+function ControlledSelection() {
+  const [selected, setSelected] = useState<string[]>([]);
+  const all = POSTS.map((p) => p.id);
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex gap-2">
+        <button type="button" className="rounded-md border border-border px-2 py-1 text-sm" onClick={() => setSelected(all)}>
+          Select all {POSTS.length}
+        </button>
+        <button
+          type="button"
+          className="rounded-md border border-border px-2 py-1 text-sm"
+          onClick={() => setSelected((now) => all.filter((id) => !now.includes(id)))}
+        >
+          Invert
+        </button>
+      </div>
+      <BentoDataTable<Post>
+        rows={POSTS}
+        getRowId={(p) => p.id}
+        getRowLabel={(p) => p.title}
+        columns={COLUMNS}
+        label="Posts"
+        selectedIds={selected}
+        onSelectionChange={setSelected}
+        selectionActions={[{ id: "archive", label: "Archive", icon: IconArchive, onSelect: () => {} }]}
+      />
+    </div>
+  );
+}
+
+/** The page owns the selection: `selectedIds` beside `onSelectionChange`, so its own controls can select every row or invert. */
+export const ControlledSelectionStory: Story = {
+  name: "Controlled selection",
+  render: () => <ControlledSelection />,
+};
+
 export const Empty: Story = {
   render: () => (
     <BentoDataTable<Post>

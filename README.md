@@ -840,6 +840,9 @@ and optionally `rowActions` for a per-row menu and `selectionActions` for the ba
 that appears over a selection. The arrows move between rows, Shift with an arrow
 or a click extends a selection, and Enter calls `onRowOpen`. The column picker
 reports `onLayoutChange`, and you store the layout, as you do for `BentoListPage`.
+The selection works the same way: pass `selectedIds` beside `onSelectionChange` and
+the table ticks exactly those rows. That lets your page select every row or invert
+the selection with its own controls, without remounting the table.
 
 ```tsx
 <BentoDataTable

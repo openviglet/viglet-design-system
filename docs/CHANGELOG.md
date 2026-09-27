@@ -233,6 +233,8 @@
   checked **A keyboard move reaches onEntryMove with the time of day kept** bento-calendar.test.tsx drives the pick-up, the arrows and the drop, across a change of offset too, and axe runs both stories.
 - ✅ **VDS173** **the contract has no two-pane page shape, so a form and its preview cannot be read side by side** — BentoSplitPage is the fourth page shape: two panes scrolling on their own with a remembered ratio, one pane and a switch at phone width (design recorded in `docs/BENTO-AUTHORING.md`).
   checked **Two regions at desktop width, one pane and a labelled switch on a phone** bento-split-page.test.tsx renders both widths, and the phone test keeps a typed value across the switch.
+- ✅ **VDS174** **BentoDataTable takes no selection in, so a page cannot select every row or invert the selection** — BentoDataTable takes a controlled selectedIds beside onSelectionChange, so a page can select all or invert with no remount; a scope change still clears it.
+  checked **A selection passed in is the one drawn, and a new set redraws with no remount** bento-data-table.test.tsx passes a set, inverts it on rerender and reads the same grid element ticking the new rows.
 
 ## Block G — The package knows one chrome
 

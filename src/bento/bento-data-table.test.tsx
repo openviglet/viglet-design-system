@@ -203,3 +203,54 @@ describe("BentoDataTable", () => {
     expect(screen.getByText("Nothing to show")).toBeInTheDocument()
   })
 })
+
+describe("BentoDataTable with a controlled selection", () => {
+  // VDS174 — selectedIds is controlled the way layout is, so a page can select
+  // every row or invert the selection without remounting a virtualised table.
+  const actions = [{ id: "trash", label: "Trash", icon: IconTrash, onSelect: () => {} }]
+
+  it("ticks exactly the rows it is given, and follows a new set with no remount", () => {
+    const { rerender } = draw(table({ selectionActions: actions, selectedIds: ["p1", "p3"] }))
+    const grid = screen.getByRole("grid", { name: "Posts" })
+    expect(selectedTitles()).toEqual(["Post 1", "Post 3"])
+    expect(screen.getByText("2 selected")).toBeInTheDocument()
+
+    // Invert, as a page's own control would.
+    const all = posts(20).map((p) => p.id)
+    rerender(<I18nextProvider i18n={i18next}>{table({ selectionActions: actions, selectedIds: all.filter((id) => id !== "p1" && id !== "p3") })}</I18nextProvider>)
+    expect(screen.getByRole("grid", { name: "Posts" })).toBe(grid)
+    expect(selectedTitles()).not.toContain("Post 1")
+    expect(selectedTitles()).toContain("Post 0")
+    expect(screen.getByText("18 selected")).toBeInTheDocument()
+  })
+
+  it("reports a change without keeping a copy of its own", async () => {
+    const user = userEvent.setup()
+    const onSelectionChange = vi.fn()
+    draw(table({ selectionActions: actions, selectedIds: ["p1"], onSelectionChange }))
+
+    await user.click(screen.getByRole("checkbox", { name: "Select Post 2" }))
+    expect(onSelectionChange).toHaveBeenLastCalledWith(["p1", "p2"])
+    // The product did not pass the new set back, so the table still draws its own.
+    expect(selectedTitles()).toEqual(["Post 1"])
+  })
+
+  it("draws nothing selected once the scope changes, until the product answers the clear", async () => {
+    const onSelectionChange = vi.fn()
+    const withScope = (scope: string, selectedIds: string[]) => (
+      <I18nextProvider i18n={i18next}>
+        {table({ selectionActions: actions, selectionScope: scope, selectedIds, onSelectionChange })}
+      </I18nextProvider>
+    )
+    const ids = ["p1"]
+    const { rerender } = render(withScope("draft", ids))
+    expect(selectedTitles()).toEqual(["Post 1"])
+
+    rerender(withScope("published", ids))
+    expect(selectedTitles()).toEqual([])
+    expect(onSelectionChange).toHaveBeenLastCalledWith([])
+
+    rerender(withScope("published", ["p4"]))
+    expect(selectedTitles()).toEqual(["Post 4"])
+  })
+})
