@@ -61,6 +61,7 @@ export {
   type BentoDiffProps,
   type BentoDiffSide,
 } from "./bento-diff";
+export { BentoChangeMark, type BentoChangeMarkProps, type BentoChangeState } from "./bento-change-mark";
 export { BentoEntityTile, type BentoEntityTileProps } from "./bento-entity-tile";
 export {
   BentoFilterBar,

@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import { cn } from "@/lib/utils";
 
+import { BentoChangeMark, type BentoChangeState } from "./bento-change-mark";
+
 /** How a field's two values are compared. */
 export type BentoDiffFieldKind =
   /** Plain text, compared word by word. */
@@ -103,7 +105,7 @@ function renderedBlocks(html: string): string[] {
 
 const asText = (value: unknown) => (value === null || value === undefined ? "" : String(value));
 
-type FieldState = "added" | "removed" | "changed" | "unchanged";
+type FieldState = BentoChangeState;
 
 /**
  * VDS140 — one comparison for every place a curator compares two versions.
@@ -142,13 +144,6 @@ export function BentoDiff({ before, after, fields, showUnchanged = false, layout
   const changed = rows.filter((row) => row.state !== "unchanged");
   const unchanged = rows.filter((row) => row.state === "unchanged");
 
-  const statusText: Record<FieldState, string> = {
-    added: t("bento.diff.added", { defaultValue: "Added" }),
-    removed: t("bento.diff.removed", { defaultValue: "Removed" }),
-    changed: t("bento.diff.changed", { defaultValue: "Changed" }),
-    unchanged: t("bento.diff.unchanged", { defaultValue: "Unchanged" }),
-  };
-
   return (
     <div data-slot="bento-diff" className="flex flex-col gap-3">
       {(before === null || after === null) && (
@@ -167,7 +162,7 @@ export function BentoDiff({ before, after, fields, showUnchanged = false, layout
 
       <dl className="m-0 flex flex-col gap-3">
         {changed.map((row) => (
-          <FieldRow key={row.field.id} label={row.field.label} status={statusText[row.state]} state={row.state}>
+          <FieldRow key={row.field.id} label={row.field.label} state={row.state}>
             <FieldChange row={row} layout={layout} />
           </FieldRow>
         ))}
@@ -187,7 +182,7 @@ export function BentoDiff({ before, after, fields, showUnchanged = false, layout
           {open && (
             <dl className="m-0 flex flex-col gap-3">
               {unchanged.map((row) => (
-                <FieldRow key={row.field.id} label={row.field.label} status={statusText.unchanged} state="unchanged">
+                <FieldRow key={row.field.id} label={row.field.label} state="unchanged">
                   <p className={cn("m-0 whitespace-pre-wrap text-sm text-muted-foreground", row.kind === "lines" && "font-mono text-xs")}>
                     {row.kind === "rich"
                       ? renderedBlocks(asText(row.b)).join("\n\n")
@@ -205,26 +200,12 @@ export function BentoDiff({ before, after, fields, showUnchanged = false, layout
   );
 }
 
-function FieldRow({
-  label,
-  status,
-  state,
-  children,
-}: Readonly<{ label: string; status: string; state: FieldState; children: ReactNode }>) {
+function FieldRow({ label, state, children }: Readonly<{ label: string; state: FieldState; children: ReactNode }>) {
   return (
     <div className="rounded-xl border border-border/60 bg-card/40 p-3">
       <dt className="mb-1.5 flex items-center gap-2 text-xs font-medium text-muted-foreground">
         <span>{label}</span>
-        <span
-          className={cn(
-            "rounded-full border px-1.5 leading-4",
-            state === "added" && "bento-status bento-status-on",
-            state === "removed" && "bento-status bento-status-error",
-            state === "changed" && "bento-status bento-status-warn",
-          )}
-        >
-          {status}
-        </span>
+        <BentoChangeMark state={state} />
       </dt>
       <dd className="m-0">{children}</dd>
     </div>

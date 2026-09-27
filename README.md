@@ -698,9 +698,9 @@ AppFooter, AppSwitcher, BackendStatusBanner, BackendStatusProvider, BadgeColorfu
 
 `DialogDelete`, `GradientButtonLink` and `LoadProvider` are imported from `@viglet/viglet-design-system/router`; every other name above comes from the package root. `Login` and `StartupFirst` are compounds — each is a root with named parts on it, the way `Card` is.
 
-### Bento Layer (31 components)
+### Bento Layer (32 components)
 
-AdaptiveSectionCard, BentoActionsMenu, BentoBackLink, BentoBackToTop, BentoCommandPalette, BentoCountTile, BentoDataTable, BentoDiff, BentoEmptyState, BentoEntityShell, BentoEntityTile, BentoFilterBar, BentoFormHero, BentoFormSection, BentoHero, BentoHeroIconPicker, BentoInlineEdit, BentoListPage, BentoNavRail, BentoPaletteTrigger, BentoPanel, BentoSaveBar, BentoScrollSaveBar, BentoSection, BentoShell, BentoShortcutsDialog, BentoStatusMarker, BentoTile, BentoTileGrid, BentoUserMenu, BentoVersionRail
+AdaptiveSectionCard, BentoActionsMenu, BentoBackLink, BentoBackToTop, BentoChangeMark, BentoCommandPalette, BentoCountTile, BentoDataTable, BentoDiff, BentoEmptyState, BentoEntityShell, BentoEntityTile, BentoFilterBar, BentoFormHero, BentoFormSection, BentoHero, BentoHeroIconPicker, BentoInlineEdit, BentoListPage, BentoNavRail, BentoPaletteTrigger, BentoPanel, BentoSaveBar, BentoScrollSaveBar, BentoSection, BentoShell, BentoShortcutsDialog, BentoStatusMarker, BentoTile, BentoTileGrid, BentoUserMenu, BentoVersionRail
 
 All from `@viglet/viglet-design-system/bento`, with `@viglet/viglet-design-system/bento.css` beside it. [The bento layer](#the-bento-layer) is what each one is for and how a page composes them; this is the inventory.
 
@@ -904,7 +904,11 @@ alone is no change), `lines` (a source file, compared by line and drawn in numbe
 monospace rows, with the unchanged stretches between changes folded) or `value`
 (compared whole). Unchanged fields collapse behind a count. `layout="split"` draws a
 `lines` field with the original beside the change and unchanged lines level with
-each other. Below 48rem of the comparison's own width it falls back to one column. A side that is `null` renders the other whole, as a created or deleted
+each other. Below 48rem of the comparison's own width it falls back to one column.
+`BentoChangeMark` is the chip `BentoDiff` draws beside each field, for a list of
+what changed: `state` is `added`, `removed`, `changed` or `unchanged`, and
+`compact` draws git's letter (`A`, `D`, `M`) with the word as its accessible name
+and tooltip. A side that is `null` renders the other whole, as a created or deleted
 item. Every change is named in text as well as coloured. `BentoVersionRail` lists
 the revisions (author, person or agent, time) as a listbox a reader picks two
 from, by keyboard or pointer. Neither fetches anything.

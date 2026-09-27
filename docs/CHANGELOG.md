@@ -224,6 +224,9 @@
 - ✅ **VDS169** **a lines comparison draws one column, so a file cannot be read before and after side by side as VS Code shows it** — BentoDiff takes layout split: a lines field draws the original beside the change, rows aligned with hatched cells, lines wrapped, and falls back to inline under 48rem.
   checked **Split keeps the unchanged lines level on both sides** A hunk that removes two lines and adds five draws five rows with the left padded, and the next unchanged line sits on one row in both columns, each with its own number.
   checked **Split under the container width draws as inline** A BentoDiff in a narrow container asked for split draws the same rows inline, measured on the container and not the window.
+- ✅ **VDS170** **no component marks an item in a list as created, changed or deleted, so each product draws its own letter and tint** — BentoChangeMark draws the diff's field chip for any list, same words and tints; compact draws git's letter, the word its name (design recorded in `src/bento/bento-change-mark.tsx`).
+  checked **BentoDiff's field chip is BentoChangeMark** FieldRow renders the exported mark, so a list and the comparison it opens show one word and one tint for each state.
+  checked **A compact mark says its word, not its letter** The letter's accessible name and tooltip are the full word in en and pt, and a locale that sets its own letter key draws that letter.
 
 ## Block G — The package knows one chrome
 

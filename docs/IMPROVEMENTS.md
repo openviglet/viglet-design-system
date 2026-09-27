@@ -90,32 +90,6 @@ release that warned. Before shipping, run viglet-ds-check-duplicates and a type-
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
 
-### §VDS170 One mark for created, changed and deleted
-
-`BentoDiff` names each field's state in a chip, Added, Removed, Changed or Unchanged,
-tinted by the `bento-status` classes. A list of what changed needs the same words one
-level up: roadkeep-gui lists the files an agent touched in the VDS167 `Tree` and is
-about to mark each created, changed or deleted, as VS Code's source-control list does
-with a letter. Drawn by the product, that mark picks its own colours and words, and the
-list disagrees with the comparison it opens about what a change looks like, which VDS140
-exists to prevent.
-
-**`BentoChangeMark`, the chip lifted out of `FieldRow`.** `state` takes the chip's four
-values; its words are the `bento.diff.*` keys the chip already reads, in both
-catalogues, and its tints the same classes. `FieldRow` draws it, so the two cannot
-drift.
-
-**A letter where a row is narrow.** `compact` draws one letter, git's `A`, `M` or `D` by
-default and a key of its own per locale, with the word as its accessible name and
-tooltip. A letter is an abbreviation, so the name is what a screen reader says and what
-a pointer reads.
-
-**The `Tree` needs nothing.** A node's `label` is a `ReactNode`, so a product puts the
-mark at the row's end. Striking a deleted item's name is the product's to draw: the mark
-does not reach into the label.
-
-Three states and nothing else cross the prop: no file, no path, no product's data.
-
 ### §VDS171 VigletAssistant forwards paused to its avatar
 
 `VigletAvatar` takes `paused` and stops its motion while keeping its state readable, and
