@@ -52,31 +52,6 @@ which of the two expired — the poll, or the hover before it — and whether th
 had focus. Raising the deadline before that is guessing at which number was wrong, and
 would only make a stalled run take longer to say the same nothing.
 
-### §VDS165 The alias the census reads past
-
-`measureConsumer` makes two passes. The first collects the console-era names a consumer
-can reach, adding each import clause's *alias*; the second counts files importing a
-reachable name, reading each clause's *original* name. For `import { SubPage } from
-"…/router"` the two agree. For `import { SubPage as SharedSubPage } from "…/router"` the
-first pass records `SharedSubPage`, the second asks for `SubPage`, and the file counts
-as nothing.
-
-That is not hypothetical. Turing's `components/sub.page.tsx` bound a density onto the
-package's `SubPage` exactly that way, and the census read zero console-era imports
-across all nine consumers — the reading VDS147 removed eleven components on. Turing's
-build broke on the file the day it moved to 2026.3.11. Nothing imported the shim, so it
-was deleted rather than ported, but the reading was wrong and the next alias will be
-wrong the same way.
-
-A direct import of the same name elsewhere in the consumer hides it: the unaliased
-clause puts `SubPage` in the reachable set, and the aliased file then matches. So a
-fixture holding both passes, and only an aliased import on its own reproduces it,
-measuring zero.
-
-The fix is to count a file when any clause imports a console-era name from the package,
-aliased or not, and keep the alias set for what it is for — following a shim's re-export
-into the pages that take it. The fixture that proves it is the aliased import alone.
-
 ### §VDS166 The census walk and its deadline
 
 `chrome-census.test.ts` holds the real register to the real checkouts where a machine

@@ -120,6 +120,8 @@
   checked **A focus assertion waits for the browser instead of reading past it** The inline-edit parity tests poll document.activeElement, so a slow run is slow rather than a report that the component lost focus.
 - ✅ **VDS164** **a sonner removal timer outlives the hook test's jsdom environment and fails the run with every test green** — The hook test waits sonner's own exit delay after its last dismissal, so no removal timer outlives the jsdom environment (design recorded in `src/hooks/use-assistant-notifications.test.tsx`).
   checked **No sonner timer runs after the hook test's environment is gone** The file waits sonner's own exit delay after its last dismissal, read from the build, and the full suite reports no unhandled error.
+- ✅ **VDS165** **the chrome census counts nothing for a console-era name imported under an alias** — The chrome census counts a console-era name imported from the package under an alias, and maps a renaming shim's pages back to the package's name (design recorded in `scripts/chrome-census.mjs`).
+  checked **A console-era name imported under an alias counts as taken** A fixture holding only an aliased import measures one file, not zero, and the shim-follow case still counts its pages.
 
 ## Block B — Bento becomes a design-system layer
 

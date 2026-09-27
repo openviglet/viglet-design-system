@@ -43,6 +43,24 @@ describe("measuring a consumer", () => {
     expect(measured.files).toEqual({ SubPageHeader: 2, BlankSlate: 1 })
     expect(measured.total).toBe(3)
   })
+
+  it("counts a console-era name imported under an alias, on its own", () => {
+    // VDS165 — Turing's sub.page.tsx. No unaliased import elsewhere puts the
+    // original name in reach, which is what used to hide it.
+    write("src/components/sub.page.tsx", `import { SubPage as SharedSubPage } from "${PKG}/router"\n`)
+
+    const measured = measureConsumer(checkout, ["src"])
+    expect(measured.files).toEqual({ SubPage: 1 })
+    expect(measured.total).toBe(1)
+  })
+
+  it("counts pages taking a console-era name through a shim that renames it", () => {
+    write("src/components/shared.ts", `export { SubPage as SharedSubPage } from "${PKG}/router"\n`)
+    write("src/app/a.page.tsx", `import { SharedSubPage } from "@/components/shared"\n`)
+
+    const measured = measureConsumer(checkout, ["src"])
+    expect(measured.files).toEqual({ SubPage: 1 })
+  })
 })
 
 describe("reading a console-era import as a regression", () => {

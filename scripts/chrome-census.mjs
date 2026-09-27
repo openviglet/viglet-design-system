@@ -74,19 +74,29 @@ export function measureConsumer(checkout, sourceRoots) {
   const texts = sourceRoots.flatMap((root) => sources(join(checkout, root))).map((file) => readFileSync(file, "utf8"))
   const fromPackage = (from) => from === PACKAGE_NAME || from.startsWith(`${PACKAGE_NAME}/`)
 
-  const reachable = new Set()
+  // The name a shim re-exports under, mapped to the console-era name behind it, so
+  // the pages importing through the shim count under the package's own name.
+  const reachable = new Map()
   for (const text of texts) {
     for (const clause of clauses(text)) {
-      if (fromPackage(clause.from) && ERA.has(clause.name)) reachable.add(clause.alias)
+      if (fromPackage(clause.from) && ERA.has(clause.name)) reachable.set(clause.alias, clause.name)
     }
+  }
+
+  // VDS165 — a clause importing from the package counts by its original name, so
+  // `import { SubPage as SharedSubPage }` on its own is a file taking SubPage.
+  const eraName = (c) => {
+    if (!fromPackage(c.from)) return reachable.get(c.name)
+    return ERA.has(c.name) ? c.name : undefined
   }
 
   const files = {}
   for (const text of texts) {
     const taken = new Set(
       clauses(text)
-        .filter((c) => c.kind === "import" && reachable.has(c.name))
-        .map((c) => c.name),
+        .filter((c) => c.kind === "import")
+        .map(eraName)
+        .filter(Boolean),
     )
     for (const name of taken) files[name] = (files[name] ?? 0) + 1
   }
