@@ -106,6 +106,15 @@ export function routeOf(pathname, patterns) {
   return best ?? routePattern(pathname)
 }
 
+/**
+ * A read page's route: the router match the probe found, unless it is a splat,
+ * else the path named against the patterns known.
+ */
+export function nameRoute(path, match, patterns) {
+  if (match && !match.includes("*")) return match.replace(/\/+$/, "") || "/"
+  return routeOf(path, patterns)
+}
+
 /** Whether a link is a route to walk: same origin, under the start path, not a sign-out or a file. */
 export function walkable(href, start) {
   let url
@@ -398,11 +407,24 @@ export function compare(id, allowed, current, holes = {}) {
   return { grew, lowered: Object.keys(holes).length > 0 ? [] : lowered }
 }
 
-/** One line per view with gaps, naming the routes it did not measure. */
-export function describeGaps(id, holes) {
-  return Object.entries(holes).map(
-    ([view, routes]) => `${id} ${view}: ${routes.length} route(s) not measured (${routes.join(", ")})`,
-  )
+/**
+ * Why a view did not measure a route (VDS193): the page failed to load or left
+ * the walk, it was read but its title moved between the two reads, or no reading
+ * of it carries this name.
+ */
+export function whyMissing(route, view, readings, failures) {
+  const failure = failures.find((f) => f.route === route && f.view === view)
+  if (failure) return failure.error
+  if (readings.some((r) => r.route === route && r.view === view)) return "the title offset differed between the two reads"
+  return "no reading in this view carries this route's name"
+}
+
+/** One line per view with gaps, naming each route it did not measure and why. */
+export function describeGaps(id, holes, readings = [], failures = []) {
+  return Object.entries(holes).map(([view, routes]) => {
+    const named = routes.map((route) => `${route}: ${whyMissing(route, view, readings, failures)}`)
+    return `${id} ${view}: ${routes.length} route(s) not measured (${named.join("; ")})`
+  })
 }
 
 // ---------------------------------------------------------------------------
@@ -502,7 +524,10 @@ async function walkConsumer(chromium, start, auth, log) {
         : raw.overlaps.map(ownerAt)
     return {
       reading: {
-        route: raw.current && !raw.current.includes("*") ? raw.current.replace(/\/+$/, "") || "/" : routeOf(raw.path, known),
+        // Named once the walk ends, against every pattern the views found (VDS193).
+        route: null,
+        path: raw.path,
+        match: raw.current,
         view: view.id,
         dark: raw.dark,
         samples: agreed.samples.map(([figure, value, chain]) => ({ figure, value, owner: ownerAt(chain) })),
@@ -526,7 +551,7 @@ async function walkConsumer(chromium, start, auth, log) {
     // Queued by route, so a route reached twice (a list linking forty users) is read once.
     const routes = new Map()
     const readings = []
-    const errors = []
+    const failures = []
     const queue = []
     const offer = (href) => {
       if (routes.size >= MAX_ROUTES || !walkable(href, start)) return
@@ -542,11 +567,11 @@ async function walkConsumer(chromium, start, auth, log) {
       const url = queue.shift()
       const result = await read(page, url, first)
       if (result.error) {
-        errors.push(`${routeOf(new URL(url).pathname, known)} (${first.id}): ${result.error}`)
+        failures.push({ path: new URL(url).pathname, view: first.id, error: result.error })
         continue
       }
       readings.push(result.reading)
-      log(`  ${first.id} ${result.reading.route}`)
+      log(`  ${first.id} ${result.reading.path}`)
       // The router's static routes are seeds; a route with a param is reached through a link.
       for (const pattern of [...known].sort()) {
         if (!pattern.includes(":") && !pattern.includes("*")) offer(`${origin}${pattern}`)
@@ -558,15 +583,24 @@ async function walkConsumer(chromium, start, auth, log) {
     await Promise.all(
       rest.map(async (view) => {
         const { context: other, page: otherPage } = await contextFor(view)
-        for (const [pattern, url] of routes) {
+        for (const url of routes.values()) {
           const result = await read(otherPage, url, view)
-          if (result.error) errors.push(`${pattern} (${view.id}): ${result.error}`)
+          if (result.error) failures.push({ path: new URL(url).pathname, view: view.id, error: result.error })
           else readings.push(result.reading)
         }
         await other.close()
       }),
     )
-    return { routes: [...new Set(readings.map((r) => r.route))].sort(), readings, errors }
+    // The crawl read a page while the pattern set was still growing, so a name
+    // given then could fold a path the other views name by its pattern.
+    for (const r of readings) r.route = nameRoute(r.path, r.match, known)
+    const failed = failures.map((f) => ({ route: routeOf(f.path, known), view: f.view, error: f.error }))
+    return {
+      routes: [...new Set(readings.map((r) => r.route))].sort(),
+      readings,
+      failures: failed,
+      errors: failed.map((f) => `${f.route} (${f.view}): ${f.error}`),
+    }
   } finally {
     await browser.close()
   }
@@ -672,7 +706,7 @@ async function main() {
       grew.push(...result.grew)
       lowered.push(...result.lowered)
     }
-    incomplete.push(...describeGaps(id, holes))
+    incomplete.push(...describeGaps(id, holes, walked.readings, walked.failures))
     if (!json) printConsumer(id, walked, tallied)
   }
 

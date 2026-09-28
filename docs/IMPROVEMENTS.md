@@ -69,22 +69,6 @@ route by a concrete segment rather than `:param`, the probe's route-table walk i
 `scripts/look-census.mjs` missed that router. Fix it there before recording, because an
 account name in a route would end up in a committed file.
 
-### §VDS193 Name the crawl once it ends
-
-The look census reads desktop-dark while it crawls and the other two views afterwards. A
-reading is named by the router match the probe found, and when there is none (a splat
-route, or a match the probe could not reach) by `routeOf` against the patterns known so
-far. During the crawl that set is still growing, so a page the dark view read early can
-be named by its folded path, while light and phone, reading after the crawl, name the
-same page by its router pattern. The Shio run of 2026-09-28 lost dark exactly on pages
-reached by an id and on create forms, which fits that cause but does not prove it. Since
-VDS189 the census compares only the routes every view measured, so a naming split now
-shows as a gap, keeps `--write` refused and drops the route from every figure. The fix
-is to name the crawl's readings once the crawl ends: keep the page path on each reading
-and resolve it against the final pattern set before the other views run, so all three
-name a page the same way. If routes are still missing after that, the cause is in
-loading or settling the page, and the `not read:` errors say which.
-
 ## Block F — What a consuming CMS needs from the package next
 
 ### §VDS152 The deprecation ends

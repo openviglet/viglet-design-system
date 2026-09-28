@@ -13,6 +13,7 @@ import {
   fits,
   gaps,
   makeClassifier,
+  nameRoute,
   ownerOf,
   routeOf,
   routePattern,
@@ -50,6 +51,19 @@ describe("naming a route", () => {
     expect(fits("/a/:id", "/a/b/c")).toBe(false)
     expect(fits("/a/*", "/a/b/c")).toBe(true)
     expect(fits("/a/b", "/a")).toBe(false)
+  })
+
+  it("names a page by its router match, else against the patterns the whole walk found", () => {
+    // VDS193 — named mid-crawl, a page reached by id folded to its path, while
+    // the views read after the crawl named it by the pattern found later.
+    const path = "/bento/site/9f1c2e3d4b5a6978/edit"
+    expect(nameRoute(path, null, [])).toBe("/bento/site/:id/edit")
+    expect(nameRoute("/bento/users/ana/", null, ["/bento/users/:username"])).toBe("/bento/users/:username")
+    expect(nameRoute(path, "/bento/site/:siteId/edit/", [])).toBe("/bento/site/:siteId/edit")
+    // A splat match names nothing, so the path is named instead.
+    expect(nameRoute("/bento/files/a/b", "/bento/files/*", ["/bento/files/:folder/:file"])).toBe(
+      "/bento/files/:folder/:file",
+    )
   })
 
   it("walks same-origin links under the start path, and never a sign-out", () => {
@@ -218,7 +232,18 @@ describe("the allowance", () => {
     const holes = gaps(partial)
     expect(holes).toEqual({ "desktop-dark": ["/b"] })
     expect(complete(partial).map((r) => r.route)).toEqual(["/a", "/a", "/a"])
-    expect(describeGaps("shio", holes)).toEqual(["shio desktop-dark: 1 route(s) not measured (/b)"])
+    // Each gap says why: read but unstable, failed to load, or read under no such name.
+    expect(describeGaps("shio", holes, partial)).toEqual([
+      "shio desktop-dark: 1 route(s) not measured (/b: the title offset differed between the two reads)",
+    ])
+    const failures = [{ route: "/b", view: "desktop-dark", error: "load: timeout" }]
+    const unread = partial.filter((r) => !(r.route === "/b" && r.view === "desktop-dark"))
+    expect(describeGaps("shio", gaps(unread), unread, failures)).toEqual([
+      "shio desktop-dark: 1 route(s) not measured (/b: load: timeout)",
+    ])
+    expect(describeGaps("shio", gaps(unread), unread)).toEqual([
+      "shio desktop-dark: 1 route(s) not measured (/b: no reading in this view carries this route's name)",
+    ])
 
     const current = allowanceOf(tally(complete(partial)))
     expect(compare("shio", allowed, current).lowered).toContain("shio title-x@desktop-dark: 1 distinct, allowance 2")

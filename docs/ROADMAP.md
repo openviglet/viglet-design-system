@@ -2,8 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS193** (deps: VDS189 ✅) **The census names a page it crawled in dark by its folded path, where light and phone name it by router pattern** — Two names for one page read as a route one view never measured, so the run reports gaps and --write stays refused. → §VDS193
-
 ## Block F — What a consuming CMS needs from the package next
 
 ## Block C — One look across products
@@ -32,13 +30,6 @@
   lowers must be one every bento consumer reports, not only Shio.
 - **No committed route names an id or an account** The allowance is committed, so a
   concrete segment would publish product data.
-
-## Done when — VDS193
-
-- **All three views name a page by the same route** A split name is a gap in a view that
-  did read the page.
-- **A route still missing from a view names why it was not read** What remains after
-  naming is a load or settle failure, and the run must say which.
 
 ## Non-goals
 

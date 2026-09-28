@@ -16,6 +16,9 @@ export interface Sample {
 
 export interface Reading {
   route: string
+  /** The page's path, and the router match the probe found there, which name it (VDS193). */
+  path?: string
+  match?: string | null
   view: string
   samples: Sample[]
   primaries: number
@@ -89,4 +92,17 @@ export declare function compare(
   current: Allowance,
   holes?: Record<string, string[]>,
 ): { grew: string[]; lowered: string[] }
-export declare function describeGaps(id: string, holes: Record<string, string[]>): string[]
+export interface Failure {
+  route: string
+  view: string
+  error: string
+}
+
+export declare function nameRoute(path: string, match: string | null, patterns: Iterable<string>): string
+export declare function whyMissing(route: string, view: string, readings: Reading[], failures: Failure[]): string
+export declare function describeGaps(
+  id: string,
+  holes: Record<string, string[]>,
+  readings?: Reading[],
+  failures?: Failure[],
+): string[]

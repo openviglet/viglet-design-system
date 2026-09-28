@@ -145,6 +145,9 @@
   checked **A button counts as a primary only when rendered visible** The morph's hidden copy is not a second primary.
   checked **A switch, checkbox or toggle is never counted as a primary** Its fill states a value, not a claim to be the page's action.
   checked **A control scrolled under a sticky header is not a corner overlap** That is an ordinary scrolling state, not a covered control.
+- ✅ **VDS193** **The census names a page it crawled in dark by its folded path, where light and phone name it by router pattern** — The look census names every reading once all views finish, from the final pattern set, and each unmeasured route says why.
+  checked **All three views name a page by the same route** A split name is a gap in a view that did read the page.
+  checked **A route still missing from a view names why it was not read** What remains after naming is a load or settle failure, and the run must say which.
 
 ## Block B — Bento becomes a design-system layer
 
