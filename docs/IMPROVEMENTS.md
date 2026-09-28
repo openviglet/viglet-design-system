@@ -86,6 +86,23 @@ to lower allowances. A figure should be compared only over the routes every view
 measured, or reported as incomplete with the unmeasured routes named, and `--write`
 should refuse a view with gaps.
 
+### §VDS190 Count what a reader sees
+
+The look census reports "routes with more than one filled primary" for the Shio e-mail,
+token and webhook editors, two each. Checked in a browser on 2026-09-28, none of those
+routes shows a reader two primaries. On the e-mail settings the second fill is the Save
+inside the save-bar morph's fixed copy, which BentoFormHero renders at opacity 0 until
+the hero scrolls away. On the token editor the extra fills are `role="switch"` controls
+that are on, painted in --primary because that is how a checked switch is drawn. Neither
+is a claim to be the page's primary action. The consequence is that the figure a round
+of work is asked to lower cannot reach its target on a correct page, so it stops being
+read. A filled button should be counted only when it is rendered visible (opacity above
+zero and no ancestor hiding it) and when it is a button rather than a switch, checkbox
+or toggle whose fill states a value. The same care applies to the corner-overlap count:
+on the Shio hubs it counted tiles that were scrolled under the sticky shell header, and
+the back-to-top control while hidden. Both are ordinary states of a scrolling page, not
+a corner covering a control.
+
 ## Block F — What a consuming CMS needs from the package next
 
 ### §VDS152 The deprecation ends
@@ -124,6 +141,19 @@ it (solid cards, 16 px hero titles, the chip on hero only) and map states to ton
 published emerald, draft slate, scheduled violet, changed amber, archived neutral.
 Components follow the review.
 
+### §VDS192 A short table is short
+
+With VDS183, a Shio admin list with one record, such as the single API token on a fresh
+instance, renders a BentoDataTable whose panel runs about 450 px below its one 44 px
+row, empty to the bottom of the viewport. The table mounts only the visible rows, so it
+sizes its scroll container to the viewport rather than to its content. That is right for
+a list of thousands and wrong for a list of one to a dozen, which is most admin lists.
+The empty panel reads as a failure to load rather than as a short list, and it pushes
+whatever the page puts below the table out of view. The same VDS183 contract promised
+that an empty list is one inline card. The complement is that a short list is only as
+tall as its rows. The table's height should be the smaller of its content and the space
+available, with virtualisation engaging only when the rows exceed it.
+
 ## Block E — The assistant every product shares
 
 ### §VDS185 The dock rests at the foot of the rail
@@ -143,3 +173,20 @@ count sit above the user menu. It opens as a popover anchored to the rail, and o
 phone, where there is no rail, it moves to the header's trailing edge. The second is the
 proposal, because the rail foot is empty today and costs nothing. The census's overlap
 measure is what shows it done in every consumer that mounts a dock.
+
+### §VDS191 A place for the assistant's own settings
+
+Shio lets each person choose what the assistant dock reports and whether the mascot
+animates (its SH971). Those preferences belong to the dock, and the authoring contract
+says a surface's own controls belong to the surface rather than to the header. But
+neither the assistant nor the user menu has anywhere to put them. `VigletAssistant`
+takes messages, reports, unread state and callbacks, and no action of its own.
+`BentoUserMenu` takes the account, sign-out, organisations, tenant-admin, shortcuts and
+tour routes and nothing else. So Shio renders the preferences as a bell-with-a-cog
+button in the header, beside the tenant switch and the user menu. That reads as a second
+notification affordance next to the mascot, which the 2026-09-28 review first took it
+for. A product that wants the same thing, a reader choosing what the assistant tells
+them, will make the same choice. The proposal is a slot on the assistant for its own
+settings, such as an `onOpenSettings` callback drawn as a small control in the panel's
+header. It keeps the header to the set the contract names, and it puts the choice next
+to the thing it configures.

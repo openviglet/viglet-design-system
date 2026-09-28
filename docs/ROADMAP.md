@@ -3,12 +3,17 @@
 ## Block A — The gate the design system never had
 
 - 📋 **VDS189** (deps: VDS180 ✅) **A census run left desktop-dark unmeasured on 14 of 34 routes and still offered its lower figure for --write** — An allowance lowered from a partial reading turns the next complete run into a false regression, so a view with gaps must not be compared or written. → §VDS189
+- 📋 **VDS190** (deps: VDS180 ✅) **The census counts a hidden morph copy and a switch that is on as primaries, and a scrolled-under tile as covered** — A figure a correct page cannot lower stops being read, so only visible buttons count as primaries and only a fixed corner counts as covering. → §VDS190
 
 ## Block F — What a consuming CMS needs from the package next
 
 ## Block C — One look across products
 
+- 📋 **VDS192** (deps: —) **A one-row BentoDataTable reserves about 450 px of empty panel, so a short list reads as a failed load** — A table as tall as its rows up to the space available, virtualising only past it, makes a short list look short. → §VDS192
+
 ## Block E — The assistant every product shares
+
+- 📋 **VDS191** (deps: —) **The assistant has no place for its own settings, so Shio puts its preferences in the header as a second bell** — A settings slot on the assistant keeps the header to the contract's set and puts the choice beside the thing it configures. → §VDS191
 
 ## Done when — VDS182
 
@@ -39,6 +44,25 @@
   lost routes reads as an improvement.
 - **--write refuses a view with unmeasured routes, and names them** The allowance is
   trusted; a partial reading must not become it.
+
+## Done when — VDS190
+
+- **A button counts as a primary only when rendered visible** The morph's hidden copy is
+  not a second primary.
+- **A switch, checkbox or toggle is never counted as a primary** Its fill states a
+  value, not a claim to be the page's action.
+- **A control scrolled under a sticky header is not a corner overlap** That is an
+  ordinary scrolling state, not a covered control.
+
+## Done when — VDS191
+
+- **The assistant renders a control for its own settings when given one** A product's
+  dock preferences need a home that is not the header.
+
+## Done when — VDS192
+
+- **A table with fewer rows than the space holds is as tall as its rows** A short list
+  must not read as a failed load.
 
 ## Non-goals
 
