@@ -115,10 +115,10 @@ const STATE_KEY: Record<VigletAvatarState, string> = {
 
 const STATE_TONE: Record<VigletAvatarState, string> = {
   idle: "text-muted-foreground",
-  working: "text-amber-600 dark:text-amber-400",
+  working: "text-amber-700 dark:text-amber-400",
   success: "text-emerald-700 dark:text-emerald-400",
   error: "text-destructive",
-  attention: "text-amber-700 dark:text-amber-300",
+  attention: "text-amber-800 dark:text-amber-300",
 };
 
 /** How many actions a report renders. */

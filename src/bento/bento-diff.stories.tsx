@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
+import { expect } from "storybook/test";
 
 import { BentoDiff, type BentoDiffField } from "./bento-diff";
 import { BentoVersionRail, type BentoVersion } from "./bento-version-rail";
@@ -110,6 +111,14 @@ export const SourceFileSplit: Story = {
       layout="split"
     />
   ),
+  play: async ({ canvasElement }) => {
+    // Only where the canvas is wide enough to hold the two columns.
+    if (canvasElement.querySelector("section")!.clientWidth < 768) return;
+    const display = (layout: string) =>
+      getComputedStyle(canvasElement.querySelector(`table[data-layout="${layout}"]`)!).display;
+    await expect(display("split")).toBe("table");
+    await expect(display("inline")).toBe("none");
+  },
 };
 
 /** Split in a sheet narrower than 48rem draws inline: two columns of a few words each read worse than one. */
@@ -124,4 +133,10 @@ export const SourceFileSplitNarrow: Story = {
       />
     </div>
   ),
+  play: async ({ canvasElement }) => {
+    const display = (layout: string) =>
+      getComputedStyle(canvasElement.querySelector(`table[data-layout="${layout}"]`)!).display;
+    await expect(display("split")).toBe("none");
+    await expect(display("inline")).toBe("table");
+  },
 };

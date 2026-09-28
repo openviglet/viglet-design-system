@@ -55,7 +55,11 @@ export default defineConfig({
       // the accessibility tree, none of which jsdom models, so the gate has to
       // run somewhere that lays the page out.
       {
+        // VDS176 — tailwindcss() as the parity project has it. Without it the
+        // stylesheet loaded and generated no utility, so axe measured every story
+        // at the browser's default size and colour, not the catalogue's.
         plugins: [
+          tailwindcss(),
           storybookTest({ configDir: resolve(import.meta.dirname, ".storybook") }),
         ],
         resolve: { alias: sourceAlias },

@@ -124,6 +124,8 @@
   checked **A console-era name imported under an alias counts as taken** A fixture holding only an aliased import measures one file, not zero, and the shim-follow case still counts its pages.
 - ✅ **VDS166** **the census test walks nine checkouts under a five-second default and timed out once on a cold disk** — The register census case runs under a 30s timeout sized for a cold disk and the loaded suite, with the measured walk cost in its comment (design recorded in `scripts/chrome-census.test.ts`).
   checked **The register census case is sized for the loaded suite** Its timeout carries a comment giving the measured cold and warm walk, and the case passes beside the other script tests on a cold disk.
+- ✅ **VDS176** **story tests render without Tailwind utilities, so axe checks contrast on unstyled text at the default size** — Story tests render with Tailwind, so axe measures what the catalogue draws; the eight contrast failures it surfaced are fixed (design recorded in `vitest.config.ts`).
+  checked **Story tests render with the Tailwind utilities the catalogue has** A story's axe pass then measures the text a product author sees.
 
 ## Block B — Bento becomes a design-system layer
 

@@ -128,8 +128,8 @@ function Completion({
         className={cn(
           "text-sm font-medium transition-all duration-500",
           allDone
-            ? "text-emerald-600 dark:text-emerald-400"
-            : "text-muted-foreground/40",
+            ? "text-emerald-700 dark:text-emerald-400"
+            : "text-muted-foreground",
         )}
       >
         {allDone ? ready : pending}

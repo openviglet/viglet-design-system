@@ -170,7 +170,7 @@ export function BentoInlineEdit({
   if (readOnly) {
     return (
       <span className={cn("block w-full", className)} aria-label={ariaLabel}>
-        {value || <span className="text-muted-foreground/80">{placeholder ?? "—"}</span>}
+        {value || <span className="text-muted-foreground">{placeholder ?? "—"}</span>}
       </span>
     );
   }
@@ -208,7 +208,7 @@ export function BentoInlineEdit({
         aria-label={ariaLabel ?? t("forms.formActions.edit")}
       >
         {value || (
-          <span className="text-muted-foreground/80">{placeholder ?? "—"}</span>
+          <span className="text-muted-foreground">{placeholder ?? "—"}</span>
         )}
       </button>
     );

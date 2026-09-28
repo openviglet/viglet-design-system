@@ -52,28 +52,6 @@ which of the two expired — the poll, or the hover before it — and whether th
 had focus. Raising the deadline before that is guessing at which number was wrong, and
 would only make a stalled run take longer to say the same nothing.
 
-### §VDS176 The story tests draw without the utilities
-
-The `stories` project in `vitest.config.ts` runs every story in Chromium for axe, and
-lists `storybookTest()` as its only plugin. The `parity` project beside it adds
-`tailwindcss()`, and the Storybook catalogue gets it from `vite.config.ts`, but the
-story tests get neither. `src/styles/index.css` loads, `@import "tailwindcss"` and all,
-and no utility is generated from it.
-
-VDS169 found it. A play function reading `getComputedStyle` found no `.hidden` rule in
-any stylesheet, and the axe failure VDS168 hit measured the text inside a `text-xs`
-table at 16px. So axe checks contrast on text at the browser default size, with no
-utility colour, spacing or `sr-only` applied. It passes what the catalogue would fail,
-and fails what it would pass. Nothing that depends on layout, such as a container query,
-a hidden element or a truncation, can be asserted in a story at all.
-
-The repair is adding `tailwindcss()` to the stories project, as the parity project does.
-Expect it to surface findings in stories that have passed on unstyled markup: each is a
-real contrast or name failure the gate never saw, and fixing them belongs in the same
-commit, since a gate turned on red is one people learn to re-run. Once it is green, a
-play function in `bento-diff.stories.tsx` can assert that split draws as inline in a
-28rem container, which VDS169 could only pin by class name.
-
 ### §VDS177 The README test and a stale dist
 
 `scripts/check-readme.test.ts` ends with a block that holds the real README against
@@ -92,6 +70,27 @@ repairs would work. Skip the block when `dist/exports.json` is older than the ne
 file under `src/`, and name the skip. Or derive the surface from source, as
 `exported-surface.test.ts` does, so the reading never depends on a build. The second
 keeps the check honest on a clean checkout as well, and matches VDS69's choice.
+
+### §VDS179 The accent label on its tints
+
+`src/styles/contrast.test.ts` measures every named token pair on both grounds, plus the
+pairs a name cannot derive: the page, muted text, the accented label on the page, and
+white on the accent fill. It does not measure the accented label on the accent's own
+tints, `--vg-accent-surface` and `--vg-accent-surface-strong`. The icon picker draws
+exactly that pair: its hover state is `--vg-accent-fg` on the strong tint, and so is its
+selected cell.
+
+VDS176 found it, once story tests could see the styles. The brand-accent story's strong
+tint measured 4.11:1 in light mode, and the preset's `--vg-accent-text` went one step
+deeper to hold it. Nothing prevents the next re-key from failing the same way: a product
+that keys `--vg-accent-text` to a colour that passes on the page can still fail on the
+tints, and the gate would stay green.
+
+The tints are `color-mix` over the accent with `transparent`, so they are not opaque
+until they are laid over the page. The repair is to compose each tint over
+`--vg-background` for its ground, and to measure `--vg-accent-fg` on the result as two
+more pairs. Then the re-key check in the same file, which already measures a product's
+accent, covers the tints as well.
 
 ## Block F — What a consuming CMS needs from the package next
 

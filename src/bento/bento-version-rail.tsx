@@ -111,6 +111,8 @@ export function BentoVersionRail({ versions, selected, onSelect, label }: Readon
         const isSelected = selected.includes(version.id);
         const when = format(version.at);
         const Actor = version.actor === "agent" ? IconRobot : IconUser;
+        // Muted text on the selected tint falls under 4.5:1, so a selected option reads it in the foreground.
+        const secondary = isSelected ? "text-foreground/80" : "text-muted-foreground";
         return (
           <li
             key={version.id}
@@ -135,13 +137,13 @@ export function BentoVersionRail({ versions, selected, onSelect, label }: Readon
             <span className="flex items-center gap-1.5 font-medium">
               <Actor size={14} aria-hidden="true" />
               {version.author}
-              <span className="text-xs font-normal text-muted-foreground">
+              <span className={cn("text-xs font-normal", secondary)}>
                 {version.actor === "agent"
                   ? t("bento.versions.agent", { defaultValue: "Agent" })
                   : t("bento.versions.human", { defaultValue: "Person" })}
               </span>
             </span>
-            <time dateTime={when.iso} className="text-xs text-muted-foreground">
+            <time dateTime={when.iso} className={cn("text-xs", secondary)}>
               {when.text}
             </time>
             {version.summary && <span className="text-xs">{version.summary}</span>}

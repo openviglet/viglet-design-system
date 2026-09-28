@@ -59,7 +59,7 @@ export const CustomFallback: Story = {
   render: () => (
     <ErrorBoundary
       fallback={({ error, reset }) => (
-        <div className="p-6 rounded-md border border-destructive/30 bg-destructive/5 space-y-2">
+        <div className="p-6 rounded-md border border-destructive/30 space-y-2">
           <h3 className="font-medium text-destructive">Custom fallback</h3>
           <pre className="text-xs text-muted-foreground">{error.message}</pre>
           <button
