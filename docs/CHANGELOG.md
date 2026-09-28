@@ -134,6 +134,8 @@
   checked **A census run reports every bento consumer, route by route** Turing and Dumont are unmeasured today, and a claim about three products needs all three read.
   checked **Each finding is attributed to package or product code** That split decides whether a fix lands here or in a consumer, which every later line depends on.
   checked **The first reading is committed as the allowance, offenders named** Later tasks then lower a figure instead of describing an improvement.
+- ✅ **VDS187** **No reading counts the record lists each consumer still renders as tiles after the table became the default** — pnpm look:census names the routes drawing a list as tiles, from a marker every list mosaic now carries, and gates the count.
+  checked **The census reports a tile-lists figure per consumer, routes named** Each record list moved to columns must lower a number the allowance holds.
 
 ## Block B — Bento becomes a design-system layer
 

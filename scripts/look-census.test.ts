@@ -158,6 +158,26 @@ describe("the allowance", () => {
     expect(lowered).toContain("shio routes with more than one filled primary: 0, allowance 1")
   })
 
+  it("names the routes drawing a list as tiles, and gates the count once recorded", () => {
+    const withTiles = [
+      reading("/users", "desktop-dark", [["button-height", "36", "package"]], { tiles: 1 }),
+      reading("/users", "phone-dark", [["button-height", "36", "package"]], { tiles: 1 }),
+      reading("/media", "desktop-dark", [["button-height", "36", "package"]], { tiles: 2 }),
+      reading("/roles", "desktop-dark", [["button-height", "36", "package"]], { tiles: 0 }),
+    ]
+    const allowance = allowanceOf(tally(withTiles))
+    expect(allowance.tiles).toEqual({ "/media": 2, "/users": 1 })
+
+    const moved = allowanceOf(tally(withTiles.filter((r) => r.route !== "/users")))
+    expect(compare("shio", allowance, moved).lowered).toContain("shio routes with a list drawn as tiles: 1, allowance 2")
+    const more = allowanceOf(tally([...withTiles, reading("/roles", "desktop-dark", [], { tiles: 1 })]))
+    expect(compare("shio", allowance, more).grew).toContain("shio routes with a list drawn as tiles: 3, allowance 2 (new: /roles)")
+
+    // A reading recorded before the census counted tiles does not gate the count.
+    const { tiles: _unrecorded, ...older } = allowance
+    expect(compare("shio", older, more).grew).toEqual([])
+  })
+
   it("holds every bento consumer, measured or with the reason it was not", () => {
     const register = JSON.parse(readFileSync(join(root, "consumers.json"), "utf8")) as {
       consumers: { id: string; chrome: string }[]

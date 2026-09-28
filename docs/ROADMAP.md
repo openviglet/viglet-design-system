@@ -2,7 +2,7 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS187** (deps: VDS183 ✅) **No reading counts the record lists each consumer still renders as tiles after the table became the default** — A counted, named figure is what turns the new default into a migration each product can see and lower. → §VDS187
+- 📋 **VDS188** (deps: VDS180 ✅) **Two look census runs on an unchanged Shio disagree on radii, fills and dock overlaps** — A reading that moves on its own fails tasks that changed nothing and hides the changes it exists to catch. → §VDS188
 
 ## Block F — What a consuming CMS needs from the package next
 
@@ -33,10 +33,10 @@
 - **No committed route names an id or an account** The allowance is committed, so a
   concrete segment would publish product data.
 
-## Done when — VDS187
+## Done when — VDS188
 
-- **The census reports a tile-lists figure per consumer, routes named** Each record list
-  moved to columns must lower a number the allowance holds.
+- **Two back-to-back runs agree on every figure** Only a stable reading can hold an
+  allowance that tasks lower.
 
 ## Non-goals
 

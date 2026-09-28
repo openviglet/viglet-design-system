@@ -20,12 +20,17 @@ export interface Reading {
   samples: Sample[]
   primaries: number
   overlaps: Owner[]
+  /** List mosaics on the route (VDS187). */
+  tiles?: number
+  /** Package-drawn `.bento-grid` mosaics, marked or not. */
+  mosaics?: number
 }
 
 export interface Tally {
   figures: Record<string, Record<string, { package: number; product: number; unknown: number; routes: Set<string> }>>
   crowded: Record<string, number>
   dock: Record<string, number>
+  tiles: Record<string, number>
 }
 
 export interface Allowance {
@@ -40,6 +45,8 @@ export interface Allowance {
   >
   crowded: Record<string, number>
   dock: Record<string, number>
+  /** Absent in a reading taken before the census counted it; then not gated. */
+  tiles?: Record<string, number>
 }
 
 export declare const VIEWS: readonly { id: string; width: number; height: number; theme: "dark" | "light" }[]

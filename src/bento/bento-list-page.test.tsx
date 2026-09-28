@@ -169,6 +169,7 @@ describe("BentoListPage as a table, the default", () => {
     expect(screen.getByRole("columnheader", { name: /Name/ })).toBeInTheDocument()
     for (const item of items) expect(screen.getByText(item.name)).toBeInTheDocument()
     expect(document.querySelector(".bento-grid")).toBeNull()
+    expect(document.querySelector("[data-slot='bento-list-tiles']")).toBeNull()
   })
 
   it("puts the create action in the hero as its one primary, with no New tile", () => {
@@ -212,6 +213,8 @@ describe("BentoListPage as a table, the default", () => {
 
     expect(document.querySelector(".bento-grid")).not.toBeNull()
     expect(screen.queryByRole("grid")).not.toBeInTheDocument()
+    // VDS187 — the mosaic says it is a list, so the look census can count it.
+    expect(document.querySelector("[data-slot='bento-list-tiles']")).not.toBeNull()
   })
 })
 

@@ -411,12 +411,19 @@ export function probe() {
     walk.push([fiber.sibling, base], [fiber.child, inner])
   }
 
+  // VDS187 — the lists drawn as tiles. The marker is newer than some consumers'
+  // installs, so every .bento-grid is sent too, to tell "none" from "not marked".
+  const tileLists = document.querySelectorAll('[data-slot="bento-list-tiles"]').length
+  const mosaics = [...document.querySelectorAll(".bento-grid")].filter(visible).map(chainOf)
+
   return {
     path: location.pathname,
     dark: document.documentElement.classList.contains("dark"),
     samples,
     primaries,
     overlaps,
+    tileLists,
+    mosaics,
     stacks,
     chains,
     links: [...document.querySelectorAll("a[href]")].map((a) => a.href),
@@ -436,6 +443,7 @@ export function tally(readings) {
   const figures = {}
   const crowded = {}
   const dock = {}
+  const tiles = {}
   for (const r of readings) {
     for (const s of r.samples) {
       const figure = s.figure === "title-x" ? `title-x@${r.view}` : s.figure
@@ -446,8 +454,9 @@ export function tally(readings) {
     }
     if (r.primaries > 1) crowded[r.route] = Math.max(crowded[r.route] ?? 0, r.primaries)
     if (r.overlaps.length > 0) dock[r.route] = Math.max(dock[r.route] ?? 0, r.overlaps.length)
+    if ((r.tiles ?? 0) > 0) tiles[r.route] = Math.max(tiles[r.route] ?? 0, r.tiles)
   }
-  return { figures, crowded, dock }
+  return { figures, crowded, dock, tiles }
 }
 
 const total = (cell) => cell.package + cell.product + cell.unknown
@@ -476,7 +485,7 @@ export function allowanceOf(tallied) {
     }
   }
   const sorted = (o) => Object.fromEntries(Object.entries(o).sort(([a], [b]) => a.localeCompare(b)))
-  return { figures, crowded: sorted(tallied.crowded), dock: sorted(tallied.dock) }
+  return { figures, crowded: sorted(tallied.crowded), dock: sorted(tallied.dock), tiles: sorted(tallied.tiles ?? {}) }
 }
 
 /**
@@ -500,8 +509,12 @@ export function compare(id, allowed, current) {
   for (const [key, label] of [
     ["crowded", "routes with more than one filled primary"],
     ["dock", "routes where the corner covers a control"],
+    ["tiles", "routes with a list drawn as tiles"],
   ]) {
-    const was = Object.keys(allowed[key] ?? {}).length
+    // A figure the allowance never recorded is not gated yet: a reading taken
+    // before the census counted it would otherwise make its first count "growth".
+    if (!(key in allowed)) continue
+    const was = Object.keys(allowed[key]).length
     const now = Object.keys(current[key]).length
     if (now > was) {
       const added = Object.keys(current[key]).filter((r) => !(r in (allowed[key] ?? {})))
@@ -581,6 +594,8 @@ async function walkConsumer(chromium, start, auth, log) {
         samples: raw.samples.map(([figure, value, chain]) => ({ figure, value, owner: ownerAt(chain) })),
         primaries: raw.primaries,
         overlaps: raw.overlaps.map(ownerAt),
+        tiles: raw.tileLists,
+        mosaics: raw.mosaics.map(ownerAt).filter((owner) => owner === "package").length,
       },
       links: raw.links,
     }
@@ -675,6 +690,11 @@ function printConsumer(id, walked, tallied) {
   }
   console.log(`  routes with more than one filled primary: ${Object.keys(allowance.crowded).length}`)
   console.log(`  routes where the corner covers a control: ${Object.keys(allowance.dock).length}`)
+  const tileRoutes = Object.keys(allowance.tiles)
+  console.log(`  routes with a list drawn as tiles: ${tileRoutes.length}${tileRoutes.length ? ` (${tileRoutes.join(", ")})` : ""}`)
+  if (tileRoutes.length === 0 && walked.readings.some((r) => r.mosaics > 0)) {
+    console.log("  (the package mosaics here carry no list marker: this consumer installs a release before it, so the tile count reads 0)")
+  }
   for (const error of walked.errors) console.log(`  not read: ${error}`)
 }
 
@@ -747,6 +767,7 @@ async function main() {
           figures: reading.figures,
           crowded: reading.crowded,
           dock: reading.dock,
+          tiles: reading.tiles,
         }
       } else if (!allowance.consumers[id]?.figures) {
         allowance.consumers[id] = { measured: null, reason: reading.reason }

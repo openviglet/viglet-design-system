@@ -145,6 +145,8 @@ export interface BentoListPageProps<T> {
  */
 const ListTable = BentoDataTable as unknown as <T>(props: BentoDataTableProps<T>) => ReactElement;
 
+// VDS187 — every list mosaic says it is one, so the look census can count the
+// lists still drawn as tiles; a hub's BentoSection grid is not a list and says nothing.
 const BENTO_GRID_CLASS =
   "bento-grid grid auto-rows-[minmax(140px,auto)] grid-cols-2 gap-4 md:grid-cols-4 md:gap-5 lg:grid-cols-6";
 
@@ -393,7 +395,7 @@ export function BentoTileGrid<T>({
 
   return (
     <LoadProvider checkIsNotUndefined={items} error={error ?? null} tryAgainUrl={tryAgainUrl}>
-      <div className={BENTO_GRID_CLASS}>
+      <div data-slot="bento-list-tiles" className={BENTO_GRID_CLASS}>
         {newTile}
         {(items ?? []).map((item) => (
           <span key={itemKey(item)} className="contents">
@@ -431,7 +433,7 @@ function StaticGrid<T>({
 }>) {
   const hasSmall = resolved.some((r) => r.emphasis === "SMALL");
   return (
-    <div className={cn(BENTO_GRID_CLASS, hasSmall && "grid-flow-dense")}>
+    <div data-slot="bento-list-tiles" className={cn(BENTO_GRID_CLASS, hasSmall && "grid-flow-dense")}>
       {!hideNew && <NewTile route={newRoute} label={newLabel} subtitle={newSubtitle} chip={chip} />}
       {resolved.map(({ item, key, emphasis }) => (
         <span key={key} className="contents">
@@ -597,7 +599,7 @@ function BentoListEditor<T>({
 
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext items={draft.map((r) => r.key)} strategy={rectSortingStrategy}>
-          <div className={cn(BENTO_GRID_CLASS, hasSmall && "grid-flow-dense")}>
+          <div data-slot="bento-list-tiles" className={cn(BENTO_GRID_CLASS, hasSmall && "grid-flow-dense")}>
             {/* The New tile stays in place (non-draggable) so the editable grid
                 is WYSIWYG with the saved result — same tile, same slot, same
                 packing. It just isn't a sortable item. */}

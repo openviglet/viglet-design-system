@@ -69,22 +69,24 @@ route by a concrete segment rather than `:param`, the probe's route-table walk i
 `scripts/look-census.mjs` missed that router. Fix it there before recording, because an
 account name in a route would end up in a committed file.
 
-### §VDS187 Counting the lists still drawn as tiles
+### §VDS188 A census that reads the same page the same way
 
-VDS183 made the table the default for `BentoListPage`, but every consumer that passes
-`renderTile` still gets tiles, and nothing counts how many of those are record lists a
-reader compares rather than picks. The Shio walk named users, groups, roles, tokens,
-providers, webhooks and tenants. Nobody has counted Turing and Dumont.
+Two `pnpm look:census` runs against the same Shio dev server on 2026-09-28, with no
+change in between, disagreed on three figures: radii 15 then 13, saturated button fills
+4 then 5 (a `#d60590` fill appeared once), and routes where the dock covers a control 18
+then 20. A gate that moves on its own fails a task that changed nothing, and it hides a
+real change as noise.
 
-`pnpm look:census` already walks every route and reads React fibers, so it can report
-this without a second walker. In the probe, find the fibers whose component is
-`BentoListPage` (the owner chain already resolves package frames) and record, per route,
-whether it rendered the mosaic (`.bento-grid` under it) or the table (`[role=grid]`).
-The census then prints a `tile-lists` figure per consumer, with the routes named, and
-the allowance holds it like any other figure. The figure only goes down: each product
-moving a record list to `columns` lowers it with `--write`. A media or blueprint list
-that stays tiles on purpose is still counted. The number is a prompt to look, not a
-verdict, which is why the routes are named beside it.
+The probe reads each page 800 ms after network idle, so whatever is still moving is
+measured mid-flight. The likely sources are the shell's entry animations and the tile
+stagger, the mascot's typed caption growing the dock's box, hover and focus states left
+on the element the last navigation clicked, and toasts. The fix belongs in
+`scripts/look-census.mjs`. Open each context with `reducedMotion: "reduce"`, which
+`bento.css` honours for every animation. Wait for `document.fonts.ready` and for two
+animation frames with no layout change before reading. Move the pointer off the page.
+Then read every route twice and report a value seen in only one read as unstable, rather
+than counting it. The acceptance is two back-to-back runs that agree on every figure,
+and the allowance re-recorded from a stable run.
 
 ## Block F — What a consuming CMS needs from the package next
 
