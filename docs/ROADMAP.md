@@ -2,7 +2,69 @@
 
 ## Block A — The gate the design system never had
 
+- 📋 **VDS180** (deps: —) **No check measures how bento consumers look: Shio alone renders 15 button heights, 10 radii and 3 mono faces** — The census comes before any change to the look, and it splits what the package draws from what a product draws, which says where each fix belongs. → §VDS180
+
 ## Block F — What a consuming CMS needs from the package next
+
+- 📋 **VDS184** (deps: —) **A hero's way back names one parent, so a post five folders deep does not say where the reader is** — An optional ancestor trail where the back link sits gives a nested CMS a location without a second nav, and leaves flat products unchanged. → §VDS184
+
+## Block C — One look across products
+
+- 📋 **VDS181** (deps: —) **The rail names a section only in a tooltip, so a reader learns it by hovering, and no item can show a count** — A short label under each icon, and an optional count badge on the item that owns it, keep the rail's few choices while making them recognisable at a glance. → §VDS181
+- 📋 **VDS182** (deps: VDS180) **Glass, gradient chips on every tile and hero, and one tone per area make colour everywhere and mean nothing** — Keeping the chip for identity and turning tones into state lets the accent mark the primary action and the current place, which is what a working screen needs. → §VDS182
+- 📋 **VDS183** (deps: VDS180) **BentoListPage requires renderTile, so products render records nobody picks by picture as a tile mosaic** — A table by default, with tiles as the variant for visual or few entities, makes list.dc.html's discriminator the path of least resistance. → §VDS183
+
+## Block E — The assistant every product shares
+
+- 📋 **VDS185** (deps: VDS180) **The shell owns the dock's corner but reserves nothing there, so the orb covers row actions in the column** — Resting the dock at the rail's foot, a slot the shell already reserves, keeps one voice for notices and can never hide a control. → §VDS185
+
+## Done when — VDS180
+
+- **A census run reports every bento consumer, route by route** Turing and Dumont are
+  unmeasured today, and a claim about three products needs all three read.
+- **Each finding is attributed to package or product code** That split decides whether a
+  fix lands here or in a consumer, which every later line depends on.
+- **The first reading is committed as the allowance, offenders named** Later tasks then
+  lower a figure instead of describing an improvement.
+
+## Done when — VDS181
+
+- **Every rail section with a labelKey shows its label under the icon** A tooltip is not
+  a name a reader can scan.
+- **BentoNavItem accepts a count and the rail draws it as a badge** The count sits on
+  the destination that owns it, never in the header.
+- **The rail stays one level, with no groups and no collapse state** The few-choices
+  structure is what the rail exists to keep.
+
+## Done when — VDS182
+
+- **The gradient chip renders only in entity heroes and hub tiles** Identity is the one
+  place a picture names a thing.
+- **Tones map to five states and render through BentoStatusMarker** Colour that means
+  state is readable; colour per area is noise.
+- **The reference artboards are redrawn from preset tokens first** The direction is
+  reviewed as composition before a component changes.
+
+## Done when — VDS183
+
+- **BentoListPage renders a table by default, tiles only when asked** The default is
+  what products do, so it has to be the right answer.
+- **BENTO-AUTHORING.md and list.dc.html state the same default** Two sources saying
+  different things is how the drift started.
+
+## Done when — VDS184
+
+- **Heroes accept an ancestor list and render it as linked steps** A nested entity needs
+  its location, not only its parent.
+- **A route with one parent still renders the arrow back link** Flat products must see
+  no change.
+
+## Done when — VDS185
+
+- **The dock rests at the rail's foot and opens as an anchored popover** A reserved slot
+  is the only place it cannot cover content.
+- **The census reports zero dock overlaps with interactive elements** An overlap is
+  invisible to every other check.
 
 ## Non-goals
 
