@@ -57,6 +57,21 @@ describe("the catalogue build leaves dist alone", () => {
     expect(names).not.toContain("copy-standalone-css")
   })
 
+  // VDS196 — `layer-package-utilities` was the third, and nothing asked. The
+  // library config is the list of candidates, so it is read rather than restated:
+  // a plugin with a writeBundle hook is one that can write into dist.
+  it("strips every library plugin that writes a bundle", async () => {
+    const { default: libraryConfig } = await import("../vite.config")
+    // A plugin entry may be an array of plugins; two levels is what Vite accepts.
+    const writers = ((libraryConfig.plugins ?? []) as unknown[])
+      .flat(2)
+      .filter((p): p is MinimalPlugin & { writeBundle: unknown } => !!p && typeof p === "object" && "writeBundle" in p)
+      .map((p) => ({ name: p.name }))
+
+    expect(writers.map((p) => p.name)).toContain("layer-package-utilities")
+    expect(await pluginsAfterViteFinal(writers)).toEqual([])
+  })
+
   it("keeps every other plugin, so the catalogue still builds", async () => {
     const names = await pluginsAfterViteFinal([
       { name: "vite:react-babel" },

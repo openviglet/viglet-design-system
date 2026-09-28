@@ -129,20 +129,6 @@ it (solid cards, 16 px hero titles, the chip on hero only) and map states to ton
 published emerald, draft slate, scheduled violet, changed amber, archived neutral.
 Components follow the review.
 
-### §VDS196 The catalogue drops every dist writer
-
-`.storybook/main.ts` holds the rule that the catalogue build never writes into `dist`,
-and enforces it by dropping, by name, every plugin from `vite.config.ts` that does:
-`WRITES_TO_DIST` lists `unplugin-dts` and `copy-standalone-css`. VDS194 added a third,
-`layer-package-utilities`, which rewrites `dist/viglet-design-system.css` from
-`writeBundle`. Today it does nothing under Storybook, because it matches that one file
-name and a catalogue build emits hashed assets. That is a coincidence of naming, not the
-rule. A fallback in it even resolves `dist` when Rollup names no output directory.
-
-Add `layer-package-utilities` to `WRITES_TO_DIST`, with a line in the comment above the
-set saying what it writes, as the other two have. `scripts/dist-stability.test.ts` is
-the guard to extend, if it reads the set rather than a restated list.
-
 ## Block E — The assistant every product shares
 
 ### §VDS185 The dock rests at the foot of the rail

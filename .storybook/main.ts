@@ -48,7 +48,11 @@ const config: StorybookConfig = {
     // it is invisible locally: a developer has run the build, so the directory
     // is there. Creating it here would be the wrong fix — that keeps a Storybook
     // build writing into dist, which is what the rule above forbids.
-    const WRITES_TO_DIST = new Set(["unplugin-dts", "copy-standalone-css"]);
+    //
+    // `layer-package-utilities` (VDS194, VDS196) rewrites the package stylesheet
+    // in dist from `writeBundle`. A catalogue build emits no file by that name,
+    // so it would do nothing here, but that is a naming accident and not the rule.
+    const WRITES_TO_DIST = new Set(["unplugin-dts", "copy-standalone-css", "layer-package-utilities"]);
     if (Array.isArray(cfg.plugins)) {
       cfg.plugins = cfg.plugins.filter((plugin) => {
         const name =

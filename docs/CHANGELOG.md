@@ -204,6 +204,8 @@
   checked **A table with fewer rows than the space holds is as tall as its rows** A short list must not read as a failed load.
 - ✅ **VDS194** **The package stylesheet ships compiled utilities like .hidden, which beat a consumer's lg:block and hide its content** — A consumer's hidden lg:block shows at lg: the package's utilities sit below the consumer's and its variants in a layer above (design recorded in `scripts/lib/layer-utilities.mjs`).
   checked **hidden lg:block shows its element at a large viewport in a consumer** That is the idiom that failed silently in Shio.
+- ✅ **VDS196** **The catalogue build keeps layer-package-utilities, a dist writer, and stays out of dist only by a file-name accident** — The catalogue build drops layer-package-utilities, and a test fails any vite.config plugin with a writeBundle hook it keeps.
+  checked **WRITES_TO_DIST names layer-package-utilities** The set is the rule's enforcement, so a dist writer missing from it is the defect.
 
 ## Block D — The package in a server-rendered framework
 

@@ -6,8 +6,6 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS196** (deps: VDS194 ✅) **The catalogue build keeps layer-package-utilities, a dist writer, and stays out of dist only by a file-name accident** — The catalogue does not touch dist, and the list that enforces it has to name every plugin that could. → §VDS196
-
 ## Block E — The assistant every product shares
 
 ## Done when — VDS182
@@ -38,11 +36,6 @@
 - **A story file whose browser drops fails, and npm test exits instead of hanging**
   Failing fast is what the gate lacked: every test passed, and the run still never
   ended.
-
-## Done when — VDS196
-
-- **WRITES_TO_DIST names layer-package-utilities** The set is the rule's enforcement, so
-  a dist writer missing from it is the defect.
 
 ## Non-goals
 
