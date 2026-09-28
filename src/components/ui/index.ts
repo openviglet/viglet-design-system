@@ -58,11 +58,13 @@ export { UserAvatar, getUserInitials } from "./user-avatar";
 export { VigletAvatar, type VigletAvatarProps, type VigletAvatarState } from "./viglet-avatar";
 export {
   VigletAssistant,
+  VIGLET_ASSISTANT_SIZES,
   type VigletAssistantAction,
   type VigletAssistantChatMessage,
   type VigletAssistantMessage,
   type VigletAssistantProps,
   type VigletAssistantReport,
+  type VigletAssistantSize,
 } from "./viglet-assistant";
 export type { UserAvatarProps } from "./user-avatar";
 export { UserMenu } from "./user-menu";

@@ -4,7 +4,7 @@ import { readFileSync, readdirSync } from "node:fs"
 import { join, resolve } from "node:path"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
-import { VigletAssistant, type VigletAssistantReport } from "./viglet-assistant"
+import { VIGLET_ASSISTANT_SIZES, VigletAssistant, type VigletAssistantReport } from "./viglet-assistant"
 
 // VDS101 — the dock, and the backend it must not know.
 //
@@ -53,6 +53,24 @@ describe("VigletAssistant", () => {
     // The mascot is decorative, so the orb is one control and not a button
     // wrapped around a second announced thing.
     expect(orb.querySelector("canvas")).toHaveAttribute("aria-hidden", "true")
+  })
+
+  it("sizes the collapsed orb from a preset, small by default, or from pixels", () => {
+    const orbWidth = () =>
+      screen.getByRole("button", { name: KEY.open }).querySelector("canvas")?.style.width
+
+    const { rerender } = render(<VigletAssistant />)
+    expect(orbWidth()).toBe(`${VIGLET_ASSISTANT_SIZES.sm}px`)
+
+    rerender(<VigletAssistant size="lg" />)
+    expect(orbWidth()).toBe(`${VIGLET_ASSISTANT_SIZES.lg}px`)
+
+    rerender(<VigletAssistant size={60} />)
+    expect(orbWidth()).toBe("60px")
+
+    // Below this the sun is a smudge, so a custom size is held to it.
+    rerender(<VigletAssistant size={4} />)
+    expect(orbWidth()).toBe("24px")
   })
 
   it("renders no composer at all when the product passes no onSend", async () => {

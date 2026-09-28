@@ -38,6 +38,7 @@ const meta = {
     },
     unread: { control: "boolean" },
     busy: { control: "boolean" },
+    size: { control: "select", options: ["sm", "md", "lg"] },
   },
 } satisfies Meta<typeof VigletAssistant>;
 
@@ -67,6 +68,23 @@ export const Collapsed: Story = {
   render: (args) => (
     <Stage>
       <Dock {...args} />
+    </Stage>
+  ),
+};
+
+/**
+ * `size`: the three presets side by side, and a size in pixels for a corner that
+ * fits none of them. The caption and the badge move with the orb.
+ */
+export const Sizes: Story = {
+  render: () => (
+    <Stage>
+      <div className="flex flex-col items-end gap-10 pt-6 pr-6">
+        {(["sm", "md", "lg"] as const).map((size) => (
+          <VigletAssistant key={size} inline size={size} unread={2} state="attention" caption={`size="${size}"`} />
+        ))}
+        <VigletAssistant inline size={64} unread={2} state="success" caption="size={64}" />
+      </div>
     </Stage>
   ),
 };

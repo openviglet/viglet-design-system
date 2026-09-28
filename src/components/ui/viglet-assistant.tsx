@@ -1,5 +1,5 @@
 import { IconX } from "@tabler/icons-react";
-import { useEffect, useRef, useState } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useInCornerSlot } from "@/lib/corner-slot";
@@ -102,7 +102,46 @@ export interface VigletAssistantProps {
    * `prefers-reduced-motion` does the same for the whole system.
    */
   paused?: boolean;
+  /**
+   * How big the collapsed orb is: a preset, or a size in CSS pixels for a
+   * product whose corner fits none of them. The caption and the unread badge
+   * scale with it. The open panel keeps its own header size.
+   */
+  size?: VigletAssistantSize | number;
   className?: string;
+}
+
+/** The collapsed orb's preset sizes. */
+export type VigletAssistantSize = "sm" | "md" | "lg";
+
+/** Each preset in CSS pixels. `lg` is the size the dock shipped with. */
+export const VIGLET_ASSISTANT_SIZES: Readonly<Record<VigletAssistantSize, number>> = {
+  sm: 44,
+  md: 88,
+  lg: 132,
+};
+
+/** The open panel's header orb. */
+const OPEN_SIZE = 76;
+
+/** A preset's pixels, or a custom size held to what the mascot still reads at. */
+function resolveOrbSize(size: VigletAssistantSize | number) {
+  return typeof size === "number" ? Math.max(24, Math.round(size)) : VIGLET_ASSISTANT_SIZES[size];
+}
+
+/**
+ * Where the caption and the badge sit around an orb of `size` pixels. The orb's
+ * canvas leaves a margin around the sun, so the caption tucks into it a little
+ * and the badge sits inside the corner rather than on it.
+ */
+function orbLayout(size: number) {
+  const captionRight = Math.round(size * 0.88 + 8);
+  return {
+    captionRight,
+    captionBottom: Math.round(size * 0.3),
+    captionMaxWidth: `min(23rem, calc(100vw - ${captionRight + 20}px))`,
+    badgeInset: Math.round(size * 0.2) - 8,
+  };
 }
 
 const STATE_KEY: Record<VigletAvatarState, string> = {
@@ -146,7 +185,12 @@ function prefersReducedMotion() {
  * Mount this with `key={text}` — a new sentence is a new caption, which is what
  * resets the reveal without an effect writing state on the way past.
  */
-function Caption({ text, still = false, className }: Readonly<{ text: string; still?: boolean; className?: string }>) {
+function Caption({
+  text,
+  still = false,
+  className,
+  style,
+}: Readonly<{ text: string; still?: boolean; className?: string; style?: CSSProperties }>) {
   const [shown, setShown] = useState(0);
 
   useEffect(() => {
@@ -177,7 +221,7 @@ function Caption({ text, still = false, className }: Readonly<{ text: string; st
   }, [text, still]);
 
   return (
-    <span className={className}>
+    <span className={className} style={style}>
       <span aria-hidden="true">
         {text.slice(0, shown)}
         {shown < text.length && (
@@ -233,8 +277,11 @@ export function VigletAssistant({
   activity = 0,
   inline = false,
   paused = false,
+  size = "sm",
   className,
 }: Readonly<VigletAssistantProps>) {
+  const orbSize = resolveOrbSize(size);
+  const layout = orbLayout(orbSize);
   const { t, i18n } = useTranslation();
   // In the shell's corner stack the shell holds the corner, so the dock is in
   // flow there and takes pointer events back from the stack that positions it.
@@ -307,9 +354,10 @@ export function VigletAssistant({
         "flex flex-col",
         isOpen
           ? "w-[min(22.5rem,calc(100vw-2.5rem))] rounded-2xl border border-border bg-popover p-4 text-popover-foreground shadow-2xl"
-          : "w-[8.25rem] items-end",
+          : "w-[var(--vg-assistant-orb)] items-end",
         className ?? "",
       ].join(" ")}
+      style={{ "--vg-assistant-orb": `${orbSize}px` } as CSSProperties}
       onKeyDown={(event) => {
         if (event.key === "Escape" && isOpen) setOpen(false);
       }}
@@ -325,7 +373,8 @@ export function VigletAssistant({
           key={said}
           text={said}
           still={paused}
-          className="pointer-events-none absolute bottom-11 right-[7.75rem] w-max max-w-[min(23rem,calc(100vw-9rem))] text-right text-sm font-semibold leading-snug text-foreground drop-shadow-sm"
+          style={{ right: layout.captionRight, bottom: layout.captionBottom, maxWidth: layout.captionMaxWidth }}
+          className="pointer-events-none absolute w-max text-right text-sm font-semibold leading-snug text-foreground drop-shadow-sm"
         />
       )}
 
@@ -343,12 +392,13 @@ export function VigletAssistant({
             unread={pending}
             activity={activity}
             paused={paused}
-            size={isOpen ? 76 : 132}
+            size={isOpen ? OPEN_SIZE : orbSize}
           />
           {!isOpen && count > 0 && (
             <span
               aria-hidden="true"
-              className="absolute right-5 top-5 grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[0.6875rem] font-semibold leading-none text-primary-foreground"
+              style={{ right: layout.badgeInset, top: layout.badgeInset }}
+              className="absolute grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[0.6875rem] font-semibold leading-none text-primary-foreground"
             >
               {count}
             </span>

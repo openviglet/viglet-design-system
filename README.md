@@ -538,6 +538,12 @@ who asked for a quiet dock: the mascot holds still and the caption appears whole
 instead of being typed, while it is still announced. `prefers-reduced-motion`
 does the same system-wide.
 
+`size` sets how big the collapsed orb is: `"sm"` (44px, the default), `"md"`
+(88px) or `"lg"` (132px, the size the dock shipped with), or a number of CSS
+pixels for a corner that fits none of them. The caption and the unread badge move
+with the orb, and the open panel keeps its own header size.
+`VIGLET_ASSISTANT_SIZES` holds the presets' pixels.
+
 A message may carry one `action`, so an answer can offer something to do with
 it — the label is your copy, already translated:
 
