@@ -21,5 +21,7 @@
   // CI — so its tests are type-checked here rather than left to the test run.
   // The scripts themselves are .mjs because node runs them with no build step,
   // so allowJs is what lets a test import one and still be checked against it.
-  "include": ["vite.config.ts", "vitest.config.ts", "scripts/**/*.ts", "scripts/**/*.mjs"]
+  "include": ["vite.config.ts", "vitest.config.ts", "scripts/**/*.ts", "scripts/**/*.mjs"],
+  // Those run in a browser, and tsconfig.parity.json checks them with the DOM types.
+  "exclude": ["scripts/**/*.parity.test.ts"]
 }

@@ -45,7 +45,7 @@ export default defineConfig({
           ],
           // The parity digest needs a browser to compute a style; jsdom would
           // report the class name back instead of the colour.
-          exclude: ["**/node_modules/**", "src/**/*.parity.test.tsx"],
+          exclude: ["**/node_modules/**", "src/**/*.parity.test.tsx", "scripts/**/*.parity.test.ts"],
           css: false,
           restoreMocks: true,
         },
@@ -97,7 +97,8 @@ export default defineConfig({
         resolve: { alias: sourceAlias },
         test: {
           name: "parity",
-          include: ["src/**/*.parity.test.tsx"],
+          // VDS190 — the look census's probe, which reads a laid-out page too.
+          include: ["src/**/*.parity.test.tsx", "scripts/**/*.parity.test.ts"],
           browser: {
             enabled: true,
             headless: true,

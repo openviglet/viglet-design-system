@@ -69,23 +69,6 @@ route by a concrete segment rather than `:param`, the probe's route-table walk i
 `scripts/look-census.mjs` missed that router. Fix it there before recording, because an
 account name in a route would end up in a committed file.
 
-### §VDS190 Count what a reader sees
-
-The look census reports "routes with more than one filled primary" for the Shio e-mail,
-token and webhook editors, two each. Checked in a browser on 2026-09-28, none of those
-routes shows a reader two primaries. On the e-mail settings the second fill is the Save
-inside the save-bar morph's fixed copy, which BentoFormHero renders at opacity 0 until
-the hero scrolls away. On the token editor the extra fills are `role="switch"` controls
-that are on, painted in --primary because that is how a checked switch is drawn. Neither
-is a claim to be the page's primary action. The consequence is that the figure a round
-of work is asked to lower cannot reach its target on a correct page, so it stops being
-read. A filled button should be counted only when it is rendered visible (opacity above
-zero and no ancestor hiding it) and when it is a button rather than a switch, checkbox
-or toggle whose fill states a value. The same care applies to the corner-overlap count:
-on the Shio hubs it counted tiles that were scrolled under the sticky shell header, and
-the back-to-top control while hidden. Both are ordinary states of a scrolling page, not
-a corner covering a control.
-
 ### §VDS193 Name the crawl once it ends
 
 The look census reads desktop-dark while it crawls and the other two views afterwards. A

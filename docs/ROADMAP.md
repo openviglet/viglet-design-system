@@ -2,7 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS190** (deps: VDS180 ✅) **The census counts a hidden morph copy and a switch that is on as primaries, and a scrolled-under tile as covered** — A figure a correct page cannot lower stops being read, so only visible buttons count as primaries and only a fixed corner counts as covering. → §VDS190
 - 📋 **VDS193** (deps: VDS189 ✅) **The census names a page it crawled in dark by its folded path, where light and phone name it by router pattern** — Two names for one page read as a route one view never measured, so the run reports gaps and --write stays refused. → §VDS193
 
 ## Block F — What a consuming CMS needs from the package next
@@ -37,15 +36,6 @@
   lowers must be one every bento consumer reports, not only Shio.
 - **No committed route names an id or an account** The allowance is committed, so a
   concrete segment would publish product data.
-
-## Done when — VDS190
-
-- **A button counts as a primary only when rendered visible** The morph's hidden copy is
-  not a second primary.
-- **A switch, checkbox or toggle is never counted as a primary** Its fill states a
-  value, not a claim to be the page's action.
-- **A control scrolled under a sticky header is not a corner overlap** That is an
-  ordinary scrolling state, not a covered control.
 
 ## Done when — VDS191
 

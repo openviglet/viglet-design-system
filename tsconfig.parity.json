@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.node.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.parity.tsbuildinfo",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"]
+  },
+  // VDS190 — the scripts' tests that run in a browser (the look census's probe).
+  // They need the DOM types, which the node config leaves out so a node script
+  // never type-checks against a `document` it will not have.
+  "include": ["scripts/**/*.parity.test.ts"],
+  "exclude": []
+}

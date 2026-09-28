@@ -141,6 +141,10 @@
 - ✅ **VDS189** **A census run left desktop-dark unmeasured on 14 of 34 routes and still offered its lower figure for --write** — The look census compares figures only over routes every view measured, and --write refuses a run with gaps, naming the routes (design recorded in `scripts/look-census.mjs`).
   checked **A figure is compared only over routes every view measured** Otherwise a view that lost routes reads as an improvement.
   checked **--write refuses a view with unmeasured routes, and names them** The allowance is trusted; a partial reading must not become it.
+- ✅ **VDS190** **The census counts a hidden morph copy and a switch that is on as primaries, and a scrolled-under tile as covered** — The look census counts only visible, stateless buttons as primaries, and only a fixed slot's visible part as covering a control (design recorded in `scripts/look-census-probe.mjs`).
+  checked **A button counts as a primary only when rendered visible** The morph's hidden copy is not a second primary.
+  checked **A switch, checkbox or toggle is never counted as a primary** Its fill states a value, not a claim to be the page's action.
+  checked **A control scrolled under a sticky header is not a corner overlap** That is an ordinary scrolling state, not a covered control.
 
 ## Block B — Bento becomes a design-system layer
 
