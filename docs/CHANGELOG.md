@@ -138,6 +138,9 @@
   checked **The census reports a tile-lists figure per consumer, routes named** Each record list moved to columns must lower a number the allowance holds.
 - ✅ **VDS188** **Two look census runs on an unchanged Shio disagree on radii, fills and dock overlaps** — The look census reads each route at rest and twice, counts only what both reads saw, and two back-to-back Shio runs now agree.
   checked **Two back-to-back runs agree on every figure** Only a stable reading can hold an allowance that tasks lower.
+- ✅ **VDS189** **A census run left desktop-dark unmeasured on 14 of 34 routes and still offered its lower figure for --write** — The look census compares figures only over routes every view measured, and --write refuses a run with gaps, naming the routes (design recorded in `scripts/look-census.mjs`).
+  checked **A figure is compared only over routes every view measured** Otherwise a view that lost routes reads as an improvement.
+  checked **--write refuses a view with unmeasured routes, and names them** The allowance is trusted; a partial reading must not become it.
 
 ## Block B — Bento becomes a design-system layer
 

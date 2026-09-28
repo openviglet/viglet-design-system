@@ -6,9 +6,12 @@ import {
   agree,
   allowanceOf,
   compare,
+  complete,
+  describeGaps,
   unmarked,
   decodeMappings,
   fits,
+  gaps,
   makeClassifier,
   ownerOf,
   routeOf,
@@ -196,6 +199,40 @@ describe("the allowance", () => {
     // A reading recorded before the census counted tiles does not gate the count.
     const { tiles: _unrecorded, ...older } = allowance
     expect(compare("shio", older, more).grew).toEqual([])
+  })
+
+  it("compares only the routes every view measured, and offers nothing lowered from a partial view", () => {
+    const views = ["desktop-dark", "desktop-light", "phone-dark"]
+    const route = (path: string, title: Record<string, string>, height: string) =>
+      views.map((view) =>
+        reading(path, view, [["button-height", height, "package"], ...(view in title ? [["title-x", title[view], "package"] as [string, string, "package"]] : [])]),
+      )
+    const all = { "desktop-dark": "188", "desktop-light": "188", "phone-dark": "16" }
+    const full = [...route("/a", all, "36"), ...route("/b", { ...all, "desktop-dark": "380" }, "44")]
+    const allowed = allowanceOf(tally(full))
+    expect(gaps(full)).toEqual({})
+
+    // The dark view lost /b: its title offset did not survive, the other views read it.
+    const { "desktop-dark": _lost, ...rest } = all
+    const partial = [...route("/a", all, "36"), ...route("/b", { ...rest, "desktop-light": "380" }, "44")]
+    const holes = gaps(partial)
+    expect(holes).toEqual({ "desktop-dark": ["/b"] })
+    expect(complete(partial).map((r) => r.route)).toEqual(["/a", "/a", "/a"])
+    expect(describeGaps("shio", holes)).toEqual(["shio desktop-dark: 1 route(s) not measured (/b)"])
+
+    const current = allowanceOf(tally(complete(partial)))
+    expect(compare("shio", allowed, current).lowered).toContain("shio title-x@desktop-dark: 1 distinct, allowance 2")
+    expect(compare("shio", allowed, current, holes).lowered).toEqual([])
+
+    // Growth over fewer routes is still growth.
+    const grown = [
+      ...route("/a", all, "36"),
+      reading("/a", "desktop-light", [["button-height", "40", "product"], ["button-height", "50", "product"]]),
+      ...route("/b", rest, "44"),
+    ]
+    expect(compare("shio", allowed, allowanceOf(tally(complete(grown))), gaps(grown)).grew).toEqual([
+      "shio button-height: 3 distinct, allowance 2 (new: 40, 50)",
+    ])
   })
 
   it("holds every bento consumer, measured or with the reason it was not", () => {

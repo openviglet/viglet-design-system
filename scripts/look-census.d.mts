@@ -81,8 +81,12 @@ export declare function agree(
 export declare function unmarked(readings: Pick<Reading, "tiles" | "mosaics">[]): boolean
 export declare function tally(readings: Reading[]): Tally
 export declare function allowanceOf(tallied: Tally): Allowance
+export declare function gaps(readings: Reading[]): Record<string, string[]>
+export declare function complete(readings: Reading[]): Reading[]
 export declare function compare(
   id: string,
   allowed: Allowance,
   current: Allowance,
+  holes?: Record<string, string[]>,
 ): { grew: string[]; lowered: string[] }
+export declare function describeGaps(id: string, holes: Record<string, string[]>): string[]

@@ -2,8 +2,8 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS189** (deps: VDS180 ✅) **A census run left desktop-dark unmeasured on 14 of 34 routes and still offered its lower figure for --write** — An allowance lowered from a partial reading turns the next complete run into a false regression, so a view with gaps must not be compared or written. → §VDS189
 - 📋 **VDS190** (deps: VDS180 ✅) **The census counts a hidden morph copy and a switch that is on as primaries, and a scrolled-under tile as covered** — A figure a correct page cannot lower stops being read, so only visible buttons count as primaries and only a fixed corner counts as covering. → §VDS190
+- 📋 **VDS193** (deps: VDS189 ✅) **The census names a page it crawled in dark by its folded path, where light and phone name it by router pattern** — Two names for one page read as a route one view never measured, so the run reports gaps and --write stays refused. → §VDS193
 
 ## Block F — What a consuming CMS needs from the package next
 
@@ -38,13 +38,6 @@
 - **No committed route names an id or an account** The allowance is committed, so a
   concrete segment would publish product data.
 
-## Done when — VDS189
-
-- **A figure is compared only over routes every view measured** Otherwise a view that
-  lost routes reads as an improvement.
-- **--write refuses a view with unmeasured routes, and names them** The allowance is
-  trusted; a partial reading must not become it.
-
 ## Done when — VDS190
 
 - **A button counts as a primary only when rendered visible** The morph's hidden copy is
@@ -63,6 +56,13 @@
 
 - **A table with fewer rows than the space holds is as tall as its rows** A short list
   must not read as a failed load.
+
+## Done when — VDS193
+
+- **All three views name a page by the same route** A split name is a gap in a view that
+  did read the page.
+- **A route still missing from a view names why it was not read** What remains after
+  naming is a load or settle failure, and the run must say which.
 
 ## Non-goals
 

@@ -464,6 +464,37 @@ export function agree(first, second) {
 }
 
 // ---------------------------------------------------------------------------
+// Gaps: what a view did not measure (VDS189)
+
+/**
+ * The routes each view did not measure, keyed by view, for views that missed any.
+ * A route is measured when the view's reading of it kept its title offset: the
+ * probe samples one on every page (`none` included), so a reading without it
+ * failed to load or never held still across the two reads. A view that read
+ * fewer routes than the others reports fewer distinct values, which reads as a
+ * figure lowered when nothing on the page changed.
+ */
+export function gaps(readings) {
+  const routes = [...new Set(readings.map((r) => r.route))].sort()
+  const measured = new Map(VIEWS.map((v) => [v.id, new Set()]))
+  for (const r of readings) {
+    if (r.samples.some((s) => s.figure === "title-x")) measured.get(r.view)?.add(r.route)
+  }
+  const out = {}
+  for (const view of VIEWS) {
+    const missing = routes.filter((route) => !measured.get(view.id).has(route))
+    if (missing.length > 0) out[view.id] = missing
+  }
+  return out
+}
+
+/** The readings of the routes every view measured, which is what a figure is compared over. */
+export function complete(readings) {
+  const missing = new Set(Object.values(gaps(readings)).flat())
+  return readings.filter((r) => !missing.has(r.route))
+}
+
+// ---------------------------------------------------------------------------
 // Readings: tally, allowance, comparison
 
 /**
@@ -522,8 +553,12 @@ export function allowanceOf(tallied) {
 /**
  * A new reading against the recorded one. `grew` fails the run; `lowered` is a
  * number a task brought down, which `--write` then records.
+ *
+ * `holes` is what `gaps` found. With any, the reading covers fewer routes than the
+ * allowance did, so a lower count says nothing and `lowered` stays empty; growth
+ * over fewer routes is still growth, so `grew` is kept.
  */
-export function compare(id, allowed, current) {
+export function compare(id, allowed, current, holes = {}) {
   const grew = []
   const lowered = []
   const figures = new Set([...Object.keys(allowed.figures), ...Object.keys(current.figures)])
@@ -554,7 +589,14 @@ export function compare(id, allowed, current) {
       lowered.push(`${id} ${label}: ${now}, allowance ${was}`)
     }
   }
-  return { grew, lowered }
+  return { grew, lowered: Object.keys(holes).length > 0 ? [] : lowered }
+}
+
+/** One line per view with gaps, naming the routes it did not measure. */
+export function describeGaps(id, holes) {
+  return Object.entries(holes).map(
+    ([view, routes]) => `${id} ${view}: ${routes.length} route(s) not measured (${routes.join(", ")})`,
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -800,6 +842,7 @@ async function main() {
   const out = {}
   const grew = []
   const lowered = []
+  const incomplete = []
   for (const id of bento) {
     const start = urls[id]
     if (!start) {
@@ -812,15 +855,18 @@ async function main() {
       out[id] = { measured: false, reason: walked.error }
       continue
     }
-    const tallied = tally(walked.readings)
+    // Figures are counted over the routes every view measured (VDS189).
+    const holes = gaps(walked.readings)
+    const tallied = tally(complete(walked.readings))
     const reading = allowanceOf(tallied)
-    out[id] = { measured: true, routes: walked.routes, errors: walked.errors, ...reading, readings: walked.readings }
+    out[id] = { measured: true, routes: walked.routes, errors: walked.errors, gaps: holes, ...reading, readings: walked.readings }
     const allowed = allowance.consumers[id]
     if (allowed?.figures) {
-      const result = compare(id, allowed, reading)
+      const result = compare(id, allowed, reading, holes)
       grew.push(...result.grew)
       lowered.push(...result.lowered)
     }
+    incomplete.push(...describeGaps(id, holes))
     if (!json) printConsumer(id, walked, tallied)
   }
 
@@ -831,7 +877,17 @@ async function main() {
     for (const id of missing) console.log(`\n${id}: not measured (${out[id].reason})`)
   }
 
+  for (const line of incomplete) console.error(`  incomplete: ${line}`)
+  if (incomplete.length > 0) {
+    console.error("  figures were compared over the routes every view measured; nothing is offered as lowered")
+  }
+
   if (args.includes("--write")) {
+    // A partial reading written as the allowance fails the next complete run.
+    if (incomplete.length > 0) {
+      console.error("look-census: not written, since a view has routes it did not measure")
+      process.exit(2)
+    }
     const today = new Date().toISOString().slice(0, 10)
     for (const id of bento) {
       const reading = out[id]

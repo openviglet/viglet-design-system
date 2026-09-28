@@ -69,23 +69,6 @@ route by a concrete segment rather than `:param`, the probe's route-table walk i
 `scripts/look-census.mjs` missed that router. Fix it there before recording, because an
 account name in a route would end up in a committed file.
 
-### §VDS189 A partial view is not a lower reading
-
-A look census of the Shio console on 2026-09-28, after VDS188, printed `?` for the
-desktop-dark title offset on 14 of its 34 routes. Those were the editors reached by an
-id, the create forms, trash, GraphQL and the Universal Editor, while desktop-light and
-the phone view read every one of them. The summary then reported one distinct dark
-offset where the light view reported four, and printed "lowered: title-x@desktop-dark: 1
-distinct, allowance 4 (run --write to record it)". Following that advice would have
-recorded a figure the run never measured as the new allowance, and the next honest run
-would fail as a regression. Two things are wrong. The dark walk loses routes the other
-two views keep, which is a measurement gap. And a view that read fewer routes than the
-others is compared and offered for `--write` as though it were complete, which is a
-reporting gap. The second is the one that costs something, because the census is trusted
-to lower allowances. A figure should be compared only over the routes every view
-measured, or reported as incomplete with the unmeasured routes named, and `--write`
-should refuse a view with gaps.
-
 ### §VDS190 Count what a reader sees
 
 The look census reports "routes with more than one filled primary" for the Shio e-mail,
@@ -102,6 +85,22 @@ or toggle whose fill states a value. The same care applies to the corner-overlap
 on the Shio hubs it counted tiles that were scrolled under the sticky shell header, and
 the back-to-top control while hidden. Both are ordinary states of a scrolling page, not
 a corner covering a control.
+
+### §VDS193 Name the crawl once it ends
+
+The look census reads desktop-dark while it crawls and the other two views afterwards. A
+reading is named by the router match the probe found, and when there is none (a splat
+route, or a match the probe could not reach) by `routeOf` against the patterns known so
+far. During the crawl that set is still growing, so a page the dark view read early can
+be named by its folded path, while light and phone, reading after the crawl, name the
+same page by its router pattern. The Shio run of 2026-09-28 lost dark exactly on pages
+reached by an id and on create forms, which fits that cause but does not prove it. Since
+VDS189 the census compares only the routes every view measured, so a naming split now
+shows as a gap, keeps `--write` refused and drops the route from every figure. The fix
+is to name the crawl's readings once the crawl ends: keep the page path on each reading
+and resolve it against the final pattern set before the other views run, so all three
+name a page the same way. If routes are still missing after that, the cause is in
+loading or settling the page, and the `not read:` errors say which.
 
 ## Block F — What a consuming CMS needs from the package next
 
