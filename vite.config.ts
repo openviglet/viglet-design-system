@@ -1,4 +1,4 @@
-import { copyFileSync } from "node:fs"
+import { copyFileSync, readFileSync, writeFileSync } from "node:fs"
 import { resolve } from "path"
 import react from "@vitejs/plugin-react"
 import tailwindcss from "@tailwindcss/vite"
@@ -7,6 +7,7 @@ import dts from "vite-plugin-dts"
 
 import { CLIENT_ENTRIES, ENTRIES } from "./scripts/lib/entries.mjs"
 import { isExternal } from "./scripts/lib/externals.mjs"
+import { layerUtilities } from "./scripts/lib/layer-utilities.mjs"
 
 // Stylesheets a consumer imports by their own subpath, copied verbatim so the
 // entry in the exports map is the file itself.
@@ -32,6 +33,23 @@ const copyStandaloneCss = (): Plugin => ({
   },
 })
 
+// VDS194 — the package's utilities are a second compilation of class names the
+// consumer also generates, so they have to sit where the consumer's own cannot
+// be beaten by them. By file name, because Storybook builds through this config
+// too and its stylesheet is one compilation with nothing to reorder.
+const LAYERED_CSS = "viglet-design-system.css"
+
+const layerPackageUtilities = (): Plugin => ({
+  name: "layer-package-utilities",
+  writeBundle(options, bundle) {
+    for (const fileName of Object.keys(bundle)) {
+      if (fileName !== LAYERED_CSS) continue
+      const file = resolve(options.dir ?? resolve(__dirname, "dist"), fileName)
+      writeFileSync(file, layerUtilities(readFileSync(file, "utf8")))
+    }
+  },
+})
+
 export default defineConfig({
   plugins: [
     react(),
@@ -45,6 +63,7 @@ export default defineConfig({
       exclude: ["src/**/*.{test,spec}.{ts,tsx}", "src/test/**"],
     }),
     copyStandaloneCss(),
+    layerPackageUtilities(),
   ],
   resolve: {
     alias: {

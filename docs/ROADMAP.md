@@ -2,11 +2,11 @@
 
 ## Block A — The gate the design system never had
 
+- 📋 **VDS195** (deps: —) **npm test never finishes: the stories project uses its whole timeout on a minute of tests, and one file loses its browser** — A gate that cannot finish is not run, so every task falls back to running projects by hand and trusting a partial result. → §VDS195
+
 ## Block F — What a consuming CMS needs from the package next
 
 ## Block C — One look across products
-
-- 📋 **VDS194** (deps: —) **The package stylesheet ships compiled utilities like .hidden, which beat a consumer's lg:block and hide its content** — Shipping no utility a consumer also generates, or layering them, keeps the ordinary responsive idiom working in every product. → §VDS194
 
 ## Block E — The assistant every product shares
 
@@ -33,10 +33,11 @@
 - **No committed route names an id or an account** The allowance is committed, so a
   concrete segment would publish product data.
 
-## Done when — VDS194
+## Done when — VDS195
 
-- **hidden lg:block shows its element at a large viewport in a consumer** That is the
-  idiom that failed silently in Shio.
+- **npm test finishes all three projects within ten minutes on a developer machine**
+  Finishing is the property the gate lacks, and ten minutes is the default tool timeout
+  a session runs it under.
 
 ## Non-goals
 

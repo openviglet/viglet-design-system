@@ -202,6 +202,8 @@
   checked **BENTO-AUTHORING.md and list.dc.html state the same default** Two sources saying different things is how the drift started.
 - ✅ **VDS192** **A one-row BentoDataTable reserves about 450 px of empty panel, so a short list reads as a failed load** — BentoDataTable's body is as tall as its rows up to height and scrolls only past it, so a one-row list is one row tall.
   checked **A table with fewer rows than the space holds is as tall as its rows** A short list must not read as a failed load.
+- ✅ **VDS194** **The package stylesheet ships compiled utilities like .hidden, which beat a consumer's lg:block and hide its content** — A consumer's hidden lg:block shows at lg: the package's utilities sit below the consumer's and its variants in a layer above (design recorded in `scripts/lib/layer-utilities.mjs`).
+  checked **hidden lg:block shows its element at a large viewport in a consumer** That is the idiom that failed silently in Shio.
 
 ## Block D — The package in a server-rendered framework
 

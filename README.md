@@ -242,6 +242,13 @@ Or in your entry TypeScript/JavaScript:
 import "@viglet/viglet-design-system/styles";
 ```
 
+Next to your own `@import "tailwindcss"`, in either order, your utilities win
+over the copies `./styles` carries for its components. The package's plain
+utilities (`.hidden`, `.flex`) sit in `@layer utilities.viglet`, below yours, so
+`hidden lg:block` in your app shows at `lg`. Its variant utilities (`md:flex`,
+`hover:bg-accent`) sit in `@layer viglet-variants`, ordered after `utilities`, so
+your plain `.hidden` does not hide the package's responsive chrome.
+
 The brand faces are a **separate import**, and one you probably want:
 
 ```css
