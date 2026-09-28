@@ -2,7 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS186** (deps: VDS180 ✅) **Turing, Dumont and roadkeep-gui have no look reading, so their drift fails nothing** — A reading per consumer is what lets a look fix land in the package instead of in whichever product was measured first. → §VDS186
 - 📋 **VDS187** (deps: VDS183 ✅) **No reading counts the record lists each consumer still renders as tiles after the table became the default** — A counted, named figure is what turns the new default into a migration each product can see and lower. → §VDS187
 
 ## Block F — What a consuming CMS needs from the package next
