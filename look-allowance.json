@@ -29,29 +29,24 @@
     },
     "shio": {
       "measured": "2026-09-28",
-      "package": "2026.3.14",
+      "package": "2026.3.15",
       "views": [
         "desktop-dark",
         "desktop-light",
         "phone-dark"
       ],
-      "routes": 34,
+      "routes": 35,
       "figures": {
         "button-height": {
-          "distinct": 24,
+          "distinct": 22,
           "byOwner": {
-            "package": 12,
-            "product": 14,
+            "package": 11,
+            "product": 13,
             "unknown": 1
           },
           "values": {
-            "14": {
-              "package": 48,
-              "product": 0,
-              "unknown": 0
-            },
             "16": {
-              "package": 153,
+              "package": 6,
               "product": 0,
               "unknown": 0
             },
@@ -62,7 +57,7 @@
             },
             "20": {
               "package": 0,
-              "product": 153,
+              "product": 150,
               "unknown": 0
             },
             "21": {
@@ -71,8 +66,8 @@
               "unknown": 0
             },
             "24": {
-              "package": 0,
-              "product": 6,
+              "package": 45,
+              "product": 3,
               "unknown": 0
             },
             "26": {
@@ -96,12 +91,12 @@
               "unknown": 0
             },
             "32": {
-              "package": 369,
+              "package": 189,
               "product": 0,
               "unknown": 0
             },
             "36": {
-              "package": 393,
+              "package": 429,
               "product": 0,
               "unknown": 0
             },
@@ -122,11 +117,11 @@
             },
             "41": {
               "package": 4,
-              "product": 55,
+              "product": 0,
               "unknown": 0
             },
             "44": {
-              "package": 6,
+              "package": 111,
               "product": 15,
               "unknown": 0
             },
@@ -143,11 +138,6 @@
             "69": {
               "package": 0,
               "product": 3,
-              "unknown": 0
-            },
-            "132": {
-              "package": 105,
-              "product": 0,
               "unknown": 0
             },
             "182": {
@@ -167,16 +157,7 @@
             }
           },
           "offenders": {
-            "14": [
-              "/bento/admin/auth-providers/:authProviderId",
-              "/bento/admin/email-config",
-              "/bento/admin/exchange-providers/:exchangeProviderId",
-              "/bento/admin/tenants/:tenantId",
-              "/bento/admin/tokens/:tokenId",
-              "/bento/admin/webhooks/:webhookId"
-            ],
             "16": [
-              "/bento/content/files",
               "/bento/content/object/:objectId"
             ],
             "18": [
@@ -188,14 +169,19 @@
               "/bento/content/forms"
             ],
             "20": [
-              "/bento/admin/activity",
-              "/bento/content/object/:objectId"
+              "/bento/admin/activity"
             ],
             "21": [
               "/bento/admin/groups/:groupId",
               "/bento/admin/roles/:roleId"
             ],
             "24": [
+              "/bento/admin/auth-providers",
+              "/bento/admin/groups",
+              "/bento/admin/tenants",
+              "/bento/admin/tokens",
+              "/bento/admin/users",
+              "/bento/content",
               "/bento/content/object/:objectId",
               "/bento/graphql"
             ],
@@ -214,13 +200,13 @@
             ],
             "32": [
               "/bento/admin/activity",
+              "/bento/admin/auth-providers",
               "/bento/admin/auth-providers/:authProviderId",
               "/bento/admin/email-config",
               "/bento/admin/exchange-providers/:exchangeProviderId",
+              "/bento/admin/groups",
               "/bento/admin/marketplace",
-              "/bento/admin/review",
-              "/bento/admin/tenants/:tenantId",
-              "/bento/admin/tokens/:tokenId"
+              "/bento/admin/review"
             ],
             "37": [
               "/bento/admin/groups/:groupId",
@@ -234,12 +220,17 @@
             ],
             "41": [
               "/bento/admin/groups/:groupId",
-              "/bento/admin/review",
               "/bento/admin/roles/:roleId"
             ],
             "44": [
-              "/bento/content/site/import",
-              "/bento/graphql"
+              "/bento",
+              "/bento/admin/activity",
+              "/bento/admin/auth-providers",
+              "/bento/admin/auth-providers/:authProviderId",
+              "/bento/admin/email-config",
+              "/bento/admin/exchange-providers",
+              "/bento/admin/exchange-providers/:exchangeProviderId",
+              "/bento/admin/groups"
             ],
             "49": [
               "/bento/universal-editor"
@@ -249,16 +240,6 @@
             ],
             "69": [
               "/bento/universal-editor"
-            ],
-            "132": [
-              "/bento",
-              "/bento/admin/activity",
-              "/bento/admin/auth-providers",
-              "/bento/admin/auth-providers/:authProviderId",
-              "/bento/admin/email-config",
-              "/bento/admin/exchange-providers",
-              "/bento/admin/exchange-providers/:exchangeProviderId",
-              "/bento/admin/groups"
             ],
             "182": [
               "/bento/admin/marketplace"
@@ -272,27 +253,22 @@
           }
         },
         "font": {
-          "distinct": 4,
+          "distinct": 3,
           "byOwner": {
             "package": 1,
-            "product": 3,
+            "product": 2,
             "unknown": 2
           },
           "values": {
             "Inter Variable": {
-              "package": 2603,
-              "product": 1085,
+              "package": 2424,
+              "product": 1213,
               "unknown": 0
             },
             "Fira Code": {
               "package": 0,
               "product": 0,
-              "unknown": 125
-            },
-            "ui-monospace": {
-              "package": 0,
-              "product": 75,
-              "unknown": 0
+              "unknown": 122
             },
             "Roboto": {
               "package": 0,
@@ -303,9 +279,6 @@
           "offenders": {
             "Fira Code": [
               "/bento/graphql"
-            ],
-            "ui-monospace": [
-              "/bento/admin/review"
             ],
             "Roboto": [
               "/bento/graphql"
@@ -338,50 +311,36 @@
           }
         },
         "mono": {
-          "distinct": 2,
+          "distinct": 1,
           "byOwner": {
             "package": 0,
-            "product": 1,
+            "product": 0,
             "unknown": 1
           },
           "values": {
             "Fira Code, Consolas, Courier New, monospace": {
               "package": 0,
               "product": 0,
-              "unknown": 125
-            },
-            "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace": {
-              "package": 0,
-              "product": 75,
-              "unknown": 0
+              "unknown": 122
             }
           },
-          "offenders": {
-            "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace": [
-              "/bento/admin/review"
-            ]
-          }
+          "offenders": {}
         },
         "primary-fill": {
-          "distinct": 5,
+          "distinct": 4,
           "byOwner": {
-            "package": 3,
+            "package": 2,
             "product": 2,
             "unknown": 0
           },
           "values": {
             "#ff8904": {
-              "package": 80,
+              "package": 24,
               "product": 0,
               "unknown": 0
             },
             "#ca3500": {
-              "package": 40,
-              "product": 0,
-              "unknown": 0
-            },
-            "#008236": {
-              "package": 6,
+              "package": 12,
               "product": 0,
               "unknown": 0
             },
@@ -402,13 +361,10 @@
               "/bento/admin/auth-providers/:authProviderId",
               "/bento/admin/email-config",
               "/bento/admin/exchange-providers/:exchangeProviderId",
-              "/bento/admin/review",
               "/bento/admin/tenants/:tenantId",
               "/bento/admin/tokens/:tokenId",
-              "/bento/admin/users/:userId"
-            ],
-            "#008236": [
-              "/bento/content/object/:objectId"
+              "/bento/admin/users/:userId",
+              "/bento/admin/webhooks/:webhookId"
             ],
             "#ff5794": [
               "/bento/graphql"
@@ -427,33 +383,33 @@
           },
           "values": {
             "3.35544e+07px": {
-              "package": 1176,
-              "product": 33,
+              "package": 972,
+              "product": 39,
               "unknown": 0
             },
             "8px": {
-              "package": 846,
-              "product": 9,
+              "package": 732,
+              "product": 13,
               "unknown": 0
             },
             "16px": {
-              "package": 492,
+              "package": 438,
               "product": 0,
               "unknown": 0
             },
             "24px": {
-              "package": 183,
+              "package": 144,
               "product": 150,
               "unknown": 0
             },
             "4px": {
-              "package": 153,
+              "package": 6,
               "product": 27,
               "unknown": 9
             },
             "10px": {
               "package": 3,
-              "product": 51,
+              "product": 36,
               "unknown": 0
             },
             "6px": {
@@ -515,26 +471,20 @@
             ],
             "24px": [
               "/bento",
-              "/bento/admin/auth-providers",
               "/bento/admin/auth-providers/:authProviderId",
               "/bento/admin/email-config",
               "/bento/admin/exchange-providers",
               "/bento/admin/exchange-providers/:exchangeProviderId",
-              "/bento/admin/groups",
-              "/bento/admin/roles"
+              "/bento/admin/review",
+              "/bento/admin/roles",
+              "/bento/admin/tenants/:tenantId"
             ],
             "4px": [
-              "/bento/content/files",
               "/bento/content/object/:objectId",
               "/bento/graphql"
             ],
             "10px": [
               "/bento",
-              "/bento/admin/auth-providers/:authProviderId",
-              "/bento/admin/exchange-providers/:exchangeProviderId",
-              "/bento/admin/tenants/:tenantId",
-              "/bento/admin/tokens/:tokenId",
-              "/bento/admin/webhooks/:webhookId",
               "/bento/content/scheduled"
             ],
             "6px": [
@@ -569,48 +519,36 @@
             "unknown": 0
           },
           "values": {
-            "140": {
+            "112": {
               "package": 1,
               "product": 0,
               "unknown": 0
             },
-            "188": {
-              "package": 14,
+            "152": {
+              "package": 31,
               "product": 0,
               "unknown": 0
             },
-            "208": {
-              "package": 12,
+            "216": {
+              "package": 2,
               "product": 0,
               "unknown": 0
             },
-            "380": {
-              "package": 8,
+            "344": {
+              "package": 2,
               "product": 0,
               "unknown": 0
             }
           },
           "offenders": {
-            "140": [
+            "112": [
               "/bento/graphql"
             ],
-            "208": [
-              "/bento/admin/auth-providers",
-              "/bento/admin/exchange-providers",
-              "/bento/admin/groups",
+            "216": [
               "/bento/admin/groups/:groupId",
-              "/bento/admin/roles",
-              "/bento/admin/roles/:roleId",
-              "/bento/admin/tenants",
-              "/bento/admin/tokens"
+              "/bento/admin/roles/:roleId"
             ],
-            "380": [
-              "/bento/admin/auth-providers/:authProviderId",
-              "/bento/admin/email-config",
-              "/bento/admin/exchange-providers/:exchangeProviderId",
-              "/bento/admin/tenants/:tenantId",
-              "/bento/admin/tokens/:tokenId",
-              "/bento/admin/webhooks/:webhookId",
+            "344": [
               "/bento/content/site/import",
               "/bento/content/site/new"
             ]
@@ -624,48 +562,36 @@
             "unknown": 0
           },
           "values": {
-            "140": {
+            "112": {
               "package": 1,
               "product": 0,
               "unknown": 0
             },
-            "188": {
-              "package": 14,
+            "152": {
+              "package": 31,
               "product": 0,
               "unknown": 0
             },
-            "208": {
-              "package": 12,
+            "216": {
+              "package": 2,
               "product": 0,
               "unknown": 0
             },
-            "380": {
-              "package": 8,
+            "344": {
+              "package": 2,
               "product": 0,
               "unknown": 0
             }
           },
           "offenders": {
-            "140": [
+            "112": [
               "/bento/graphql"
             ],
-            "208": [
-              "/bento/admin/auth-providers",
-              "/bento/admin/exchange-providers",
-              "/bento/admin/groups",
+            "216": [
               "/bento/admin/groups/:groupId",
-              "/bento/admin/roles",
-              "/bento/admin/roles/:roleId",
-              "/bento/admin/tenants",
-              "/bento/admin/tokens"
+              "/bento/admin/roles/:roleId"
             ],
-            "380": [
-              "/bento/admin/auth-providers/:authProviderId",
-              "/bento/admin/email-config",
-              "/bento/admin/exchange-providers/:exchangeProviderId",
-              "/bento/admin/tenants/:tenantId",
-              "/bento/admin/tokens/:tokenId",
-              "/bento/admin/webhooks/:webhookId",
+            "344": [
               "/bento/content/site/import",
               "/bento/content/site/new"
             ]
@@ -679,59 +605,27 @@
             "unknown": 0
           },
           "values": {
-            "60": {
-              "package": 23,
+            "16": {
+              "package": 34,
               "product": 0,
               "unknown": 0
             },
             "80": {
-              "package": 12,
+              "package": 2,
               "product": 0,
               "unknown": 0
             }
           },
           "offenders": {
             "80": [
-              "/bento/admin/auth-providers",
-              "/bento/admin/exchange-providers",
-              "/bento/admin/groups",
               "/bento/admin/groups/:groupId",
-              "/bento/admin/roles",
-              "/bento/admin/roles/:roleId",
-              "/bento/admin/tenants",
-              "/bento/admin/tokens"
+              "/bento/admin/roles/:roleId"
             ]
           }
         }
       },
-      "crowded": {
-        "/bento/admin/email-config": 2,
-        "/bento/admin/review": 25,
-        "/bento/admin/tokens/:tokenId": 2,
-        "/bento/admin/webhooks/:webhookId": 2
-      },
-      "dock": {
-        "/bento": 1,
-        "/bento/admin/auth-providers": 1,
-        "/bento/admin/auth-providers/:authProviderId": 2,
-        "/bento/admin/email-config": 1,
-        "/bento/admin/exchange-providers/:exchangeProviderId": 2,
-        "/bento/admin/groups": 2,
-        "/bento/admin/marketplace": 2,
-        "/bento/admin/review": 6,
-        "/bento/admin/tenants": 1,
-        "/bento/admin/tokens": 1,
-        "/bento/admin/tokens/:tokenId": 1,
-        "/bento/admin/users": 1,
-        "/bento/admin/webhooks/:webhookId": 1,
-        "/bento/content": 2,
-        "/bento/content/files": 2,
-        "/bento/content/forms": 1,
-        "/bento/content/post-type": 8,
-        "/bento/content/trash": 4,
-        "/bento/graphql": 2,
-        "/bento/universal-editor": 5
-      }
+      "crowded": {},
+      "dock": {}
     },
     "turing": {
       "measured": null,
