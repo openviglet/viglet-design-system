@@ -17,6 +17,7 @@
     "unread": "An answer is waiting",
     "unreadCount": "Unread: {{count}}",
     "new": "New",
-    "dismiss": "Dismiss"
+    "dismiss": "Dismiss",
+    "settings": "Assistant settings"
   }
 }

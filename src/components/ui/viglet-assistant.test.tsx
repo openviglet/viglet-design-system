@@ -42,6 +42,7 @@ const KEY = {
   transcript: "assistant.transcript",
   thinking: "assistant.thinking",
   empty: "assistant.empty",
+  settings: "assistant.settings",
 }
 
 describe("VigletAssistant", () => {
@@ -88,6 +89,21 @@ describe("VigletAssistant", () => {
 
     expect(screen.getByRole("log", { name: KEY.transcript })).toBeInTheDocument()
     expect(screen.getByRole("textbox", { name: KEY.placeholder })).toBeInTheDocument()
+  })
+
+  it("offers its own settings in the open panel only when the product gives a place for them", async () => {
+    // VDS191 — the choice sits beside the thing it configures, not in the header.
+    const user = userEvent.setup()
+    const onOpenSettings = vi.fn()
+    const { rerender } = render(<VigletAssistant open />)
+    expect(screen.queryByRole("button", { name: KEY.settings })).not.toBeInTheDocument()
+
+    rerender(<VigletAssistant open onOpenSettings={onOpenSettings} />)
+    await user.click(screen.getByRole("button", { name: KEY.settings }))
+    expect(onOpenSettings).toHaveBeenCalledOnce()
+
+    rerender(<VigletAssistant open={false} onOpenSettings={onOpenSettings} />)
+    expect(screen.queryByRole("button", { name: KEY.settings })).not.toBeInTheDocument()
   })
 
   it("hands the product what was typed, and clears the draft", async () => {

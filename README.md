@@ -589,6 +589,11 @@ and a dismiss button appears on each report once you pass `onDismiss`. A report
 is announced once, when it arrives, and not again when the dock opens or
 re-renders.
 
+The assistant's own settings, such as what it reports or whether the mascot
+moves, go in the dock rather than in the header. Pass `onOpenSettings`, and the
+open panel's header shows a settings button that calls it. You open whatever
+holds the settings: a dialog, a popover or a page.
+
 It pins itself to the bottom-right of the viewport; pass `inline` to render it
 in flow and place it yourself. In a bento product, pass it to `BentoShell` as
 `dock` instead. With a rail, the shell rests it at the rail's foot, where it

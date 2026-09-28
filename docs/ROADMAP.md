@@ -12,8 +12,6 @@
 
 ## Block E — The assistant every product shares
 
-- 📋 **VDS191** (deps: —) **The assistant has no place for its own settings, so Shio puts its preferences in the header as a second bell** — A settings slot on the assistant keeps the header to the contract's set and puts the choice beside the thing it configures. → §VDS191
-
 ## Done when — VDS182
 
 - **The gradient chip renders only in entity heroes and hub tiles** Identity is the one
@@ -36,11 +34,6 @@
   lowers must be one every bento consumer reports, not only Shio.
 - **No committed route names an id or an account** The allowance is committed, so a
   concrete segment would publish product data.
-
-## Done when — VDS191
-
-- **The assistant renders a control for its own settings when given one** A product's
-  dock preferences need a home that is not the header.
 
 ## Done when — VDS192
 

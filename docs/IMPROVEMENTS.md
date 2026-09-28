@@ -155,20 +155,3 @@ count sit above the user menu. It opens as a popover anchored to the rail, and o
 phone, where there is no rail, it moves to the header's trailing edge. The second is the
 proposal, because the rail foot is empty today and costs nothing. The census's overlap
 measure is what shows it done in every consumer that mounts a dock.
-
-### §VDS191 A place for the assistant's own settings
-
-Shio lets each person choose what the assistant dock reports and whether the mascot
-animates (its SH971). Those preferences belong to the dock, and the authoring contract
-says a surface's own controls belong to the surface rather than to the header. But
-neither the assistant nor the user menu has anywhere to put them. `VigletAssistant`
-takes messages, reports, unread state and callbacks, and no action of its own.
-`BentoUserMenu` takes the account, sign-out, organisations, tenant-admin, shortcuts and
-tour routes and nothing else. So Shio renders the preferences as a bell-with-a-cog
-button in the header, beside the tenant switch and the user menu. That reads as a second
-notification affordance next to the mascot, which the 2026-09-28 review first took it
-for. A product that wants the same thing, a reader choosing what the assistant tells
-them, will make the same choice. The proposal is a slot on the assistant for its own
-settings, such as an `onOpenSettings` callback drawn as a small control in the panel's
-header. It keeps the header to the set the contract names, and it puts the choice next
-to the thing it configures.

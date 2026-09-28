@@ -1,4 +1,4 @@
-import { IconX } from "@tabler/icons-react";
+import { IconSettings, IconX } from "@tabler/icons-react";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -88,6 +88,12 @@ export interface VigletAssistantProps {
   onRead?: (id: string) => void;
   /** Given, each report offers to be dismissed, and this is told which. */
   onDismiss?: (id: string) => void;
+  /**
+   * VDS191 — given, the open panel's header offers the assistant's own settings
+   * (what it reports, whether the mascot moves), and this is called to open them.
+   * The settings themselves are the product's: a dialog, a page, a popover.
+   */
+  onOpenSettings?: () => void;
   /** Bump to make the mascot react to something smaller than a state change. */
   activity?: number;
   /**
@@ -274,6 +280,7 @@ export function VigletAssistant({
   unread,
   onRead,
   onDismiss,
+  onOpenSettings,
   activity = 0,
   inline = false,
   paused = false,
@@ -438,6 +445,20 @@ export function VigletAssistant({
               />
             )}
           </div>
+        )}
+
+        {/* The assistant's settings sit beside the thing they configure, so a
+            product never has to put them in the header as a second bell. */}
+        {isOpen && onOpenSettings && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="size-8 flex-none self-start"
+            aria-label={t("assistant.settings")}
+            onClick={onOpenSettings}
+          >
+            <IconSettings aria-hidden="true" size={16} />
+          </Button>
         )}
 
         {isOpen && (

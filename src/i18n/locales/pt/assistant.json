@@ -17,6 +17,7 @@
     "unread": "Uma resposta está esperando",
     "unreadCount": "Não lidas: {{count}}",
     "new": "Nova",
-    "dismiss": "Dispensar"
+    "dismiss": "Dispensar",
+    "settings": "Configurações do assistente"
   }
 }

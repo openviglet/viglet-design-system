@@ -107,6 +107,30 @@ export const StatusOnly: Story = {
 };
 
 /**
+ * `onOpenSettings`: the open panel offers the assistant's own settings (what it
+ * reports, whether the mascot moves) beside the thing they configure, so a
+ * product never puts them in the header. What opens is the product's.
+ */
+export const WithSettings: Story = {
+  args: {
+    state: "success",
+    defaultOpen: true,
+    caption: "Published 12 pages to the live site.",
+  },
+  render: function Render(args) {
+    const [asked, setAsked] = useState(0);
+    return (
+      <Stage>
+        <p className="text-sm text-muted-foreground">
+          {asked === 0 ? "Press the cog in the panel's header." : `The product opens its settings (${asked}).`}
+        </p>
+        <Dock {...args} onOpenSettings={() => setAsked((n) => n + 1)} />
+      </Stage>
+    );
+  },
+};
+
+/**
  * `paused`: a person asked for a quiet dock. The mascot holds one frame and the
  * caption arrives whole instead of being typed, while it is still announced.
  */
