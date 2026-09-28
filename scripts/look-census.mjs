@@ -344,13 +344,15 @@ export function probe() {
   if (title) add("title-x", Math.round(title.getBoundingClientRect().left), title)
   else samples.push(["title-x", "none", -1])
 
-  // VDS133 gave the corner one owner; an interactive element under it is still covered.
+  // VDS133 gave the corner one owner; an interactive element under it is still
+  // covered. VDS185 moved the dock to its own slot (the rail's foot, or the header
+  // on a phone), so both slots are read.
   const overlaps = []
-  const corner = document.querySelector('[data-slot="bento-shell-corner"]')
-  if (corner && visible(corner)) {
-    const c = corner.getBoundingClientRect()
+  for (const slot of document.querySelectorAll('[data-slot="bento-shell-corner"], [data-slot="bento-shell-dock"]')) {
+    if (!visible(slot)) continue
+    const c = slot.getBoundingClientRect()
     for (const el of document.querySelectorAll('a[href], button, input, select, textarea, [role="button"]')) {
-      if (corner.contains(el) || !visible(el)) continue
+      if (slot.contains(el) || !visible(el)) continue
       const r = el.getBoundingClientRect()
       const w = Math.min(r.right, c.right) - Math.max(r.left, c.left)
       const h = Math.min(r.bottom, c.bottom) - Math.max(r.top, c.top)

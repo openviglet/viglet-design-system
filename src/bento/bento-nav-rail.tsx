@@ -102,7 +102,7 @@ export function BentoNavRail({
     <TooltipProvider delayDuration={200}>
       <nav
         aria-label={t("bento.nav.label", { defaultValue: "Primary" })}
-        className="fixed inset-y-0 left-0 z-40 hidden w-20 flex-col items-center gap-1 overflow-y-auto overflow-x-hidden border-r border-border/40 bg-background/55 pt-20 pb-4 backdrop-blur-xl backdrop-saturate-150 md:flex"
+        className="fixed inset-y-0 left-0 z-40 hidden w-20 flex-col items-center gap-1 overflow-y-auto overflow-x-hidden border-r border-border/40 bg-background/55 pt-20 pb-[calc(1rem+var(--bento-rail-foot,0px))] backdrop-blur-xl backdrop-saturate-150 md:flex"
       >
         <RailLink
           to={homeRoute}

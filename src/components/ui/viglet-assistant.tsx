@@ -2,7 +2,7 @@ import { IconX } from "@tabler/icons-react";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useInCornerSlot } from "@/lib/corner-slot";
+import { useDockPlacement, useInCornerSlot } from "@/lib/corner-slot";
 
 import { Button } from "./button";
 import { Input } from "./input";
@@ -280,12 +280,17 @@ export function VigletAssistant({
   size = "sm",
   className,
 }: Readonly<VigletAssistantProps>) {
-  const orbSize = resolveOrbSize(size);
-  const layout = orbLayout(orbSize);
-  const { t, i18n } = useTranslation();
   // In the shell's corner stack the shell holds the corner, so the dock is in
   // flow there and takes pointer events back from the stack that positions it.
   const slotted = useInCornerSlot();
+  // VDS185 — the shell may rest the dock at the rail's foot or in the header
+  // instead. Both have a fixed room, so the orb there is never above `sm`.
+  const placement = useDockPlacement();
+  const edge = slotted ? placement : "corner";
+  const resolved = resolveOrbSize(size);
+  const orbSize = edge === "corner" ? resolved : Math.min(resolved, VIGLET_ASSISTANT_SIZES.sm);
+  const layout = orbLayout(orbSize);
+  const { t, i18n } = useTranslation();
   const [ownOpen, setOwnOpen] = useState(defaultOpen);
   const [draft, setDraft] = useState("");
   const transcriptRef = useRef<HTMLDivElement>(null);
@@ -344,17 +349,30 @@ export function VigletAssistant({
         .filter(Boolean)
         .join(", ");
 
+  // Open in the header, the panel drops below the orb rather than growing the
+  // header, and a placeholder keeps the orb's place so the header does not shift.
+  const dropdown = edge === "header" && isOpen;
+  // The caption grows away from the edge the dock rests against: leftwards from
+  // the corner, rightwards from the rail, downwards from the header.
+  const captionAt: CSSProperties =
+    edge === "rail"
+      ? { left: layout.captionRight, bottom: layout.captionBottom, maxWidth: layout.captionMaxWidth }
+      : edge === "header"
+        ? { right: 0, top: orbSize + 8, maxWidth: layout.captionMaxWidth }
+        : { right: layout.captionRight, bottom: layout.captionBottom, maxWidth: layout.captionMaxWidth };
+
   return (
+    <>
+    {dropdown && <span aria-hidden="true" className="block flex-none" style={{ width: orbSize, height: orbSize }} />}
     <div
+      data-dock-edge={slotted ? edge : undefined}
       className={[
-        inline || slotted
-          ? "relative"
-          : "fixed bottom-5 right-5 z-50",
+        dropdown ? "absolute right-0 top-0 z-50" : inline || slotted ? "relative" : "fixed bottom-5 right-5 z-50",
         slotted ? "pointer-events-auto" : "",
         "flex flex-col",
         isOpen
           ? "w-[min(22.5rem,calc(100vw-2.5rem))] rounded-2xl border border-border bg-popover p-4 text-popover-foreground shadow-2xl"
-          : "w-[var(--vg-assistant-orb)] items-end",
+          : `w-[var(--vg-assistant-orb)] ${edge === "rail" ? "items-start" : "items-end"}`,
         className ?? "",
       ].join(" ")}
       style={{ "--vg-assistant-orb": `${orbSize}px` } as CSSProperties}
@@ -373,8 +391,8 @@ export function VigletAssistant({
           key={said}
           text={said}
           still={paused}
-          style={{ right: layout.captionRight, bottom: layout.captionBottom, maxWidth: layout.captionMaxWidth }}
-          className="pointer-events-none absolute w-max text-right text-sm font-semibold leading-snug text-foreground drop-shadow-sm"
+          style={captionAt}
+          className={`pointer-events-none absolute w-max ${edge === "rail" ? "text-left" : "text-right"} text-sm font-semibold leading-snug text-foreground drop-shadow-sm`}
         />
       )}
 
@@ -550,5 +568,6 @@ export function VigletAssistant({
         </div>
       )}
     </div>
+    </>
   );
 }

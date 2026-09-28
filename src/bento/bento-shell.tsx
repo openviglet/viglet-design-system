@@ -1,8 +1,9 @@
-import { type ReactNode, type RefObject, useEffect, useId, useRef } from "react";
+import { type CSSProperties, type ReactNode, type RefObject, useEffect, useId, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useInRouterContext, useLocation } from "react-router-dom";
 
-import { CornerSlotContext } from "@/lib/corner-slot";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { CornerSlotContext, type DockPlacement, DockPlacementContext } from "@/lib/corner-slot";
 import { cn } from "@/lib/utils";
 
 import { BentoBackToTop } from "./bento-back-to-top";
@@ -36,11 +37,13 @@ export interface BentoShellProps {
   /** The reading column. A page inside it sets no width, gutter or rhythm of its own. */
   column?: BentoShellColumn;
   /**
-   * The assistant dock, usually a `VigletAssistant`. It takes the corner, and
-   * renders in flow there without being told to.
+   * The assistant dock, usually a `VigletAssistant`. With a rail it rests at the
+   * rail's foot and opens beside it; on a phone, at the header's trailing edge;
+   * with neither, in the corner. It renders in flow wherever it rests, without
+   * being told to.
    */
   dock?: ReactNode;
-  /** Whether the back-to-top control sits in the corner, above the dock. On by default. */
+  /** Whether the back-to-top control sits in the corner, above a cornered dock. On by default. */
   backToTop?: boolean;
   /** The routed page. */
   children?: ReactNode;
@@ -75,7 +78,22 @@ export function BentoShell({
   const announcer = useRef<HTMLSpanElement>(null);
   const full = column === "full";
   const header = headerStart != null || headerEnd != null;
-  const corner = backToTop || dock != null;
+  const mobile = useIsMobile();
+  // VDS185 — the corner held the dock and reserved nothing, so the orb sat over
+  // the column's last row actions on every page. The rail's foot is a slot the
+  // shell already reserves and nothing uses; on a phone there is no rail, and the
+  // header has room at its trailing edge. The corner is what is left.
+  let dockAt: DockPlacement | null = null;
+  if (dock != null) {
+    if (mobile) dockAt = header ? "header" : "corner";
+    else dockAt = rail != null ? "rail" : "corner";
+  }
+  const corner = backToTop || dockAt === "corner";
+  const docked = (placement: DockPlacement) => (
+    <CornerSlotContext.Provider value={true}>
+      <DockPlacementContext.Provider value={placement}>{dock}</DockPlacementContext.Provider>
+    </CornerSlotContext.Provider>
+  );
 
   return (
     <div
@@ -88,6 +106,8 @@ export function BentoShell({
         rail != null && "bento-rail-gutter",
         full ? "flex h-svh flex-col overflow-hidden" : "min-h-svh",
       )}
+      // The rail pads its foot by this, so no section link ever sits under the dock.
+      style={dockAt === "rail" ? ({ "--bento-rail-foot": "4.5rem" } as CSSProperties) : undefined}
     >
       {/*
         VDS141 — the first thing a keyboard reaches, so a reader skips the rail
@@ -108,10 +128,26 @@ export function BentoShell({
 
       {rail}
 
+      {dockAt === "rail" && (
+        <div
+          data-slot="bento-shell-dock"
+          className="pointer-events-none fixed bottom-4 left-[18px] z-50 flex flex-col items-start"
+        >
+          {docked("rail")}
+        </div>
+      )}
+
       {header && (
         <header className="bento-shell-header bento-shell-bar sticky top-0 z-30 flex shrink-0 items-center justify-between gap-3 border-b border-border/40 bg-background/55 py-3 backdrop-blur-xl backdrop-saturate-150">
           <div className="flex min-w-0 items-center gap-3">{headerStart}</div>
-          <div className="flex items-center gap-2">{headerEnd}</div>
+          <div className="flex items-center gap-2">
+            {headerEnd}
+            {dockAt === "header" && (
+              <div data-slot="bento-shell-dock" className="relative flex">
+                {docked("header")}
+              </div>
+            )}
+          </div>
         </header>
       )}
 
@@ -140,7 +176,7 @@ export function BentoShell({
         >
           <CornerSlotContext.Provider value={true}>
             {backToTop && <BentoBackToTop />}
-            {dock}
+            {dockAt === "corner" && docked("corner")}
           </CornerSlotContext.Provider>
         </div>
       )}

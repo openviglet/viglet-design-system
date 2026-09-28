@@ -591,8 +591,11 @@ re-renders.
 
 It pins itself to the bottom-right of the viewport; pass `inline` to render it
 in flow and place it yourself. In a bento product, pass it to `BentoShell` as
-`dock` instead: the shell holds the corner, stacks `BentoBackToTop` above the
-dock, and keeps either from covering the other. `open` / `onOpenChange` make it controlled,
+`dock` instead. With a rail, the shell rests it at the rail's foot, where it
+opens beside the rail and covers nothing in the column. On a phone, which has no
+rail, it sits at the header's trailing edge and opens as a dropdown. With
+neither, it takes the corner under `BentoBackToTop`. At the rail or in the
+header the orb is held to `"sm"`, since both have a fixed room. `open` / `onOpenChange` make it controlled,
 Escape collapses it, and the caption is typed for everyone while a screen reader
 is handed the whole sentence at once.
 
@@ -827,9 +830,9 @@ only the layout maths does not pull CSS it never renders. It reads the preset's
 tokens, so import the preset too.
 
 `BentoShell` is the page frame. It reserves the gutter for the rail you pass,
-lays out the header's leading and trailing edges, holds the corner (the
-`VigletAssistant` you pass as `dock`, with `BentoBackToTop` stacked above it;
-`backToTop={false}` drops the button), and owns `main`: the width, the gutters
+lays out the header's leading and trailing edges, rests the `VigletAssistant`
+you pass as `dock` at the rail's foot (the header on a phone), holds the corner
+for `BentoBackToTop` (`backToTop={false}` drops it), and owns `main`: the width, the gutters
 and the vertical rhythm. A page
 inside it sets none of those. Choose the width by name with `column`: `default`,
 `narrow` for a single-question form, `wide` for a table, or `full` for a tool

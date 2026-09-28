@@ -361,6 +361,59 @@ describe("BentoShell", () => {
     expect(screen.getByRole("main")).not.toContainElement(dock)
   })
 
+  // VDS185 — the corner held the dock and reserved nothing, so the orb covered
+  // row actions in the column. With a rail it rests at the rail's foot.
+  const dockOf = () => screen.getByRole("button", { name: /assistant\.open|open/i }).closest("[data-dock-edge]")!
+  const rail = <BentoNavRail groups={groups} homeRoute="/bento" homeLabel="Home" />
+
+  it("rests the dock at the rail's foot when there is a rail, and leaves the corner to back-to-top", () => {
+    const { container } = draw(
+      <BentoShell rail={rail} dock={<VigletAssistant caption="Ready" size="lg" />}>page</BentoShell>,
+    )
+    const foot = container.querySelector<HTMLElement>("[data-slot='bento-shell-dock']")!
+    const corner = container.querySelector<HTMLElement>("[data-slot='bento-shell-corner']")!
+
+    expect(foot).toHaveClass("fixed", "bottom-4", "pointer-events-none")
+    expect(foot).toContainElement(dockOf() as HTMLElement)
+    expect(dockOf()).toHaveAttribute("data-dock-edge", "rail")
+    expect(corner).not.toContainElement(dockOf() as HTMLElement)
+    expect(corner).toContainElement(screen.getByRole("button", { name: /back ?to ?top/i }))
+    // The rail's foot has a fixed room, so a large orb is held to the small one.
+    expect((dockOf() as HTMLElement).style.getPropertyValue("--vg-assistant-orb")).toBe("44px")
+    // The rail pads its foot by what the shell reserves, so no link sits under the dock.
+    expect(container.querySelector<HTMLElement>("[data-slot='bento-shell']")!.style.getPropertyValue("--bento-rail-foot")).toBe("4.5rem")
+  })
+
+  it("keeps the dock in the corner when there is no rail", () => {
+    draw(<BentoShell dock={<VigletAssistant caption="Ready" />}>page</BentoShell>)
+
+    expect(dockOf()).toHaveAttribute("data-dock-edge", "corner")
+  })
+
+  it("moves the dock to the header's trailing edge on a phone, where there is no rail", () => {
+    vi.spyOn(window, "matchMedia").mockImplementation(
+      (query: string) =>
+        ({
+          matches: query.includes("max-width"),
+          media: query,
+          addEventListener: vi.fn(),
+          removeEventListener: vi.fn(),
+        }) as unknown as MediaQueryList,
+    )
+    draw(
+      <BentoShell rail={rail} headerEnd={<button type="button">Account</button>} dock={<VigletAssistant caption="Ready" />}>
+        page
+      </BentoShell>,
+    )
+
+    const header = screen.getByRole("banner")
+    expect(header).toContainElement(dockOf() as HTMLElement)
+    expect(dockOf()).toHaveAttribute("data-dock-edge", "header")
+    // After the product's own trailing controls: the header's far edge.
+    const account = screen.getByRole("button", { name: "Account" })
+    expect(account.compareDocumentPosition(dockOf()) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
   it("leaves both in their own corner outside a shell", () => {
     draw(
       <>

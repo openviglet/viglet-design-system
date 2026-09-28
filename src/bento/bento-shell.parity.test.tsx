@@ -190,3 +190,71 @@ describe("BentoShell's corner", () => {
     expect(c.left).toBeGreaterThanOrEqual(0)
   })
 })
+
+/**
+ * VDS185 — the dock at the rail's foot, measured the way the look census measures
+ * it: no interactive element outside the dock's slot may sit under the slot.
+ *
+ * The corner held the dock and reserved nothing, so in the Shio console the orb
+ * covered the last row action in a table on every 1440 x 900 page. Here a page
+ * puts a row of actions flush with the column's bottom-right edge, the place the
+ * corner used to cover, and a rail full enough to reach the dock.
+ */
+describe("BentoShell's dock at the rail's foot", () => {
+  const overlap = (a: DOMRect, b: DOMRect) =>
+    Math.min(a.right, b.right) - Math.max(a.left, b.left) > 4 &&
+    Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 4
+
+  it.each([
+    ["desktop", 1440, 900],
+    ["laptop", 1024, 640],
+  ] as const)("covers no control on %s", async (_, width, height) => {
+    await page.viewport(width, height)
+    const links = Array.from({ length: 9 }, (_, i) => (
+      <a key={i} href={`#s${i}`} className="grid h-11 w-11 shrink-0 place-items-center">
+        {i}
+      </a>
+    ))
+    const { container } = render(
+      <I18nextProvider i18n={i18next}>
+        <MemoryRouter>
+          <BentoShell
+            rail={
+              <nav
+                aria-label="Primary"
+                className="fixed inset-y-0 left-0 z-40 flex w-20 flex-col items-center gap-1 overflow-y-auto pt-20 pb-[calc(1rem+var(--bento-rail-foot,0px))]"
+              >
+                {links}
+              </nav>
+            }
+            dock={<VigletAssistant caption="Ready" />}
+          >
+            <div style={{ minHeight: height - 40, display: "flex", flexDirection: "column", justifyContent: "flex-end" }}>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <button type="button">First</button>
+                <button type="button">Revert</button>
+                <button type="button">Delete</button>
+              </div>
+            </div>
+          </BentoShell>
+        </MemoryRouter>
+      </I18nextProvider>,
+    )
+    window.scrollTo(0, 0)
+    const slot = container.querySelector<HTMLElement>("[data-slot='bento-shell-dock']")!
+    await expect.poll(() => slot.getBoundingClientRect().height).toBeGreaterThan(0)
+    const s = slot.getBoundingClientRect()
+
+    const controls = [...container.querySelectorAll<HTMLElement>("a[href], button")].filter((el) => !slot.contains(el))
+    expect(controls.length, "there is something to cover").toBeGreaterThan(10)
+    for (const el of controls) {
+      const r = el.getBoundingClientRect()
+      if (r.width === 0 || r.bottom < 0 || r.top > height) continue
+      expect(overlap(r, s), `the dock covers ${el.textContent || el.getAttribute("aria-label")}`).toBe(false)
+    }
+    // It rests inside the rail's column and on screen.
+    expect(s.left).toBeGreaterThanOrEqual(0)
+    expect(s.right).toBeLessThanOrEqual(5 * REM)
+    expect(s.bottom).toBeLessThanOrEqual(height)
+  })
+})

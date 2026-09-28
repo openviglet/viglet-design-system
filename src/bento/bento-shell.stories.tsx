@@ -110,9 +110,10 @@ export const ShellNarrowColumn: Story = {
 };
 
 /**
- * The corner, with the assistant dock in it. The dock takes the corner and the
- * back-to-top control stacks above it once the page has scrolled, so neither
- * covers the other.
+ * The assistant dock at the foot of the rail (VDS185). It opens beside the rail,
+ * so it never covers a row action in the column, and the back-to-top control has
+ * the corner to itself once the page has scrolled. At phone width the dock moves
+ * to the header's trailing edge.
  */
 export const ShellWithDock: Story = {
   render: () => (
@@ -123,7 +124,8 @@ export const ShellWithDock: Story = {
     >
       <h1 className="text-2xl font-semibold tracking-tight">A long page</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Scroll down: the back-to-top control appears above the dock.
+        The dock rests at the foot of the rail. Scroll down: the back-to-top control
+        appears in the corner, which the dock no longer holds.
       </p>
       <div className="mt-6 min-h-[150vh]" />
     </BentoShell>

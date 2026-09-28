@@ -11,8 +11,6 @@
 
 ## Block E — The assistant every product shares
 
-- 📋 **VDS185** (deps: VDS180 ✅) **The shell owns the dock's corner but reserves nothing there, so the orb covers row actions in the column** — Resting the dock at the rail's foot, a slot the shell already reserves, keeps one voice for notices and can never hide a control. → §VDS185
-
 ## Done when — VDS182
 
 - **The gradient chip renders only in entity heroes and hub tiles** Identity is the one

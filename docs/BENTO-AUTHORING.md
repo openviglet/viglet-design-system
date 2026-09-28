@@ -42,10 +42,12 @@ and the palette is the mobile one, and a second eats the width the content needs
 not a home for one surface's controls: a switcher or a pending count belongs to the surface
 that owns it, not to every page that renders beneath it.
 
-**The corner is the shell's.** The assistant dock, passed as `dock`, takes it, and
-`BentoBackToTop` stacks above the dock. Neither is fixed to the viewport inside the shell:
-two components each pinning themselves to one corner is how the dock came to cover the
-button.
+**The corner and the dock's place are the shell's.** Pass the assistant as `dock`. With a
+rail it rests at the rail's foot and opens beside the rail; on a phone it sits at the
+header's trailing edge; with neither it takes the corner. `BentoBackToTop` keeps the
+corner. Nothing is fixed to the viewport inside the shell. Two components each pinning
+themselves to one corner is how the dock came to cover the button, and a corner that
+reserves no room is how it came to cover the column's last row actions.
 
 **The shell owns the reading column.** `main` sets the max width, the gutters and the
 vertical rhythm once, so every page begins and ends on the same line; a page sets none of

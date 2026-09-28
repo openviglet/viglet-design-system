@@ -17,3 +17,19 @@ export const CornerSlotContext = createContext(false);
 export function useInCornerSlot(): boolean {
   return useContext(CornerSlotContext);
 }
+
+/**
+ * VDS185 — where the shell rests the assistant dock. The corner held it and
+ * reserved nothing, so the orb sat over the column's last row actions. With a
+ * rail it rests at the rail's foot, which is empty; on a phone, where there is
+ * no rail, at the header's trailing edge; with neither, in the corner as before.
+ * The dock reads this to grow its caption and its panel into the page rather
+ * than off the edge it rests against.
+ */
+export type DockPlacement = "corner" | "rail" | "header";
+
+export const DockPlacementContext = createContext<DockPlacement>("corner");
+
+export function useDockPlacement(): DockPlacement {
+  return useContext(DockPlacementContext);
+}
