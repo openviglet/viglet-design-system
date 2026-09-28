@@ -38,8 +38,11 @@ To enable it for everyone working in a repository, commit it in `.claude/setting
 }
 ```
 
-The server is started with `npx --no-install viglet-ds-mcp`, so it needs the package
-installed in the repository and never downloads one.
+The server is started by a small launcher in the plugin, which finds the package where the
+repository installs it: at the root, in a declared workspace, or in a directory up to two
+levels down, as a web client beside a Java build usually is. It then runs that copy's own
+`viglet-ds-mcp`, so it needs the package installed and never downloads one. Where it finds
+none it says where it looked.
 
 ## The artboards stay on disk
 

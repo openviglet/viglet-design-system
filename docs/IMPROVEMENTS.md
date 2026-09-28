@@ -109,27 +109,6 @@ release that warned. Before shipping, run viglet-ds-check-duplicates and a type-
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
 
-### §VDS175 The plugin finds a workspace installation
-
-Measured in Shio after it enabled `viglet-ds` (SH944). The plugin's `.mcp.json` starts
-the server as `npx --no-install viglet-ds-mcp`, and Claude Code runs it at the project
-root. Shio installs the package in its `shio-react` workspace, not at the root, so the
-bin is not on the root's path. `npx --no-install` then falls through to the registry and
-answers `E404`. The skill's fallback sentence points at
-`node_modules/@viglet/viglet-design-system/docs/`, which does not exist at that root
-either. Turing and Dumont have the same layout, so this is the ordinary monorepo
-consumer, not an edge case.
-
-The hook and `/viglet-ds-check` already do the right thing: one resolves the package
-from the file being written, the other from the package that installs it. The server
-needs the same idea. It can start from a small launcher in the plugin that finds the
-installation from the project root, the way `use:local` finds consumers: the register,
-then workspace globs. Or it can take the consumer's package directory as an argument.
-The skill's fallback should name the path it found, or say how to find one.
-
-The assertion is the server answering `initialize` when started from a workspace-root
-fixture that installs the package one level down.
-
 ### §VDS178 The fourth shape on the canvas
 
 `docs/BENTO-AUTHORING.md` closes by pointing at `docs/reference/`: eight artboards, one

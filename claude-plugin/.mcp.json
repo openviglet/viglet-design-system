@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "viglet-ds": {
-      "command": "npx",
-      "args": ["--no-install", "viglet-ds-mcp"]
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/server/launch.mjs"]
     }
   }
 }

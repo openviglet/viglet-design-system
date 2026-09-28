@@ -26,6 +26,7 @@ package this repository has installed, so what it says matches that release.
 package ships. A write that declares a name the package exports is denied, with the import
 to use instead.
 
-If the server does not answer, the installed package predates it or is outside the range in
-the plugin's `package.json` (`supportedPackage`). The same documents are in
-`node_modules/@viglet/viglet-design-system/docs/`.
+If the server does not answer, its log names where it looked for the package, or the
+installed release predates the server. The same documents are in the installed package's
+`docs/`: `node_modules/@viglet/viglet-design-system/docs/` under whichever directory installs
+it, which in a monorepo is a workspace such as the web client, not the repository root.

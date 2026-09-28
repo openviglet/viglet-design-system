@@ -5,6 +5,7 @@ import { join, resolve } from "node:path"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
 
 import { contentAfter, withinRange } from "../claude-plugin/hooks/duplicate-guard.mjs"
+import { BIN, chooseInstallation, findInstallations } from "../claude-plugin/server/launch.mjs"
 
 // VDS135 — the design system as a Claude Code plugin.
 //
@@ -79,14 +80,17 @@ describe("the plugin's manifests", () => {
   })
 
   // VDS136 — the catalogue server, started from the consumer's own install.
-  it("wire the MCP server to the bin the package ships", () => {
+  // VDS175 — through a launcher that finds that install below the root.
+  it("wire the MCP server to a launcher that runs the bin the package ships", () => {
     const server = json(join(plugin, ".mcp.json")).mcpServers["viglet-ds"]
     expect(server, "the skill names the server viglet-ds").toBeDefined()
-    const bins = Object.keys(json(join(root, "package.json")).bin)
-    expect(bins).toContain(server.args.at(-1))
+    expect(server.command).toBe("node")
+    const [launcher] = server.args.map((arg: string) => arg.replace("${CLAUDE_PLUGIN_ROOT}/", ""))
+    expect(existsSync(join(plugin, launcher)), `${launcher} is not in the plugin`).toBe(true)
+    expect(Object.keys(json(join(root, "package.json")).bin)).toContain(BIN)
     // Never fetched from the registry: the server has to describe the release
     // the product installed, not whichever is newest.
-    expect(server.args).toContain("--no-install")
+    expect(JSON.stringify(server)).not.toMatch(/npx|npm exec/)
   })
 
   it("give the check command every check bin the package ships", () => {
@@ -94,8 +98,7 @@ describe("the plugin's manifests", () => {
     expect(frontmatter(text).description).toBeTruthy()
     // A check added to the package and not to the command is a check no session
     // runs. The server is served by .mcp.json, not run as a check.
-    const served = new Set(Object.values(json(join(plugin, ".mcp.json")).mcpServers).map((s) => (s as { args: string[] }).args.at(-1)))
-    for (const bin of Object.keys(json(join(root, "package.json")).bin).filter((b) => !served.has(b))) {
+    for (const bin of Object.keys(json(join(root, "package.json")).bin).filter((b) => b !== BIN)) {
       expect(text, `the check command does not run ${bin}`).toContain(bin)
     }
     expect(text).toMatch(/Do not fix anything without asking/)
@@ -227,5 +230,78 @@ describe("the duplicate guard", () => {
     const garbage = spawnSync(process.execPath, [guard], { input: "not json", encoding: "utf8" })
     expect(garbage.status).toBe(0)
     expect(garbage.stdout).toBe("")
+  })
+})
+
+describe("the server launcher", () => {
+  // VDS175 — Claude Code starts the server at the project root, and a monorepo
+  // consumer installs the package in a workspace one level down.
+  const launcher = join(plugin, "server", "launch.mjs")
+  let project: string
+
+  /** An installed copy of the package under `dir`, carrying the real server and a one-component catalogue. */
+  function installIn(dir: string, version = "2026.3.12") {
+    const installed = join(project, dir, "node_modules", "@viglet", "viglet-design-system")
+    mkdirSync(join(installed, "dist"), { recursive: true })
+    mkdirSync(join(installed, "scripts"), { recursive: true })
+    writeFileSync(
+      join(installed, "package.json"),
+      JSON.stringify({
+        name: "@viglet/viglet-design-system",
+        version,
+        bin: { [BIN]: "./scripts/mcp.mjs" },
+        exports: { "./exports.json": "./dist/exports.json" },
+      }),
+    )
+    writeFileSync(join(installed, "dist", "exports.json"), JSON.stringify({ name: "@viglet/viglet-design-system", version, entries: {} }))
+    writeFileSync(
+      join(installed, "dist", "catalogue.json"),
+      JSON.stringify({ name: "@viglet/viglet-design-system", version, components: [] }),
+    )
+    copyFileSync(join(root, "scripts", "mcp.mjs"), join(installed, "scripts", "mcp.mjs"))
+    return installed
+  }
+
+  beforeEach(() => {
+    project = mkdtempSync(join(tmpdir(), "vds-plugin-launch-"))
+    writeFileSync(join(project, "package.json"), '{"name":"monorepo"}')
+  })
+
+  afterEach(() => {
+    rmSync(project, { recursive: true, force: true })
+  })
+
+  it("answers initialize from a root whose package is installed one level down", () => {
+    installIn("shio-react")
+    const run = spawnSync(process.execPath, [launcher], {
+      cwd: project,
+      env: { ...process.env, CLAUDE_PROJECT_DIR: "" },
+      input: `${JSON.stringify({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2025-06-18" } })}\n`,
+      encoding: "utf8",
+    })
+    expect(run.stderr).toBe("")
+    const reply = JSON.parse(run.stdout.trim().split("\n")[0])
+    expect(reply).toMatchObject({ id: 1, result: { serverInfo: { name: "viglet-ds", version: "2026.3.12" } } })
+  })
+
+  it("finds a declared workspace before a directory it only happens to reach", () => {
+    writeFileSync(join(project, "package.json"), JSON.stringify({ name: "monorepo", workspaces: ["apps/*"] }))
+    const declared = installIn(join("apps", "console"))
+    const stray = installIn("aaa-legacy")
+    expect(findInstallations(project).map((i) => i.packageRoot)).toEqual([declared, stray])
+  })
+
+  it("serves the nearest release the plugin supports, and says where it looked when there is none", () => {
+    const old = installIn("aaa-old", "2026.2.9")
+    const current = installIn("web")
+    expect(chooseInstallation(findInstallations(project))?.packageRoot).toBe(current)
+    expect(chooseInstallation([{ packageRoot: old, version: "2026.2.9" }])?.packageRoot).toBe(old)
+
+    rmSync(join(project, "aaa-old"), { recursive: true, force: true })
+    rmSync(join(project, "web"), { recursive: true, force: true })
+    const run = spawnSync(process.execPath, [launcher], { cwd: project, env: { ...process.env, CLAUDE_PROJECT_DIR: "" }, encoding: "utf8" })
+    expect(run.status).toBe(1)
+    expect(run.stderr).toContain("no installation of @viglet/viglet-design-system under")
+    expect(run.stderr).toContain("2 levels down")
   })
 })

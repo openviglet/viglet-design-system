@@ -235,6 +235,8 @@
   checked **Two regions at desktop width, one pane and a labelled switch on a phone** bento-split-page.test.tsx renders both widths, and the phone test keeps a typed value across the switch.
 - ✅ **VDS174** **BentoDataTable takes no selection in, so a page cannot select every row or invert the selection** — BentoDataTable takes a controlled selectedIds beside onSelectionChange, so a page can select all or invert with no remount; a scope change still clears it.
   checked **A selection passed in is the one drawn, and a new set redraws with no remount** bento-data-table.test.tsx passes a set, inverts it on rerender and reads the same grid element ticking the new rows.
+- ✅ **VDS175** **the plugin's MCP server cannot start where the package is installed in a workspace, not at the root** — The plugin starts its server through a launcher that finds the package at the root, in a workspace or two levels down, and runs that copy (design recorded in `claude-plugin/server/launch.mjs`).
+  checked **The server answers initialize from a root that installs the package a level down** scripts/claude-plugin.test.ts starts the launcher at a fixture root whose web workspace installs the package, and reads the reply.
 
 ## Block G — The package knows one chrome
 

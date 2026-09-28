@@ -203,7 +203,9 @@ against the working tree, and denies a write that declares a component the
 package already exports, naming the import to use instead.
 
 The catalogue server is a bin of its own, `viglet-ds-mcp`, so any MCP client can
-start it from a product's install. It has two tools: `find_component` ranks the
+start it from a product's install. The plugin finds that install below the
+repository root, so a package installed in a workspace, such as a web client
+beside a Java build, is served too. It has two tools: `find_component` ranks the
 components that do a job, and `read_component` returns one component's purpose,
 props, the contract sections that govern it and an import to start from. The
 authoring contract, the boundary and the token reference are resources
