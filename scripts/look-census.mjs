@@ -433,6 +433,37 @@ export function probe() {
 }
 
 // ---------------------------------------------------------------------------
+// Two reads of one page (VDS188)
+
+/**
+ * What two reads of the same page agree on. Two runs against an unchanged console
+ * disagreed on radii, fills and dock overlaps, because whatever was still moving
+ * was read mid-flight. So every route is read twice and a value counts only when
+ * both reads saw it, as many times as the scarcer read saw it. A value seen by one
+ * read alone is reported as unstable instead of counted.
+ *
+ * Samples are the probe's `[figure, value, chain]`; the chain is not compared,
+ * since it indexes each read's own table.
+ */
+export function agree(first, second) {
+  const key = (s) => `${s[0]} ${s[1]}`
+  const left = new Map()
+  for (const s of second) left.set(key(s), (left.get(key(s)) ?? 0) + 1)
+  const samples = []
+  for (const s of first) {
+    const n = left.get(key(s)) ?? 0
+    if (n > 0) {
+      samples.push(s)
+      left.set(key(s), n - 1)
+    }
+  }
+  const seenFirst = new Set(first.map(key))
+  const seenSecond = new Set(second.map(key))
+  const unstable = [...new Set([...seenFirst, ...seenSecond])].filter((k) => !seenFirst.has(k) || !seenSecond.has(k))
+  return { samples, unstable: unstable.sort() }
+}
+
+// ---------------------------------------------------------------------------
 // Readings: tally, allowance, comparison
 
 /**
@@ -558,6 +589,9 @@ async function walkConsumer(chromium, start, auth, log) {
     const context = await browser.newContext({
       viewport: { width: view.width, height: view.height },
       colorScheme: view.theme,
+      // bento.css turns every entry animation off under reduced motion, so a
+      // page is read at rest rather than part-way through a stagger (VDS188).
+      reducedMotion: "reduce",
     })
     if (authorization) {
       await context.route(`${origin}/**`, (route) =>
@@ -574,28 +608,61 @@ async function walkConsumer(chromium, start, auth, log) {
     return { context, page }
   }
 
+  /** Fonts loaded, nothing finite animating, and the layout still for three frames. */
+  async function settle(page) {
+    await page.evaluate(async () => {
+      await document.fonts.ready
+      const frame = () => new Promise((done) => requestAnimationFrame(() => done()))
+      const deadline = performance.now() + 3000
+      let last = ""
+      let still = 0
+      while (still < 3 && performance.now() < deadline) {
+        await frame()
+        const moving = document
+          .getAnimations()
+          .filter((a) => a.playState === "running" && a.effect?.getComputedTiming().iterations !== Infinity).length
+        const shape = `${document.body.scrollHeight}:${document.body.getElementsByTagName("*").length}:${moving}`
+        still = moving === 0 && shape === last ? still + 1 : 0
+        last = shape
+      }
+      // Focus left on whatever the page autofocused paints a ring and a state.
+      document.activeElement?.blur?.()
+    })
+  }
+
   async function read(page, url, view) {
     try {
       await page.goto(url, { waitUntil: "networkidle", timeout: 30000 })
     } catch (error) {
       return { error: `load: ${String(error.message).split("\n")[0]}` }
     }
-    await page.waitForTimeout(800)
     if (!walkable(page.url(), start)) return { error: `left the walk for ${new URL(page.url()).pathname}` }
+    await settle(page)
     const raw = await page.evaluate(probe)
+    await page.waitForTimeout(400)
+    await settle(page)
+    const again = await page.evaluate(probe)
     for (const pattern of raw.patterns) known.add(pattern)
-    const owners = await Promise.all(raw.chains.map((chain) => ownerOf(chain, raw.stacks, classify)))
+    const ownersOf = (read) => Promise.all(read.chains.map((chain) => ownerOf(chain, read.stacks, classify)))
+    const [owners, ownersAgain] = await Promise.all([ownersOf(raw), ownersOf(again)])
     const ownerAt = (i) => (i >= 0 ? owners[i] : "unknown")
+    const agreed = agree(raw.samples, again.samples)
+    // A route figure is the lower of the two reads: what was there both times.
+    const overlaps =
+      again.overlaps.length < raw.overlaps.length
+        ? again.overlaps.map((i) => (i >= 0 ? ownersAgain[i] : "unknown"))
+        : raw.overlaps.map(ownerAt)
     return {
       reading: {
         route: raw.current && !raw.current.includes("*") ? raw.current.replace(/\/+$/, "") || "/" : routeOf(raw.path, known),
         view: view.id,
         dark: raw.dark,
-        samples: raw.samples.map(([figure, value, chain]) => ({ figure, value, owner: ownerAt(chain) })),
-        primaries: raw.primaries,
-        overlaps: raw.overlaps.map(ownerAt),
-        tiles: raw.tileLists,
+        samples: agreed.samples.map(([figure, value, chain]) => ({ figure, value, owner: ownerAt(chain) })),
+        primaries: Math.min(raw.primaries, again.primaries),
+        overlaps,
+        tiles: Math.min(raw.tileLists, again.tileLists),
         mosaics: raw.mosaics.map(ownerAt).filter((owner) => owner === "package").length,
+        unstable: agreed.unstable,
       },
       links: raw.links,
     }
@@ -692,10 +759,20 @@ function printConsumer(id, walked, tallied) {
   console.log(`  routes where the corner covers a control: ${Object.keys(allowance.dock).length}`)
   const tileRoutes = Object.keys(allowance.tiles)
   console.log(`  routes with a list drawn as tiles: ${tileRoutes.length}${tileRoutes.length ? ` (${tileRoutes.join(", ")})` : ""}`)
-  if (tileRoutes.length === 0 && walked.readings.some((r) => r.mosaics > 0)) {
+  if (unmarked(walked.readings)) {
     console.log("  (the package mosaics here carry no list marker: this consumer installs a release before it, so the tile count reads 0)")
   }
+  const unstable = [...new Set(walked.readings.flatMap((r) => r.unstable ?? []))].sort()
+  if (unstable.length > 0) {
+    console.log(`  unstable, seen in one of two reads and not counted: ${unstable.length}`)
+    for (const value of unstable.slice(0, 12)) console.log(`    ${value}`)
+  }
   for (const error of walked.errors) console.log(`  not read: ${error}`)
+}
+
+/** Whether a consumer's mosaics predate the list marker, so its tile count is not one. */
+export function unmarked(readings) {
+  return readings.some((r) => (r.mosaics ?? 0) > 0) && !readings.some((r) => (r.tiles ?? 0) > 0)
 }
 
 async function main() {
@@ -767,7 +844,9 @@ async function main() {
           figures: reading.figures,
           crowded: reading.crowded,
           dock: reading.dock,
-          tiles: reading.tiles,
+          // Package mosaics with no list marker mean a release before VDS187, whose
+          // zero is not a count; leaving the key out leaves the figure ungated.
+          ...(unmarked(reading.readings) ? {} : { tiles: reading.tiles }),
         }
       } else if (!allowance.consumers[id]?.figures) {
         allowance.consumers[id] = { measured: null, reason: reading.reason }

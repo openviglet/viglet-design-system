@@ -136,6 +136,8 @@
   checked **The first reading is committed as the allowance, offenders named** Later tasks then lower a figure instead of describing an improvement.
 - ✅ **VDS187** **No reading counts the record lists each consumer still renders as tiles after the table became the default** — pnpm look:census names the routes drawing a list as tiles, from a marker every list mosaic now carries, and gates the count.
   checked **The census reports a tile-lists figure per consumer, routes named** Each record list moved to columns must lower a number the allowance holds.
+- ✅ **VDS188** **Two look census runs on an unchanged Shio disagree on radii, fills and dock overlaps** — The look census reads each route at rest and twice, counts only what both reads saw, and two back-to-back Shio runs now agree.
+  checked **Two back-to-back runs agree on every figure** Only a stable reading can hold an allowance that tasks lower.
 
 ## Block B — Bento becomes a design-system layer
 

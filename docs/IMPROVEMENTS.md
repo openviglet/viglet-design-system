@@ -69,25 +69,6 @@ route by a concrete segment rather than `:param`, the probe's route-table walk i
 `scripts/look-census.mjs` missed that router. Fix it there before recording, because an
 account name in a route would end up in a committed file.
 
-### §VDS188 A census that reads the same page the same way
-
-Two `pnpm look:census` runs against the same Shio dev server on 2026-09-28, with no
-change in between, disagreed on three figures: radii 15 then 13, saturated button fills
-4 then 5 (a `#d60590` fill appeared once), and routes where the dock covers a control 18
-then 20. A gate that moves on its own fails a task that changed nothing, and it hides a
-real change as noise.
-
-The probe reads each page 800 ms after network idle, so whatever is still moving is
-measured mid-flight. The likely sources are the shell's entry animations and the tile
-stagger, the mascot's typed caption growing the dock's box, hover and focus states left
-on the element the last navigation clicked, and toasts. The fix belongs in
-`scripts/look-census.mjs`. Open each context with `reducedMotion: "reduce"`, which
-`bento.css` honours for every animation. Wait for `document.fonts.ready` and for two
-animation frames with no layout change before reading. Move the pointer off the page.
-Then read every route twice and report a value seen in only one read as unstable, rather
-than counting it. The acceptance is two back-to-back runs that agree on every figure,
-and the allowance re-recorded from a stable run.
-
 ## Block F — What a consuming CMS needs from the package next
 
 ### §VDS152 The deprecation ends

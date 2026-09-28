@@ -2,8 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS188** (deps: VDS180 ✅) **Two look census runs on an unchanged Shio disagree on radii, fills and dock overlaps** — A reading that moves on its own fails tasks that changed nothing and hides the changes it exists to catch. → §VDS188
-
 ## Block F — What a consuming CMS needs from the package next
 
 ## Block C — One look across products
@@ -32,11 +30,6 @@
   lowers must be one every bento consumer reports, not only Shio.
 - **No committed route names an id or an account** The allowance is committed, so a
   concrete segment would publish product data.
-
-## Done when — VDS188
-
-- **Two back-to-back runs agree on every figure** Only a stable reading can hold an
-  allowance that tasks lower.
 
 ## Non-goals
 

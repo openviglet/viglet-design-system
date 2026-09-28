@@ -74,6 +74,11 @@ export declare function ownerOf(
 ): Promise<Owner>
 
 export declare function probe(): unknown
+export declare function agree(
+  first: [string, string, number][],
+  second: [string, string, number][],
+): { samples: [string, string, number][]; unstable: string[] }
+export declare function unmarked(readings: Pick<Reading, "tiles" | "mosaics">[]): boolean
 export declare function tally(readings: Reading[]): Tally
 export declare function allowanceOf(tallied: Tally): Allowance
 export declare function compare(

@@ -3,8 +3,10 @@ import { join, resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 
 import {
+  agree,
   allowanceOf,
   compare,
+  unmarked,
   decodeMappings,
   fits,
   makeClassifier,
@@ -109,6 +111,19 @@ describe("attributing an element", () => {
   })
 })
 
+describe("reading a page twice", () => {
+  // VDS188 — two runs on an unchanged console disagreed, because whatever was
+  // still moving was read mid-flight. A value counts only when both reads saw it.
+  it("keeps what both reads saw, as often as the scarcer read saw it", () => {
+    const first: [string, string, number][] = [["radius", "8px", 0], ["radius", "8px", 1], ["radius", "8px", 2], ["primary-fill", "#d60590", 3], ["radius", "12px", 4]]
+    const second: [string, string, number][] = [["radius", "12px", 0], ["radius", "8px", 1], ["radius", "8px", 2], ["radius", "6px", 3]]
+    const { samples, unstable } = agree(first, second)
+
+    expect(samples.map(([figure, value]) => `${figure} ${value}`)).toEqual(["radius 8px", "radius 8px", "radius 12px"])
+    expect(unstable).toEqual(["primary-fill #d60590", "radius 6px"])
+  })
+})
+
 describe("the allowance", () => {
   const reading = (route: string, view: string, samples: [string, string, Reading["samples"][number]["owner"]][], extra: Partial<Reading> = {}): Reading => ({
     route,
@@ -172,6 +187,11 @@ describe("the allowance", () => {
     expect(compare("shio", allowance, moved).lowered).toContain("shio routes with a list drawn as tiles: 1, allowance 2")
     const more = allowanceOf(tally([...withTiles, reading("/roles", "desktop-dark", [], { tiles: 1 })]))
     expect(compare("shio", allowance, more).grew).toContain("shio routes with a list drawn as tiles: 3, allowance 2 (new: /roles)")
+
+    // Package mosaics with no marker are a release before it, not zero lists.
+    expect(unmarked([{ mosaics: 3, tiles: 0 }, { mosaics: 1 }])).toBe(true)
+    expect(unmarked([{ mosaics: 3, tiles: 1 }])).toBe(false)
+    expect(unmarked([{ mosaics: 0, tiles: 0 }])).toBe(false)
 
     // A reading recorded before the census counted tiles does not gate the count.
     const { tiles: _unrecorded, ...older } = allowance
