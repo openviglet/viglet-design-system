@@ -23,9 +23,16 @@ import {
   IconUsers,
   IconX,
 } from "@tabler/icons-react";
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactElement, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import {
+  BentoDataTable,
+  type BentoDataTableProps,
+  type BentoDataTableAction,
+  type BentoDataTableColumn,
+  type BentoDataTableLayout,
+} from "./bento-data-table";
 import { BentoEmptyState } from "./bento-empty-state";
 import { BentoHero } from "./bento-hero";
 import {
@@ -66,7 +73,8 @@ export interface BentoListPageProps<T> {
   backTo?: string;
   /** Label for the {@link backTo} back-link. */
   backLabel?: ReactNode;
-  heroIcon: TablerIcon;
+  /** The hero's icon chip. Optional: a list of records names no single thing. */
+  heroIcon?: TablerIcon;
   title: string;
   subtitle: string;
   /** Tone driving the hero chip + New-tile gradient. Default `indigo`. */
@@ -87,8 +95,32 @@ export interface BentoListPageProps<T> {
 
   // --- items ---
   itemKey: (item: T) => string;
-  /** Render one item's tile at the resolved {@link BentoEmphasis} size. */
-  renderTile: (item: T, emphasis: BentoEmphasis) => ReactNode;
+
+  // --- rows: the default (VDS183) ---
+  /**
+   * The table's columns, as {@link BentoDataTable} takes them. A list renders as
+   * a table unless it passes {@link renderTile}: records a reader compares, such
+   * as users, roles, tokens or webhooks, are rows. The create action sits in the
+   * hero, and a `BentoFilterBar` goes in {@link headerAction}, above the table.
+   */
+  columns?: readonly BentoDataTableColumn<T>[];
+  /** A menu of named actions on each row. */
+  rowActions?: readonly BentoDataTableAction<T>[];
+  /** Enter or a double click on a row, usually its detail route. */
+  onRowOpen?: (item: T) => void;
+  /** How a screen reader names one row. Defaults to its key. */
+  getRowLabel?: (item: T) => string;
+  /** Which columns the reader hid; the product stores it, as it stores a tile layout. */
+  columnLayout?: BentoDataTableLayout;
+  onColumnLayoutChange?: (layout: BentoDataTableLayout) => void;
+
+  // --- tiles: the variant ---
+  /**
+   * Render one item's tile at the resolved {@link BentoEmphasis} size. Passing it
+   * is what asks for the mosaic instead of the table, for entities a reader picks
+   * by sight or that are few: media, blueprints, a hub.
+   */
+  renderTile?: (item: T, emphasis: BentoEmphasis) => ReactNode;
 
   // --- empty state ---
   emptyTitle: string;
@@ -101,6 +133,14 @@ export interface BentoListPageProps<T> {
    */
   layout?: BentoListLayout;
 }
+
+/**
+ * The table, over the list's unconstrained `T`. BentoDataTable bounds its rows by
+ * TanStack's `RowData` (an object or an array), which every entity list already
+ * is. Putting that bound on `BentoListPage<T>` would break a product's own
+ * generic wrapper around it, so the cast sits here, once, where the two meet.
+ */
+const ListTable = BentoDataTable as unknown as <T>(props: BentoDataTableProps<T>) => ReactElement;
 
 const BENTO_GRID_CLASS =
   "bento-grid grid auto-rows-[minmax(140px,auto)] grid-cols-2 gap-4 md:grid-cols-4 md:gap-5 lg:grid-cols-6";
@@ -128,13 +168,20 @@ export interface BentoListLayout {
 }
 
 /**
- * The reusable Bento list surface — the `bento-grid` mosaic with a
- * dashed "New" tile, an empty-state hint, and per-item {@link BentoEmphasis}
- * sizing. When a `listId` is supplied it also gains a drag-reorder + emphasis
- * **edit mode** (T575) whose layout persists through the T574 cascade
- * (per-user override → admin global template → featured=idx0 default). Every
- * entity list is this component plus a `renderTile`; the common tile shape is
- * covered by {@link BentoEntityTile}.
+ * The reusable Bento list surface: a hero over a {@link BentoDataTable} by
+ * default, or over the `bento-grid` mosaic when the page passes `renderTile`.
+ *
+ * VDS183 — the default is rows. `list.dc.html` draws the discriminator: a reader
+ * who arrives to compare many gets a table, one who arrives to pick one gets
+ * tiles. The mosaic used to be the only shape, so products rendered users and
+ * tokens as cards nobody picks by picture. As a table, the create action is the
+ * hero's one primary and an empty list is one inline card.
+ *
+ * The mosaic keeps its dashed "New" tile, its empty hint and per-item
+ * {@link BentoEmphasis} sizing. With a `listId` and a `layout` it also gains a
+ * drag-reorder + emphasis **edit mode** (T575) whose layout persists through the
+ * T574 cascade (per-user override → admin global template → featured=idx0
+ * default); the common tile shape is covered by {@link BentoEntityTile}.
  */
 export function BentoListPage<T>({
   items,
@@ -154,6 +201,12 @@ export function BentoListPage<T>({
   newSubtitle,
   hideNew = false,
   itemKey,
+  columns,
+  rowActions,
+  onRowOpen,
+  getRowLabel,
+  columnLayout,
+  onColumnLayoutChange,
   renderTile,
   emptyTitle,
   emptyDescription,
@@ -168,6 +221,53 @@ export function BentoListPage<T>({
     [items, itemKey, layout?.data?.entries],
   );
 
+  const leading = HeroIcon ? (
+    <span className={`grid h-12 w-12 place-items-center rounded-2xl ${chip} text-white shadow-md`}>
+      <HeroIcon size={24} />
+    </span>
+  ) : undefined;
+
+  if (!renderTile) {
+    return (
+      <LoadProvider checkIsNotUndefined={items} error={error ?? null} tryAgainUrl={tryAgainUrl}>
+        <BentoHero
+          eyebrow={eyebrow}
+          backTo={backTo}
+          backLabel={backLabel}
+          leading={leading}
+          title={title}
+          subtitle={subtitle}
+          trailing={
+            hideNew ? undefined : (
+              <Button asChild className="gap-2">
+                <Link to={newRoute}>
+                  <IconPlus size={16} />
+                  {newLabel}
+                </Link>
+              </Button>
+            )
+          }
+        />
+        {headerAction && <div className="mb-4 flex flex-wrap items-center gap-2">{headerAction}</div>}
+        {items?.length === 0 ? (
+          <BentoEmptyState icon={IconSparkles} title={emptyTitle} description={emptyDescription} />
+        ) : (
+          <ListTable
+            rows={items ?? []}
+            getRowId={itemKey}
+            columns={columns ?? []}
+            label={title}
+            getRowLabel={getRowLabel}
+            rowActions={rowActions}
+            onRowOpen={onRowOpen}
+            layout={columnLayout}
+            onLayoutChange={onColumnLayoutChange}
+          />
+        )}
+      </LoadProvider>
+    );
+  }
+
   const canCustomize = Boolean(listId) && Boolean(layout) && (items?.length ?? 0) > 0;
 
   return (
@@ -176,11 +276,7 @@ export function BentoListPage<T>({
         eyebrow={eyebrow}
         backTo={backTo}
         backLabel={backLabel}
-        leading={
-          <span className={`grid h-12 w-12 place-items-center rounded-2xl ${chip} text-white shadow-md`}>
-            <HeroIcon size={24} />
-          </span>
-        }
+        leading={leading}
         title={title}
         subtitle={subtitle}
       />

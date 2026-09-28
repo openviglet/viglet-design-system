@@ -801,6 +801,12 @@ quota, the first-run tour) and navigation data. `BentoListPage` takes a `layout`
 object rather than fetching one, because where a layout is stored is the
 product's business — its API, its cache, its mutation library.
 
+`BentoListPage` renders a table by default: pass `columns` (plus `rowActions`
+and `onRowOpen` as you would to `BentoDataTable`) and the records sit under the
+hero, with the create action as the hero's primary button. Pass `renderTile`
+to ask for the tile mosaic instead, for things a reader picks by sight. A page
+that already passes `renderTile` keeps its tiles. `heroIcon` is now optional.
+
 It is a separate entry point, so a console still on the first era carries none
 of it:
 

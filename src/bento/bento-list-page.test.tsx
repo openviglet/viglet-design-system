@@ -134,6 +134,87 @@ describe("BentoListPage", () => {
   })
 })
 
+// VDS183 — rows are the default, because most lists are records a reader
+// compares. The mosaic is what a page asks for by passing renderTile.
+describe("BentoListPage as a table, the default", () => {
+  const columns = [
+    { id: "name", header: "Name", cell: (i: Item) => i.name, sortValue: (i: Item) => i.name },
+    { id: "id", header: "Key", cell: (i: Item) => i.id },
+  ]
+
+  function table(overrides: Partial<React.ComponentProps<typeof BentoListPage<Item>>> = {}) {
+    return draw(
+      <BentoListPage<Item>
+        items={items}
+        tryAgainUrl="/users"
+        title="Users"
+        subtitle="Everyone who can sign in"
+        newRoute="/users/new"
+        newLabel="New user"
+        itemKey={(i) => i.id}
+        columns={columns}
+        getRowLabel={(i) => i.name}
+        emptyTitle="No users yet"
+        emptyDescription="Invite one to get started"
+        {...overrides}
+      />,
+    )
+  }
+
+  it("renders a table of the items when no renderTile is passed", () => {
+    table()
+
+    const grid = screen.getByRole("grid", { name: "Users" })
+    expect(grid).toBeInTheDocument()
+    expect(screen.getByRole("columnheader", { name: /Name/ })).toBeInTheDocument()
+    for (const item of items) expect(screen.getByText(item.name)).toBeInTheDocument()
+    expect(document.querySelector(".bento-grid")).toBeNull()
+  })
+
+  it("puts the create action in the hero as its one primary, with no New tile", () => {
+    table()
+
+    expect(screen.getByRole("link", { name: /New user/ })).toHaveAttribute("href", "/users/new")
+    expect(document.querySelector(".bento-new-tile")).toBeNull()
+  })
+
+  it("drops the create action for a read-only list", () => {
+    table({ hideNew: true })
+
+    expect(screen.queryByRole("link", { name: /New user/ })).not.toBeInTheDocument()
+  })
+
+  it("shows one inline empty-state card, not an empty table", () => {
+    table({ items: [] })
+
+    expect(screen.getByText("No users yet")).toBeInTheDocument()
+    expect(screen.queryByRole("grid")).not.toBeInTheDocument()
+  })
+
+  it("renders the hero without a chip when no heroIcon is given", () => {
+    table()
+
+    expect(screen.getByRole("heading", { name: "Users" })).toBeInTheDocument()
+    expect(document.querySelector(".shadow-md")).toBeNull()
+  })
+
+  it("opens a row through the product's callback", async () => {
+    const onRowOpen = vi.fn()
+    table({ onRowOpen })
+
+    const row = screen.getByText("Beta").closest("[role='row']")!
+    await userEvent.dblClick(row)
+    expect(onRowOpen).toHaveBeenCalledWith(items[1])
+  })
+
+  it("still renders the mosaic when a page asks for tiles", () => {
+    list()
+
+    expect(document.querySelector(".bento-grid")).not.toBeNull()
+    expect(screen.queryByRole("grid")).not.toBeInTheDocument()
+  })
+})
+
 describe("the customise affordance", () => {
   const layout = (over: Partial<BentoListLayout> = {}): BentoListLayout => ({
     data: { listId: "llm", source: "DEFAULT", canEditGlobal: false, entries: [] },

@@ -20,9 +20,11 @@ const models: Model[] = [
 ];
 
 /**
- * A whole list screen: one call plus a `renderTile`. The mosaic sizes the first
- * item large and widens the rest, so two consoles' grids line up without either
- * of them deciding anything.
+ * A whole list screen in one call. By default it is a table: the records a reader
+ * compares, with the create action in the hero. Passing a `renderTile` asks for
+ * the mosaic instead, for things picked by sight or that are few; it sizes the
+ * first item large and widens the rest, so two consoles' grids line up without
+ * either of them deciding anything.
  */
 const meta = {
   title: "Bento/BentoListPage",
@@ -64,6 +66,27 @@ const common = {
   emptyDescription: "Connect a provider to get started.",
 };
 
+/** The default (VDS183): no `renderTile`, so the list is rows under the hero. */
+export const Table: Story = {
+  render: () => (
+    <div className="p-6">
+      <BentoListPage<Model>
+        {...common}
+        renderTile={undefined}
+        heroIcon={undefined}
+        items={models}
+        getRowLabel={(m) => m.name}
+        columns={[
+          { id: "name", header: "Name", cell: (m) => m.name, sortValue: (m) => m.name, width: "minmax(12rem, 2fr)" },
+          { id: "provider", header: "Provider", cell: (m) => m.note, sortValue: (m) => m.note },
+          { id: "enabled", header: "Enabled", cell: (m) => (m.enabled ? "Yes" : "No") },
+        ]}
+      />
+    </div>
+  ),
+};
+
+/** The mosaic, which a page asks for by passing `renderTile`. */
 export const Populated: Story = {
   render: () => (
     <div className="p-6">

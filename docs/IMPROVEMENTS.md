@@ -69,6 +69,23 @@ route by a concrete segment rather than `:param`, the probe's route-table walk i
 `scripts/look-census.mjs` missed that router. Fix it there before recording, because an
 account name in a route would end up in a committed file.
 
+### §VDS187 Counting the lists still drawn as tiles
+
+VDS183 made the table the default for `BentoListPage`, but every consumer that passes
+`renderTile` still gets tiles, and nothing counts how many of those are record lists a
+reader compares rather than picks. The Shio walk named users, groups, roles, tokens,
+providers, webhooks and tenants. Nobody has counted Turing and Dumont.
+
+`pnpm look:census` already walks every route and reads React fibers, so it can report
+this without a second walker. In the probe, find the fibers whose component is
+`BentoListPage` (the owner chain already resolves package frames) and record, per route,
+whether it rendered the mosaic (`.bento-grid` under it) or the table (`[role=grid]`).
+The census then prints a `tile-lists` figure per consumer, with the routes named, and
+the allowance holds it like any other figure. The figure only goes down: each product
+moving a record list to `columns` lowers it with `--write`. A media or blueprint list
+that stays tiles on purpose is still counted. The number is a prompt to look, not a
+verdict, which is why the routes are named beside it.
+
 ## Block F — What a consuming CMS needs from the package next
 
 ### §VDS152 The deprecation ends
@@ -125,25 +142,6 @@ steps down to a size that leaves the fold to the work. The reference artboards n
 it (solid cards, 16 px hero titles, the chip on hero only) and map states to tones:
 published emerald, draft slate, scheduled violet, changed amber, archived neutral.
 Components follow the review.
-
-### §VDS183 Record lists default to a table
-
-`list.dc.html` draws the right discriminator: a reader who arrives to pick one gets
-tiles, and a reader who arrives to compare many gets a table inside a panel, under the
-same hero. The authoring contract states the default the other way. A list screen "is
-one BentoListPage call with a renderTile", `renderTile` and `heroIcon` are required, and
-the table is the exception a page argues for. Products follow the default. The Shio
-console renders users, groups, roles, tokens, providers, webhooks and tenants as tiles,
-which is records nobody picks by picture, where one user fills a 390 x 300 card and
-fifteen sites become a mosaic in which the first is visually more important for no
-reason the data gives. The change flips the default without removing tiles.
-`BentoListPage` takes the columns and row actions that `BentoDataTable` takes and
-renders a table under its hero, with the create action as the header's one primary and
-`BentoFilterBar` above. Tiles become the variant a page opts into, for entities that are
-genuinely visual or few: media, blueprints, a hub. The empty and one-row states get an
-inline empty-state card instead of a lone tile. `BENTO-AUTHORING.md` and `list.dc.html`
-are rewritten to say the same thing in the same order, and the census reports how many
-record lists still render as tiles in each consumer.
 
 ## Block E — The assistant every product shares
 

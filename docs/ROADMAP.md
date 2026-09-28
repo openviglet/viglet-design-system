@@ -3,14 +3,13 @@
 ## Block A — The gate the design system never had
 
 - 📋 **VDS186** (deps: VDS180 ✅) **Turing, Dumont and roadkeep-gui have no look reading, so their drift fails nothing** — A reading per consumer is what lets a look fix land in the package instead of in whichever product was measured first. → §VDS186
+- 📋 **VDS187** (deps: VDS183 ✅) **No reading counts the record lists each consumer still renders as tiles after the table became the default** — A counted, named figure is what turns the new default into a migration each product can see and lower. → §VDS187
 
 ## Block F — What a consuming CMS needs from the package next
 
 - 📋 **VDS184** (deps: —) **A hero's way back names one parent, so a post five folders deep does not say where the reader is** — An optional ancestor trail where the back link sits gives a nested CMS a location without a second nav, and leaves flat products unchanged. → §VDS184
 
 ## Block C — One look across products
-
-- 📋 **VDS183** (deps: VDS180 ✅) **BentoListPage requires renderTile, so products render records nobody picks by picture as a tile mosaic** — A table by default, with tiles as the variant for visual or few entities, makes list.dc.html's discriminator the path of least resistance. → §VDS183
 
 ## Block E — The assistant every product shares
 
@@ -24,13 +23,6 @@
   state is readable; colour per area is noise.
 - **The reference artboards are redrawn from preset tokens first** The direction is
   reviewed as composition before a component changes.
-
-## Done when — VDS183
-
-- **BentoListPage renders a table by default, tiles only when asked** The default is
-  what products do, so it has to be the right answer.
-- **BENTO-AUTHORING.md and list.dc.html state the same default** Two sources saying
-  different things is how the drift started.
 
 ## Done when — VDS184
 
@@ -52,6 +44,11 @@
   lowers must be one every bento consumer reports, not only Shio.
 - **No committed route names an id or an account** The allowance is committed, so a
   concrete segment would publish product data.
+
+## Done when — VDS187
+
+- **The census reports a tile-lists figure per consumer, routes named** Each record list
+  moved to columns must lower a number the allowance holds.
 
 ## Non-goals
 

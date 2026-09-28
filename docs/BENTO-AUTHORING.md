@@ -83,12 +83,18 @@ receiving `{ staged, onStateChange }` and groups its fields in
 `BentoFormSection`s. Wire the query hooks in the page and put no shell mechanics
 there.
 
-**A list screen** is one `BentoListPage` call with a `renderTile`. Use
-`BentoEntityTile` for the common icon-chip + status-pill + title + meta shape;
-hand-roll a tile only when the entity genuinely needs a different layout.
+**A list screen** is one `BentoListPage` call, and by default it is a table. Ask
+first whether the reader arrives to **compare many** or to **pick one**. Comparing
+is rows: users, roles, tokens, webhooks, providers, anything a reader scans down a
+column. Pass `columns` (and `rowActions`, `onRowOpen`), and the page renders a
+`BentoDataTable` under its hero with the create action as the hero's one primary.
+An empty list is one inline card. Picking is tiles: media, blueprints, a hub, or a
+handful of things a reader tells apart by sight. Pass `renderTile` to ask for the
+mosaic, and use `BentoEntityTile` for the common tile shape. Hand-roll a tile only
+when the entity genuinely needs a different layout.
 
-A list a reader sorts, selects a range of and acts on in bulk, or one that runs
-to thousands of rows, is `BentoDataTable` instead. It mounts only the visible rows,
+A table with selection and bulk actions, or one inside a page that already has its
+own hero, is `BentoDataTable` on its own. It mounts only the visible rows,
 its headers sort and say how, a row is reachable and selectable from the keyboard,
 and row actions are a menu of named items. Pass the rows, the columns and the
 actions, and store the column layout it reports. Never build a table from `Table`
