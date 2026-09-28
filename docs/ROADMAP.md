@@ -6,6 +6,8 @@
 
 ## Block C — One look across products
 
+- 📋 **VDS194** (deps: —) **The package stylesheet ships compiled utilities like .hidden, which beat a consumer's lg:block and hide its content** — Shipping no utility a consumer also generates, or layering them, keeps the ordinary responsive idiom working in every product. → §VDS194
+
 ## Block E — The assistant every product shares
 
 ## Done when — VDS182
@@ -30,6 +32,11 @@
   lowers must be one every bento consumer reports, not only Shio.
 - **No committed route names an id or an account** The allowance is committed, so a
   concrete segment would publish product data.
+
+## Done when — VDS194
+
+- **hidden lg:block shows its element at a large viewport in a consumer** That is the
+  idiom that failed silently in Shio.
 
 ## Non-goals
 

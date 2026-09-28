@@ -107,6 +107,26 @@ it (solid cards, 16 px hero titles, the chip on hero only) and map states to ton
 published emerald, draft slate, scheduled violet, changed amber, archived neutral.
 Components follow the review.
 
+### §VDS194 Utilities belong to the consumer
+
+`dist/viglet-design-system.css` ships compiled Tailwind utilities alongside the
+components: `.block`, `.flex`, `.grid`, `.hidden` and the rest the package's own sources
+use. A consumer's stylesheet compiles the same utilities from its own sources, so the
+page ends up with two copies of `.hidden { display: none }`, and whichever loads later,
+or sits outside a cascade layer, wins. In the Shio console on 2026-09-28 the package's
+copy won. A new folder tree written as `hidden lg:block` rendered with `display: none`
+at 1440 px, although the served CSS contained the `lg:block` rule, because the package's
+`.hidden` beat the consumer's layered responsive variant. The workaround that shipped is
+`max-lg:hidden`, which never needs to beat a base class. But every consumer writing the
+ordinary Tailwind idiom, hidden at small widths and shown at large ones, meets the same
+silent failure, and it looks like a Tailwind bug rather than a package one. The package
+should not ship utility classes a consumer also generates. It can compile its
+components' styles against a prefix, emit them inside `@layer utilities` so the
+consumer's variants order correctly, or leave utilities to the consumer entirely and
+ship only component CSS. The check that closes it renders `hidden lg:block` in a
+consumer fixture with the package stylesheet loaded and asserts the element is shown at
+a large viewport.
+
 ## Block E — The assistant every product shares
 
 ### §VDS185 The dock rests at the foot of the rail
