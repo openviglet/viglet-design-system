@@ -18,11 +18,19 @@ prose. Where the two disagree, the contract is right and an artboard is stale.
 | The shapes | `list.dc.html`          | a list screen, and the discriminator between tiles and rows               |
 | The shapes | `detail.dc.html`        | a detail screen, and the save-bar morph at both ends of the scroll        |
 | The shapes | `form-hero.dc.html`     | a form with no entity behind it yet                                       |
-| The shapes | `panel.dc.html`         | the frosted box with no heading, and why it has none                      |
+| The shapes | `panel.dc.html`         | the plain card with no heading, and why it has none                       |
 | The shapes | `grounds.dc.html`       | the same components on both grounds, with the ratios                      |
 | The shapes | `split.dc.html`         | a two-pane screen: who scrolls, who owns the ratio, and phone width       |
 
 `canvas.json` places them and names the two pages.
+
+**The shapes are drawn one step ahead of the components.** They show the quieter surface
+that this package proposes, for review as a composition before any component changes. Panels
+are solid cards, not frosted glass. The gradient chip names a thing, so it stays in an
+entity hero and a hub's tiles and leaves rows, lists and form sections. Colour marks
+state (published, draft, scheduled, changed, archived) as a dot and a word, not an
+area. Until the components follow, a page built today still renders the glass and
+the chips; the rule above, that the contract wins, applies again once they do.
 
 ## Two rules about the content
 

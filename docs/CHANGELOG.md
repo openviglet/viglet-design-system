@@ -182,6 +182,7 @@
   checked **Every rail section with a labelKey shows its label under the icon** A tooltip is not a name a reader can scan.
   checked **BentoNavItem accepts a count and the rail draws it as a badge** The count sits on the destination that owns it, never in the header.
   checked **The rail stays one level, with no groups and no collapse state** The few-choices structure is what the rail exists to keep.
+- ✅ **VDS182 (reference artboards)** **Glass, gradient chips on every tile and hero, and one tone per area make colour everywhere and mean nothing** — The reference artboards draw solid cards, the gradient chip only on an entity hero, and five states as a dot and a word.
 
 ## Block D — The package in a server-rendered framework
 

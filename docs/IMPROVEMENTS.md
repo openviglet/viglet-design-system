@@ -121,10 +121,10 @@ list pages and form sections lose it. Tones stop being a per-area decoration and
 state: published, draft, scheduled, changed since publish and archived, drawn through
 `BentoStatusMarker` as a dot and a word. The accent is reserved for the primary action
 and "you are here". The emphasised double tile stops being automatic. The hero title
-steps down to a size that leaves the fold to the work. The first artboards of this
-direction are in the Shio concept canvas, and the reference artboards here are redrawn
-from the preset's tokens before any component changes, so the decision is reviewed as
-composition first.
+steps down to a size that leaves the fold to the work. The reference artboards now draw
+it (solid cards, 16 px hero titles, the chip on hero only) and map states to tones:
+published emerald, draft slate, scheduled violet, changed amber, archived neutral.
+Components follow the review.
 
 ### §VDS183 Record lists default to a table
 

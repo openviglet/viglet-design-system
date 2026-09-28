@@ -10,7 +10,6 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS182** (deps: VDS180 ✅) **Glass, gradient chips on every tile and hero, and one tone per area make colour everywhere and mean nothing** — Keeping the chip for identity and turning tones into state lets the accent mark the primary action and the current place, which is what a working screen needs. → §VDS182
 - 📋 **VDS183** (deps: VDS180 ✅) **BentoListPage requires renderTile, so products render records nobody picks by picture as a tile mosaic** — A table by default, with tiles as the variant for visual or few entities, makes list.dc.html's discriminator the path of least resistance. → §VDS183
 
 ## Block E — The assistant every product shares

@@ -11,5 +11,7 @@
 
 ## Block C — One look across products
 
+- ⏸ **VDS182** (deps: VDS180 ✅) **Glass, gradient chips on every tile and hero, and one tone per area make colour everywhere and mean nothing** — set aside (It waits on a review of the redrawn artboards.): Components still draw glass, a chip per tile and a tone per area. → §VDS182
+
 ## Block E — The assistant every product shares
 
