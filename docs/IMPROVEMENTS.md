@@ -71,23 +71,25 @@ account name in a route would end up in a committed file.
 
 ### §VDS195 The story run stalls
 
-`npm test` on 2026-09-28 ran the three projects for 35 minutes with no output and was
-stopped. Run alone, the unit and parity projects finished in seconds. The stories
-project was run twice with a 1500 s timeout. Both runs used the whole of it, while
-vitest measured 34 to 64 s of tests. In each run one file lost its browser (`Browser
-connection was closed while running tests`), a different file each time:
-`login.stories.tsx`, then `bento-shell.stories.tsx`. The first run also had four files
-that never reached the server (`Cannot connect to the server in 60 seconds`). Both files
-pass alone in under four seconds.
+On 2026-09-28 `npm test` ran for 35 minutes with no output and was stopped. Two later
+runs of the stories project alone each used their whole 1500 s timeout while vitest
+measured 34 to 64 s of tests. In each, one file lost its browser (`Browser connection
+was closed while running tests`), a different file each time: `login.stories.tsx`, then
+`bento-shell.stories.tsx`. The first also had four files that never connected (`Cannot
+connect to the server in 60 seconds`). Both files pass alone in under four seconds.
 
-So the gate is not red on a story. It never finishes, which means nobody can run `npm
-test` as the one command the project's instructions list. Start by reading where the
-wall clock goes: `--reporter=verbose` with timestamps, and the Storybook cache under
-`node_modules/.cache/storybook`, which every run rebuilds its pre-bundle into. Then
-check whether the stall follows the worker count. The stories project has no
-`maxWorkers` or `fileParallelism` setting, and two browser projects run side by side
-under the root `npm test`. A setting that fixes it belongs in `vitest.config.ts` beside
-the project it bounds, with the measurement in its comment.
+The same evening it did not come back. The stories project passed alone in 40 s, and
+again in 22 s with `npm run build` running beside it. The whole of `npm test` passed in
+62 s. Both stalled runs had a build or a Storybook build beside them, and another
+session was driving Chromium against a Shio dev server at the time, so load is the
+suspect, but a build alone did not reproduce it.
+
+So the defect worth fixing is narrower than a slow gate: once a page drops, the run
+waits out whatever timeout wraps it instead of failing that file. Pick this up with a
+reproduction in hand. Then read where the wall clock goes (`--reporter=verbose`,
+timestamped), and check whether `browser.connectTimeout`, a bound on the stories
+project's workers, or `teardownTimeout` turns the hang into a failure. The setting
+belongs in `vitest.config.ts` beside that project, with the measurement in its comment.
 
 ## Block F — What a consuming CMS needs from the package next
 
@@ -126,6 +128,20 @@ steps down to a size that leaves the fold to the work. The reference artboards n
 it (solid cards, 16 px hero titles, the chip on hero only) and map states to tones:
 published emerald, draft slate, scheduled violet, changed amber, archived neutral.
 Components follow the review.
+
+### §VDS196 The catalogue drops every dist writer
+
+`.storybook/main.ts` holds the rule that the catalogue build never writes into `dist`,
+and enforces it by dropping, by name, every plugin from `vite.config.ts` that does:
+`WRITES_TO_DIST` lists `unplugin-dts` and `copy-standalone-css`. VDS194 added a third,
+`layer-package-utilities`, which rewrites `dist/viglet-design-system.css` from
+`writeBundle`. Today it does nothing under Storybook, because it matches that one file
+name and a catalogue build emits hashed assets. That is a coincidence of naming, not the
+rule. A fallback in it even resolves `dist` when Rollup names no output directory.
+
+Add `layer-package-utilities` to `WRITES_TO_DIST`, with a line in the comment above the
+set saying what it writes, as the other two have. `scripts/dist-stability.test.ts` is
+the guard to extend, if it reads the set rather than a restated list.
 
 ## Block E — The assistant every product shares
 
