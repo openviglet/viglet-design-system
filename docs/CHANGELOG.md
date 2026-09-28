@@ -257,6 +257,9 @@
   checked **The server answers initialize from a root that installs the package a level down** scripts/claude-plugin.test.ts starts the launcher at a fixture root whose web workspace installs the package, and reads the reply.
 - ✅ **VDS178** **the reference canvas draws three page shapes, so the two-pane shape has no picture of where each region sits** — The reference canvas draws BentoSplitPage at desktop and phone width beside what the shape decides, and every stated count says four shapes and ten artboards.
   checked **The page-shapes artboard draws BentoSplitPage at desktop and phone width** Reading docs/reference/canvas.json shows four shapes, and its text says four.
+- ✅ **VDS184** **A hero's way back names one parent, so a post five folders deep does not say where the reader is** — Heroes take a trail of ancestors and render it as linked steps, collapsed past four; a trail of one keeps the arrow back link.
+  checked **Heroes accept an ancestor list and render it as linked steps** A nested entity needs its location, not only its parent.
+  checked **A route with one parent still renders the arrow back link** Flat products must see no change.
 
 ## Block G — The package knows one chrome
 

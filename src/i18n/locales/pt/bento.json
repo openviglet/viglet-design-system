@@ -113,6 +113,9 @@
       "rowActions": "Ações para {{row}}",
       "empty": "Nada para mostrar"
     },
-    "backToTop": "Voltar ao topo"
+    "backToTop": "Voltar ao topo",
+    "trail": {
+      "label": "Localização"
+    }
   }
 }

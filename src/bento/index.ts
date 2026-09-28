@@ -119,6 +119,7 @@ export {
   type BentoNavSectionId,
 } from "./bento-nav";
 export { BentoBackLink, BentoHero, type BentoHeroProps } from "./bento-hero";
+export { BentoTrail, type BentoTrailStep } from "./bento-trail";
 export { BentoSaveBar, type BentoSaveBarProps } from "./bento-save-bar";
 export { useBentoScrollFade } from "./bento-scroll-fade";
 export { BentoScrollSaveBar } from "./bento-scroll-save-bar";

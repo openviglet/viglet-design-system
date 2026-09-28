@@ -35,6 +35,7 @@ import {
 } from "./bento-data-table";
 import { BentoEmptyState } from "./bento-empty-state";
 import { BentoHero } from "./bento-hero";
+import type { BentoTrailStep } from "./bento-trail";
 import {
   BENTO_EMPHASIS_SPAN,
   type BentoEmphasis,
@@ -73,6 +74,8 @@ export interface BentoListPageProps<T> {
   backTo?: string;
   /** Label for the {@link backTo} back-link. */
   backLabel?: ReactNode;
+  /** A nested list's ancestors, root first (forwarded to BentoHero). */
+  trail?: readonly BentoTrailStep[];
   /** The hero's icon chip. Optional: a list of records names no single thing. */
   heroIcon?: TablerIcon;
   title: string;
@@ -191,6 +194,7 @@ export function BentoListPage<T>({
   eyebrow,
   backTo,
   backLabel,
+  trail,
   heroIcon: HeroIcon,
   title,
   subtitle,
@@ -234,6 +238,7 @@ export function BentoListPage<T>({
           eyebrow={eyebrow}
           backTo={backTo}
           backLabel={backLabel}
+          trail={trail}
           leading={leading}
           title={title}
           subtitle={subtitle}
@@ -276,6 +281,7 @@ export function BentoListPage<T>({
         eyebrow={eyebrow}
         backTo={backTo}
         backLabel={backLabel}
+        trail={trail}
         leading={leading}
         title={title}
         subtitle={subtitle}

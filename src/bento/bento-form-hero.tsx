@@ -2,7 +2,7 @@ import { GradientButton } from "@/components/ui/gradient-button";
 import { IconDeviceFloppy, IconX } from "@tabler/icons-react";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { BentoBackLink, BentoHero, type BentoHeroProps } from "./bento-hero";
+import { BentoHero, heroWayBack, type BentoHeroProps } from "./bento-hero";
 import { BentoScrollSaveBar } from "./bento-scroll-save-bar";
 
 export interface BentoFormHeroProps extends BentoHeroProps {
@@ -97,6 +97,7 @@ export function BentoFormHero({
   eyebrow,
   backTo,
   backLabel,
+  trail,
   leading,
   title,
   subtitle,
@@ -113,12 +114,10 @@ export function BentoFormHero({
   const { t } = useTranslation();
   const disabled = saveDisabled ?? (Boolean(titleMissing) || !dirty);
 
-  // A `backTo` route wins over a hand-passed `eyebrow` and renders the standard
-  // "← label" breadcrumb via the shared {@link BentoBackLink} (matches
-  // BentoEntityShell's and BentoHero's built-in back-arrow).
-  const resolvedEyebrow = backTo !== undefined ? (
-    <BentoBackLink to={backTo}>{backLabel}</BentoBackLink>
-  ) : eyebrow;
+  // A `trail` or a `backTo` route wins over a hand-passed `eyebrow` and renders
+  // the standard way back: linked steps, or the "← label" breadcrumb of the
+  // shared BentoBackLink (matches BentoEntityShell's and BentoHero's own).
+  const resolvedEyebrow = heroWayBack(trail, backTo, backLabel) ?? eyebrow;
 
   return (
     <>

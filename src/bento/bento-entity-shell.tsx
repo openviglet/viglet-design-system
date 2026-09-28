@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { BentoActionsMenu, type BentoActionsMenuItem } from "./bento-actions-menu";
 import { BentoBackLink, BentoHero } from "./bento-hero";
+import { BentoTrail, type BentoTrailStep } from "./bento-trail";
 import { BentoHeroIconPicker } from "./bento-hero-icon-picker";
 import { BentoInlineEdit } from "./bento-inline-edit";
 import { BentoStatusMarker } from "./bento-status-marker";
@@ -81,6 +82,13 @@ export interface BentoEntityShellProps<TEntity extends BentoEntityLike> {
   eyebrow: ReactNode;
   /** List route the eyebrow links to and Cancel/Delete navigate back to. */
   listRoute: string;
+  /**
+   * VDS184 — the entity's ancestors, root first and its parent last, for content
+   * that nests (a post in a folder in a site). Two or more replace the eyebrow's
+   * back link with linked steps; with one or none the eyebrow links to
+   * {@link listRoute} as before.
+   */
+  trail?: readonly BentoTrailStep[];
   /** Default hero icon when no Iconify icon is picked. */
   icon: TablerIcon;
   tone: BentoTone;
@@ -158,6 +166,7 @@ export function BentoEntityShell<TEntity extends BentoEntityLike>({
   headlineFallback,
   eyebrow,
   listRoute,
+  trail,
   icon,
   tone,
   formId,
@@ -307,7 +316,11 @@ export function BentoEntityShell<TEntity extends BentoEntityLike>({
              * {@link BentoBackLink} renders the canonical arrow+label so this
              * matches every other bento breadcrumb. 
              */}
-            <BentoBackLink to={listRoute}>{eyebrow}</BentoBackLink>
+            {trail && trail.length > 1 ? (
+              <BentoTrail steps={trail} />
+            ) : (
+              <BentoBackLink to={listRoute}>{eyebrow}</BentoBackLink>
+            )}
             {!readOnly && (
               <BentoStatusMarker titleMissing={titleMissing} dirty={isNew || formState.isDirty} />
             )}

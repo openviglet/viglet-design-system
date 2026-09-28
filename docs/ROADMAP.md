@@ -7,8 +7,6 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS184** (deps: —) **A hero's way back names one parent, so a post five folders deep does not say where the reader is** — An optional ancestor trail where the back link sits gives a nested CMS a location without a second nav, and leaves flat products unchanged. → §VDS184
-
 ## Block C — One look across products
 
 ## Block E — The assistant every product shares
@@ -23,13 +21,6 @@
   state is readable; colour per area is noise.
 - **The reference artboards are redrawn from preset tokens first** The direction is
   reviewed as composition before a component changes.
-
-## Done when — VDS184
-
-- **Heroes accept an ancestor list and render it as linked steps** A nested entity needs
-  its location, not only its parent.
-- **A route with one parent still renders the arrow back link** Flat products must see
-  no change.
 
 ## Done when — VDS185
 

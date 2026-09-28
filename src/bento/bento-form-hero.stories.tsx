@@ -6,6 +6,7 @@ import { BentoFormSection } from "./bento-form-section";
 import { BentoBackLink, BentoHero } from "./bento-hero";
 import { BentoSaveBar } from "./bento-save-bar";
 import { BentoScrollSaveBar } from "./bento-scroll-save-bar";
+import { BentoTrail } from "./bento-trail";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -48,6 +49,38 @@ export const Hero: Story = {
         backTo="/models"
         backLabel="All models"
       />
+    </div>
+  ),
+};
+
+/**
+ * VDS184 — nested content says where it is. Two or more ancestors render as linked
+ * steps where the back link sits, and past four the middle collapses; one ancestor
+ * keeps the arrow, as in the story above.
+ */
+export const Trail: Story = {
+  render: () => (
+    <div className="p-6" style={atRest}>
+      <BentoHero
+        title="Spring launch"
+        subtitle="A post five folders deep"
+        trail={[
+          { to: "/sites/site", label: "Site" },
+          { to: "/sites/site/folder-a", label: "Campaigns" },
+          { to: "/sites/site/folder-b", label: "2026" },
+          { to: "/sites/site/folder-c", label: "Spring" },
+          { to: "/sites/site/folder-d", label: "Launch" },
+        ]}
+      />
+    </div>
+  ),
+};
+
+/** The trail on its own, for an eyebrow a page composes with other content. */
+export const TrailAlone: Story = {
+  render: () => (
+    <div className="p-6 text-xs uppercase tracking-[0.18em] text-muted-foreground">
+      <BentoTrail steps={[{ to: "/sites/site", label: "Site" }, { to: "/sites/site/news", label: "News" }]} />
     </div>
   ),
 };

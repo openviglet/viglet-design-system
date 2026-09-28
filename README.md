@@ -710,9 +710,9 @@ AppFooter, AppSwitcher, BackendStatusBanner, BackendStatusProvider, BadgeColorfu
 
 `DialogDelete`, `GradientButtonLink` and `LoadProvider` are imported from `@viglet/viglet-design-system/router`; every other name above comes from the package root. `Login` and `StartupFirst` are compounds — each is a root with named parts on it, the way `Card` is.
 
-### Bento Layer (34 components)
+### Bento Layer (35 components)
 
-AdaptiveSectionCard, BentoActionsMenu, BentoBackLink, BentoBackToTop, BentoCalendar, BentoChangeMark, BentoCommandPalette, BentoCountTile, BentoDataTable, BentoDiff, BentoEmptyState, BentoEntityShell, BentoEntityTile, BentoFilterBar, BentoFormHero, BentoFormSection, BentoHero, BentoHeroIconPicker, BentoInlineEdit, BentoListPage, BentoNavRail, BentoPaletteTrigger, BentoPanel, BentoSaveBar, BentoScrollSaveBar, BentoSection, BentoShell, BentoShortcutsDialog, BentoSplitPage, BentoStatusMarker, BentoTile, BentoTileGrid, BentoUserMenu, BentoVersionRail
+AdaptiveSectionCard, BentoActionsMenu, BentoBackLink, BentoBackToTop, BentoCalendar, BentoChangeMark, BentoCommandPalette, BentoCountTile, BentoDataTable, BentoDiff, BentoEmptyState, BentoEntityShell, BentoEntityTile, BentoFilterBar, BentoFormHero, BentoFormSection, BentoHero, BentoHeroIconPicker, BentoInlineEdit, BentoListPage, BentoNavRail, BentoPaletteTrigger, BentoPanel, BentoSaveBar, BentoScrollSaveBar, BentoSection, BentoShell, BentoShortcutsDialog, BentoSplitPage, BentoStatusMarker, BentoTile, BentoTileGrid, BentoTrail, BentoUserMenu, BentoVersionRail
 
 All from `@viglet/viglet-design-system/bento`, with `@viglet/viglet-design-system/bento.css` beside it. [The bento layer](#the-bento-layer) is what each one is for and how a page composes them; this is the inventory.
 
@@ -854,6 +854,12 @@ icon; a section with no key shows the icon alone. Give a `BentoNavItem` a
 section hub with the total, capped at `99+`. The rail stays one level: it lists
 hubs, never the items themselves. A product with its own shell reserves the
 same width with the `bento-rail-gutter` class.
+
+For content that nests, pass `trail` to `BentoHero`, `BentoFormHero`,
+`BentoEntityShell` or `BentoListPage`: the ancestors as `{ to, label }`, root
+first and the parent last. Two or more render as linked steps where the back
+link sits, with the middle collapsed past four. A trail of one renders the usual
+arrow back link. `BentoTrail` is the same trail on its own, for a custom eyebrow.
 
 `BentoDataTable` is the list a curator sorts, range-selects and acts on at scale.
 It mounts only the rows in view, so ten thousand cost what twenty do. Pass `rows`,

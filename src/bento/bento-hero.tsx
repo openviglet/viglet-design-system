@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { IconArrowLeft } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
+import { BentoTrail, type BentoTrailStep } from "./bento-trail";
 
 /**
  * Canonical breadcrumb back-link for Bento heroes — a leading
@@ -20,6 +21,20 @@ export function BentoBackLink({ to, children }: Readonly<{ to: string; children:
       {children}
     </Link>
   );
+}
+
+/**
+ * The way back a hero draws above its title: a trail when there are ancestors to
+ * name, the arrow back link when there is one parent, nothing when there is none.
+ */
+export function heroWayBack(
+  trail: readonly BentoTrailStep[] | undefined,
+  backTo?: string,
+  backLabel?: ReactNode,
+): ReactNode {
+  if (trail && trail.length > 1) return <BentoTrail steps={trail} />;
+  if (trail && trail.length === 1) return <BentoBackLink to={trail[0].to}>{trail[0].label}</BentoBackLink>;
+  return backTo != null ? <BentoBackLink to={backTo}>{backLabel}</BentoBackLink> : null;
 }
 
 export interface BentoHeroProps {
@@ -43,6 +58,13 @@ export interface BentoHeroProps {
   backTo?: string;
   /** Label for the {@link BentoHeroProps.backTo} back-link. */
   backLabel?: ReactNode;
+  /**
+   * VDS184 — the entity's ancestors, root first and its parent last, for a
+   * product whose content nests. Two or more render as linked steps where the
+   * back link sits; one renders the arrow back link to it, as `backTo` would.
+   * Wins over `backTo`; `eyebrow` still wins over both.
+   */
+  trail?: readonly BentoTrailStep[];
   /** Headline — a greeting, the page title, etc. */
   title: ReactNode;
   /** Sub-line below the title. */
@@ -71,15 +93,15 @@ export function BentoHero({
   eyebrow,
   backTo,
   backLabel,
+  trail,
   title,
   subtitle,
   leading,
   trailing,
 }: Readonly<BentoHeroProps>) {
-  // `eyebrow` wins for bespoke content; otherwise `backTo` renders the
-  // canonical arrow+label back-link so no page has to re-type it.
-  const eyebrowContent =
-    eyebrow ?? (backTo != null ? <BentoBackLink to={backTo}>{backLabel}</BentoBackLink> : null);
+  // `eyebrow` wins for bespoke content; otherwise a trail or `backTo` renders
+  // the canonical way back so no page has to re-type it.
+  const eyebrowContent = eyebrow ?? heroWayBack(trail, backTo, backLabel);
 
   return (
     <header className="bento-shell-header mb-6 flex flex-col items-start gap-3 md:mb-10">

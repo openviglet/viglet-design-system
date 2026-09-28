@@ -113,6 +113,9 @@
       "rowActions": "Actions for {{row}}",
       "empty": "Nothing to show"
     },
-    "backToTop": "Back to top"
+    "backToTop": "Back to top",
+    "trail": {
+      "label": "Location"
+    }
   }
 }

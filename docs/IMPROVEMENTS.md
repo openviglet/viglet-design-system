@@ -102,25 +102,6 @@ release that warned. Before shipping, run viglet-ds-check-duplicates and a type-
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
 
-### §VDS184 An ancestor trail for nested content
-
-A hero's way back is `BentoBackLink`: an arrow and the parent's name, small and
-upper-case, above the title. For a two-level product that is enough, because the parent
-is the list and the list is one click from the rail. A CMS is not two-level. In Shio a
-post lives at site, then folder, then any depth of subfolders, and the same editor is
-reached from the content browser, from search, from the review queue and from a
-scheduled list. The back link names one parent and not where the reader is. The
-2026-09-28 captures show the gap: the post editor's eyebrow reads "Voltar", the site
-browser's "Sites", and the content browser moves the path into a toolbar panel below two
-rows of buttons, a third place for the same information. The proposal is an optional
-trail on the heroes. It is a list of ancestors rendered where the back link sits today,
-each one a link, the last one being the current entity's parent, and truncated in the
-middle past a width. It is passed the way `backTo` is passed, so the product still owns
-the hierarchy, and the package draws it. It does not replace the back link: a route with
-one parent keeps the arrow, and the authoring rule that an arrow promises a destination
-still holds. The header's back control is unchanged. Turing and Dumont take nothing
-until a surface of theirs nests.
-
 ## Block C — One look across products
 
 ### §VDS182 A quieter surface: the chip for identity, tones for state
