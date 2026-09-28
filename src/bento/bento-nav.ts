@@ -71,6 +71,13 @@ export interface BentoNavItem {
   bentoRoute?: string;
   /** Where to go while a surface has no bento route of its own. */
   fallbackRoute: string;
+  /**
+   * What is waiting on this surface — reviews to approve, jobs that failed. The
+   * nav rail draws the section's total as a badge on the hub that holds the item,
+   * so "what needs me" is answered without a click and never from the header.
+   * Omit it, or pass 0, for no badge.
+   */
+  count?: number;
 }
 
 /** One section and the items a product decided are visible in it. */

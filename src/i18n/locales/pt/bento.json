@@ -1,7 +1,8 @@
 {
   "bento": {
     "nav": {
-      "label": "Navegação principal"
+      "label": "Navegação principal",
+      "count": "{{count}} aguardando"
     },
     "palette": {
       "title": "Paleta de comandos",

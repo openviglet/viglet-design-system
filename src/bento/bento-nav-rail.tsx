@@ -56,15 +56,26 @@ export interface BentoNavRailProps {
   homeLabel?: string;
 }
 
+/** What the badge on a hub shows: its items' counts added up, or nothing at zero. */
+function sectionCount(group: BentoNavGroup): number {
+  return group.items.reduce((sum, item) => sum + (item.count && item.count > 0 ? item.count : 0), 0);
+}
+
 /**
- * The fixed icon rail down the left edge, with Home and one link per section hub
- * and never the leaf surfaces.
+ * The fixed rail down the left edge, with Home and one link per section hub and
+ * never the leaf surfaces.
  *
  * Listing hubs rather than surfaces keeps the rail a fixed, small height however
  * many surfaces a product has, so it cannot overflow the viewport the way a flat
  * console sidebar did. Each hub opens its section's area, where the surfaces sit
  * as a bento mosaic, and a surface is reached from there or from the command
  * palette. `BentoShell` takes it as `rail` and reserves its gutter.
+ *
+ * VDS181 — each link shows its label under the icon, since a glyph alone does
+ * not carry an abstract section and the rail was learned by hovering. A section
+ * with no `labelKey` keeps the icon alone, with its id in a tooltip. A hub also
+ * shows the total of its items' `count`, on the destination that owns it. It
+ * stays one level: no groups, no collapse state.
  *
  * Hidden below `md`, where the header's palette trigger and the global shortcut
  * navigate instead. The console era's collapsible `Sidebar` is not for a bento page.
@@ -91,12 +102,13 @@ export function BentoNavRail({
     <TooltipProvider delayDuration={200}>
       <nav
         aria-label={t("bento.nav.label", { defaultValue: "Primary" })}
-        className="fixed inset-y-0 left-0 z-40 hidden w-16 flex-col items-center gap-1 overflow-y-auto overflow-x-hidden border-r border-border/40 bg-background/55 pt-20 pb-4 backdrop-blur-xl backdrop-saturate-150 md:flex"
+        className="fixed inset-y-0 left-0 z-40 hidden w-20 flex-col items-center gap-1 overflow-y-auto overflow-x-hidden border-r border-border/40 bg-background/55 pt-20 pb-4 backdrop-blur-xl backdrop-saturate-150 md:flex"
       >
         <RailLink
           to={homeRoute}
           icon={IconHome}
           label={homeLabel ?? t("home.title", { defaultValue: "Home" })}
+          shown
           active={homeActive}
         />
 
@@ -107,11 +119,13 @@ export function BentoNavRail({
             key={group.section.id}
             to={group.section.areaRoute}
             icon={group.section.icon ?? FALLBACK_HUB_ICON}
-            // A rail link is an icon and nothing else, so its label is the only
-            // thing naming it. A section that supplied no key falls back to its
-            // own id rather than to an empty string: the link stays reachable by
-            // name, and the name says which section wants labelling.
+            // A section that supplied no key is named by its own id rather than
+            // an empty string: the link stays reachable by name, and the name
+            // says which section wants labelling. That id is not a label a reader
+            // should see, so it stays in the tooltip and the accessible name.
             label={group.section.labelKey ? t(group.section.labelKey) : group.section.id}
+            shown={Boolean(group.section.labelKey)}
+            count={sectionCount(group)}
             active={isSectionActive(pathname, group)}
           />
         ))}
@@ -124,24 +138,50 @@ function RailLink({
   to,
   icon: Icon,
   label,
+  shown,
+  count = 0,
   active,
-}: Readonly<{ to: string; icon: TablerIcon; label: string; active: boolean }>) {
+}: Readonly<{ to: string; icon: TablerIcon; label: string; shown: boolean; count?: number; active: boolean }>) {
+  const { t } = useTranslation();
+  const waiting = count > 0 ? t("bento.nav.count", { count, defaultValue: "{{count}} waiting" }) : null;
+  const link = (
+    <Link
+      to={to}
+      aria-label={waiting ? `${label}, ${waiting}` : label}
+      aria-current={active ? "page" : undefined}
+      className={`group flex w-full shrink-0 flex-col items-center gap-1 px-1 py-0.5 ${
+        active ? "text-primary" : "text-muted-foreground hover:text-foreground"
+      }`}
+    >
+      <span
+        className={`bento-tile-clickable relative grid h-11 w-11 place-items-center rounded-2xl border transition-colors duration-200 ${
+          active
+            ? "bento-rail-active"
+            : "border-transparent group-hover:border-border/60 group-hover:bg-card/60"
+        }`}
+      >
+        <Icon size={20} />
+        {count > 0 && (
+          <span
+            aria-hidden
+            data-slot="bento-rail-count"
+            className="absolute -right-1 -top-1 min-w-4 rounded-full bg-primary px-1 text-center text-[0.6875rem] leading-4 text-primary-foreground"
+          >
+            {count > 99 ? "99+" : count}
+          </span>
+        )}
+      </span>
+      {shown && (
+        <span aria-hidden title={label} className="w-full truncate text-center text-[0.6875rem] leading-4">
+          {label}
+        </span>
+      )}
+    </Link>
+  );
+  if (shown) return link;
   return (
     <Tooltip>
-      <TooltipTrigger asChild>
-        <Link
-          to={to}
-          aria-label={label}
-          aria-current={active ? "page" : undefined}
-          className={`bento-tile-clickable grid h-11 w-11 shrink-0 place-items-center rounded-2xl border transition-colors duration-200 ${
-            active
-              ? "bento-rail-active"
-              : "border-transparent text-muted-foreground hover:border-border/60 hover:bg-card/60 hover:text-foreground"
-          }`}
-        >
-          <Icon size={20} />
-        </Link>
-      </TooltipTrigger>
+      <TooltipTrigger asChild>{link}</TooltipTrigger>
       <TooltipContent side="right">{label}</TooltipContent>
     </Tooltip>
   );

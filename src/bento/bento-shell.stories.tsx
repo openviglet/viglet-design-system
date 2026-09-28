@@ -46,6 +46,8 @@ const items: BentoNavItem[] = [
     section: "search",
     tone: "emerald",
     fallbackRoute: "/admin/indexing",
+    // The rail badges the Search hub with it: two crawls waiting on a reader.
+    count: 2,
   },
 ];
 

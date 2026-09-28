@@ -136,6 +136,68 @@ describe("BentoNavRail", () => {
 
     expect(screen.getByRole("link", { name: /Home/ })).toBeInTheDocument()
   })
+
+  // VDS181 — the rail was learned by hovering, since a glyph does not name an
+  // abstract section. The label is drawn under the icon, and a hub carries what
+  // its items say is waiting.
+  it("shows each labelled section's name under its icon", () => {
+    draw(<BentoNavRail groups={groups} homeRoute="/bento" homeLabel="Home" />)
+
+    const hub = screen.getByRole("link", { name: "Generative AI" })
+    expect(within(hub).getByText("Generative AI")).toBeVisible()
+    expect(within(screen.getByRole("link", { name: "Home" })).getByText("Home")).toBeVisible()
+  })
+
+  it("keeps the icon alone for a section with no label key", () => {
+    const unlabelled: BentoNavGroup[] = [
+      { section: { id: "generativeAi", icon: IconCpu2, areaRoute: "/ai" }, items: [] },
+    ]
+
+    draw(<BentoNavRail groups={unlabelled} homeRoute="/bento" homeLabel="Home" />)
+
+    // The id names the link for a screen reader; it is not a label to print.
+    expect(within(screen.getByRole("link", { name: "generativeAi" })).queryByText("generativeAi")).toBeNull()
+  })
+
+  it("badges a hub with the total its items count, and nothing at zero", () => {
+    i18next.addResource("en", "translation", "bento.nav.count", "{{count}} waiting")
+    const item = groups[0].items[0]
+    const counted: BentoNavGroup[] = [
+      {
+        section: groups[0].section,
+        items: [
+          { ...item, id: "a", count: 2 },
+          { ...item, id: "b", count: 3 },
+          { ...item, id: "c" },
+        ],
+      },
+      { section: { id: "idle", labelKey: "Idle", areaRoute: "/idle" }, items: [{ ...item, id: "d", count: 0 }] },
+    ]
+
+    const { container } = draw(<BentoNavRail groups={counted} homeRoute="/bento" homeLabel="Home" />)
+
+    const hub = screen.getByRole("link", { name: "Generative AI, 5 waiting" })
+    expect(within(hub).getByText("5")).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "Idle" })).toBeInTheDocument()
+    expect(container.querySelectorAll("[data-slot='bento-rail-count']")).toHaveLength(1)
+  })
+
+  it("caps a badge at 99+", () => {
+    i18next.addResource("en", "translation", "bento.nav.count", "{{count}} waiting")
+    const item = { ...groups[0].items[0], count: 250 }
+    draw(<BentoNavRail groups={[{ section: groups[0].section, items: [item] }]} homeRoute="/bento" homeLabel="Home" />)
+
+    expect(screen.getByText("99+")).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "Generative AI, 250 waiting" })).toBeInTheDocument()
+  })
+
+  it("stays one level: an item's count never puts the item itself on the rail", () => {
+    const item = { ...groups[0].items[0], count: 4 }
+    draw(<BentoNavRail groups={[{ section: groups[0].section, items: [item] }]} homeRoute="/bento" homeLabel="Home" />)
+
+    expect(screen.getAllByRole("link")).toHaveLength(2)
+    expect(screen.queryByRole("link", { name: /Models/ })).not.toBeInTheDocument()
+  })
 })
 
 describe("BentoUserMenu", () => {
@@ -397,9 +459,11 @@ describe("the shell's layout contract", () => {
   })
 
   it("reserves the rail's gutter at the width the rail actually is", () => {
-    // The rail is w-16 (4rem) and hidden below md (48rem); the gutter has to
+    // The rail is w-20 (5rem) and hidden below md (48rem); the gutter has to
     // agree on both numbers or content sits under it on one breakpoint.
-    expect(css).toMatch(/@media \(min-width: 48rem\)[\s\S]*?\.bento-rail-gutter[\s\S]*?padding-left: 4rem/)
+    const rail = readFileSync(join(resolve(import.meta.dirname), "bento-nav-rail.tsx"), "utf8")
+    expect(rail).toMatch(/hidden w-20 [^"]*md:flex/)
+    expect(css).toMatch(/@media \(min-width: 48rem\)[\s\S]*?\.bento-rail-gutter[\s\S]*?padding-left: 5rem/)
   })
 
   it("states the no-sidebar rule where a consumer meets it", () => {

@@ -90,7 +90,7 @@ describe("BentoShell's reading column", () => {
   it("centres the column in the space the rail leaves", () => {
     const { shell, main } = drawShell()
     const inner = shell.getBoundingClientRect()
-    const rail = 4 * REM
+    const rail = 5 * REM // w-20 since VDS181 labelled the rail
     expect(px(getComputedStyle(shell).paddingLeft)).toBe(rail)
 
     const column = main.getBoundingClientRect()

@@ -1,7 +1,8 @@
 {
   "bento": {
     "nav": {
-      "label": "Primary"
+      "label": "Primary",
+      "count": "{{count}} waiting"
     },
     "palette": {
       "title": "Command palette",

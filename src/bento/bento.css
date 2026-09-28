@@ -421,15 +421,15 @@
 }
 
 /* Reserves the gutter the fixed nav rail occupies, so page content is not
-   underneath it. The rail is `w-16` and hidden below `md`, and this matches on
-   both counts.
+   underneath it. The rail is `w-20` and hidden below `md`, and this matches on
+   both counts. It was `w-16` until VDS181 put a label under each icon.
 
    `BentoShell` puts it on its own root when it is given a rail. It stays a class
    for a product whose shell is still its own: the measurement is the rail's,
    and a product copying the literal is how the two stop matching. */
 @media (min-width: 48rem) {
   .bento-rail-gutter {
-    padding-left: 4rem;
+    padding-left: 5rem;
   }
 }
 

@@ -842,6 +842,13 @@ you can redefine at `:root`.
 </BentoShell>
 ```
 
+`BentoNavRail` is 80 px wide and prints each section's `labelKey` under its
+icon; a section with no key shows the icon alone. Give a `BentoNavItem` a
+`count` (reviews waiting, jobs that failed) and the rail badges that item's
+section hub with the total, capped at `99+`. The rail stays one level: it lists
+hubs, never the items themselves. A product with its own shell reserves the
+same width with the `bento-rail-gutter` class.
+
 `BentoDataTable` is the list a curator sorts, range-selects and acts on at scale.
 It mounts only the rows in view, so ten thousand cost what twenty do. Pass `rows`,
 `getRowId`, `columns` (a header, a `cell`, and a `sortValue` to make it sortable),

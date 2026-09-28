@@ -10,22 +10,12 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS181** (deps: —) **The rail names a section only in a tooltip, so a reader learns it by hovering, and no item can show a count** — A short label under each icon, and an optional count badge on the item that owns it, keep the rail's few choices while making them recognisable at a glance. → §VDS181
 - 📋 **VDS182** (deps: VDS180 ✅) **Glass, gradient chips on every tile and hero, and one tone per area make colour everywhere and mean nothing** — Keeping the chip for identity and turning tones into state lets the accent mark the primary action and the current place, which is what a working screen needs. → §VDS182
 - 📋 **VDS183** (deps: VDS180 ✅) **BentoListPage requires renderTile, so products render records nobody picks by picture as a tile mosaic** — A table by default, with tiles as the variant for visual or few entities, makes list.dc.html's discriminator the path of least resistance. → §VDS183
 
 ## Block E — The assistant every product shares
 
 - 📋 **VDS185** (deps: VDS180 ✅) **The shell owns the dock's corner but reserves nothing there, so the orb covers row actions in the column** — Resting the dock at the rail's foot, a slot the shell already reserves, keeps one voice for notices and can never hide a control. → §VDS185
-
-## Done when — VDS181
-
-- **Every rail section with a labelKey shows its label under the icon** A tooltip is not
-  a name a reader can scan.
-- **BentoNavItem accepts a count and the rail draws it as a badge** The count sits on
-  the destination that owns it, never in the header.
-- **The rail stays one level, with no groups and no collapse state** The few-choices
-  structure is what the rail exists to keep.
 
 ## Done when — VDS182
 

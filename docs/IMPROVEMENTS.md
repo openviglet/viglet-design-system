@@ -106,25 +106,6 @@ until a surface of theirs nests.
 
 ## Block C — One look across products
 
-### §VDS181 Labels on the rail, and a count on the item that owns one
-
-The bento rail draws an icon per section and names it only in a tooltip and an
-`aria-label`. That keeps the rail at 64 px, and the rail-to-hub-to-item structure behind
-it is right: no level offers more than a handful of choices, and the header stays free
-of a second nav. What fails is the first step. A reader has to recognise "content" or
-"administration" from a glyph, and no glyph carries an abstract section reliably, so the
-rail is learned by hovering. Recognition beats recall only when the thing to recognise
-is visible. So the change is a short label under each icon, set in the rail's own type
-step and kept to one line. The rail widens to whatever the longest label needs within a
-declared ceiling, around 80 px, and still carries no second level, no groups and no
-collapse state. The same change lets a nav item carry a count: an optional `count` on
-`BentoNavItem`, drawn as a small badge on the item's icon. It is the answer to "what is
-waiting for me" without a click, and it stays inside the rule that a surface's controls
-belong to the surface: the badge sits on the destination that owns the count, never in
-the header. Every bento consumer receives both at once, since the nav array is theirs
-and only the rendering changes. Labels come from the `labelKey` sections already
-declare; a section with none keeps the icon alone.
-
 ### §VDS182 A quieter surface: the chip for identity, tones for state
 
 The layer's surfaces carry a lot of ornament at once. Frosted glass sits behind every

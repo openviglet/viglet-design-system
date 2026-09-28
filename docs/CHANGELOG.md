@@ -178,6 +178,10 @@
 - ✅ **VDS85** **an artboard opened from the file tree lays out inline and prints its helmet as text** — Each artboard's own helmet sets x-dc to block and hides helmet, so opening one from the file tree renders it; the canvas path is untouched.
 - ✅ **VDS86** **a seventh consumer renders its own accent and appears nowhere in the register the guards read** — consumers.json declares the Roadkeep GUI and the digest carries its amber, the first set a consumer ships; five claims that had stopped being true were widened or corrected.
 - ✅ **VDS88** **the contract and the artboards are in docs, which reaches no consumer, so they are read by whoever goes looking** — viglet-ds-page-reference writes the contract, the boundary and the artboards into a consumer, merges its canvas rather than replacing it, and --check reports absent apart from stale.
+- ✅ **VDS181** **The rail names a section only in a tooltip, so a reader learns it by hovering, and no item can show a count** — The bento rail prints each section's label under its icon at 80 px and badges a hub with its items' count, still one level deep.
+  checked **Every rail section with a labelKey shows its label under the icon** A tooltip is not a name a reader can scan.
+  checked **BentoNavItem accepts a count and the rail draws it as a badge** The count sits on the destination that owns it, never in the header.
+  checked **The rail stays one level, with no groups and no collapse state** The few-choices structure is what the rail exists to keep.
 
 ## Block D — The package in a server-rendered framework
 
