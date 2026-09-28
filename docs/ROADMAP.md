@@ -2,6 +2,8 @@
 
 ## Block A — The gate the design system never had
 
+- 📋 **VDS189** (deps: VDS180 ✅) **A census run left desktop-dark unmeasured on 14 of 34 routes and still offered its lower figure for --write** — An allowance lowered from a partial reading turns the next complete run into a false regression, so a view with gaps must not be compared or written. → §VDS189
+
 ## Block F — What a consuming CMS needs from the package next
 
 ## Block C — One look across products
@@ -30,6 +32,13 @@
   lowers must be one every bento consumer reports, not only Shio.
 - **No committed route names an id or an account** The allowance is committed, so a
   concrete segment would publish product data.
+
+## Done when — VDS189
+
+- **A figure is compared only over routes every view measured** Otherwise a view that
+  lost routes reads as an improvement.
+- **--write refuses a view with unmeasured routes, and names them** The allowance is
+  trusted; a partial reading must not become it.
 
 ## Non-goals
 

@@ -69,6 +69,23 @@ route by a concrete segment rather than `:param`, the probe's route-table walk i
 `scripts/look-census.mjs` missed that router. Fix it there before recording, because an
 account name in a route would end up in a committed file.
 
+### §VDS189 A partial view is not a lower reading
+
+A look census of the Shio console on 2026-09-28, after VDS188, printed `?` for the
+desktop-dark title offset on 14 of its 34 routes. Those were the editors reached by an
+id, the create forms, trash, GraphQL and the Universal Editor, while desktop-light and
+the phone view read every one of them. The summary then reported one distinct dark
+offset where the light view reported four, and printed "lowered: title-x@desktop-dark: 1
+distinct, allowance 4 (run --write to record it)". Following that advice would have
+recorded a figure the run never measured as the new allowance, and the next honest run
+would fail as a regression. Two things are wrong. The dark walk loses routes the other
+two views keep, which is a measurement gap. And a view that read fewer routes than the
+others is compared and offered for `--write` as though it were complete, which is a
+reporting gap. The second is the one that costs something, because the census is trusted
+to lower allowances. A figure should be compared only over the routes every view
+measured, or reported as incomplete with the unmeasured routes named, and `--write`
+should refuse a view with gaps.
+
 ## Block F — What a consuming CMS needs from the package next
 
 ### §VDS152 The deprecation ends
