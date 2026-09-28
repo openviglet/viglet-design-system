@@ -6,13 +6,6 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS178** (deps: —) **the reference canvas draws three page shapes, so the two-pane shape has no picture of where each region sits** — The contract points a reader at docs/reference when a sentence is clear and the page is not, and the split is the most spatial shape. → §VDS178
-
-## Done when — VDS178
-
-- **The page-shapes artboard draws BentoSplitPage at desktop and phone width** Reading
-  docs/reference/canvas.json shows four shapes, and its text says four.
-
 ## Done when — VDS179
 
 - **The accent label is measured on both accent tints, on both grounds**

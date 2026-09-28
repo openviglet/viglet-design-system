@@ -1023,7 +1023,7 @@ of this package and which stay in the product, and why. Four of them are one
 product's commercial offer rendered as cards, and shipping those as chrome would
 put that offer in every console.
 
-[docs/reference/](docs/reference/) is the same contract drawn: eight artboards,
+[docs/reference/](docs/reference/) is the same contract drawn: ten artboards,
 one per decision that makes two products built from this package stop looking
 like one — the header's set, who owns the reading column, what `--primary`
 reaches, the four page shapes, the panel, and both grounds with their ratios.

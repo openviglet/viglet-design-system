@@ -241,6 +241,8 @@
   checked **A selection passed in is the one drawn, and a new set redraws with no remount** bento-data-table.test.tsx passes a set, inverts it on rerender and reads the same grid element ticking the new rows.
 - ✅ **VDS175** **the plugin's MCP server cannot start where the package is installed in a workspace, not at the root** — The plugin starts its server through a launcher that finds the package at the root, in a workspace or two levels down, and runs that copy (design recorded in `claude-plugin/server/launch.mjs`).
   checked **The server answers initialize from a root that installs the package a level down** scripts/claude-plugin.test.ts starts the launcher at a fixture root whose web workspace installs the package, and reads the reply.
+- ✅ **VDS178** **the reference canvas draws three page shapes, so the two-pane shape has no picture of where each region sits** — The reference canvas draws BentoSplitPage at desktop and phone width beside what the shape decides, and every stated count says four shapes and ten artboards.
+  checked **The page-shapes artboard draws BentoSplitPage at desktop and phone width** Reading docs/reference/canvas.json shows four shapes, and its text says four.
 
 ## Block G — The package knows one chrome
 

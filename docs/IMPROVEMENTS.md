@@ -88,22 +88,3 @@ through, and delete warnWithoutId and its test. The change note in the ledger na
 release that warned. Before shipping, run viglet-ds-check-duplicates and a type-check in
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
-
-### §VDS178 The fourth shape on the canvas
-
-`docs/BENTO-AUTHORING.md` closes by pointing at `docs/reference/`: eight artboards, one
-per decision, for when "a sentence here is clear and you still cannot picture the page
-it describes". VDS173 made the two-pane screen the contract's fourth page shape, and the
-contract, the README and both skill texts now say four. The canvas still draws three.
-Its page-shapes artboard text in `docs/reference/canvas.json` reads "one of three shapes
-plus data", and no artboard shows `BentoSplitPage`.
-
-The two-pane shape is the one that most needs a drawing. What the contract decides is
-spatial: the hero and the save bar span both panes, each pane scrolls within the height
-under them, the handle sits between the panes, and at phone width a switch replaces the
-second pane. A sentence states all four, but only a picture shows a reader where each
-one sits.
-
-The repair is to add the shape to the page-shapes artboard with the same hand as the
-other three, desktop and phone, and to correct the artboard's count. If the canvas has a
-generator, add the shape there so a rebuild keeps it.

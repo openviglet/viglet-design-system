@@ -4,7 +4,7 @@
  *
  * The catalogue answers "does this component exist". What it cannot answer is
  * "does this page read as the same product", and the answer to that lives in
- * two documents and nine artboards which are not in anybody's `node_modules`
+ * two documents and ten artboards which are not in anybody's `node_modules`
  * by reading them: a contract a product author has to browse a repository to
  * find is one they read after the fifth screen, which is what BENTO-AUTHORING's
  * own opening warns against.

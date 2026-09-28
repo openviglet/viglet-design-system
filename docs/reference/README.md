@@ -1,6 +1,6 @@
 # The page reference
 
-Nine artboards, one per decision that makes two products built from this package stop
+Ten artboards, one per decision that makes two products built from this package stop
 looking like one. They are the composition half of the catalogue: a story proves a component
 in isolation, and these prove the arrangement.
 
@@ -20,6 +20,7 @@ prose. Where the two disagree, the contract is right and an artboard is stale.
 | The shapes | `form-hero.dc.html`     | a form with no entity behind it yet                                       |
 | The shapes | `panel.dc.html`         | the frosted box with no heading, and why it has none                      |
 | The shapes | `grounds.dc.html`       | the same components on both grounds, with the ratios                      |
+| The shapes | `split.dc.html`         | a two-pane screen: who scrolls, who owns the ratio, and phone width       |
 
 `canvas.json` places them and names the two pages.
 
