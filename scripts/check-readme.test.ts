@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs"
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs"
 import { join, resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 
@@ -226,27 +226,47 @@ describe("holding the lists to the surface", () => {
   })
 })
 
+/** The newest modification time of any file under `dir`. */
+function newest(dir: string): number {
+  let latest = 0
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const path = join(dir, entry.name)
+    latest = Math.max(latest, entry.isDirectory() ? newest(path) : statSync(path).mtimeMs)
+  }
+  return latest
+}
+
 // The build is the gate, and it runs where dist has just been emitted. This is
 // the same reading against the real pair when one is there to read.
-describe.skipIf(!existsSync(join(root, "dist", "exports.json")))("the README in this checkout", () => {
-  const surface = () => JSON.parse(readFileSync(join(root, "dist", "exports.json"), "utf8"))
+//
+// VDS177 — and only when that dist is current. The test job runs before the
+// build, so a commit that adds a component and lists it read a README that was
+// right against a manifest from before the component existed. A dist older than
+// src/ is skipped by name, and the build still reads the fresh one.
+const manifest = join(root, "dist", "exports.json")
+const staleDist = existsSync(manifest) && statSync(manifest).mtimeMs < newest(join(root, "src"))
+describe.skipIf(!existsSync(manifest) || staleDist)(
+  staleDist ? "the README in this checkout (skipped: dist/exports.json is older than src/)" : "the README in this checkout",
+  () => {
+    const surface = () => JSON.parse(readFileSync(join(root, "dist", "exports.json"), "utf8"))
 
-  it("names every component the root entry exports", () => {
-    const readme = readFileSync(join(root, "README.md"), "utf8")
-    const sections = inventory(readme)
+    it("names every component the root entry exports", () => {
+      const readme = readFileSync(join(root, "README.md"), "utf8")
+      const sections = inventory(readme)
 
-    expect(sections.length, "no list was read out of What's Included").toBeGreaterThan(2)
-    expect(findings(sections, surface())).toEqual([])
-  })
+      expect(sections.length, "no list was read out of What's Included").toBeGreaterThan(2)
+      expect(findings(sections, surface())).toEqual([])
+    })
 
-  it("carries the declaring module for every component the root entry exports", () => {
-    // What `emit-exports` writes, read back: without it the family rule has
-    // nothing to compare and every part reads as an unlisted component.
-    const { declaredIn, values } = surface().entries["."]
-    const components = values.filter((name: string) => /^[A-Z]/.test(name))
+    it("carries the declaring module for every component the root entry exports", () => {
+      // What `emit-exports` writes, read back: without it the family rule has
+      // nothing to compare and every part reads as an unlisted component.
+      const { declaredIn, values } = surface().entries["."]
+      const components = values.filter((name: string) => /^[A-Z]/.test(name))
 
-    expect(components.every((name: string) => declaredIn[name])).toBe(true)
-    expect(declaredIn.Card, "a compound's parts have to agree on a module").toBe(declaredIn.CardHeader)
-    expect(declaredIn.Card).not.toBe(declaredIn.Button)
-  })
-})
+      expect(components.every((name: string) => declaredIn[name])).toBe(true)
+      expect(declaredIn.Card, "a compound's parts have to agree on a module").toBe(declaredIn.CardHeader)
+      expect(declaredIn.Card).not.toBe(declaredIn.Button)
+    })
+  },
+)

@@ -126,6 +126,8 @@
   checked **The register census case is sized for the loaded suite** Its timeout carries a comment giving the measured cold and warm walk, and the case passes beside the other script tests on a cold disk.
 - ✅ **VDS176** **story tests render without Tailwind utilities, so axe checks contrast on unstyled text at the default size** — Story tests render with Tailwind, so axe measures what the catalogue draws; the eight contrast failures it surfaced are fixed (design recorded in `vitest.config.ts`).
   checked **Story tests render with the Tailwind utilities the catalogue has** A story's axe pass then measures the text a product author sees.
+- ✅ **VDS177** **the README test reads a stale dist/exports.json, so listing a new component fails npm test until a build runs** — The README test skips by name when dist/exports.json is older than src/, so adding and listing a component passes npm test pre-build (design recorded in `scripts/check-readme.test.ts`).
+  checked **Adding and listing a component passes npm test before a build** A fixture checkout with a stale dist, or a surface read from source, shows the README test green.
 
 ## Block B — Bento becomes a design-system layer
 

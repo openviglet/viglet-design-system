@@ -52,25 +52,6 @@ which of the two expired — the poll, or the hover before it — and whether th
 had focus. Raising the deadline before that is guessing at which number was wrong, and
 would only make a stalled run take longer to say the same nothing.
 
-### §VDS177 The README test and a stale dist
-
-`scripts/check-readme.test.ts` ends with a block that holds the real README against
-`dist/exports.json`, skipped when there is no `dist`. It is not skipped when `dist` is
-there but stale, and the gate order this project documents runs `npm test` before `npm
-run build`. So the commit that adds a component and lists it in the README fails the
-suite: the README names an export the old `dist` does not have. The failure reads as a
-README defect, and it clears only after a build that the test itself never asks for.
-
-VDS172 hit it with `BentoCalendar`. VDS69 fixed the same shape in another test, which
-failed on every clean checkout because it read `dist`.
-
-The build already runs `check-readme.mjs` against a `dist` it has just emitted, so this
-block adds nothing the build lacks, apart from a false red between the two steps. Two
-repairs would work. Skip the block when `dist/exports.json` is older than the newest
-file under `src/`, and name the skip. Or derive the surface from source, as
-`exported-surface.test.ts` does, so the reading never depends on a build. The second
-keeps the check honest on a clean checkout as well, and matches VDS69's choice.
-
 ### §VDS179 The accent label on its tints
 
 `src/styles/contrast.test.ts` measures every named token pair on both grounds, plus the

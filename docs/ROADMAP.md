@@ -2,17 +2,11 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS177** (deps: —) **the README test reads a stale dist/exports.json, so listing a new component fails npm test until a build runs** — The gate order runs tests before the build, so every commit adding an export goes red on a README that is right. → §VDS177
 - 📋 **VDS179** (deps: —) **the contrast gate never measures the accented label on the accent's own tints, which the icon picker draws** — A re-keyed accent that passes on the page can fail on its tints, as the default did at 4.11:1, and every gate stays green. → §VDS179
 
 ## Block F — What a consuming CMS needs from the package next
 
 - 📋 **VDS178** (deps: —) **the reference canvas draws three page shapes, so the two-pane shape has no picture of where each region sits** — The contract points a reader at docs/reference when a sentence is clear and the page is not, and the split is the most spatial shape. → §VDS178
-
-## Done when — VDS177
-
-- **Adding and listing a component passes npm test before a build** A fixture checkout
-  with a stale dist, or a surface read from source, shows the README test green.
 
 ## Done when — VDS178
 
