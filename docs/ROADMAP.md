@@ -2,15 +2,7 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS179** (deps: —) **the contrast gate never measures the accented label on the accent's own tints, which the icon picker draws** — A re-keyed accent that passes on the page can fail on its tints, as the default did at 4.11:1, and every gate stays green. → §VDS179
-
 ## Block F — What a consuming CMS needs from the package next
-
-## Done when — VDS179
-
-- **The accent label is measured on both accent tints, on both grounds**
-  contrast.test.ts lists the two pairs among those it finds, and the re-key case fails a
-  label too light for the tint.
 
 ## Non-goals
 

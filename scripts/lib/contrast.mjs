@@ -196,8 +196,12 @@ export function parseColour(value, tokens = new Map()) {
     const a = parseColour(first.colour, tokens)
     const b = parseColour(second.colour, tokens)
     if (!a || !b) return null
-    const lerp = (x, y) => x * p1 + y * (1 - p1)
-    return { L: lerp(a.L, b.L), a: lerp(a.a, b.a), b: lerp(a.b, b.b), alpha: lerp(a.alpha, b.alpha) }
+    // Premultiplied, as CSS mixes: a colour mixed with `transparent` keeps its
+    // hue and loses alpha, rather than being pulled toward black.
+    const alpha = a.alpha * p1 + b.alpha * (1 - p1)
+    if (alpha === 0) return { L: 0, a: 0, b: 0, alpha: 0 }
+    const lerp = (x, y) => (x * a.alpha * p1 + y * b.alpha * (1 - p1)) / alpha
+    return { L: lerp(a.L, b.L), a: lerp(a.a, b.a), b: lerp(a.b, b.b), alpha }
   }
   return null
 }
@@ -218,6 +222,20 @@ function splitTopLevel(text) {
   return out
 }
 
+const linearToSrgb = (v) => (v <= 0.0031308 ? v * 12.92 : 1.055 * v ** (1 / 2.4) - 0.055)
+
+/**
+ * A translucent colour laid over an opaque one, as a browser composites: in
+ * gamma-encoded sRGB. Null where the ground is not opaque.
+ */
+export function over(top, ground) {
+  if (!top || !ground || ground.alpha < 1) return null
+  if (top.alpha >= 1) return top
+  const [front, back] = [oklabToLinear(top).map(linearToSrgb), oklabToLinear(ground).map(linearToSrgb)]
+  const mixed = front.map((channel, i) => channel * top.alpha + back[i] * (1 - top.alpha))
+  return { ...linearToOklab(mixed.map(srgbToLinear)), alpha: 1 }
+}
+
 /** WCAG relative luminance of an opaque colour; a translucent one has no single answer. */
 export function luminance(colour) {
   if (!colour || colour.alpha < 1) return null
@@ -236,11 +254,16 @@ export function ratio(front, behind) {
  * Pairs a name alone cannot derive: the page and muted text on it, the accented
  * label on the page, and the white label the gradient button and the checked
  * switch draw on the accent fill.
+ *
+ * VDS179 — and the accented label on the accent's own tints, which the icon
+ * picker draws. The tints are translucent, so they are measured laid over the page.
  */
 const NAMED_PAIRS = [
   ["--vg-background", "--vg-foreground"],
   ["--vg-background", "--vg-muted-foreground"],
   ["--vg-background", "--vg-accent-fg"],
+  ["--vg-accent-surface", "--vg-accent-fg"],
+  ["--vg-accent-surface-strong", "--vg-accent-fg"],
   ["--vg-accent-fill-from", "white"],
   ["--vg-accent-fill-to", "white"],
 ]
@@ -284,8 +307,11 @@ export function measurePairs(sheets, ground) {
     }
     return found
   }
+  const page = parseColour(tokens.get("--vg-background") ?? "", tokens)
   return pairsOf(tokens).map(([surface, foreground]) => {
-    const behind = luminance(parseColour(tokens.get(surface) ?? "", tokens))
+    // A translucent surface is read where it is drawn: over the page.
+    const drawn = parseColour(tokens.get(surface) ?? "", tokens)
+    const behind = luminance(drawn && drawn.alpha < 1 && surface !== "--vg-background" ? over(drawn, page) : drawn)
     const front = luminance(parseColour(foreground === "white" ? "white" : (tokens.get(foreground) ?? ""), tokens))
     const unread = [behind === null ? surface : null, front === null ? foreground : null].filter(Boolean)
     return {

@@ -54,6 +54,9 @@ describe.each(["light", "dark"] as const)("VDS92: every named token pair on the 
         "--vg-popover-foreground on --vg-popover",
         "--vg-primary-foreground on --vg-primary",
         "--vg-accent-fg on --vg-background",
+        // VDS179 — the tints, laid over the page.
+        "--vg-accent-fg on --vg-accent-surface",
+        "--vg-accent-fg on --vg-accent-surface-strong",
         "white on --vg-accent-fill-from",
         "white on --vg-accent-fill-to",
       ]),
@@ -93,6 +96,28 @@ describe("VDS137: measured where a product re-keys", () => {
     const css = ":root { --vg-accent-from: #f97316; --vg-accent-to: #ea580c; --vg-accent-text: rgb(249 115 22); }"
     expect(pair(css, "light", "--vg-accent-fg", "--vg-background").ratio).toBeLessThan(AA_TEXT)
     expect(pair(css, "light", "white", "--vg-accent-fill-from").ratio).toBeLessThan(AA_TEXT)
+  })
+
+  it("measures the accent label on its own tints, laid over the page", () => {
+    // VDS179 — the default before VDS176 deepened it passed on the page and read
+    // 4.11:1 on the strong tint in the browser, with every gate green.
+    const before = ":root { --vg-accent-text: oklch(54.6% 0.245 262.881); }"
+    expect(pair(before, "light", "--vg-accent-fg", "--vg-background").ratio).toBeGreaterThanOrEqual(AA_TEXT)
+    const strong = pair(before, "light", "--vg-accent-fg", "--vg-accent-surface-strong")
+    expect(strong.ratio).toBeLessThan(AA_TEXT)
+    expect(strong.ratio).toBeCloseTo(4.11, 1)
+
+    // A re-key that clears the page and not the tint is named against the tint.
+    const css = ":root { --vg-accent-from: #2563eb; --vg-accent-to: #4f46e5; --vg-accent-text: #2563eb; }"
+    expect(pair(css, "light", "--vg-accent-fg", "--vg-background").ratio).toBeGreaterThanOrEqual(AA_TEXT)
+    expect(pair(css, "light", "--vg-accent-fg", "--vg-accent-surface-strong").ratio).toBeLessThan(AA_TEXT)
+  })
+
+  it("mixes with transparent the way CSS does, keeping the hue", () => {
+    // Premultiplied: half of white over black is mid-grey, not a darker white.
+    const half = parseColour("color-mix(in oklab, white 50%, transparent)")!
+    expect(half.alpha).toBeCloseTo(0.5, 5)
+    expect(half.L).toBeCloseTo(1, 5)
   })
 
   it("reads the colour forms a product writes, and refuses the ones it cannot", () => {

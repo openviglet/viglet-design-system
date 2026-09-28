@@ -52,27 +52,6 @@ which of the two expired — the poll, or the hover before it — and whether th
 had focus. Raising the deadline before that is guessing at which number was wrong, and
 would only make a stalled run take longer to say the same nothing.
 
-### §VDS179 The accent label on its tints
-
-`src/styles/contrast.test.ts` measures every named token pair on both grounds, plus the
-pairs a name cannot derive: the page, muted text, the accented label on the page, and
-white on the accent fill. It does not measure the accented label on the accent's own
-tints, `--vg-accent-surface` and `--vg-accent-surface-strong`. The icon picker draws
-exactly that pair: its hover state is `--vg-accent-fg` on the strong tint, and so is its
-selected cell.
-
-VDS176 found it, once story tests could see the styles. The brand-accent story's strong
-tint measured 4.11:1 in light mode, and the preset's `--vg-accent-text` went one step
-deeper to hold it. Nothing prevents the next re-key from failing the same way: a product
-that keys `--vg-accent-text` to a colour that passes on the page can still fail on the
-tints, and the gate would stay green.
-
-The tints are `color-mix` over the accent with `transparent`, so they are not opaque
-until they are laid over the page. The repair is to compose each tint over
-`--vg-background` for its ground, and to measure `--vg-accent-fg` on the result as two
-more pairs. Then the re-key check in the same file, which already measures a product's
-accent, covers the tints as well.
-
 ## Block F — What a consuming CMS needs from the package next
 
 ### §VDS152 The deprecation ends

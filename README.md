@@ -155,7 +155,8 @@ viglet-ds-page-lint src --contrast src/index.css
 It lays your stylesheet over the preset the way the two cascade and measures every
 token pair your stylesheet changes on both grounds: each `--vg-X` with its
 `--vg-X-foreground`, text and muted text on the page, the accented label on the
-page, and the white label on the accent fill. A pair under 4.5:1 on either ground
+page and on the accent's two tints (read laid over the page), and the white label
+on the accent fill. A pair under 4.5:1 on either ground
 is a finding at the line that declares the token, with both grounds' ratios:
 
 ```

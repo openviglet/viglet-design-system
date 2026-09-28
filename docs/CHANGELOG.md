@@ -128,6 +128,8 @@
   checked **Story tests render with the Tailwind utilities the catalogue has** A story's axe pass then measures the text a product author sees.
 - ✅ **VDS177** **the README test reads a stale dist/exports.json, so listing a new component fails npm test until a build runs** — The README test skips by name when dist/exports.json is older than src/, so adding and listing a component passes npm test pre-build (design recorded in `scripts/check-readme.test.ts`).
   checked **Adding and listing a component passes npm test before a build** A fixture checkout with a stale dist, or a surface read from source, shows the README test green.
+- ✅ **VDS179** **the contrast gate never measures the accented label on the accent's own tints, which the icon picker draws** — The contrast gate and page-lint measure the accent label on both accent tints, laid over the page, and mix with transparent the way CSS does (design recorded in `scripts/lib/contrast.mjs`).
+  checked **The accent label is measured on both accent tints, on both grounds** contrast.test.ts lists the two pairs among those it finds, and the re-key case fails a label too light for the tint.
 
 ## Block B — Bento becomes a design-system layer
 
