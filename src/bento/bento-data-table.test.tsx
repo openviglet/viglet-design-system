@@ -78,6 +78,21 @@ describe("BentoDataTable", () => {
     expect(bodyRows().length).toBeLessThan(30)
   })
 
+  it("is as tall as its rows when they are fewer than the space holds, and scrolls only past it", () => {
+    // VDS192 — one row under a 400px body read as a list still loading.
+    const bodyOf = () =>
+      screen.getByRole("grid", { name: "Posts" }).querySelector<HTMLElement>("[role='rowgroup'] + [role='rowgroup']")!
+
+    const { rerender } = draw(table({ rows: posts(1) }))
+    expect(bodyOf().style.height).toBe("40px")
+
+    rerender(<I18nextProvider i18n={i18next}>{table({ rows: posts(7) })}</I18nextProvider>)
+    expect(bodyOf().style.height).toBe("280px")
+
+    rerender(<I18nextProvider i18n={i18next}>{table({ rows: posts(50) })}</I18nextProvider>)
+    expect(bodyOf().style.height).toBe("400px")
+  })
+
   it("extends a selection with shift and the arrows, and clears it with Escape", async () => {
     const user = userEvent.setup()
     draw(table({ selectionActions: [{ id: "trash", label: "Move to trash", icon: IconTrash, onSelect: () => {} }] }))

@@ -123,6 +123,13 @@ export const ControlledSelectionStory: Story = {
   render: () => <ControlledSelection />,
 };
 
+/** A short list is short: the body is as tall as its rows, and scrolls only once they pass `height`. */
+export const OneRow: Story = {
+  render: () => (
+    <BentoDataTable<Post> rows={POSTS.slice(0, 1)} getRowId={(p) => p.id} columns={COLUMNS} label="Posts" />
+  ),
+};
+
 export const Empty: Story = {
   render: () => (
     <BentoDataTable<Post>

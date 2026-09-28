@@ -197,6 +197,8 @@
 - ✅ **VDS183** **BentoListPage requires renderTile, so products render records nobody picks by picture as a tile mosaic** — BentoListPage renders a table from columns by default, with the create action in the hero; renderTile asks for the mosaic.
   checked **BentoListPage renders a table by default, tiles only when asked** The default is what products do, so it has to be the right answer.
   checked **BENTO-AUTHORING.md and list.dc.html state the same default** Two sources saying different things is how the drift started.
+- ✅ **VDS192** **A one-row BentoDataTable reserves about 450 px of empty panel, so a short list reads as a failed load** — BentoDataTable's body is as tall as its rows up to height and scrolls only past it, so a one-row list is one row tall.
+  checked **A table with fewer rows than the space holds is as tall as its rows** A short list must not read as a failed load.
 
 ## Block D — The package in a server-rendered framework
 

@@ -8,8 +8,6 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS192** (deps: —) **A one-row BentoDataTable reserves about 450 px of empty panel, so a short list reads as a failed load** — A table as tall as its rows up to the space available, virtualising only past it, makes a short list look short. → §VDS192
-
 ## Block E — The assistant every product shares
 
 ## Done when — VDS182
@@ -34,11 +32,6 @@
   lowers must be one every bento consumer reports, not only Shio.
 - **No committed route names an id or an account** The allowance is committed, so a
   concrete segment would publish product data.
-
-## Done when — VDS192
-
-- **A table with fewer rows than the space holds is as tall as its rows** A short list
-  must not read as a failed load.
 
 ## Done when — VDS193
 

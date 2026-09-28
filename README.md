@@ -870,7 +870,9 @@ link sits, with the middle collapsed past four. A trail of one renders the usual
 arrow back link. `BentoTrail` is the same trail on its own, for a custom eyebrow.
 
 `BentoDataTable` is the list a curator sorts, range-selects and acts on at scale.
-It mounts only the rows in view, so ten thousand cost what twenty do. Pass `rows`,
+It mounts only the rows in view, so ten thousand cost what twenty do. The body is
+as tall as its rows up to `height` (480 px by default) and scrolls past that, so a
+list of one is one row tall. Pass `rows`,
 `getRowId`, `columns` (a header, a `cell`, and a `sortValue` to make it sortable),
 and optionally `rowActions` for a per-row menu and `selectionActions` for the bar
 that appears over a selection. The arrows move between rows, Shift with an arrow

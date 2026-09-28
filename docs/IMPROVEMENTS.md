@@ -123,19 +123,6 @@ it (solid cards, 16 px hero titles, the chip on hero only) and map states to ton
 published emerald, draft slate, scheduled violet, changed amber, archived neutral.
 Components follow the review.
 
-### §VDS192 A short table is short
-
-With VDS183, a Shio admin list with one record, such as the single API token on a fresh
-instance, renders a BentoDataTable whose panel runs about 450 px below its one 44 px
-row, empty to the bottom of the viewport. The table mounts only the visible rows, so it
-sizes its scroll container to the viewport rather than to its content. That is right for
-a list of thousands and wrong for a list of one to a dozen, which is most admin lists.
-The empty panel reads as a failure to load rather than as a short list, and it pushes
-whatever the page puts below the table out of view. The same VDS183 contract promised
-that an empty list is one inline card. The complement is that a short list is only as
-tall as its rows. The table's height should be the smaller of its content and the space
-available, with virtualisation engaging only when the rows exceed it.
-
 ## Block E — The assistant every product shares
 
 ### §VDS185 The dock rests at the foot of the rail

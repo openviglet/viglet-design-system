@@ -96,7 +96,7 @@ export interface BentoDataTableProps<TRow> {
   onRowOpen?: (row: TRow) => void;
   /** Pixels per row. Rows are one height, which is what lets the table mount only the visible ones. */
   rowHeight?: number;
-  /** The scrolling body's height in pixels. */
+  /** The most the body grows to, in pixels. Fewer rows than fill it, and it is as tall as the rows. */
   height?: number;
   /** Shown instead of the body when there are no rows. */
   empty?: ReactNode;
@@ -217,9 +217,13 @@ export function BentoDataTable<TRow extends RowData>({
     .join(" ");
 
   const total = ordered.length;
-  const page = Math.max(1, Math.floor(height / rowHeight));
+  // VDS192 — the body is as tall as its rows, up to `height`, and scrolls only
+  // past it. A body held at `height` left one row above a panel of empty space,
+  // which read as a list still loading.
+  const viewport = Math.min(height, total * rowHeight);
+  const page = Math.max(1, Math.floor(viewport / rowHeight));
   const first = Math.max(0, Math.floor(scrollTop / rowHeight) - OVERSCAN);
-  const last = Math.min(total, Math.ceil((scrollTop + height) / rowHeight) + OVERSCAN);
+  const last = Math.min(total, Math.ceil((scrollTop + viewport) / rowHeight) + OVERSCAN);
   const current = Math.min(focused, Math.max(0, total - 1));
 
   // Focus follows the keyboard into rows the move just scrolled into view. Only
@@ -262,7 +266,7 @@ export function BentoDataTable<TRow extends RowData>({
     if (el) {
       let nextTop = el.scrollTop;
       if (top < nextTop) nextTop = top;
-      else if (top + rowHeight > nextTop + height) nextTop = top + rowHeight - height;
+      else if (top + rowHeight > nextTop + viewport) nextTop = top + rowHeight - viewport;
       if (nextTop !== el.scrollTop) {
         el.scrollTop = nextTop;
         setScrollTop(nextTop);
@@ -481,7 +485,7 @@ export function BentoDataTable<TRow extends RowData>({
             ref={body}
             onScroll={(event) => setScrollTop(event.currentTarget.scrollTop)}
             className="relative overflow-y-auto"
-            style={{ height }}
+            style={{ height: viewport }}
           >
             <div style={{ height: total * rowHeight }} className="relative">
               {ordered.slice(first, last).map((row, offset) => {
