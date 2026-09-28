@@ -1,0 +1,76 @@
+/** The shapes `look-census.mjs` works in, for the TypeScript that imports it. */
+
+export type Owner = "package" | "product" | "unknown"
+
+export interface Frame {
+  url: string
+  line: number
+  column: number
+}
+
+export interface Sample {
+  figure: string
+  value: string
+  owner: Owner
+}
+
+export interface Reading {
+  route: string
+  view: string
+  samples: Sample[]
+  primaries: number
+  overlaps: Owner[]
+}
+
+export interface Tally {
+  figures: Record<string, Record<string, { package: number; product: number; unknown: number; routes: Set<string> }>>
+  crowded: Record<string, number>
+  dock: Record<string, number>
+}
+
+export interface Allowance {
+  figures: Record<
+    string,
+    {
+      distinct: number
+      byOwner: Record<Owner, number>
+      values: Record<string, Record<Owner, number>>
+      offenders: Record<string, string[]>
+    }
+  >
+  crowded: Record<string, number>
+  dock: Record<string, number>
+}
+
+export declare const VIEWS: readonly { id: string; width: number; height: number; theme: "dark" | "light" }[]
+export declare const FIGURES: Record<string, string>
+
+export declare function routePattern(pathname: string): string
+export declare function fits(pattern: string, pathname: string): boolean
+export declare function routeOf(pathname: string, patterns: Iterable<string>): string
+export declare function walkable(href: string, start: string): boolean
+
+export declare function decodeMappings(mappings: string): [number, number][][]
+export declare function sourceAt(
+  map: { sources: string[] },
+  decoded: [number, number][][],
+  line: number,
+  column: number,
+): string | null
+export declare function makeClassifier(
+  loadMap: (url: string) => Promise<{ sources: string[]; mappings: string } | null>,
+): (frame: Frame) => Promise<"package" | "product" | "react" | "third">
+export declare function ownerOf(
+  chain: number[],
+  stacks: Frame[][],
+  classify: (frame: Frame) => Promise<"package" | "product" | "react" | "third">,
+): Promise<Owner>
+
+export declare function probe(): unknown
+export declare function tally(readings: Reading[]): Tally
+export declare function allowanceOf(tallied: Tally): Allowance
+export declare function compare(
+  id: string,
+  allowed: Allowance,
+  current: Allowance,
+): { grew: string[]; lowered: string[] }

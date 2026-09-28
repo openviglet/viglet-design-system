@@ -52,24 +52,22 @@ which of the two expired — the poll, or the hover before it — and whether th
 had focus. Raising the deadline before that is guessing at which number was wrong, and
 would only make a stalled run take longer to say the same nothing.
 
-### §VDS180 A visual census across the bento consumers
+### §VDS186 Reading the other bento consumers
 
-A Playwright walk of all 45 Shio console routes on 2026-09-28 (dark, light and a 390 px
-phone) measured what no check here asserts: fifteen visible button heights between 16
-and 44 px, ten border radii, inputs at 36, 42 and 44 px, three monospace stacks, two
-colours acting as the filled primary, and the page title starting at four x offsets.
-Nobody has measured Turing and Dumont the same way, and that gap is the reason this task
-exists. The package has already measured one kind of drift across its consumers:
-`chrome:census` counts console-era imports in every entry of `consumers.json`, and
-`viglet-ds-page-lint` reports a page that sets its own column. Neither reads a rendered
-page. The deliverable is the instrument, before any change to the look. It is a census
-that loads each bento consumer's routes in a browser and records, per route, the title's
-offset, the heights of controls, the radii in use, the font families, the number of
-filled primary buttons and whether the dock overlaps an interactive element. It then
-separates what the package's own components render from what product code renders. That
-split is the number every other line in this round needs, because it says whether a fix
-belongs here or in a product. The first reading lands as the allowance, with the
-offenders named, so each later task lowers a figure rather than claiming an improvement.
+The first `pnpm look:census --write` read Shio only: its dev server was the one running
+on this machine, on port 5173 against a local backend. Turing, Dumont and roadkeep-gui
+sit in `look-allowance.json` as `measured: null` with that reason, so nothing fails when
+their look drifts, and every figure in the round is so far a Shio figure.
+
+The work is operational, not new code. Start each consumer's dev server with its
+backend, then run `pnpm look:census --url <id>=<start url> --auth <id>=<user:pass>
+--write` with that consumer's bento entry as the start. The walk crawls from there and
+reads the router, so nothing about the product needs to be declared first. Commit the
+allowance it writes. A consumer that renders `<Routes>` below a splat route only shows
+its nested patterns once the walk has reached a page under it. If a reading names a
+route by a concrete segment rather than `:param`, the probe's route-table walk in
+`scripts/look-census.mjs` missed that router. Fix it there before recording, because an
+account name in a route would end up in a committed file.
 
 ## Block F — What a consuming CMS needs from the package next
 

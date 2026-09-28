@@ -130,6 +130,10 @@
   checked **Adding and listing a component passes npm test before a build** A fixture checkout with a stale dist, or a surface read from source, shows the README test green.
 - ✅ **VDS179** **the contrast gate never measures the accented label on the accent's own tints, which the icon picker draws** — The contrast gate and page-lint measure the accent label on both accent tints, laid over the page, and mix with transparent the way CSS does (design recorded in `scripts/lib/contrast.mjs`).
   checked **The accent label is measured on both accent tints, on both grounds** contrast.test.ts lists the two pairs among those it finds, and the re-key case fails a label too light for the tint.
+- ✅ **VDS180** **No check measures how bento consumers look: Shio alone renders 15 button heights, 10 radii and 3 mono faces** — pnpm look:census walks bento consumers in a browser, splits each figure by package or product, and holds Shio's first reading as the allowance (design recorded in `scripts/look-census.mjs`).
+  checked **A census run reports every bento consumer, route by route** Turing and Dumont are unmeasured today, and a claim about three products needs all three read.
+  checked **Each finding is attributed to package or product code** That split decides whether a fix lands here or in a consumer, which every later line depends on.
+  checked **The first reading is committed as the allowance, offenders named** Later tasks then lower a figure instead of describing an improvement.
 
 ## Block B — Bento becomes a design-system layer
 

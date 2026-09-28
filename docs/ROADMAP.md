@@ -2,7 +2,7 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS180** (deps: —) **No check measures how bento consumers look: Shio alone renders 15 button heights, 10 radii and 3 mono faces** — The census comes before any change to the look, and it splits what the package draws from what a product draws, which says where each fix belongs. → §VDS180
+- 📋 **VDS186** (deps: VDS180 ✅) **Turing, Dumont and roadkeep-gui have no look reading, so their drift fails nothing** — A reading per consumer is what lets a look fix land in the package instead of in whichever product was measured first. → §VDS186
 
 ## Block F — What a consuming CMS needs from the package next
 
@@ -11,21 +11,12 @@
 ## Block C — One look across products
 
 - 📋 **VDS181** (deps: —) **The rail names a section only in a tooltip, so a reader learns it by hovering, and no item can show a count** — A short label under each icon, and an optional count badge on the item that owns it, keep the rail's few choices while making them recognisable at a glance. → §VDS181
-- 📋 **VDS182** (deps: VDS180) **Glass, gradient chips on every tile and hero, and one tone per area make colour everywhere and mean nothing** — Keeping the chip for identity and turning tones into state lets the accent mark the primary action and the current place, which is what a working screen needs. → §VDS182
-- 📋 **VDS183** (deps: VDS180) **BentoListPage requires renderTile, so products render records nobody picks by picture as a tile mosaic** — A table by default, with tiles as the variant for visual or few entities, makes list.dc.html's discriminator the path of least resistance. → §VDS183
+- 📋 **VDS182** (deps: VDS180 ✅) **Glass, gradient chips on every tile and hero, and one tone per area make colour everywhere and mean nothing** — Keeping the chip for identity and turning tones into state lets the accent mark the primary action and the current place, which is what a working screen needs. → §VDS182
+- 📋 **VDS183** (deps: VDS180 ✅) **BentoListPage requires renderTile, so products render records nobody picks by picture as a tile mosaic** — A table by default, with tiles as the variant for visual or few entities, makes list.dc.html's discriminator the path of least resistance. → §VDS183
 
 ## Block E — The assistant every product shares
 
-- 📋 **VDS185** (deps: VDS180) **The shell owns the dock's corner but reserves nothing there, so the orb covers row actions in the column** — Resting the dock at the rail's foot, a slot the shell already reserves, keeps one voice for notices and can never hide a control. → §VDS185
-
-## Done when — VDS180
-
-- **A census run reports every bento consumer, route by route** Turing and Dumont are
-  unmeasured today, and a claim about three products needs all three read.
-- **Each finding is attributed to package or product code** That split decides whether a
-  fix lands here or in a consumer, which every later line depends on.
-- **The first reading is committed as the allowance, offenders named** Later tasks then
-  lower a figure instead of describing an improvement.
+- 📋 **VDS185** (deps: VDS180 ✅) **The shell owns the dock's corner but reserves nothing there, so the orb covers row actions in the column** — Resting the dock at the rail's foot, a slot the shell already reserves, keeps one voice for notices and can never hide a control. → §VDS185
 
 ## Done when — VDS181
 
@@ -65,6 +56,13 @@
   is the only place it cannot cover content.
 - **The census reports zero dock overlaps with interactive elements** An overlap is
   invisible to every other check.
+
+## Done when — VDS186
+
+- **Turing, Dumont and roadkeep-gui each carry a measured reading** A figure the round
+  lowers must be one every bento consumer reports, not only Shio.
+- **No committed route names an id or an account** The allowance is committed, so a
+  concrete segment would publish product data.
 
 ## Non-goals
 
