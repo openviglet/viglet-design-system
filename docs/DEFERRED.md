@@ -11,8 +11,6 @@
 
 - ⏸ **VDS152** (deps: VDS142 ✅) **an actions-menu item without an id still type-checks, so the one-release deprecation never ends** — set aside (a release that carried the missing-id warning): Until the type requires it, a new console verb can reach the DOM with no name for a census to match. → §VDS152
 
-## Block C — One look across products
-
 ## Block E — The assistant every product shares
 
 - ⏸ **VDS185** (deps: VDS180 ✅) **The shell owns the dock's corner but reserves nothing there, so the orb covers row actions in the column** — set aside (It waits for a release the consumers install.): No consumer runs it yet, so no census has read zero dock overlaps. → §VDS185

@@ -4,8 +4,6 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-## Block C — One look across products
-
 ## Block E — The assistant every product shares
 
 ## Done when — VDS185

@@ -107,8 +107,6 @@ release that warned. Before shipping, run viglet-ds-check-duplicates and a type-
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
 
-## Block C — One look across products
-
 ## Block E — The assistant every product shares
 
 ### §VDS185 The dock rests at the foot of the rail
