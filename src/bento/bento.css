@@ -11,7 +11,7 @@
  * JavaScript beside it.
  *
  * It reads `--primary`, `--card`, `--popover` and `--border`, which the preset
- * aliases from its own `--vg-*` tokens. So the frosted surfaces take the
+ * aliases from its own `--vg-*` tokens. So the surfaces take the
  * product's palette rather than carrying one — but a consumer importing this
  * without `@viglet/viglet-design-system/preset` gets surfaces with no colour.
  */
@@ -239,8 +239,19 @@
 
 .bento-dropdown-item:active { transform: scale(0.98); }
 
-/* Frosted-glass surface — works in light and dark through the design tokens */
+/* The panel surface — a solid card on a border (VDS182).
+
+   It was frosted glass, and every panel on a page frosting what sat behind it
+   was one of the reasons a working screen read as a collage. The class keeps its
+   name because products hand-roll it at call sites; what it draws is the card. */
 .bento-glass {
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+/* Frost stays where content scrolls under a surface — the save bar that docks
+   over a form — because there the blur is what keeps the text beneath legible. */
+.bento-frost {
   background: color-mix(in oklab, var(--card) 72%, transparent);
   -webkit-backdrop-filter: blur(18px) saturate(180%);
   backdrop-filter: blur(18px) saturate(180%);
@@ -348,6 +359,28 @@
 .dark .bento-status-error,
 [data-theme="dark"] .bento-status-error {
   --bento-status-text: var(--vg-bento-error-text-dark);
+}
+
+/* Record states (VDS182) — a dot and a word, the one place colour appears on a
+   row or a list tile. Five of them, and no tone per product area: colour that is
+   everywhere cannot say which record is live and which is waiting. */
+.bento-state-dot {
+  background-color: var(--bento-state);
+}
+
+.bento-state-published { --bento-state: var(--vg-bento-state-published); }
+.bento-state-draft     { --bento-state: var(--vg-bento-state-draft); }
+.bento-state-scheduled { --bento-state: var(--vg-bento-state-scheduled); }
+.bento-state-changed   { --bento-state: var(--vg-bento-state-changed); }
+.bento-state-archived  { --bento-state: var(--vg-bento-state-archived); }
+
+/* Where no single thing is named — a list's hero, a form section, an empty
+   state — the icon sits in a neutral well. The gradient chip names a thing, so it
+   stays in an entity hero and on a hub's tiles (VDS182). */
+.bento-well {
+  background: var(--muted);
+  border: 1px solid var(--border);
+  color: var(--muted-foreground);
 }
 
 /* The destructive item in a menu: text only until focused, then a faint wash. */

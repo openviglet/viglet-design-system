@@ -125,7 +125,12 @@ export { useBentoScrollFade } from "./bento-scroll-fade";
 export { BentoScrollSaveBar } from "./bento-scroll-save-bar";
 export { AdaptiveSectionCard, type AdaptiveSectionCardProps } from "./bento-section-chrome";
 export { BentoSection, type BentoSectionProps } from "./bento-section";
-export { BentoStatusMarker, type BentoStatusMarkerProps } from "./bento-status-marker";
+export {
+  BENTO_RECORD_STATES,
+  BentoStatusMarker,
+  type BentoRecordState,
+  type BentoStatusMarkerProps,
+} from "./bento-status-marker";
 export { BentoTile, type BentoTileProps } from "./bento-tile";
 export { BentoVersionRail, type BentoVersion, type BentoVersionRailProps } from "./bento-version-rail";
 

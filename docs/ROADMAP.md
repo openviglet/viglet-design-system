@@ -8,15 +8,6 @@
 
 ## Block E — The assistant every product shares
 
-## Done when — VDS182
-
-- **The gradient chip renders only in entity heroes and hub tiles** Identity is the one
-  place a picture names a thing.
-- **Tones map to five states and render through BentoStatusMarker** Colour that means
-  state is readable; colour per area is noise.
-- **The reference artboards are redrawn from preset tokens first** The direction is
-  reviewed as composition before a component changes.
-
 ## Done when — VDS185
 
 - **The dock rests at the rail's foot and opens as an anchored popover** A reserved slot

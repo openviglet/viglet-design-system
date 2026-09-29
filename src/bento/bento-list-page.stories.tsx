@@ -3,28 +3,31 @@ import { IconCpu2 } from "@tabler/icons-react";
 
 import { BentoEntityTile } from "./bento-entity-tile";
 import { BentoListPage, BentoTileGrid } from "./bento-list-page";
+import type { BentoRecordState } from "./bento-status-marker";
 
 interface Model {
   id: string;
   name: string;
   note: string;
   enabled: number;
+  state: BentoRecordState;
 }
 
 const models: Model[] = [
-  { id: "a", name: "Claude", note: "Anthropic", enabled: 1 },
-  { id: "b", name: "GPT", note: "OpenAI", enabled: 1 },
-  { id: "c", name: "Llama", note: "Meta", enabled: 0 },
-  { id: "d", name: "Mistral", note: "Mistral AI", enabled: 1 },
-  { id: "e", name: "Gemma", note: "Google", enabled: 0 },
+  { id: "a", name: "Claude", note: "Anthropic", enabled: 1, state: "published" },
+  { id: "b", name: "GPT", note: "OpenAI", enabled: 1, state: "changed" },
+  { id: "c", name: "Llama", note: "Meta", enabled: 0, state: "draft" },
+  { id: "d", name: "Mistral", note: "Mistral AI", enabled: 1, state: "scheduled" },
+  { id: "e", name: "Gemma", note: "Google", enabled: 0, state: "archived" },
 ];
 
 /**
  * A whole list screen in one call. By default it is a table: the records a reader
  * compares, with the create action in the hero. Passing a `renderTile` asks for
- * the mosaic instead, for things picked by sight or that are few; it sizes the
- * first item large and widens the rest, so two consoles' grids line up without
- * either of them deciding anything.
+ * the mosaic instead, for things picked by sight or that are few; it sizes every
+ * tile alike, so two consoles' grids line up without either of them deciding
+ * anything. A tile carries no chip and no tone of its own: its one colour is the
+ * record's state.
  */
 const meta = {
   title: "Bento/BentoListPage",
@@ -58,8 +61,7 @@ const common = {
       defaultIcon={IconCpu2}
       title={m.name}
       description={m.note}
-      hasStatus
-      enabled={m.enabled}
+      state={m.state}
     />
   ),
   emptyTitle: "No models yet",

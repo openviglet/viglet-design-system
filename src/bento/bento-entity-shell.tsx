@@ -343,7 +343,7 @@ export function BentoEntityShell<TEntity extends BentoEntityLike>({
             value={staged.title}
             onSave={(title) => persistField({ title })}
             placeholder={headlineFallback}
-            className="text-3xl font-semibold tracking-tight md:text-4xl"
+            className="text-2xl font-semibold tracking-tight md:text-3xl"
             ariaLabel={t("forms.common.title")}
             // Open in edit mode when creating so the user immediately sees a
             // focused input — a clear cue this is the first field to fill.

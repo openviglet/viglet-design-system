@@ -81,7 +81,7 @@ export interface BentoHeroProps {
  * Mirrors the "navigation title" pattern from iOS — large, airy,
  * left-aligned by default, and animates in with the same spring as
  * the rest of the bento shell. Stays outside the bento grid (no
- * frosted-glass surface) so it reads as a section header rather
+ * card surface) so it reads as a section header rather
  * than as a tile.
  *
  * Layout contract: leading + title block always anchor to the start;
@@ -113,7 +113,7 @@ export function BentoHero({
               {eyebrowContent}
             </span>
           )}
-          <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">{title}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">{title}</h1>
           {subtitle && (
             <p className="max-w-2xl text-sm text-muted-foreground">{subtitle}</p>
           )}

@@ -47,7 +47,7 @@ function BentoSaveBar({
   const { t } = useTranslation();
 
   return (
-    <div className="bento-glass flex items-center justify-between gap-4 rounded-2xl px-4 py-3 shadow-md backdrop-blur-xl">
+    <div className="bento-frost flex items-center justify-between gap-4 rounded-2xl px-4 py-3 shadow-md backdrop-blur-xl">
       <div className="flex min-w-0 items-center gap-3">
         {/* Not a heading: this repeats the hero's title once the hero scrolls
             away, and a second entry in the document outline would invent a

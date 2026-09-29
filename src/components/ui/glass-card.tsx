@@ -20,7 +20,7 @@ const DEFAULT_SURFACE = "rounded-2xl p-6 sm:p-8";
  *
  * Pass any Tailwind override through `className`; the merge is done with
  * `tailwind-merge`, so the last of two conflicting utilities wins (`p-4` over the
- * default `p-6 sm:p-8`). Inside a bento shell a frosted box is `BentoPanel`, and a
+ * default `p-6 sm:p-8`). Inside a bento shell a box is `BentoPanel`, and a
  * form section is `BentoFormSection`.
  *
  * The shadow tint follows `color` / `colorDark`. With neither, the light shadow

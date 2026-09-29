@@ -74,23 +74,20 @@ describe("compound markup, one chrome", () => {
     expect(frosted).toHaveClass("bento-tile")
   })
 
-  it("maps the variant to a tone, including the two with no tone of their own", () => {
-    const cyan = draw(
-      <AdaptiveSectionCard variant="cyan">
-        <AdaptiveSectionCard.Header icon={IconCpu2} title="Cyan" />
-        <AdaptiveSectionCard.Content>x</AdaptiveSectionCard.Content>
-      </AdaptiveSectionCard>,
-    )
-    expect(cyan.container.querySelector(".bento-tone-blue")).toBeInTheDocument()
-    cyan.unmount()
-
-    const orange = draw(
-      <AdaptiveSectionCard variant="orange">
-        <AdaptiveSectionCard.Header icon={IconCpu2} title="Orange" />
-        <AdaptiveSectionCard.Content>x</AdaptiveSectionCard.Content>
-      </AdaptiveSectionCard>,
-    )
-    expect(orange.container.querySelector(".bento-tone-amber")).toBeInTheDocument()
+  // VDS182 — a variant was a tone per area, and colour per area is what the
+  // layer stopped drawing. Every variant renders the same neutral well.
+  it("draws the same neutral well whatever the variant", () => {
+    for (const variant of ["cyan", "orange", "violet"] as const) {
+      const section = draw(
+        <AdaptiveSectionCard variant={variant}>
+          <AdaptiveSectionCard.Header icon={IconCpu2} title={variant} />
+          <AdaptiveSectionCard.Content>x</AdaptiveSectionCard.Content>
+        </AdaptiveSectionCard>,
+      )
+      expect(section.container.querySelector(".bento-well")).toBeInTheDocument()
+      expect(section.container.querySelector(".bento-chip")).toBeNull()
+      section.unmount()
+    }
   })
 
   it("accepts a static header as well as a collapsible one", () => {

@@ -45,7 +45,7 @@ import {
   type ResolvedBentoItem,
   toBentoLayoutEntries,
 } from "./bento-layout";
-import { bentoChipClass, type BentoTone } from "./bento-tones";
+import type { BentoTone } from "./bento-tones";
 
 export interface BentoListPageProps<T> {
   /** Query data — `undefined` while loading (drives the LoadProvider gate). */
@@ -76,11 +76,14 @@ export interface BentoListPageProps<T> {
   backLabel?: ReactNode;
   /** A nested list's ancestors, root first (forwarded to BentoHero). */
   trail?: readonly BentoTrailStep[];
-  /** The hero's icon chip. Optional: a list of records names no single thing. */
+  /** The hero's icon, in a neutral well. Optional: a list of records names no single thing. */
   heroIcon?: TablerIcon;
   title: string;
   subtitle: string;
-  /** Tone driving the hero chip + New-tile gradient. Default `indigo`. */
+  /**
+   * @deprecated Ignored since VDS182. A list names many things, so its hero icon sits in a
+   * neutral well and the New tile carries no gradient; colour on a list is a record's state.
+   */
   tone?: BentoTone;
   /**
    * Optional global action(s) rendered in a row below the hero (left-aligned,
@@ -200,7 +203,6 @@ export function BentoListPage<T>({
   heroIcon: HeroIcon,
   title,
   subtitle,
-  tone = "indigo",
   headerAction,
   newRoute,
   newLabel,
@@ -219,7 +221,6 @@ export function BentoListPage<T>({
   layout,
 }: Readonly<BentoListPageProps<T>>) {
   const { t } = useTranslation();
-  const chip = bentoChipClass(tone);
   const [editing, setEditing] = useState(false);
 
   const resolved = useMemo(
@@ -228,7 +229,7 @@ export function BentoListPage<T>({
   );
 
   const leading = HeroIcon ? (
-    <span className={`grid h-12 w-12 place-items-center rounded-2xl ${chip} text-white shadow-md`}>
+    <span className="bento-well grid h-12 w-12 place-items-center rounded-2xl">
       <HeroIcon size={24} />
     </span>
   ) : undefined;
@@ -308,7 +309,6 @@ export function BentoListPage<T>({
           canEditGlobal={layout?.data?.canEditGlobal ?? false}
           isCustomized={layout?.data?.source === "USER"}
           renderTile={renderTile}
-          chip={chip}
           hideNew={hideNew}
           newRoute={newRoute}
           newLabel={newLabel}
@@ -319,7 +319,6 @@ export function BentoListPage<T>({
         <StaticGrid
           resolved={resolved}
           renderTile={renderTile}
-          chip={chip}
           hideNew={hideNew}
           newRoute={newRoute}
           newLabel={newLabel}
@@ -340,7 +339,7 @@ export interface BentoTileGridProps<T> {
   error?: string | null;
   /** URL the LoadProvider "try again" link points at. */
   tryAgainUrl: string;
-  /** Tone driving the dashed New-tile gradient. Default `indigo`. */
+  /** @deprecated Ignored since VDS182: the New tile carries no gradient. */
   tone?: BentoTone;
   // --- "new" tile (omit both, or set hideNew, to drop it) ---
   newRoute?: string;
@@ -365,7 +364,7 @@ export interface BentoTileGridProps<T> {
 }
 
 /**
- * The Bento mosaic **without** a hero — the frosted `bento-grid` of tiles, an
+ * The Bento mosaic **without** a hero — the `bento-grid` of tiles, an
  * optional dashed "New" tile, and an empty-state hint. Use it for list content
  * that renders inside a shell which already owns the header (e.g. a page with a
  * shared {@link BentoHero} + pill tab-bar `Outlet`, like Administration, or a
@@ -377,7 +376,6 @@ export function BentoTileGrid<T>({
   items,
   error,
   tryAgainUrl,
-  tone = "indigo",
   newRoute,
   newLabel,
   newSubtitle,
@@ -387,10 +385,9 @@ export function BentoTileGrid<T>({
   emptyTitle,
   emptyDescription,
 }: Readonly<BentoTileGridProps<T>>) {
-  const chip = bentoChipClass(tone);
   const newTile =
     !hideNew && newRoute && newLabel ? (
-      <NewTile route={newRoute} label={newLabel} subtitle={newSubtitle} chip={chip} />
+      <NewTile route={newRoute} label={newLabel} subtitle={newSubtitle} />
     ) : null;
 
   return (
@@ -411,7 +408,6 @@ export function BentoTileGrid<T>({
 function StaticGrid<T>({
   resolved,
   renderTile,
-  chip,
   hideNew,
   newRoute,
   newLabel,
@@ -422,7 +418,6 @@ function StaticGrid<T>({
 }: Readonly<{
   resolved: ResolvedBentoItem<T>[];
   renderTile: (item: T, emphasis: BentoEmphasis) => ReactNode;
-  chip: string;
   hideNew: boolean;
   newRoute: string;
   newLabel: ReactNode;
@@ -434,7 +429,7 @@ function StaticGrid<T>({
   const hasSmall = resolved.some((r) => r.emphasis === "SMALL");
   return (
     <div data-slot="bento-list-tiles" className={cn(BENTO_GRID_CLASS, hasSmall && "grid-flow-dense")}>
-      {!hideNew && <NewTile route={newRoute} label={newLabel} subtitle={newSubtitle} chip={chip} />}
+      {!hideNew && <NewTile route={newRoute} label={newLabel} subtitle={newSubtitle} />}
       {resolved.map(({ item, key, emphasis }) => (
         <span key={key} className="contents">
           {renderTile(item, emphasis)}
@@ -457,7 +452,6 @@ function BentoListEditor<T>({
   canEditGlobal,
   isCustomized,
   renderTile,
-  chip,
   hideNew,
   newRoute,
   newLabel,
@@ -469,7 +463,6 @@ function BentoListEditor<T>({
   isCustomized: boolean;
   layout: BentoListLayout;
   renderTile: (item: T, emphasis: BentoEmphasis) => ReactNode;
-  chip: string;
   hideNew: boolean;
   newRoute: string;
   newLabel: ReactNode;
@@ -603,7 +596,7 @@ function BentoListEditor<T>({
             {/* The New tile stays in place (non-draggable) so the editable grid
                 is WYSIWYG with the saved result — same tile, same slot, same
                 packing. It just isn't a sortable item. */}
-            {!hideNew && <NewTile route={newRoute} label={newLabel} subtitle={newSubtitle} chip={chip} />}
+            {!hideNew && <NewTile route={newRoute} label={newLabel} subtitle={newSubtitle} />}
             {draft.map(({ item, key, emphasis }) => (
               <BentoSortableTile
                 key={key}
@@ -699,8 +692,7 @@ function NewTile({
   route,
   label,
   subtitle,
-  chip,
-}: Readonly<{ route: string; label: ReactNode; subtitle?: ReactNode; chip: string }>) {
+}: Readonly<{ route: string; label: ReactNode; subtitle?: ReactNode }>) {
   const { t } = useTranslation();
   return (
     /*
@@ -713,14 +705,14 @@ function NewTile({
       className="bento-tile bento-tile-clickable col-span-2 row-span-1 flex flex-col gap-3 rounded-3xl border-2 border-dashed border-border/60 bg-card/30 p-5 backdrop-blur-md bento-new-tile hover:bg-card/50 md:col-span-2 md:row-span-1 lg:col-span-2 lg:row-span-1"
     >
       <div className="flex items-center gap-3">
-        <span className={`bento-pulse grid h-10 w-10 place-items-center rounded-2xl ${chip} text-white shadow-md`}>
+        <span className="bento-well grid h-10 w-10 place-items-center rounded-2xl">
           <IconPlus size={20} />
         </span>
         <span className="text-[11px] uppercase tracking-wider text-muted-foreground">{t("forms.formActions.new", { defaultValue: "New" })}</span>
       </div>
       <div>
         <div className="text-base font-semibold tracking-tight md:text-lg">
-          <span className={`${chip} bg-clip-text text-transparent`}>{label}</span>
+          {label}
         </div>
         {subtitle && <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>}
       </div>

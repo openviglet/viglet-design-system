@@ -2,7 +2,7 @@
  * Colour tones for bento tiles.
  *
  * A tone names the gradient on the icon chip; the surface behind it stays
- * frosted and neutral so the two never compete. What a tone *is* lives in CSS:
+ * a solid neutral card so the two never compete. What a tone *is* lives in CSS:
  * `bento.css` maps each name to `--bento-tone-from` / `--bento-tone-to`, which
  * resolve from `--vg-bento-tone-<name>-*` in the preset.
  *

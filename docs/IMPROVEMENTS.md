@@ -109,26 +109,6 @@ without ids, so the breaking release is not the first they hear of it.
 
 ## Block C — One look across products
 
-### §VDS182 A quieter surface: the chip for identity, tones for state
-
-The layer's surfaces carry a lot of ornament at once. Frosted glass sits behind every
-panel. A 34 to 48 px chip with a blue-to-indigo gradient appears on every tile and every
-hero. Each product area gets its own tone, so a Shio console shows blue sites, green
-users and violet groups, and the first tile of a list gets a double-size cell with a
-radial glow. Each piece is reasonable alone. Together they are why a working screen
-reads as a collage: colour appears everywhere and means nothing, so the one colour that
-should mean something (the primary action, the current place, a state) has to shout over
-it. The proposal keeps the layer's shapes and quiets its surface. The gradient chip
-stays on identity only: the entity hero and a hub's tiles, where it names a thing. Rows,
-list pages and form sections lose it. Tones stop being a per-area decoration and become
-state: published, draft, scheduled, changed since publish and archived, drawn through
-`BentoStatusMarker` as a dot and a word. The accent is reserved for the primary action
-and "you are here". The emphasised double tile stops being automatic. The hero title
-steps down to a size that leaves the fold to the work. The reference artboards now draw
-it (solid cards, 16 px hero titles, the chip on hero only) and map states to tones:
-published emerald, draft slate, scheduled violet, changed amber, archived neutral.
-Components follow the review.
-
 ## Block E — The assistant every product shares
 
 ### §VDS185 The dock rests at the foot of the rail

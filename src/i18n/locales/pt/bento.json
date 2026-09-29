@@ -19,6 +19,13 @@
       "unsaved": "Alterações não salvas",
       "titleRequired": "Título obrigatório"
     },
+    "state": {
+      "published": "Publicado",
+      "draft": "Rascunho",
+      "scheduled": "Agendado",
+      "changed": "Alterado",
+      "archived": "Arquivado"
+    },
     "shortcuts": {
       "title": "Atalhos de teclado",
       "description": "Navegue sem tirar as mãos do teclado.",

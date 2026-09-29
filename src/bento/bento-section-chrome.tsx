@@ -32,7 +32,7 @@ interface HeaderLikeProps {
 export interface AdaptiveSectionCardProps {
   variant?: ColorVariant;
   /**
-   * Merged onto the frosted surface rather than replacing it. This was the prop
+   * Merged onto the section surface rather than replacing it. This was the prop
    * the chrome switch used to drop on one of its two branches, so a form styled
    * through the wrapper lost that styling under the very chrome the wrapper
    * existed to hide (VDS111); it is asserted on both paths below for that reason.
@@ -42,7 +42,7 @@ export interface AdaptiveSectionCardProps {
 }
 
 /**
- * A `SectionCard`'s markup rendered as a frosted {@link BentoFormSection}.
+ * A `SectionCard`'s markup rendered as a {@link BentoFormSection}.
  * Import it aliased where you want a drop-in:
  *
  * ```tsx
@@ -90,7 +90,7 @@ function AdaptiveSectionCard({
     return child;
   });
 
-  // A section built some other way has no header to lift. It keeps the frosted
+  // A section built some other way has no header to lift. It keeps the section
   // surface and all of its children, because losing its fields silently is the
   // failure here that would be hardest to notice.
   if (!header) {

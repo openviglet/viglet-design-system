@@ -24,13 +24,11 @@ prose. Where the two disagree, the contract is right and an artboard is stale.
 
 `canvas.json` places them and names the two pages.
 
-**The shapes are drawn one step ahead of the components.** They show the quieter surface
-that this package proposes, for review as a composition before any component changes. Panels
-are solid cards, not frosted glass. The gradient chip names a thing, so it stays in an
-entity hero and a hub's tiles and leaves rows, lists and form sections. Colour marks
-state (published, draft, scheduled, changed, archived) as a dot and a word, not an
-area. Until the components follow, a page built today still renders the glass and
-the chips; the rule above, that the contract wins, applies again once they do.
+**The shapes draw the quieter surface, and the components now follow it.** Panels are
+solid cards, not frosted glass; frost stays on the save bar, which content scrolls under.
+The gradient chip names a thing, so it stays in an entity hero and a hub's tiles and
+leaves rows, lists and form sections. Colour marks state (published, draft, scheduled,
+changed, archived) as a dot and a word, not an area.
 
 ## Two rules about the content
 

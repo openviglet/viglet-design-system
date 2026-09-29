@@ -120,15 +120,20 @@ keeps what was typed while its preview is shown. Never lay two panes out with a 
 your own: who scrolls, the reading width and the phone fallback are what this shape
 decides once.
 
-**A frosted box with arbitrary content** — a stats strip, a toolbar, a listing,
+**A box with arbitrary content** — a stats strip, a toolbar, a listing,
 a message — is `BentoPanel`. It is the one container in this layer with **no
 heading**, which is the point rather than an omission: those surfaces sit under a
 hero that already names the page, and a heading on them is noise that also puts a
 section in the document outline the page does not have. Two class slots,
-`className` on the frosted container and `contentClassName` on the inner wrapper,
+`className` on the card and `contentClassName` on the inner wrapper,
 and no padding of its own — a table wants `p-0` and a toolbar wants `py-2`.
 Never hand-roll `bento-glass rounded-2xl border`: the moment two call sites pick
 different radii the product is inconsistent for a reason no diff shows.
+
+`bento-glass` draws a solid card on its border. It was frosted glass, and a page
+where every panel frosts what sits behind it reads as a collage. Frost is
+`bento-frost`, and it belongs only on a surface content scrolls under, which in
+this layer is the save bar.
 
 Three rules that outrank convenience:
 
@@ -192,6 +197,16 @@ No component in the layer names a colour. A tone is
 `--vg-bento-tone-<name>-from` / `-to` in the preset, and the chip reads them, so
 you re-key the palette by redefining variables rather than forking a component.
 The status intents (`on`, `warn`, `error`, `danger`) work the same way.
+
+**The chip names one thing, and colour on a list is a state.** The gradient chip
+is drawn where one thing is named: an entity's hero (`BentoHeroIconPicker`) and a
+hub's tiles (`BentoTile`, `BentoCountTile`). A list's hero, its New tile, a
+record's tile, a form section and an empty state put their icon in a neutral
+well (`bento-well`) instead, and the `tone` they still accept is ignored. A
+product area gets no tone of its own. What a row or a list tile colours is the
+record's state, one of five, drawn by `BentoStatusMarker state="…"` or
+`BentoEntityTile state="…"` as a dot and a word: `published`, `draft`,
+`scheduled`, `changed` and `archived`, keyed by `--vg-bento-state-<name>`.
 
 Accents — a focus border, the rail's active marker, a hover ring — take your
 `--primary`. A shared component marking "you are here" in a colour of its own is
@@ -280,7 +295,8 @@ push, and a violation fails the build.
 ## 7. Responsive
 
 - The grid is `grid-cols-2 md:grid-cols-4 lg:grid-cols-6` with `col-span-2`
-  tiles and `row-span-2` for a featured one. **Keep spans in multiples of two**
+  tiles and `row-span-2` for one a reader chose to feature. No tile is featured by
+  default: being first in a list says nothing about a record. **Keep spans in multiples of two**
   so tiles reflow cleanly at every breakpoint — this is what keeps two consoles'
   grids aligned.
 - The nav rail is desktop-only. `BentoShell` reserves its gutter; a shell that is

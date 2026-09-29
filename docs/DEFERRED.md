@@ -13,8 +13,6 @@
 
 ## Block C — One look across products
 
-- ⏸ **VDS182** (deps: VDS180 ✅) **Glass, gradient chips on every tile and hero, and one tone per area make colour everywhere and mean nothing** — set aside (It waits on a review of the redrawn artboards.): Components still draw glass, a chip per tile and a tone per area. → §VDS182
-
 ## Block E — The assistant every product shares
 
 - ⏸ **VDS185** (deps: VDS180 ✅) **The shell owns the dock's corner but reserves nothing there, so the orb covers row actions in the column** — set aside (It waits for a release the consumers install.): No consumer runs it yet, so no census has read zero dock overlaps. → §VDS185

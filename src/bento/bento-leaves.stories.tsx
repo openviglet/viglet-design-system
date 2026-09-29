@@ -6,7 +6,7 @@ import { BentoCountTile } from "./bento-count-tile";
 import { BentoEmptyState } from "./bento-empty-state";
 import { BentoFormSection } from "./bento-form-section";
 import { BentoSection } from "./bento-section";
-import { BentoStatusMarker } from "./bento-status-marker";
+import { BENTO_RECORD_STATES, BentoStatusMarker } from "./bento-status-marker";
 import { BENTO_TONES } from "./bento-tones";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,7 +14,8 @@ import { Label } from "@/components/ui/label";
 /**
  * The small pieces a bento page is assembled from. Grouped in one entry because
  * each is a handful of markup and reading them together is how their shared
- * vocabulary — the tone, the frosted surface, the chip — becomes visible.
+ * vocabulary — the card surface, the chip that names one thing, the neutral
+ * well where nothing single is named, the record states — becomes visible.
  */
 const meta = {
   title: "Bento/Leaves",
@@ -57,11 +58,11 @@ export const Section: Story = {
 export const FormSections: Story = {
   render: () => (
     <div className="flex w-full max-w-2xl flex-col gap-4">
-      {(["violet", "emerald", "amber"] as const).map((tone) => (
-        <BentoFormSection key={tone} tone={tone} title={`${tone} section`} icon={IconCpu2}>
+      {["Connection", "Credentials", "Schedule"].map((title) => (
+        <BentoFormSection key={title} title={title} icon={IconCpu2}>
           <div className="grid gap-2">
-            <Label htmlFor={`endpoint-${tone}`}>Endpoint</Label>
-            <Input id={`endpoint-${tone}`} placeholder="https://" />
+            <Label htmlFor={`endpoint-${title}`}>Endpoint</Label>
+            <Input id={`endpoint-${title}`} placeholder="https://" />
           </div>
         </BentoFormSection>
       ))}
@@ -77,14 +78,18 @@ export const EmptyStates: Story = {
         description="Add one to get started."
         action={<button type="button" className="text-sm underline">Add a model</button>}
       />
-      <BentoEmptyState title="Nothing here" align="start" tone="emerald" />
+      <BentoEmptyState title="Nothing here" align="start" />
     </div>
   ),
 };
 
 export const StatusMarkers: Story = {
   render: () => (
-    <div className="flex items-center gap-4">
+    <div className="flex flex-wrap items-center gap-4">
+      {/* A record's state: the one colour a row or a list tile carries. */}
+      {BENTO_RECORD_STATES.map((state) => (
+        <BentoStatusMarker key={state} state={state} />
+      ))}
       <BentoStatusMarker dirty />
       <BentoStatusMarker titleMissing />
       {/* Neither condition: renders nothing, which is the third state. */}

@@ -19,6 +19,13 @@
       "unsaved": "Unsaved changes",
       "titleRequired": "Title required"
     },
+    "state": {
+      "published": "Published",
+      "draft": "Draft",
+      "scheduled": "Scheduled",
+      "changed": "Changed",
+      "archived": "Archived"
+    },
     "shortcuts": {
       "title": "Keyboard shortcuts",
       "description": "Move around without leaving the keyboard.",

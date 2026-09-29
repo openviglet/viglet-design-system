@@ -79,7 +79,9 @@ describe("BentoHero", () => {
 })
 
 describe("BentoFormSection", () => {
-  it("renders a titled section around its children with a tonal chip", () => {
+  // VDS182 — a form section names no single thing, so its icon sits in a
+  // neutral well whatever tone a caller still passes.
+  it("renders a titled section around its children with its icon in a neutral well", () => {
     const { container } = draw(
       <BentoFormSection tone="violet" title="Connection" icon={IconCpu2}>
         <input aria-label="Endpoint" />
@@ -88,7 +90,8 @@ describe("BentoFormSection", () => {
 
     expect(screen.getByText("Connection")).toBeInTheDocument()
     expect(screen.getByLabelText("Endpoint")).toBeInTheDocument()
-    expect(container.querySelector(".bento-tone-violet")).toBeInTheDocument()
+    expect(container.querySelector(".bento-well")).toBeInTheDocument()
+    expect(container.querySelector(".bento-chip")).toBeNull()
   })
 })
 

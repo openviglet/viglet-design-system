@@ -2,12 +2,12 @@ import type { Icon as TablerIcon } from "@tabler/icons-react";
 import { IconSparkles } from "@tabler/icons-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { bentoChipClass, type BentoTone } from "./bento-tones";
+import type { BentoTone } from "./bento-tones";
 
 export interface BentoEmptyStateProps {
-  /** Tonal icon in the leading chip. Defaults to a sparkle. */
+  /** Icon in the leading neutral well. Defaults to a sparkle. */
   icon?: TablerIcon;
-  /** Tone driving the icon chip gradient. Default `indigo`. */
+  /** @deprecated Ignored since VDS182: an empty state names nothing, so its icon sits in a neutral well. */
   tone?: BentoTone;
   /** Headline — what's missing, in plain language. */
   title: string;
@@ -35,7 +35,7 @@ export interface BentoEmptyStateProps {
  * The one canonical Bento empty-state (T572). Every "nothing here yet" surface
  * — an empty entity list, a chart with no samples, an analytics tab before its
  * first data point — renders this so the void reads the same everywhere: a
- * frosted `bento-glass` panel, a tonal icon chip, a short title, a one-line
+ * `bento-glass` card, an icon in a neutral well, a short title, a one-line
  * hint, and an optional CTA. Consistency here is the delight: an empty screen
  * that looks designed rather than broken.
  *
@@ -44,7 +44,6 @@ export interface BentoEmptyStateProps {
  */
 export function BentoEmptyState({
   icon: Icon = IconSparkles,
-  tone = "indigo",
   title,
   description,
   action,
@@ -52,7 +51,6 @@ export function BentoEmptyState({
   titleLevel = 2,
   className,
 }: Readonly<BentoEmptyStateProps>) {
-  const chip = bentoChipClass(tone);
   const centered = align === "center";
   const Title = `h${titleLevel}` as const;
   return (
@@ -64,7 +62,7 @@ export function BentoEmptyState({
       )}
     >
       <span
-        className={`grid h-12 w-12 place-items-center rounded-2xl ${chip} text-white shadow-md`}
+        className="bento-well grid h-12 w-12 place-items-center rounded-2xl"
       >
         <Icon size={24} />
       </span>

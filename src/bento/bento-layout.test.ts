@@ -27,11 +27,12 @@ const entry = (
 ): BentoLayoutEntry => ({ itemId, emphasis, displayOrder })
 
 describe("resolveBentoLayout", () => {
-  it("features the first item and widens the rest when nothing is persisted", () => {
+  // VDS182 — the first record used to be doubled, which said nothing about it.
+  it("sizes every item alike when nothing is persisted", () => {
     const resolved = resolveBentoLayout(items("a", "b", "c"), key, undefined)
 
     expect(resolved.map((r) => [r.key, r.emphasis])).toEqual([
-      ["a", "LARGE"],
+      ["a", "MEDIUM"],
       ["b", "MEDIUM"],
       ["c", "MEDIUM"],
     ])

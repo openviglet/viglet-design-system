@@ -79,12 +79,13 @@ describe("BentoListPage", () => {
     for (const item of items) expect(screen.getByText(item.name)).toBeInTheDocument()
   })
 
-  it("features the first tile and widens the rest, with spans in multiples of two", () => {
+  it("sizes every tile alike by default, with spans in multiples of two", () => {
     const { container } = list()
 
-    // LARGE is 2x2, MEDIUM 2x1 — the mosaic never produces a one-column tile
-    // by default, which is what keeps two consoles' grids aligned.
-    expect(container.querySelector(".row-span-2")).toBeInTheDocument()
+    // MEDIUM is 2x1 — the mosaic never produces a one-column tile by default,
+    // which is what keeps two consoles' grids aligned. No tile is doubled until
+    // a reader asks for it (VDS182).
+    expect(container.querySelector(".row-span-2")).toBeNull()
     expect(container.querySelectorAll(".col-span-2").length).toBeGreaterThanOrEqual(3)
   })
 

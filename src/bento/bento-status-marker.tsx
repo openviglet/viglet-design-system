@@ -3,6 +3,21 @@ import { useTranslation } from "react-i18next";
 
 import { cn } from "@/lib/utils";
 
+/**
+ * The five states a record can be in, and the only tones a row or a list tile
+ * carries (VDS182). A product area has no tone of its own.
+ */
+export type BentoRecordState = "published" | "draft" | "scheduled" | "changed" | "archived";
+
+/** Every record state, in the order a reader meets them. */
+export const BENTO_RECORD_STATES: readonly BentoRecordState[] = [
+  "published",
+  "draft",
+  "scheduled",
+  "changed",
+  "archived",
+];
+
 export interface BentoStatusMarkerProps {
   /**
    * The title is empty / missing. Takes precedence over `dirty` and renders
@@ -11,12 +26,17 @@ export interface BentoStatusMarkerProps {
   titleMissing?: boolean;
   /** There are unsaved changes — renders an amber "unsaved" cue. */
   dirty?: boolean;
+  /**
+   * The record's state, drawn as a dot and a word. The two save cues above win
+   * over it, because while a form cannot be saved that is what the reader needs.
+   */
+  state?: BentoRecordState;
   className?: string;
 }
 
 /**
- * A small chip in a bento hero's eyebrow saying a form cannot be saved yet or has
- * unsaved changes.
+ * A small mark in a bento hero's eyebrow, a row or a tile, saying what state a
+ * record is in, or that a form cannot be saved yet or has unsaved changes.
  *
  * It carries the two save-state cues the bento detail pages kept from the console's
  * sticky header:
@@ -24,17 +44,21 @@ export interface BentoStatusMarkerProps {
  *   - `titleMissing` → a red "Title required" blocker (Save is also disabled).
  *   - `dirty`        → an amber "Unsaved changes" cue with a pulsing dot.
  *
- * Renders nothing when neither applies. Case/tracking are reset so it can sit
+ * and, since VDS182, the record's `state` as a dot and a word: published,
+ * draft, scheduled, changed since publish, archived. That is where colour goes
+ * on a list; a product area gets none.
+ *
+ * Renders nothing when none applies. Case/tracking are reset so it can sit
  * inside the hero eyebrow (which is uppercase + wide-tracked) without
  * inheriting those styles.
  *
  * @author Alexandre Oliveira
  * @since 2026.3.4
  */
-export function BentoStatusMarker({ titleMissing, dirty, className }: Readonly<BentoStatusMarkerProps>) {
+export function BentoStatusMarker({ titleMissing, dirty, state, className }: Readonly<BentoStatusMarkerProps>) {
   const { t } = useTranslation();
 
-  if (!titleMissing && !dirty) return null;
+  if (!titleMissing && !dirty && !state) return null;
 
   const base =
     "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-medium normal-case leading-none tracking-normal";
@@ -50,12 +74,29 @@ export function BentoStatusMarker({ titleMissing, dirty, className }: Readonly<B
     );
   }
 
+  if (dirty) {
+    return (
+      <span
+        className={cn(base, "bento-status bento-status-warn", className)}
+      >
+        <span className="h-1.5 w-1.5 rounded-full bento-status-dot bento-pulse" />
+        {t("bento.saveBar.unsaved", { defaultValue: "Unsaved changes" })}
+      </span>
+    );
+  }
+
   return (
     <span
-      className={cn(base, "bento-status bento-status-warn", className)}
+      data-state={state}
+      className={cn(
+        "inline-flex items-center gap-1.5 text-xs font-normal normal-case leading-none tracking-normal",
+        state === "archived" ? "text-muted-foreground" : "text-foreground/80",
+        `bento-state-${state}`,
+        className,
+      )}
     >
-      <span className="h-1.5 w-1.5 rounded-full bento-status-dot bento-pulse" />
-      {t("bento.saveBar.unsaved", { defaultValue: "Unsaved changes" })}
+      <span aria-hidden className="h-1.5 w-1.5 shrink-0 rounded-full bento-state-dot" />
+      {t(`bento.state.${state}`)}
     </span>
   );
 }

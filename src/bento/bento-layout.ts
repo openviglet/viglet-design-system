@@ -56,8 +56,10 @@ export interface ResolvedBentoItem<T> {
 }
 
 /**
- * Resolve items into ordered, sized tiles. With no persisted entries this is the
- * built-in default — first item `LARGE`, the rest `MEDIUM`. With entries, order
+ * Resolve items into ordered, sized tiles. With no persisted entries every item
+ * is `MEDIUM`: the first one used to be `LARGE`, and a list whose first record
+ * happened to be first was not a reason to double it (VDS182). A reader who
+ * wants one tile larger says so in the editor. With entries, order
  * by `displayOrder` (items absent from the layout — e.g. created since it was
  * saved — keep their natural order at the end) and size by the persisted
  * emphasis (absent → `MEDIUM`).
@@ -68,11 +70,7 @@ export function resolveBentoLayout<T>(
   entries: BentoLayoutEntry[] | undefined,
 ): ResolvedBentoItem<T>[] {
   if (!entries || entries.length === 0) {
-    return items.map((item, idx) => ({
-      item,
-      key: itemKey(item),
-      emphasis: idx === 0 ? "LARGE" : "MEDIUM",
-    }));
+    return items.map((item) => ({ item, key: itemKey(item), emphasis: "MEDIUM" }));
   }
 
   const orderMap = new Map<string, number>();

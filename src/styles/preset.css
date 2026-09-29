@@ -129,8 +129,8 @@
 
      The values are the OKLCH the layer shipped with, so re-keying is a choice
      rather than something that happened on the way here. Fixed across light and
-     dark on purpose: the chip carries the colour and the surface stays frosted,
-     so the two never compete. */
+     dark on purpose: the chip carries the colour and the surface stays a neutral
+     card, so the two never compete. */
   --vg-bento-tone-blue-from: oklch(54.6% 0.245 262.881);
   --vg-bento-tone-blue-to: oklch(51.1% 0.262 276.966);
   --vg-bento-tone-indigo-from: oklch(51.1% 0.262 276.966);
@@ -164,6 +164,16 @@
   --vg-bento-danger-text: oklch(51.4% 0.222 16.935);
   --vg-bento-danger-text-dark: oklch(71.2% 0.194 13.428);
   --vg-bento-danger-text-dark-hover: oklch(81% 0.117 11.638);
+  /* Bento record states (VDS182) — the dot beside the word `BentoStatusMarker`
+     draws. Colour marks state here and nowhere per area. Published and changed
+     are the `on` and `warn` marks, so a live record and a pending edit read the
+     same in a pill and in a row; the other three are slate, violet and a
+     neutral that says the record is out of play. */
+  --vg-bento-state-published: var(--vg-bento-on-mark);
+  --vg-bento-state-draft: oklch(55.4% 0.046 257.417);
+  --vg-bento-state-scheduled: oklch(60.6% 0.25 292.717);
+  --vg-bento-state-changed: var(--vg-bento-warn-mark);
+  --vg-bento-state-archived: oklch(87% 0 0);
   /* The pulse glow behind a live indicator. It shipped as a raw indigo inside a
      keyframe, where the check that reads Tailwind class names could not see it. */
   --vg-bento-pulse: oklch(58.5% 0.233 277.117);

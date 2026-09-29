@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 export interface BentoPanelProps {
   children: ReactNode;
-  /** Applied to the frosted container itself — margins, `overflow-hidden`, a width. */
+  /** Applied to the card itself — margins, `overflow-hidden`, a width. */
   className?: string;
   /**
    * Applied to the inner content wrapper, which carries **no padding of its own**.
@@ -18,10 +18,10 @@ export interface BentoPanelProps {
 }
 
 /**
- * A frosted container with **no heading** — the shape the bento vocabulary was missing.
+ * A card with **no heading** — the shape the bento vocabulary was missing.
  *
  * `BentoTile` is a clickable tile, `BentoSection` is a heading plus a grid, `BentoFormSection` is
- * a titled form group. None of them is "a frosted box with arbitrary content in it", so every
+ * a titled form group. None of them is "a box with arbitrary content in it", so every
  * consumer that needed one hand-rolled `bento-glass rounded-2xl border` at the call site — and the
  * moment two of them picked different radii the product was inconsistent for a reason invisible in
  * any diff.
@@ -31,9 +31,10 @@ export interface BentoPanelProps {
  * that already names the page; a heading on any of them is noise, and `BentoSection` without a
  * title would still render its `header` element and put an empty entry in the document outline.
  *
- * The surface is `BentoSaveBar`'s, deliberately: that bar is the other frosted container with no
- * heading in this layer, and two things doing the same job should not drift apart. `bento-glass`
- * already carries the border and the blur, so this adds only the radius and the shadow.
+ * It takes `BentoSaveBar`'s radius and shadow, deliberately: that bar is the other container with
+ * no heading in this layer, and two things doing the same job should not drift apart. The
+ * surfaces differ since VDS182: `bento-glass` is a solid card on its border, and the bar keeps
+ * `bento-frost` because content scrolls under it.
  */
 export function BentoPanel({ children, className, contentClassName }: Readonly<BentoPanelProps>) {
   return (

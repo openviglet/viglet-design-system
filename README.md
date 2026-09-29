@@ -906,11 +906,11 @@ the selection with its own controls, without remounting the table.
 ```
 
 `AdaptiveSectionCard` renders the console's compound form markup — a `Header`
-child and a `Content` child — as a frosted bento section, so a form written that
+child and a `Content` child — as a bento card section, so a form written that
 way moves without being rewritten. That compound API is the whole difference
 from `BentoFormSection`, which takes the same icon, title and description as
-props. A section whose header it cannot read keeps the frosted surface and all
-of its children; a frosted box that is not part of a form is `BentoPanel`.
+props. A section whose header it cannot read keeps the section surface and all
+of its children; a box that is not part of a form is `BentoPanel`.
 
 **`SectionCardChromeProvider`, `useSectionChrome`, the `SectionChrome` type and
 the `defaultOpen` prop were removed in this release.** They picked between the
