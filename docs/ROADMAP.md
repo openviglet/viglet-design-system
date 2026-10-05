@@ -8,8 +8,6 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS200** (deps: —) **Sidebar rows, the navigation trigger and two bento controls still set heights the control scale does not hold** — A scale that only some controls read leaves the census counting the rest as the same drift. → §VDS200
-
 ## Done when — VDS185
 
 - **The dock rests at the rail's foot and opens as an anchored popover** A reserved slot
@@ -29,12 +27,6 @@
 - **A story file whose browser drops fails, and npm test exits instead of hanging**
   Failing fast is what the gate lacked: every test passed, and the run still never
   ended.
-
-## Done when — VDS200
-
-- **Every interactive element the package exports measures dense, form or touch**
-  control-height.parity.test.tsx lists each control and fails on any other height; a row
-  left off says why beside its class.
 
 ## Non-goals
 

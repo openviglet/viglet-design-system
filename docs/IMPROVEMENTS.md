@@ -128,18 +128,3 @@ proposal, because the rail foot is empty today and costs nothing. The census's o
 measure is what shows it done in every consumer that mounts a dock.
 
 ## Block C — One look across products
-
-### §VDS200 Controls still off the height scale
-
-The closed control-height scale in preset.css covers Button, GradientButton, Toggle,
-Input, SelectTrigger, SidebarInput and the bento actions trigger, and a browser test
-holds each of them to dense or form. Other interactive elements still set a fixed
-height. SidebarMenuButton draws h-8, h-7 and h-12 for its three sizes, the
-SidebarMenuSub button h-7, the navigation-menu trigger h-9, the bento list page's
-reorder grip h-7 and the command palette's search field h-12. Each one is a height a
-look census counts. Decide per element whether it is a control on the scale (the grip
-and the sidebar's sm and default rows are dense, the navigation trigger is form) or a
-row that is not a control at all (sidebar lg, the palette field), move the controls onto
-the tokens, and add the controls to the CONTROLS table in
-control-height.parity.test.tsx. A row left off the scale says why in a comment beside
-its class.

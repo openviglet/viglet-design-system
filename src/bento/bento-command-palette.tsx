@@ -257,7 +257,9 @@ export function BentoCommandPalette({
         <div className="flex items-center gap-3 border-b border-border/60 px-4">
           <IconSearch size={18} className="shrink-0 text-muted-foreground" />
           {/* autoFocus is deliberate: a palette is a keyboard-first launcher, and a
-              reader who pressed the shortcut is already typing. */}
+              reader who pressed the shortcut is already typing. Its 48 px is the
+              dialog's header row, borderless, and not a field on the control
+              scale (VDS200). */}
           <input
             autoFocus
             type="text"

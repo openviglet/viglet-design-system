@@ -679,7 +679,7 @@ function BentoSortableTile({
           {...attributes}
           {...listeners}
           aria-label={t("bento.layout.dragToReorder", { defaultValue: "Drag to reorder" })}
-          className="grid h-7 w-7 cursor-grab place-items-center rounded-full border border-border/60 bg-background/80 shadow-sm backdrop-blur hover:bg-background active:cursor-grabbing"
+          className="grid size-(--vg-control-dense) cursor-grab place-items-center rounded-full border border-border/60 bg-background/80 shadow-sm backdrop-blur hover:bg-background active:cursor-grabbing"
         >
           <IconGripVertical size={14} className="text-muted-foreground" />
         </button>

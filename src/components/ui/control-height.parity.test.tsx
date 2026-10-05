@@ -1,16 +1,24 @@
-import { IconTrash } from "@tabler/icons-react"
-import { render } from "@testing-library/react"
+import { IconCpu2, IconTrash } from "@tabler/icons-react"
+import { render, screen } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
+import i18next from "i18next"
 import type { ReactElement } from "react"
+import { I18nextProvider, initReactI18next } from "react-i18next"
+import { MemoryRouter } from "react-router-dom"
 import { describe, expect, it } from "vitest"
 
 import "@/styles/index.css"
 
 import { BentoActionsMenu } from "@/bento/bento-actions-menu"
+import { BentoEntityTile } from "@/bento/bento-entity-tile"
+import { BentoListPage } from "@/bento/bento-list-page"
 
 import { Button } from "./button"
 import { GradientButton } from "./gradient-button"
 import { Input } from "./input"
+import { NavigationMenu, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from "./navigation-menu"
 import { Select, SelectTrigger, SelectValue } from "./select"
+import { SidebarMenuButton, SidebarMenuSubButton, SidebarProvider } from "./sidebar"
 import { Toggle } from "./toggle"
 
 /**
@@ -59,13 +67,28 @@ const CONTROLS: Record<string, ReactElement> = {
       actions={[{ id: "post.delete", label: "Delete", icon: IconTrash, onSelect: () => {} }]}
     />
   ),
+  // VDS200. SidebarMenuButton `lg` is a 48 px row carrying a two-line label, and
+  // the command palette's field is its dialog's header row: neither is a control.
+  "SidebarMenuButton default": <SidebarProvider><SidebarMenuButton>Home</SidebarMenuButton></SidebarProvider>,
+  "SidebarMenuButton sm": <SidebarProvider><SidebarMenuButton size="sm">Home</SidebarMenuButton></SidebarProvider>,
+  "SidebarMenuSubButton md": <SidebarProvider><SidebarMenuSubButton href="#">Home</SidebarMenuSubButton></SidebarProvider>,
+  "SidebarMenuSubButton sm": (
+    <SidebarProvider><SidebarMenuSubButton size="sm" href="#">Home</SidebarMenuSubButton></SidebarProvider>
+  ),
+  NavigationMenuTrigger: (
+    <NavigationMenu>
+      <NavigationMenuList>
+        <NavigationMenuItem><NavigationMenuTrigger>Docs</NavigationMenuTrigger></NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
+  ),
 }
 
 function heightOf(control: ReactElement) {
   const host = document.createElement("div")
   document.body.appendChild(host)
   const { unmount } = render(control, { container: host })
-  const element = host.querySelector("button, input")!
+  const element = host.querySelector("button, input, a")!
   const height = element.getBoundingClientRect().height
   unmount()
   host.remove()
@@ -78,6 +101,42 @@ describe("every exported control sits on the closed height scale", () => {
       expect(SCALE).toContain(heightOf(control))
     })
   }
+
+  it("draws the bento list's reorder grip at the dense height", async () => {
+    if (!i18next.isInitialized) {
+      await i18next.use(initReactI18next).init({ lng: "en", resources: { en: { translation: {} } } })
+    }
+    const { unmount } = render(
+      <I18nextProvider i18n={i18next}>
+        <MemoryRouter>
+          <BentoListPage<{ id: string }>
+            items={[{ id: "a" }]}
+            listId="llm"
+            layout={{
+              data: { listId: "llm", source: "DEFAULT", canEditGlobal: false, entries: [] },
+              onSave: () => {},
+            }}
+            tryAgainUrl="/llm"
+            heroIcon={IconCpu2}
+            title="Models"
+            subtitle="Every model"
+            newRoute="/llm/new"
+            newLabel="New model"
+            itemKey={(i) => i.id}
+            renderTile={(item, emphasis) => (
+              <BentoEntityTile to={`/llm/${item.id}`} emphasis={emphasis} defaultIcon={IconCpu2} title={item.id} />
+            )}
+            emptyTitle="No models yet"
+            emptyDescription="Add one"
+          />
+        </MemoryRouter>
+      </I18nextProvider>,
+    )
+    await userEvent.click(screen.getByRole("button", { name: /customize/i }))
+    const grip = screen.getAllByRole("button", { name: /reorder/i })[0]
+    expect(grip.getBoundingClientRect().height).toBe(SCALE[0])
+    unmount()
+  })
 
   it("draws both heights, so the scale is not one value", () => {
     const heights = new Set(Object.values(CONTROLS).map(heightOf))
