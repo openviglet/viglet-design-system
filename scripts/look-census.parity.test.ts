@@ -7,7 +7,7 @@ import { probe } from "./look-census-probe.mjs"
 
 const FILL = "rgb(37, 99, 235)"
 
-type Read = { primaries: number; overlaps: number[]; samples: [string, string, number][] }
+type Read = { primaries: number; cards: number; overlaps: number[]; samples: [string, string, number][] }
 
 function page(html: string): Read {
   document.documentElement.style.setProperty("--primary", FILL)
@@ -53,6 +53,18 @@ describe("counting what a reader sees", () => {
     `)
     const heights = read.samples.filter(([figure]) => figure === "button-height").map(([, value]) => value)
     expect(heights).toEqual(["32"])
+  })
+
+  it("counts a button taller than the touch step as a card, and a short pill as a control", () => {
+    const read = page(`
+      <h1>Files</h1>
+      <button style="display:block;width:240px;height:343px">report.pdf</button>
+      <button style="height:22px;border-radius:999px">Draft</button>
+      <button style="height:44px">Menu</button>
+    `)
+    const heights = read.samples.filter(([figure]) => figure === "button-height").map(([, value]) => value)
+    expect(heights).toEqual(["22", "44"])
+    expect(read.cards).toBe(1)
   })
 
   it("does not read a control scrolled under a sticky header as covered by its dock", () => {

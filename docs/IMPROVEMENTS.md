@@ -141,27 +141,8 @@ the 21, 33 and 37 px (the entity hero's inline-edit description and title) readi
 the calendar header measured 24 to 30 px. What is left needs Shio's dev server and an
 account: run look:census --json against it, name the component behind each of those
 three values, put it on a control token or mark it as text, add it to
-control-height.parity.test.tsx, and lower Shio's button-height allowance with --write.
-
-### §VDS202 Cards are not control heights
-
-look-census-probe.mjs samples the height of every visible button and [role=button], so a
-card that happens to be a button counts as a control height. In Shio (SH1210,
-2026-10-05) that is most of what remains of the product's button-height figure: the
-files grid's tiles at 343 px, the marketplace entries at 182 px, and the Universal
-Editor's site rows at 49, 68 and 69 px, whose height follows their description. Those
-are not controls drawn off the scale; their content decides their height, and a consumer
-cannot put them on a 32 or 36 px token without turning them into something else. The
-figure exists to find controls drawn off the scale, and every card inflates it with a
-value nobody can lower. Decide which elements the figure measures. One rule is to skip a
-button taller than the touch step (44 px) and report it separately as a card count.
-Another is to skip a button whose content is block layout (a flex column, a heading, an
-image). Either way, a button 45 px or taller should stop reading as a control, while a
-short pill or a link-styled button keeps counting, since those are the hand-drawn
-controls the figure was built to catch. Apply it in look-census-probe.mjs, cover it in
-look-census.parity.test.ts with a card and a pill, and rewrite Shio's allowance from a
-fresh reading. VDS201 lets a button drawn as text opt out with data-look=text, so a card
-could declare itself the same way.
+control-height.parity.test.tsx, and lower Shio's button-height allowance with --write,
+which also drops the cards VDS202 now skips.
 
 ### §VDS203 One face, one mono
 

@@ -87,11 +87,21 @@ export function probe() {
   const STATEFUL =
     '[role="switch"], [role="checkbox"], [role="radio"], [role="menuitemcheckbox"], [role="menuitemradio"], [aria-checked], [aria-pressed]'
   const buttons = [...document.querySelectorAll('button, [role="button"]')].filter(visible)
+  // VDS202 — a button taller than the touch step is a card (a file tile, a
+  // marketplace entry, a row with a description): its content sets its height,
+  // so it is counted apart and not as a control drawn off the scale.
+  tokenProbe.style.height = "var(--vg-control-touch, 2.75rem)"
+  document.body.appendChild(tokenProbe)
+  const touch = tokenProbe.getBoundingClientRect().height || 44
+  tokenProbe.remove()
   let primaries = 0
+  let cards = 0
   for (const b of buttons) {
+    const height = Math.round(b.getBoundingClientRect().height)
     // VDS201 — a button drawn as text (an inline edit's value, a sort header, a
     // fold) takes its line's height, so it declares itself and is not a control.
-    if (!b.matches('[data-look="text"]')) add("button-height", Math.round(b.getBoundingClientRect().height), b)
+    if (height > touch) cards++
+    else if (!b.matches('[data-look="text"]')) add("button-height", height, b)
     if (b.matches(STATEFUL)) continue
     const fill = rgba(getComputedStyle(b).backgroundColor)
     if (saturated(fill)) add("primary-fill", hex(fill), b)
@@ -207,6 +217,7 @@ export function probe() {
     dark: document.documentElement.classList.contains("dark"),
     samples,
     primaries,
+    cards,
     overlaps,
     tileLists,
     mosaics,

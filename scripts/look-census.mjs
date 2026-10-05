@@ -532,6 +532,7 @@ async function walkConsumer(chromium, start, auth, log) {
         dark: raw.dark,
         samples: agreed.samples.map(([figure, value, chain]) => ({ figure, value, owner: ownerAt(chain) })),
         primaries: Math.min(raw.primaries, again.primaries),
+        cards: Math.min(raw.cards, again.cards),
         overlaps,
         tiles: Math.min(raw.tileLists, again.tileLists),
         mosaics: raw.mosaics.map(ownerAt).filter((owner) => owner === "package").length,
@@ -639,6 +640,9 @@ function printConsumer(id, walked, tallied) {
   }
   console.log(`  routes with more than one filled primary: ${Object.keys(allowance.crowded).length}`)
   console.log(`  routes where the corner covers a control: ${Object.keys(allowance.dock).length}`)
+  // VDS202 — read, not gated: a card's height is its content's, so no count of them is a defect.
+  const cardRoutes = new Set(walked.readings.filter((r) => (r.cards ?? 0) > 0).map((r) => r.route))
+  console.log(`  routes drawing buttons taller than the touch step (cards, not controls): ${cardRoutes.size}`)
   const tileRoutes = Object.keys(allowance.tiles)
   console.log(`  routes with a list drawn as tiles: ${tileRoutes.length}${tileRoutes.length ? ` (${tileRoutes.join(", ")})` : ""}`)
   if (unmarked(walked.readings)) {

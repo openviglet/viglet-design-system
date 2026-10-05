@@ -212,6 +212,7 @@
 - ✅ **VDS200** **Sidebar rows, the navigation trigger and two bento controls still set heights the control scale does not hold** — Sidebar menu and sub buttons, the navigation trigger and the bento reorder grip read the control tokens; the two rows left off say why.
   checked **Every interactive element the package exports measures dense, form or touch** control-height.parity.test.tsx lists each control and fails on any other height; a row left off says why beside its class.
 - ✅ **VDS201 (package half)** **Seven button heights in a consumer still come from package components the control-height parity test does not list** — Calendar header controls and the entity status pill sit on the dense height, and a button drawn as text declares data-look=text so the census skips it.
+- ✅ **VDS202** **The census counts a card that is a button as a control height, so tiles and rows inflate a figure nobody can lower** — The census reads a button taller than the touch step as a card, counted apart and ungated, so the button-height figure holds only controls.
 
 ## Block D — The package in a server-rendered framework
 

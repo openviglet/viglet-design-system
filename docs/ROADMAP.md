@@ -8,7 +8,6 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS202** (deps: —) **The census counts a card that is a button as a control height, so tiles and rows inflate a figure nobody can lower** — The button-height figure exists to find controls drawn off the scale, and a 343 px file tile is not one. → §VDS202
 - 📋 **VDS203** (deps: —) **The census counts one mono face twice when a library appends its own fallbacks to the token's stack** — Monaco adds platform fallbacks after reading the font option, so no consumer can lower a figure that is one face. → §VDS203
 - 📋 **VDS204** (deps: —) **BentoDataTable's body has a fixed height, so a list scrolls inside a page that also scrolls** — A list is the page: two scrollbars hide rows on a large screen and trap the wheel, and every consumer picks its own height to cope. → §VDS204
 - 📋 **VDS205** (deps: —) **A list's controls sit in three places, and the table's toolbar is a band holding only Columns** — Filter, import and New live in the hero while Columns sits alone in a band inside the table, so the controls are apart from what they control. → §VDS205
