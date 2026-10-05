@@ -126,5 +126,3 @@ count sit above the user menu. It opens as a popover anchored to the rail, and o
 phone, where there is no rail, it moves to the header's trailing edge. The second is the
 proposal, because the rail foot is empty today and costs nothing. The census's overlap
 measure is what shows it done in every consumer that mounts a dock.
-
-## Block C — One look across products

@@ -14,6 +14,3 @@
 ## Block E — The assistant every product shares
 
 - ⏸ **VDS185** (deps: VDS180 ✅) **The shell owns the dock's corner but reserves nothing there, so the orb covers row actions in the column** — set aside (It waits for a release the consumers install.): No consumer runs it yet, so no census has read zero dock overlaps. → §VDS185
-
-## Block C — One look across products
-

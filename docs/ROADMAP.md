@@ -6,8 +6,6 @@
 
 ## Block E — The assistant every product shares
 
-## Block C — One look across products
-
 ## Done when — VDS185
 
 - **The dock rests at the rail's foot and opens as an anchored popover** A reserved slot
