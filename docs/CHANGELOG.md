@@ -207,6 +207,7 @@
 - ✅ **VDS196** **The catalogue build keeps layer-package-utilities, a dist writer, and stays out of dist only by a file-name accident** — The catalogue build drops layer-package-utilities, and a test fails any vite.config plugin with a writeBundle hook it keeps.
   checked **WRITES_TO_DIST names layer-package-utilities** The set is the rule's enforcement, so a dist writer missing from it is the defect.
 - ✅ **VDS197** **Controls take any height a consumer passes, and the package itself ships three, so a console renders fifteen** — Every exported control reads a dense or form height token, a coarse pointer raises both to the touch step, and a browser test holds them (design recorded in `src/styles/preset.css`).
+- ✅ **VDS198** **Radii are arithmetic on one --vg-radius plus two bento sizes, so a console renders ten** — Every Tailwind radius key lands on a control or panel token, the bento surfaces are panels, and a source scan plus a browser test hold the three values (design recorded in `src/styles/preset.css`).
 
 ## Block D — The package in a server-rendered framework
 

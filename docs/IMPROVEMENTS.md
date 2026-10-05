@@ -129,21 +129,6 @@ measure is what shows it done in every consumer that mounts a dock.
 
 ## Block C — One look across products
 
-### §VDS198 A closed radius scale
-
-The radius tokens are arithmetic on one value: --radius-sm, md, lg and xl are
---vg-radius minus 4, minus 2, plus nothing and plus 4, and the bento surfaces add 16 and
-24 px of their own. Every consumer that changes --vg-radius moves all four, and any
-rounded-[n] in a consumer adds another; Shio's console measured ten distinct radii
-(SH1199, section LV.36 in Shio's IMPROVEMENTS). The closed scale is three values: 6 px
-for a control (button, input, select, badge, menu item), 10 px for a panel (card, bento
-panel, dialog, popover, tile), and full for pills, avatars and the state dot. Declare
-them as --vg-radius-control, --vg-radius-panel and --vg-radius-full, re-point the
-Tailwind radius keys at them (sm and md to control, lg and xl to panel) so existing
-class names keep compiling, and move the bento 16 and 24 px surfaces onto panel. Add a
-test that fails when a component in the package resolves a radius outside the three, and
-a census reading consumers report the way they report colour. Shio adopts it in SH1199.
-
 ### §VDS199 One monospace family
 
 The package declares no monospace family. Tailwind's font-mono falls back to the

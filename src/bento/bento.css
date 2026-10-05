@@ -20,7 +20,8 @@
   :root {
     --bento-spring: cubic-bezier(0.32, 0.72, 0, 1);
     --bento-soft: cubic-bezier(0.22, 1, 0.36, 1);
-    --bento-radius: 1.5rem;
+    /* A tile is a panel on the closed radius scale (VDS198); it was 24 px. */
+    --bento-radius: var(--vg-radius-panel, 0.625rem);
   }
 }
 
@@ -220,7 +221,7 @@
  * Bento dropdown surface — the frosted-glass tile aesthetic, for a popover.
  * ------------------------------------------------------------------------- */
 .bento-dropdown {
-  border-radius: calc(var(--bento-radius) - 0.25rem);
+  border-radius: var(--bento-radius);
   background: color-mix(in oklab, var(--popover) 78%, transparent);
   -webkit-backdrop-filter: blur(22px) saturate(180%);
   backdrop-filter: blur(22px) saturate(180%);
@@ -231,7 +232,7 @@
 }
 
 .bento-dropdown-item {
-  border-radius: 0.75rem;
+  border-radius: var(--vg-radius-control, 0.375rem);
   transition:
     background 200ms var(--bento-soft),
     transform  200ms var(--bento-spring);

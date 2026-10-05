@@ -44,7 +44,7 @@ export function BentoPaletteTrigger({ onClick, isMac = isMacPlatform(), classNam
       {chord && (
         <kbd
           aria-hidden
-          className="hidden rounded border border-border/60 bg-muted px-1.5 py-0.5 text-[10px] font-medium tracking-wide sm:inline"
+          className="hidden rounded-sm border border-border/60 bg-muted px-1.5 py-0.5 text-[10px] font-medium tracking-wide sm:inline"
         >
           {bentoShortcutKeys(chord, isMac).join(isMac ? "" : " ")}
         </kbd>

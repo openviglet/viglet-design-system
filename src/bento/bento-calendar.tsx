@@ -296,7 +296,7 @@ export function BentoCalendar({
               aria-pressed={shown === option ? "true" : "false"}
               onClick={() => changeView(option)}
               className={cn(
-                "rounded px-2 py-0.5 text-sm focus-visible:outline-2 focus-visible:outline-ring",
+                "rounded-sm px-2 py-0.5 text-sm focus-visible:outline-2 focus-visible:outline-ring",
                 shown === option ? "bg-primary text-primary-foreground" : "hover:bg-muted/50",
               )}
             >

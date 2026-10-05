@@ -129,7 +129,7 @@ export const DialogDelete: React.FC<Props> = ({
             </DialogHeader>
             <div className="space-y-2">
               <label className="text-sm text-muted-foreground">
-                {t("dialog.typeToConfirm")} <span className="font-mono font-semibold text-foreground bg-muted px-1.5 py-0.5 rounded">{name}</span> {t("dialog.toConfirm")}
+                {t("dialog.typeToConfirm")} <span className="font-mono font-semibold text-foreground bg-muted px-1.5 py-0.5 rounded-sm">{name}</span> {t("dialog.toConfirm")}
               </label>
               <Input
                 value={confirmText}
