@@ -47,3 +47,6 @@ held = 60
 name = "Viglet Design System"
 description = "Shared components, tokens, hooks and i18n for Viglet products."
 icon = "🧩"
+
+[install]
+wired = "0.2.511"
