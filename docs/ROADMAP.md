@@ -6,6 +6,12 @@
 
 ## Block E — The assistant every product shares
 
+## Block C — One look across products
+
+- 📋 **VDS197** (deps: —) **Controls take any height a consumer passes, and the package itself ships three, so a console renders fifteen** — Two control heights and a touch step as tokens make a consistent console the default rather than a review finding. → §VDS197
+- 📋 **VDS198** (deps: —) **Radii are arithmetic on one --vg-radius plus two bento sizes, so a console renders ten** — Three radii as tokens (control, panel, full) leave a consumer nothing to improvise and nothing to drift. → §VDS198
+- 📋 **VDS199** (deps: —) **The package declares no monospace family, so ids, paths and diffs render in three different monos** — One mono token, mapped to Tailwind's font-mono, gives every consumer one family without bundling a font. → §VDS199
+
 ## Done when — VDS185
 
 - **The dock rests at the rail's foot and opens as an anchored popover** A reserved slot

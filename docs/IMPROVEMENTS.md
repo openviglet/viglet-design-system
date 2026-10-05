@@ -126,3 +126,50 @@ count sit above the user menu. It opens as a popover anchored to the rail, and o
 phone, where there is no rail, it moves to the header's trailing edge. The second is the
 proposal, because the rail foot is empty today and costs nothing. The census's overlap
 measure is what shows it done in every consumer that mounts a dock.
+
+## Block C — One look across products
+
+### §VDS197 A closed control-height scale
+
+Button, Input and Select take their height from a size variant, and the variants span
+three values: sm is h-8, default is h-9, lg is h-10, with icon twins at the same three
+sizes. Nothing stops a consumer passing its own h-7 or h-11 through className, and
+Shio's console measured fifteen distinct control heights (SH1199, section LV.36 in
+Shio's IMPROVEMENTS). The closed scale the concept's system board proposes is two
+heights and a touch step: 32 px dense (tables, filter bars, toolbars), 36 px form
+(fields and their actions), and 44 px on a coarse pointer. Build it as tokens in
+preset.css (--vg-control-dense, --vg-control-form, --vg-control-touch), point Button,
+Input, Select and the bento controls at them, map lg to form rather than a third height,
+and raise both to the touch step under pointer: coarse. Keep the variant names so no
+consumer breaks; lg becomes an alias. Add a test that reads every exported control's
+resolved height and fails on a value outside the scale, and a census figure consumers
+can report. Shio adopts it in SH1199 once the package is published.
+
+### §VDS198 A closed radius scale
+
+The radius tokens are arithmetic on one value: --radius-sm, md, lg and xl are
+--vg-radius minus 4, minus 2, plus nothing and plus 4, and the bento surfaces add 16 and
+24 px of their own. Every consumer that changes --vg-radius moves all four, and any
+rounded-[n] in a consumer adds another; Shio's console measured ten distinct radii
+(SH1199, section LV.36 in Shio's IMPROVEMENTS). The closed scale is three values: 6 px
+for a control (button, input, select, badge, menu item), 10 px for a panel (card, bento
+panel, dialog, popover, tile), and full for pills, avatars and the state dot. Declare
+them as --vg-radius-control, --vg-radius-panel and --vg-radius-full, re-point the
+Tailwind radius keys at them (sm and md to control, lg and xl to panel) so existing
+class names keep compiling, and move the bento 16 and 24 px surfaces onto panel. Add a
+test that fails when a component in the package resolves a radius outside the three, and
+a census reading consumers report the way they report colour. Shio adopts it in SH1199.
+
+### §VDS199 One monospace family
+
+The package declares no monospace family. Tailwind's font-mono falls back to the
+browser's stack, floating-formulas-bg.css names JetBrains Mono and Fira Code, and
+bento-diff renders its rows in whatever font-mono resolves to, so a consumer gets three
+different monos on one screen; Shio's console measured three (SH1199, section LV.36 in
+Shio's IMPROVEMENTS). Declare one family as --vg-font-mono in preset.css, map Tailwind's
+--font-mono to it, point floating-formulas-bg and bento-diff at the token, and set the
+12 px mono step the type scale reserves for ids, paths, keys and diffs. The font file is
+not bundled: the stack names the family and falls back to ui-monospace, so a consumer
+that does not load it still gets one mono. Add a test that fails when a stylesheet in
+the package names a monospace family other than the token, and a census reading of
+distinct font families per consumer. Shio adopts it in SH1199.
