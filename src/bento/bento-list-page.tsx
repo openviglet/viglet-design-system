@@ -86,9 +86,15 @@ export interface BentoListPageProps<T> {
    */
   tone?: BentoTone;
   /**
-   * Optional global action(s) rendered in a row below the hero (left-aligned,
-   * sharing the row with the "Customize" button). Use for list-scoped launch
-   * actions that aren't per-item — e.g. the persona↔persona dialogue (T585).
+   * The list's own controls: its filter and any secondary, list-scoped action
+   * (an import, a launch). As a table they open the table's bar, with Columns at
+   * its end; as tiles they share a row with "Customize layout". New stays the
+   * hero's primary.
+   */
+  toolbar?: ReactNode;
+  /**
+   * @deprecated Pass {@link toolbar}. Drawn where `toolbar` is, when no `toolbar`
+   * is given, for one release.
    */
   headerAction?: ReactNode;
 
@@ -107,7 +113,7 @@ export interface BentoListPageProps<T> {
    * The table's columns, as {@link BentoDataTable} takes them. A list renders as
    * a table unless it passes {@link renderTile}: records a reader compares, such
    * as users, roles, tokens or webhooks, are rows. The create action sits in the
-   * hero, and a `BentoFilterBar` goes in {@link headerAction}, above the table.
+   * hero, and a `BentoFilterBar` goes in {@link toolbar}, in the table's bar.
    */
   columns?: readonly BentoDataTableColumn<T>[];
   /** A menu of named actions on each row. */
@@ -203,6 +209,7 @@ export function BentoListPage<T>({
   heroIcon: HeroIcon,
   title,
   subtitle,
+  toolbar: ownToolbar,
   headerAction,
   newRoute,
   newLabel,
@@ -222,6 +229,7 @@ export function BentoListPage<T>({
 }: Readonly<BentoListPageProps<T>>) {
   const { t } = useTranslation();
   const [editing, setEditing] = useState(false);
+  const toolbar = ownToolbar ?? headerAction;
 
   const resolved = useMemo(
     () => resolveBentoLayout(items ?? [], itemKey, layout?.data?.entries),
@@ -256,9 +264,12 @@ export function BentoListPage<T>({
             )
           }
         />
-        {headerAction && <div className="mb-4 flex flex-wrap items-center gap-2">{headerAction}</div>}
         {items?.length === 0 ? (
-          <BentoEmptyState icon={IconSparkles} title={emptyTitle} description={emptyDescription} />
+          <>
+            {/* No table to hold it, and a filter that matched nothing must stay to be undone. */}
+            {toolbar != null && <div className="mb-4 flex flex-wrap items-center gap-2">{toolbar}</div>}
+            <BentoEmptyState icon={IconSparkles} title={emptyTitle} description={emptyDescription} />
+          </>
         ) : (
           <ListTable
             rows={items ?? []}
@@ -270,6 +281,7 @@ export function BentoListPage<T>({
             onRowOpen={onRowOpen}
             layout={columnLayout}
             onLayoutChange={onColumnLayoutChange}
+            toolbar={toolbar}
           />
         )}
       </LoadProvider>
@@ -290,9 +302,9 @@ export function BentoListPage<T>({
         subtitle={subtitle}
       />
 
-      {(headerAction || (canCustomize && !editing)) && (
+      {(toolbar != null || (canCustomize && !editing)) && (
         <div className="mb-4 flex flex-wrap items-center gap-2">
-          {headerAction}
+          {toolbar}
           {canCustomize && !editing && (
             <Button variant="outline" size="sm" onClick={() => setEditing(true)} className="ml-auto gap-2">
               <IconAdjustmentsHorizontal size={16} />

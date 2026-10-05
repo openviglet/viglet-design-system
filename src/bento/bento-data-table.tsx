@@ -106,6 +106,12 @@ export interface BentoDataTableProps<TRow> {
   height?: number;
   /** Shown instead of the body when there are no rows. */
   empty?: ReactNode;
+  /**
+   * The list's own controls, a filter and secondary actions, drawn at the start of
+   * the table's bar with Columns at its end. A selection replaces them with its
+   * actions in the same bar, so a list never has two bands.
+   */
+  toolbar?: ReactNode;
 }
 
 /** Rows mounted beyond each edge of the window, so a fast scroll does not show blank space. */
@@ -167,6 +173,7 @@ export function BentoDataTable<TRow extends RowData>({
   rowHeight = 44,
   height,
   empty,
+  toolbar,
 }: Readonly<BentoDataTableProps<TRow>>) {
   const { t } = useTranslation();
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -425,21 +432,32 @@ export function BentoDataTable<TRow extends RowData>({
     onLayoutChange?.(next);
   }
 
+  const hideable = columns.filter((c) => c.hideable !== false);
   const selectedRows = ordered.filter((row) => selected.has(getRowId(row)));
   const allSelected = total > 0 && selectedRows.length === total;
-  const hideable = columns.filter((c) => c.hideable !== false);
-
   return (
     // Clipped rather than hidden: `overflow: hidden` would make the table a scroll
     // container, and its header row would stick to the table instead of the page.
     <div data-slot="bento-data-table" className="bento-glass overflow-clip rounded-2xl">
-      <div className="flex min-h-12 flex-wrap items-center gap-2 border-b border-border/50 px-3 py-2">
+      {/*
+        VDS205 — one bar: the list's controls, or the selection's, with Columns at
+        the end. With nothing to show it is hidden but kept, for its live region.
+      */}
+      <div
+        className={cn(
+          "flex min-h-12 flex-wrap items-center gap-2 border-b border-border/50 px-3 py-2",
+          toolbar == null && hideable.length === 0 && selectedRows.length === 0 && "sr-only",
+        )}
+      >
         {/* Present before anything is selected, so the first count is announced. */}
-        <span aria-live="polite" className="text-sm font-medium">
+        <span aria-live="polite" className={cn("text-sm font-medium", selectedRows.length === 0 && "sr-only")}>
           {selectedRows.length > 0
             ? t("bento.table.selected", { defaultValue: "{{count}} selected", count: selectedRows.length })
             : ""}
         </span>
+        {selectedRows.length === 0 && toolbar != null && (
+          <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2">{toolbar}</div>
+        )}
         {selectedRows.length > 0 && (
           <div role="toolbar" aria-label={t("bento.table.selectionActions", { defaultValue: "Actions on the selection" })} className="flex flex-wrap items-center gap-2">
             {selectionActions?.map((action) => {

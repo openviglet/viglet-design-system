@@ -145,21 +145,6 @@ control-height.parity.test.tsx, and lower Shio's button-height allowance with --
 which also drops the cards VDS202 now skips and the second mono VDS203 now reads as one
 face.
 
-### §VDS205 One toolbar on a list
-
-BentoListPage puts headerAction and the New button in the hero, and BentoDataTable draws
-its own toolbar row above the header for the column menu and the selection bar. On a
-list with no selection that row holds one button and about fifty pixels of nothing, and
-the filter that narrows the rows sits a hero away from them. A list should have one bar,
-glued to the table: the product's filter and secondary actions on the left, then sort,
-the view switch where there is one, and Columns on the right. While rows are selected,
-the same bar becomes the selection bar instead of a second band. New stays the hero's
-one filled primary. The shape needs a toolbar slot on BentoListPage that the table
-renders into its own bar, rather than a separate headerAction, and headerAction keeps
-working for one release so consumers move without a flag day. Done when a list with no
-selection renders exactly one bar between the hero and the header row. Drawn in Shio's
-docs/design/shio-site-list.dc.html, pin 1.
-
 ### §VDS206 Tiles or rows, chosen by the reader
 
 BentoListPage already takes both renderTile and columns, and picks the table whenever
@@ -190,3 +175,15 @@ came from an agent. Neither fetches anything; both take values. Done when both a
 exported from the bento entry, documented in the catalogue with their props, and render
 the same in both grounds. Drawn in Shio's docs/design/shio-site-list.dc.html, pins 2, 3
 and 5.
+
+### §VDS208 Remove the headerAction alias
+
+VDS205 gave BentoListPage a toolbar prop that a table draws in its own bar, beside
+Columns, and kept headerAction as a deprecated alias drawn in the same place so
+consumers could move without a flag day. The alias was promised for one release. Once
+Turing, Shio and Dumont pass toolbar instead (grep each for headerAction on its bento
+list pages), delete headerAction from BentoListPageProps and the `ownToolbar ??
+headerAction` fallback in bento-list-page.tsx, drop the test that draws it, and say in
+the README's BentoListPage paragraph that it is gone. Do not remove it while any
+consumer still passes it: its content would silently stop rendering, since an unknown
+prop does not fail a build that spreads props.

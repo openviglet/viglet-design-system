@@ -146,7 +146,8 @@ export function BentoFilterBar({
       role="search"
       aria-label={t("bento.filters.label", { defaultValue: "Filters" })}
       data-slot="bento-filter-bar"
-      className="flex flex-col gap-2"
+      // Grows in a table's toolbar row, beside what follows it there (VDS205).
+      className="flex min-w-0 flex-1 flex-col gap-2"
     >
       <div className="flex flex-wrap items-center gap-2">
         <div className="relative min-w-48 flex-1">

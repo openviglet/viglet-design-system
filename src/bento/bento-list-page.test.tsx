@@ -209,6 +209,30 @@ describe("BentoListPage as a table, the default", () => {
     expect(onRowOpen).toHaveBeenCalledWith(items[1])
   })
 
+  // VDS205 — one bar: the list's controls and Columns, glued to the table.
+  it("draws the toolbar in the table's own bar, beside Columns", () => {
+    table({ toolbar: <button type="button">Import</button> })
+
+    const bar = screen.getByRole("button", { name: "Import" }).parentElement!.parentElement!
+    expect(bar.closest("[data-slot='bento-data-table']")).not.toBeNull()
+    expect(bar).toContainElement(screen.getByRole("button", { name: /columns/i }))
+    expect(bar.className).not.toContain("sr-only")
+  })
+
+  it("draws a deprecated headerAction where the toolbar goes", () => {
+    table({ headerAction: <button type="button">Import</button> })
+
+    const action = screen.getByRole("button", { name: "Import" })
+    expect(action.closest("[data-slot='bento-data-table']")).not.toBeNull()
+  })
+
+  it("keeps the toolbar over an empty list, so a filter that matched nothing can be undone", () => {
+    table({ items: [], toolbar: <button type="button">Clear filters</button> })
+
+    expect(screen.getByRole("button", { name: "Clear filters" })).toBeInTheDocument()
+    expect(screen.getByText("No users yet")).toBeInTheDocument()
+  })
+
   it("still renders the mosaic when a page asks for tiles", () => {
     list()
 

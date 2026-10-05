@@ -133,6 +133,33 @@ describe("BentoDataTable", () => {
     expect(trash.mock.calls[0][0].map((p: Post) => p.id)).toEqual(["p1", "p3"])
   })
 
+  // VDS205 — one bar, and none at all when it would hold nothing.
+  it("turns its toolbar into the selection bar while rows are selected", async () => {
+    const user = userEvent.setup()
+    draw(
+      table({
+        toolbar: <button type="button">Import</button>,
+        selectionActions: [{ id: "trash", label: "Move to trash", icon: IconTrash, onSelect: () => {} }],
+      }),
+    )
+
+    expect(screen.getByRole("button", { name: "Import" })).toBeInTheDocument()
+    await user.click(within(bodyRows()[1]).getByRole("checkbox", { name: "Select Post 1" }))
+    expect(screen.queryByRole("button", { name: "Import" })).not.toBeInTheDocument()
+    expect(within(screen.getByRole("toolbar")).getByRole("button", { name: "Move to trash" })).toBeInTheDocument()
+    await user.click(screen.getByRole("button", { name: "Clear selection" }))
+    expect(screen.getByRole("button", { name: "Import" })).toBeInTheDocument()
+  })
+
+  it("draws no bar when it would hold nothing, keeping its live region", () => {
+    const fixed = columns.map((column) => ({ ...column, hideable: false }))
+    const { container } = draw(table({ columns: fixed }))
+
+    const live = container.querySelector("[aria-live='polite']")!
+    expect(live.parentElement!.className).toContain("sr-only")
+    expect(screen.queryByRole("button", { name: /Columns/ })).not.toBeInTheDocument()
+  })
+
   it("selects a range with shift-click and adds a row with ctrl-click", async () => {
     const user = userEvent.setup()
     draw(table({ selectionActions: [{ id: "x", label: "X", icon: IconTrash, onSelect: () => {} }] }))

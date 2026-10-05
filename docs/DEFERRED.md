@@ -18,3 +18,4 @@
 ## Block C — One look across products
 
 - ⏸ **VDS201** (deps: —) **Seven button heights in a consumer still come from package components the control-height parity test does not list** — set aside (Needs a live Shio census.): A fresh Shio census must name what still draws its 16, 18 and 29 px buttons and lower the allowance with --write. → §VDS201
+- ⏸ **VDS208** (deps: —) **BentoListPage still accepts headerAction, a deprecated alias for toolbar promised for one release** — set aside (Waits for the consumers to pass toolbar.): Two props for one slot invite a page to pass both, and the alias outlives its promise unless a line tracks its removal. → §VDS208

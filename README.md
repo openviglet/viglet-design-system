@@ -827,6 +827,9 @@ and `onRowOpen` as you would to `BentoDataTable`) and the records sit under the
 hero, with the create action as the hero's primary button. Pass `renderTile`
 to ask for the tile mosaic instead, for things a reader picks by sight. A page
 that already passes `renderTile` keeps its tiles. `heroIcon` is now optional.
+Pass the list's filter and secondary actions as `toolbar`: on a table they open
+its bar, with Columns at the end, so a list has one bar of controls.
+`headerAction` is deprecated and drawn in the same place for one release.
 
 It is a separate entry point, so a console still on the first era carries none
 of it:
@@ -939,20 +942,26 @@ in this release and stops type-checking in the next.
 declare (a `choice` of options, single or `multiple`, or a `date` range), the
 active filters as removable chips, and a clear-all. It holds no state. You pass
 `value` and get one `onChange` per action, typing included once it pauses, so the
-value can live in the URL and a filtered view is a link. Pass it to a
-`BentoDataTable` as `selectionScope` too, and a selection clears when the filters
-change the rows:
+value can live in the URL and a filtered view is a link. Hand the bar to the
+table as its `toolbar`, so it sits in the table's own bar, and the filters to it
+as `selectionScope` too, so a selection clears when the filters change the rows:
 
 ```tsx
-<BentoFilterBar
-  value={filters}
-  onChange={setFilters}
-  facets={[
-    { id: "state", kind: "choice", label: t("state"), multiple: true, options: states },
-    { id: "updated", kind: "date", label: t("updated") },
-  ]}
+<BentoDataTable
+  rows={filtered}
+  selectionScope={JSON.stringify(filters)}
+  toolbar={
+    <BentoFilterBar
+      value={filters}
+      onChange={setFilters}
+      facets={[
+        { id: "state", kind: "choice", label: t("state"), multiple: true, options: states },
+        { id: "updated", kind: "date", label: t("updated") },
+      ]}
+    />
+  }
+  …
 />
-<BentoDataTable rows={filtered} selectionScope={JSON.stringify(filters)} … />
 ```
 
 `BentoDiff` compares two versions of structured content field by field, for

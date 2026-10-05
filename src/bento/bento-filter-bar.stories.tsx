@@ -76,7 +76,6 @@ function FilteredPosts() {
 
   return (
     <div className="flex flex-col gap-3">
-      <BentoFilterBar value={filters} onChange={setFilters} facets={FACETS} queryLabel="Search posts" />
       <BentoDataTable<Post>
         rows={rows}
         getRowId={(p) => p.id}
@@ -84,6 +83,7 @@ function FilteredPosts() {
         label="Posts"
         height={360}
         selectionScope={JSON.stringify(filters)}
+        toolbar={<BentoFilterBar value={filters} onChange={setFilters} facets={FACETS} queryLabel="Search posts" />}
         columns={[
           { id: "title", header: "Title", cell: (p) => p.title, sortValue: (p) => p.title, hideable: false },
           { id: "type", header: "Type", cell: (p) => p.type, sortValue: (p) => p.type, width: "8rem" },
