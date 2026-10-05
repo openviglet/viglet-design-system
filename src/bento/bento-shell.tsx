@@ -89,6 +89,23 @@ export function BentoShell({
     else dockAt = rail != null ? "rail" : "corner";
   }
   const corner = backToTop || dockAt === "corner";
+
+  // VDS204 — how tall the sticky header is, as `--bento-shell-header`, so what
+  // sticks below it (a table's header row) knows where. Only where the document
+  // scrolls: `full` scrolls inside main, and nothing in it sits under the header.
+  const shell = useRef<HTMLDivElement>(null);
+  const bar = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const host = shell.current;
+    const el = bar.current;
+    if (!host || !el || full || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(() => host.style.setProperty("--bento-shell-header", `${el.offsetHeight}px`));
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      host.style.removeProperty("--bento-shell-header");
+    };
+  }, [full, header]);
   const docked = (placement: DockPlacement) => (
     <CornerSlotContext.Provider value={true}>
       <DockPlacementContext.Provider value={placement}>{dock}</DockPlacementContext.Provider>
@@ -97,6 +114,7 @@ export function BentoShell({
 
   return (
     <div
+      ref={shell}
       data-slot="bento-shell"
       className={cn(
         // No `overflow-hidden` outside `full`: it would make this a scroll
@@ -138,7 +156,7 @@ export function BentoShell({
       )}
 
       {header && (
-        <header className="bento-shell-header bento-shell-bar sticky top-0 z-30 flex shrink-0 items-center justify-between gap-3 border-b border-border/40 bg-background/55 py-3 backdrop-blur-xl backdrop-saturate-150">
+        <header ref={bar} className="bento-shell-header bento-shell-bar sticky top-0 z-30 flex shrink-0 items-center justify-between gap-3 border-b border-border/40 bg-background/55 py-3 backdrop-blur-xl backdrop-saturate-150">
           <div className="flex min-w-0 items-center gap-3">{headerStart}</div>
           <div className="flex items-center gap-2">
             {headerEnd}

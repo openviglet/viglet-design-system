@@ -13,7 +13,9 @@ import {
   type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
+  useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -96,7 +98,11 @@ export interface BentoDataTableProps<TRow> {
   onRowOpen?: (row: TRow) => void;
   /** Pixels per row. Rows are one height, which is what lets the table mount only the visible ones. */
   rowHeight?: number;
-  /** The most the body grows to, in pixels. Fewer rows than fill it, and it is as tall as the rows. */
+  /**
+   * The most the body grows to, in pixels, scrolling inside itself past it: for a
+   * table in a panel or a dialog. Omitted, the table is as tall as its rows and
+   * scrolls with the page, its header row held under the shell's header.
+   */
   height?: number;
   /** Shown instead of the body when there are no rows. */
   empty?: ReactNode;
@@ -104,6 +110,24 @@ export interface BentoDataTableProps<TRow> {
 
 /** Rows mounted beyond each edge of the window, so a fast scroll does not show blank space. */
 const OVERSCAN = 6;
+
+/** The element whose scroll moves `el`, or null for the document. */
+function scrollParent(el: HTMLElement): HTMLElement | null {
+  for (let node = el.parentElement; node && node !== document.body; node = node.parentElement) {
+    const { overflowY } = getComputedStyle(node);
+    if (overflowY === "auto" || overflowY === "scroll") return node;
+  }
+  return null;
+}
+
+/** Where `scroller` shows content, in viewport coordinates. */
+function portOf(scroller: HTMLElement | null) {
+  if (scroller) {
+    const { top, bottom } = scroller.getBoundingClientRect();
+    return { top, bottom };
+  }
+  return { top: 0, bottom: window.innerHeight };
+}
 
 const features = {
   rowSortingFeature,
@@ -141,7 +165,7 @@ export function BentoDataTable<TRow extends RowData>({
   onLayoutChange,
   onRowOpen,
   rowHeight = 44,
-  height = 480,
+  height,
   empty,
 }: Readonly<BentoDataTableProps<TRow>>) {
   const { t } = useTranslation();
@@ -178,8 +202,16 @@ export function BentoDataTable<TRow extends RowData>({
   }, [selectionScope, onSelectionChange]);
   const [focused, setFocused] = useState(0);
   const [scrollTop, setScrollTop] = useState(0);
+  // VDS204 — with no `height`, the part of the body the page shows: where it
+  // starts within the body, how much of it shows, and how tall the page's view is.
+  const paged = height === undefined;
+  const [shown, setShown] = useState(() => ({
+    size: typeof window === "undefined" ? 0 : window.innerHeight,
+    port: typeof window === "undefined" ? 0 : window.innerHeight,
+  }));
 
   const body = useRef<HTMLDivElement>(null);
+  const head = useRef<HTMLDivElement>(null);
   const rowElements = useRef(new Map<number, HTMLDivElement>());
   const focusAfterRender = useRef(false);
 
@@ -220,8 +252,33 @@ export function BentoDataTable<TRow extends RowData>({
   // VDS192 — the body is as tall as its rows, up to `height`, and scrolls only
   // past it. A body held at `height` left one row above a panel of empty space,
   // which read as a list still loading.
-  const viewport = Math.min(height, total * rowHeight);
-  const page = Math.max(1, Math.floor(viewport / rowHeight));
+  const viewport = paged ? Math.min(shown.size, total * rowHeight) : Math.min(height, total * rowHeight);
+  const page = Math.max(1, Math.floor((paged ? shown.port : viewport) / rowHeight));
+
+  // VDS204 — a table that is the page scrolls with it: the window is the part of
+  // the body its scroller shows, measured on every scroll of that scroller.
+  const measure = useCallback(() => {
+    const el = body.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const port = portOf(scrollParent(el));
+    const start = Math.max(0, port.top - rect.top);
+    setScrollTop(start);
+    setShown({ size: Math.max(0, port.bottom - Math.max(rect.top, port.top)), port: port.bottom - port.top });
+  }, []);
+
+  useLayoutEffect(() => {
+    if (!paged || !body.current) return;
+    measure();
+    const scroller = scrollParent(body.current);
+    const target: HTMLElement | Window = scroller ?? window;
+    target.addEventListener("scroll", measure, { passive: true });
+    window.addEventListener("resize", measure);
+    return () => {
+      target.removeEventListener("scroll", measure);
+      window.removeEventListener("resize", measure);
+    };
+  }, [paged, measure, total]);
   const first = Math.max(0, Math.floor(scrollTop / rowHeight) - OVERSCAN);
   const last = Math.min(total, Math.ceil((scrollTop + viewport) / rowHeight) + OVERSCAN);
   const current = Math.min(focused, Math.max(0, total - 1));
@@ -263,7 +320,21 @@ export function BentoDataTable<TRow extends RowData>({
     // Scroll first, so the row is in the window the next render mounts.
     const el = body.current;
     const top = target * rowHeight;
-    if (el) {
+    if (el && paged) {
+      // The page scrolls, so the row is brought between the stuck header row and
+      // the bottom of what the scroller shows.
+      const scroller = scrollParent(el);
+      const port = portOf(scroller);
+      const above = Math.max(port.top, head.current?.getBoundingClientRect().bottom ?? port.top);
+      const at = el.getBoundingClientRect().top + top;
+      let by = 0;
+      if (at < above) by = at - above;
+      else if (at + rowHeight > port.bottom) by = at + rowHeight - port.bottom;
+      if (by !== 0) {
+        (scroller ?? window).scrollBy({ top: by, behavior: "instant" });
+        measure();
+      }
+    } else if (el) {
       let nextTop = el.scrollTop;
       if (top < nextTop) nextTop = top;
       else if (top + rowHeight > nextTop + viewport) nextTop = top + rowHeight - viewport;
@@ -359,7 +430,9 @@ export function BentoDataTable<TRow extends RowData>({
   const hideable = columns.filter((c) => c.hideable !== false);
 
   return (
-    <div data-slot="bento-data-table" className="bento-glass overflow-hidden rounded-2xl">
+    // Clipped rather than hidden: `overflow: hidden` would make the table a scroll
+    // container, and its header row would stick to the table instead of the page.
+    <div data-slot="bento-data-table" className="bento-glass overflow-clip rounded-2xl">
       <div className="flex min-h-12 flex-wrap items-center gap-2 border-b border-border/50 px-3 py-2">
         {/* Present before anything is selected, so the first count is announced. */}
         <span aria-live="polite" className="text-sm font-medium">
@@ -420,7 +493,11 @@ export function BentoDataTable<TRow extends RowData>({
         aria-colcount={visible.length + (selectable ? 1 : 0) + (rowActions?.length ? 1 : 0)}
         aria-multiselectable={selectable ? "true" : undefined}
       >
-        <div role="rowgroup">
+        <div
+          role="rowgroup"
+          ref={head}
+          className={cn(paged && "sticky top-(--bento-shell-header,0px) z-10 bg-card/95 backdrop-blur")}
+        >
           <div
             role="row"
             aria-rowindex={1}
@@ -484,9 +561,9 @@ export function BentoDataTable<TRow extends RowData>({
           <div
             role="rowgroup"
             ref={body}
-            onScroll={(event) => setScrollTop(event.currentTarget.scrollTop)}
-            className="relative overflow-y-auto"
-            style={{ height: viewport }}
+            onScroll={paged ? undefined : (event) => setScrollTop(event.currentTarget.scrollTop)}
+            className={cn("relative", !paged && "overflow-y-auto")}
+            style={paged ? undefined : { height: viewport }}
           >
             <div style={{ height: total * rowHeight }} className="relative">
               {ordered.slice(first, last).map((row, offset) => {

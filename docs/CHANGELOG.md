@@ -214,6 +214,7 @@
 - ✅ **VDS201 (package half)** **Seven button heights in a consumer still come from package components the control-height parity test does not list** — Calendar header controls and the entity status pill sit on the dense height, and a button drawn as text declares data-look=text so the census skips it.
 - ✅ **VDS202** **The census counts a card that is a button as a control height, so tiles and rows inflate a figure nobody can lower** — The census reads a button taller than the touch step as a card, counted apart and ungated, so the button-height figure holds only controls.
 - ✅ **VDS203** **The census counts one mono face twice when a library appends its own fallbacks to the token's stack** — The census reads a mono stack only up to its first generic family, so a library's appended fallbacks count as the same face.
+- ✅ **VDS204** **BentoDataTable's body has a fixed height, so a list scrolls inside a page that also scrolls** — A BentoDataTable with no height is as tall as its rows and scrolls with the page, its header row held under the shell's header; height opts into an inner scroll.
 
 ## Block D — The package in a server-rendered framework
 

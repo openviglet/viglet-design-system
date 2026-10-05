@@ -145,21 +145,6 @@ control-height.parity.test.tsx, and lower Shio's button-height allowance with --
 which also drops the cards VDS202 now skips and the second mono VDS203 now reads as one
 face.
 
-### §VDS204 A table that scrolls with its page
-
-BentoDataTable mounts only the visible rows, and it finds that window inside a body
-capped by the height prop. That cap is what puts a second scrollbar inside a page that
-already scrolls: Shio's sites list shows eleven rows and a wide empty margin on a 1734
-px screen, and its content browser passes height 560 on every viewport. The reader
-cannot tell which scrollbar moves what, the wheel stops at the table's edge, and Print
-or Find shows only the mounted window. The fix keeps virtualization but measures the
-window against the document scroll instead of an inner box, with the header row sticky
-under the shell's header, so a short list is as tall as its rows and a long one scrolls
-the page. height stays as an opt-in for a table embedded in a panel or a dialog, where
-an inner scroll is right. Done when a page passing no height scrolls once, the header
-stays visible while it does, and the virtualization test still mounts only the visible
-window. Drawn in Shio's docs/design/shio-site-list.dc.html, pin 7.
-
 ### §VDS205 One toolbar on a list
 
 BentoListPage puts headerAction and the New button in the hero, and BentoDataTable draws

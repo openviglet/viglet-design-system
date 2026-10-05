@@ -258,3 +258,22 @@ describe("BentoShell's dock at the rail's foot", () => {
     expect(s.bottom).toBeLessThanOrEqual(height)
   })
 })
+
+// VDS204 — what sticks below the header reads its height from the shell.
+describe("BentoShell's header height", () => {
+  it("publishes the sticky header's height for what sticks below it", async () => {
+    const { container } = render(
+      <I18nextProvider i18n={i18next}>
+        <MemoryRouter>
+          <BentoShell headerStart={<span>Mark</span>}>
+            <div>a page</div>
+          </BentoShell>
+        </MemoryRouter>
+      </I18nextProvider>,
+    )
+    const shell = container.querySelector<HTMLElement>("[data-slot='bento-shell']")!
+    const header = container.querySelector<HTMLElement>("header")!
+    await expect.poll(() => shell.style.getPropertyValue("--bento-shell-header")).toBe(`${header.offsetHeight}px`)
+    expect(header.offsetHeight).toBeGreaterThan(0)
+  })
+})

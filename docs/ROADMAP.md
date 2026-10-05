@@ -8,7 +8,6 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS204** (deps: —) **BentoDataTable's body has a fixed height, so a list scrolls inside a page that also scrolls** — A list is the page: two scrollbars hide rows on a large screen and trap the wheel, and every consumer picks its own height to cope. → §VDS204
 - 📋 **VDS205** (deps: —) **A list's controls sit in three places, and the table's toolbar is a band holding only Columns** — Filter, import and New live in the hero while Columns sits alone in a band inside the table, so the controls are apart from what they control. → §VDS205
 - 📋 **VDS206** (deps: —) **BentoListPage renders tiles or a table and offers no way to switch between them** — The same records are better as pictures at twenty and as rows at four hundred, and a consumer can only choose one for every reader. → §VDS206
 - 📋 **VDS207** (deps: —) **No shared cell for a record's identity, or for when and by whom it last changed** — Each product draws its own name cell and its own absolute date, so two products disagree on how a record is recognised and how recent it is. → §VDS207
