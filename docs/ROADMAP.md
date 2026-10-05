@@ -11,6 +11,10 @@
 - 📋 **VDS201** (deps: —) **Seven button heights in a consumer still come from package components the control-height parity test does not list** — A closed scale the package's own buttons step outside is one no consumer can reach by fixing its own code. → §VDS201
 - 📋 **VDS202** (deps: —) **The census counts a card that is a button as a control height, so tiles and rows inflate a figure nobody can lower** — The button-height figure exists to find controls drawn off the scale, and a 343 px file tile is not one. → §VDS202
 - 📋 **VDS203** (deps: —) **The census counts one mono face twice when a library appends its own fallbacks to the token's stack** — Monaco adds platform fallbacks after reading the font option, so no consumer can lower a figure that is one face. → §VDS203
+- 📋 **VDS204** (deps: —) **BentoDataTable's body has a fixed height, so a list scrolls inside a page that also scrolls** — A list is the page: two scrollbars hide rows on a large screen and trap the wheel, and every consumer picks its own height to cope. → §VDS204
+- 📋 **VDS205** (deps: —) **A list's controls sit in three places, and the table's toolbar is a band holding only Columns** — Filter, import and New live in the hero while Columns sits alone in a band inside the table, so the controls are apart from what they control. → §VDS205
+- 📋 **VDS206** (deps: —) **BentoListPage renders tiles or a table and offers no way to switch between them** — The same records are better as pictures at twenty and as rows at four hundred, and a consumer can only choose one for every reader. → §VDS206
+- 📋 **VDS207** (deps: —) **No shared cell for a record's identity, or for when and by whom it last changed** — Each product draws its own name cell and its own absolute date, so two products disagree on how a record is recognised and how recent it is. → §VDS207
 
 ## Done when — VDS185
 

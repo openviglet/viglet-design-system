@@ -182,3 +182,64 @@ to its first generic family (monospace or ui-monospace), so that trailing fallba
 library appends are not a second face. Cover it in look-census.parity.test.ts with the
 token stack and the same stack with Monaco's tail, which must count as one. Then rewrite
 Shio's allowance, whose mono figure is recorded at two only because of this.
+
+### §VDS204 A table that scrolls with its page
+
+BentoDataTable mounts only the visible rows, and it finds that window inside a body
+capped by the height prop. That cap is what puts a second scrollbar inside a page that
+already scrolls: Shio's sites list shows eleven rows and a wide empty margin on a 1734
+px screen, and its content browser passes height 560 on every viewport. The reader
+cannot tell which scrollbar moves what, the wheel stops at the table's edge, and Print
+or Find shows only the mounted window. The fix keeps virtualization but measures the
+window against the document scroll instead of an inner box, with the header row sticky
+under the shell's header, so a short list is as tall as its rows and a long one scrolls
+the page. height stays as an opt-in for a table embedded in a panel or a dialog, where
+an inner scroll is right. Done when a page passing no height scrolls once, the header
+stays visible while it does, and the virtualization test still mounts only the visible
+window. Drawn in Shio's docs/design/shio-site-list.dc.html, pin 7.
+
+### §VDS205 One toolbar on a list
+
+BentoListPage puts headerAction and the New button in the hero, and BentoDataTable draws
+its own toolbar row above the header for the column menu and the selection bar. On a
+list with no selection that row holds one button and about fifty pixels of nothing, and
+the filter that narrows the rows sits a hero away from them. A list should have one bar,
+glued to the table: the product's filter and secondary actions on the left, then sort,
+the view switch where there is one, and Columns on the right. While rows are selected,
+the same bar becomes the selection bar instead of a second band. New stays the hero's
+one filled primary. The shape needs a toolbar slot on BentoListPage that the table
+renders into its own bar, rather than a separate headerAction, and headerAction keeps
+working for one release so consumers move without a flag day. Done when a list with no
+selection renders exactly one bar between the hero and the header row. Drawn in Shio's
+docs/design/shio-site-list.dc.html, pin 1.
+
+### §VDS206 Tiles or rows, chosen by the reader
+
+BentoListPage already takes both renderTile and columns, and picks the table whenever
+columns is given. A product therefore decides once, for everyone, whether a list is
+tiles or rows: Shio moved its sites to rows (VDS183), which is right at four hundred
+sites and loses the one thing tiles were good at, recognising a site by how it looks.
+Given both, the page should render a Grid and List switch in the list's toolbar, start
+from a default the product passes (defaultView), and remember the reader's choice per
+listId the way a column layout is remembered, through a callback the product stores, so
+it is a per-viewer preference and never shared state. Keyboard and screen reader
+behaviour stay each view's own: the table keeps its row model and the mosaic its tile
+model. Done when a page passing both renderTile and columns shows the switch, honours
+defaultView on first visit, and restores the reader's last choice. Drawn in Shio's
+docs/design/shio-site-grid.dc.html, pin 1.
+
+### §VDS207 The identity cell and the change cell
+
+Every console list has a first column naming the record and a column saying when it
+changed. Both are hand-drawn per screen today: a bold name and nothing under it, and a
+toLocaleDateString that repeats one date six times and never says who. The redraw in
+Shio's docs/design/shio-site-list.dc.html wants two cells the package should own so
+Turing gets them too. BentoIdentityCell: a square of initials in a hue derived from the
+name, the name, and a muted second line that carries a description or an address,
+truncating rather than wrapping. BentoChangeCell: a relative time (2 days ago, then a
+short date past a month) in the reader's locale with the absolute instant as its tooltip
+and accessible name, and an optional actor line with an agent marker when the change
+came from an agent. Neither fetches anything; both take values. Done when both are
+exported from the bento entry, documented in the catalogue with their props, and render
+the same in both grounds. Drawn in Shio's docs/design/shio-site-list.dc.html, pins 2, 3
+and 5.
