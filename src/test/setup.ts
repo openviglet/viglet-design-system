@@ -23,6 +23,20 @@ afterEach(async () => {
   await assertNoUndeclaredConsoleErrors()
 })
 
+// Iconify's `Icon` fetches an icon it does not hold from api.iconify.design, and
+// its reply lands on a timer: where it arrives after a file's jsdom is torn down,
+// the state update throws `window is not defined` outside any test and fails the
+// run (it did, in a publish, on a test whose assertions all passed). No unit test
+// reads the drawn glyph, so the component is a span naming its icon.
+vi.mock("@iconify/react", async (importOriginal) => {
+  const { createElement } = await import("react")
+  return {
+    ...(await importOriginal<typeof import("@iconify/react")>()),
+    Icon: ({ icon, className }: { icon: unknown; className?: string }) =>
+      createElement("span", { "data-icon": typeof icon === "string" ? icon : "", className }),
+  }
+})
+
 // VDS72 — everything below patches jsdom, and a file that declares
 // `@vitest-environment node` has no jsdom to patch. That is not a corner case
 // here: rendering without a DOM is exactly what a server-render test asserts,
