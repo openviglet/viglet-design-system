@@ -1,5 +1,6 @@
 import { LoadProvider } from "@/components/router/loading-provider";
 import { Button } from "@/components/ui/button";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
 import {
   closestCenter,
@@ -18,6 +19,8 @@ import {
   IconArrowBackUp,
   IconDeviceFloppy,
   IconGripVertical,
+  IconLayoutGrid,
+  IconList,
   IconPlus,
   IconSparkles,
   IconUsers,
@@ -46,6 +49,9 @@ import {
   toBentoLayoutEntries,
 } from "./bento-layout";
 import type { BentoTone } from "./bento-tones";
+
+/** A list's two shapes: the tile mosaic, or the table's rows. */
+export type BentoListView = "grid" | "list";
 
 export interface BentoListPageProps<T> {
   /** Query data — `undefined` while loading (drives the LoadProvider gate). */
@@ -133,6 +139,19 @@ export interface BentoListPageProps<T> {
    * by sight or that are few: media, blueprints, a hub.
    */
   renderTile?: (item: T, emphasis: BentoEmphasis) => ReactNode;
+
+  // --- both: the reader's choice (VDS206) ---
+  /**
+   * Which view a list given both {@link renderTile} and {@link columns} opens in,
+   * before the reader picks one. Defaults to `"list"`.
+   */
+  defaultView?: BentoListView;
+  /**
+   * The reader's choice, controlled: the product stores it per `listId`, as it
+   * stores a column layout, so it is one viewer's preference and not shared state.
+   */
+  view?: BentoListView;
+  onViewChange?: (view: BentoListView) => void;
 
   // --- empty state ---
   emptyTitle: string;
@@ -223,13 +242,51 @@ export function BentoListPage<T>({
   columnLayout,
   onColumnLayoutChange,
   renderTile,
+  defaultView = "list",
+  view: chosenView,
+  onViewChange,
   emptyTitle,
   emptyDescription,
   layout,
 }: Readonly<BentoListPageProps<T>>) {
   const { t } = useTranslation();
   const [editing, setEditing] = useState(false);
+  const [ownView, setOwnView] = useState<BentoListView>(defaultView);
   const toolbar = ownToolbar ?? headerAction;
+
+  // VDS206 — given both shapes, the reader picks one; given one, that is the list.
+  const switchable = renderTile !== undefined && columns !== undefined;
+  let view: BentoListView = renderTile ? "grid" : "list";
+  if (switchable) view = chosenView ?? ownView;
+  const viewSwitch = switchable ? (
+    <ToggleGroup
+      type="single"
+      size="sm"
+      variant="outline"
+      value={view}
+      onValueChange={(next) => {
+        if (next !== "grid" && next !== "list") return;
+        if (chosenView === undefined) setOwnView(next);
+        onViewChange?.(next);
+      }}
+      aria-label={t("bento.layout.view", { defaultValue: "View" })}
+      className="ml-auto"
+    >
+      <ToggleGroupItem value="grid" aria-label={t("bento.layout.grid", { defaultValue: "Grid" })}>
+        <IconLayoutGrid size={16} aria-hidden="true" />
+      </ToggleGroupItem>
+      <ToggleGroupItem value="list" aria-label={t("bento.layout.list", { defaultValue: "List" })}>
+        <IconList size={16} aria-hidden="true" />
+      </ToggleGroupItem>
+    </ToggleGroup>
+  ) : null;
+  const controls =
+    toolbar != null || viewSwitch != null ? (
+      <>
+        {toolbar}
+        {viewSwitch}
+      </>
+    ) : undefined;
 
   const resolved = useMemo(
     () => resolveBentoLayout(items ?? [], itemKey, layout?.data?.entries),
@@ -242,7 +299,7 @@ export function BentoListPage<T>({
     </span>
   ) : undefined;
 
-  if (!renderTile) {
+  if (view === "list" || !renderTile) {
     return (
       <LoadProvider checkIsNotUndefined={items} error={error ?? null} tryAgainUrl={tryAgainUrl}>
         <BentoHero
@@ -267,7 +324,7 @@ export function BentoListPage<T>({
         {items?.length === 0 ? (
           <>
             {/* No table to hold it, and a filter that matched nothing must stay to be undone. */}
-            {toolbar != null && <div className="mb-4 flex flex-wrap items-center gap-2">{toolbar}</div>}
+            {controls != null && <div className="mb-4 flex flex-wrap items-center gap-2">{controls}</div>}
             <BentoEmptyState icon={IconSparkles} title={emptyTitle} description={emptyDescription} />
           </>
         ) : (
@@ -281,7 +338,7 @@ export function BentoListPage<T>({
             onRowOpen={onRowOpen}
             layout={columnLayout}
             onLayoutChange={onColumnLayoutChange}
-            toolbar={toolbar}
+            toolbar={controls}
           />
         )}
       </LoadProvider>
@@ -302,11 +359,16 @@ export function BentoListPage<T>({
         subtitle={subtitle}
       />
 
-      {(toolbar != null || (canCustomize && !editing)) && (
+      {(controls != null || (canCustomize && !editing)) && (
         <div className="mb-4 flex flex-wrap items-center gap-2">
-          {toolbar}
+          {controls}
           {canCustomize && !editing && (
-            <Button variant="outline" size="sm" onClick={() => setEditing(true)} className="ml-auto gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setEditing(true)}
+              className={cn("gap-2", viewSwitch == null && "ml-auto")}
+            >
               <IconAdjustmentsHorizontal size={16} />
               {t("bento.layout.customize", { defaultValue: "Customize layout" })}
             </Button>

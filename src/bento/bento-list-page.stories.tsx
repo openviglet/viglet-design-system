@@ -88,6 +88,28 @@ export const Table: Story = {
   ),
 };
 
+/**
+ * Both shapes (VDS206): given `renderTile` and `columns`, the reader switches
+ * between tiles and rows. `defaultView` picks the first; `view` with
+ * `onViewChange` lets the product remember the reader's choice.
+ */
+export const GridOrList: Story = {
+  render: () => (
+    <div className="p-6">
+      <BentoListPage<Model>
+        {...common}
+        items={models}
+        defaultView="grid"
+        getRowLabel={(m) => m.name}
+        columns={[
+          { id: "name", header: "Name", cell: (m) => m.name, sortValue: (m) => m.name, width: "minmax(12rem, 2fr)" },
+          { id: "provider", header: "Provider", cell: (m) => m.note, sortValue: (m) => m.note },
+        ]}
+      />
+    </div>
+  ),
+};
+
 /** The mosaic, which a page asks for by passing `renderTile`. */
 export const Populated: Story = {
   render: () => (

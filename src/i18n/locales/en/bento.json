@@ -39,6 +39,9 @@
     },
     "layout": {
       "customize": "Customize layout",
+      "view": "View",
+      "grid": "Grid",
+      "list": "List",
       "editHint": "Drag tiles to reorder · pick S / M / L to resize",
       "dragToReorder": "Drag to reorder",
       "sizeGroup": "Tile size",

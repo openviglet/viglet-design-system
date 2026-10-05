@@ -830,6 +830,10 @@ that already passes `renderTile` keeps its tiles. `heroIcon` is now optional.
 Pass the list's filter and secondary actions as `toolbar`: on a table they open
 its bar, with Columns at the end, so a list has one bar of controls.
 `headerAction` is deprecated and drawn in the same place for one release.
+Pass both `renderTile` and `columns` and the reader gets a Grid and List switch
+in that bar: `defaultView` (`"grid"` or `"list"`) is the first view, and `view`
+with `onViewChange` let you store the reader's choice per list, as you store a
+column layout.
 
 It is a separate entry point, so a console still on the first era carries none
 of it:

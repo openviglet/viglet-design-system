@@ -84,6 +84,7 @@ export {
   BentoListPage,
   type BentoListPageProps,
   type BentoListLayout,
+  type BentoListView,
   BentoTileGrid,
   type BentoTileGridProps,
 } from "./bento-list-page";

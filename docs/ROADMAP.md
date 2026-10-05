@@ -8,7 +8,6 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS206** (deps: —) **BentoListPage renders tiles or a table and offers no way to switch between them** — The same records are better as pictures at twenty and as rows at four hundred, and a consumer can only choose one for every reader. → §VDS206
 - 📋 **VDS207** (deps: —) **No shared cell for a record's identity, or for when and by whom it last changed** — Each product draws its own name cell and its own absolute date, so two products disagree on how a record is recognised and how recent it is. → §VDS207
 
 ## Done when — VDS185

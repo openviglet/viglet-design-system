@@ -243,6 +243,41 @@ describe("BentoListPage as a table, the default", () => {
   })
 })
 
+// VDS206 — given both shapes, the reader picks one, and the product remembers it.
+describe("BentoListPage given both tiles and columns", () => {
+  const columns = [{ id: "name", header: "Name", cell: (i: Item) => i.name }]
+  const grid = () => screen.getByRole("radio", { name: /grid/i })
+  const rows = () => screen.queryByRole("grid", { name: "Models" })
+
+  it("offers no switch when it is given one shape", () => {
+    list()
+    expect(screen.queryByRole("radio", { name: /grid/i })).not.toBeInTheDocument()
+  })
+
+  it("opens in the default view, and switches on the reader's pick", async () => {
+    const onViewChange = vi.fn()
+    list({ columns, defaultView: "grid", onViewChange })
+
+    expect(document.querySelector("[data-slot='bento-list-tiles']")).not.toBeNull()
+    expect(rows()).toBeNull()
+    expect(grid()).toHaveAttribute("aria-checked", "true")
+
+    await userEvent.click(screen.getByRole("radio", { name: /list/i }))
+    expect(rows()).toBeInTheDocument()
+    expect(document.querySelector("[data-slot='bento-list-tiles']")).toBeNull()
+    expect(onViewChange).toHaveBeenCalledWith("list")
+    // The switch moves with the view, into the table's bar.
+    expect(grid().closest("[data-slot='bento-data-table']")).not.toBeNull()
+  })
+
+  it("restores the reader's last choice over the default", () => {
+    list({ columns, defaultView: "grid", view: "list" })
+
+    expect(rows()).toBeInTheDocument()
+    expect(screen.getByRole("radio", { name: /list/i })).toHaveAttribute("aria-checked", "true")
+  })
+})
+
 describe("the customise affordance", () => {
   const layout = (over: Partial<BentoListLayout> = {}): BentoListLayout => ({
     data: { listId: "llm", source: "DEFAULT", canEditGlobal: false, entries: [] },

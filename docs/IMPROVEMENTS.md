@@ -145,21 +145,6 @@ control-height.parity.test.tsx, and lower Shio's button-height allowance with --
 which also drops the cards VDS202 now skips and the second mono VDS203 now reads as one
 face.
 
-### §VDS206 Tiles or rows, chosen by the reader
-
-BentoListPage already takes both renderTile and columns, and picks the table whenever
-columns is given. A product therefore decides once, for everyone, whether a list is
-tiles or rows: Shio moved its sites to rows (VDS183), which is right at four hundred
-sites and loses the one thing tiles were good at, recognising a site by how it looks.
-Given both, the page should render a Grid and List switch in the list's toolbar, start
-from a default the product passes (defaultView), and remember the reader's choice per
-listId the way a column layout is remembered, through a callback the product stores, so
-it is a per-viewer preference and never shared state. Keyboard and screen reader
-behaviour stay each view's own: the table keeps its row model and the mosaic its tile
-model. Done when a page passing both renderTile and columns shows the switch, honours
-defaultView on first visit, and restores the reader's last choice. Drawn in Shio's
-docs/design/shio-site-grid.dc.html, pin 1.
-
 ### §VDS207 The identity cell and the change cell
 
 Every console list has a first column naming the record and a column saying when it
