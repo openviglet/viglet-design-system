@@ -9,6 +9,7 @@
 ## Block C — One look across products
 
 - 📋 **VDS201** (deps: —) **Seven button heights in a consumer still come from package components the control-height parity test does not list** — A closed scale the package's own buttons step outside is one no consumer can reach by fixing its own code. → §VDS201
+- 📋 **VDS202** (deps: —) **The census counts a card that is a button as a control height, so tiles and rows inflate a figure nobody can lower** — The button-height figure exists to find controls drawn off the scale, and a 343 px file tile is not one. → §VDS202
 
 ## Done when — VDS185
 

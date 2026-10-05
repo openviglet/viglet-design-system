@@ -145,3 +145,22 @@ control token or, where the element is not a control (a sortable header, a link 
 as text), say so in the census's own rule so it is not counted as one. Add each
 component to the parity test with the height it resolves to, and lower Shio's
 button-height allowance with --write when the reading drops.
+
+### §VDS202 Cards are not control heights
+
+look-census-probe.mjs samples the height of every visible button and [role=button], so a
+card that happens to be a button counts as a control height. In Shio (SH1210,
+2026-10-05) that is most of what remains of the product's button-height figure: the
+files grid's tiles at 343 px, the marketplace entries at 182 px, and the Universal
+Editor's site rows at 49, 68 and 69 px, whose height follows their description. Those
+are not controls drawn off the scale; their content decides their height, and a consumer
+cannot put them on a 32 or 36 px token without turning them into something else. The
+figure exists to find controls drawn off the scale, and every card inflates it with a
+value nobody can lower. Decide which elements the figure measures. One rule is to skip a
+button taller than the touch step (44 px) and report it separately as a card count.
+Another is to skip a button whose content is block layout (a flex column, a heading, an
+image). Either way, a button 45 px or taller should stop reading as a control, while a
+short pill or a link-styled button keeps counting, since those are the hand-drawn
+controls the figure was built to catch. Apply it in look-census-probe.mjs, cover it in
+look-census.parity.test.ts with a card and a pill, and rewrite Shio's allowance from a
+fresh reading.

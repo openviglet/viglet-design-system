@@ -38,10 +38,10 @@
       "routes": 35,
       "figures": {
         "button-height": {
-          "distinct": 18,
+          "distinct": 16,
           "byOwner": {
             "package": 10,
-            "product": 10,
+            "product": 8,
             "unknown": 1
           },
           "values": {
@@ -55,11 +55,6 @@
               "product": 0,
               "unknown": 0
             },
-            "20": {
-              "package": 0,
-              "product": 150,
-              "unknown": 0
-            },
             "21": {
               "package": 6,
               "product": 0,
@@ -70,19 +65,14 @@
               "product": 0,
               "unknown": 0
             },
-            "26": {
-              "package": 0,
-              "product": 15,
-              "unknown": 0
-            },
             "29": {
               "package": 6,
               "product": 0,
               "unknown": 0
             },
             "32": {
-              "package": 231,
-              "product": 15,
+              "package": 381,
+              "product": 30,
               "unknown": 0
             },
             "33": {
@@ -148,9 +138,6 @@
               "/bento/admin/webhooks/:webhookId",
               "/bento/content/forms"
             ],
-            "20": [
-              "/bento/admin/activity"
-            ],
             "21": [
               "/bento/admin/groups/:groupId",
               "/bento/admin/roles/:roleId"
@@ -164,25 +151,22 @@
               "/bento/content",
               "/bento/content/object/:objectId"
             ],
-            "26": [
-              "/bento/content/files"
-            ],
             "29": [
               "/bento/content/scheduled"
-            ],
-            "32": [
-              "/bento/admin/activity",
-              "/bento/admin/auth-providers",
-              "/bento/admin/auth-providers/:authProviderId",
-              "/bento/admin/email-config",
-              "/bento/admin/exchange-providers/:exchangeProviderId",
-              "/bento/admin/groups",
-              "/bento/admin/groups/:groupId",
-              "/bento/admin/marketplace"
             ],
             "33": [
               "/bento/admin/groups/:groupId",
               "/bento/admin/roles/:roleId"
+            ],
+            "36": [
+              "/bento",
+              "/bento/admin/activity",
+              "/bento/admin/auth-providers",
+              "/bento/admin/auth-providers/:authProviderId",
+              "/bento/admin/email-config",
+              "/bento/admin/exchange-providers",
+              "/bento/admin/exchange-providers/:exchangeProviderId",
+              "/bento/admin/groups"
             ],
             "37": [
               "/bento/admin/groups/:groupId",
@@ -227,8 +211,8 @@
           },
           "values": {
             "Inter Variable": {
-              "package": 2424,
-              "product": 1222,
+              "package": 2574,
+              "product": 1072,
               "unknown": 6
             },
             "JetBrains Mono": {
@@ -345,15 +329,15 @@
               "product": 39,
               "unknown": 0
             },
+            "6px": {
+              "package": 786,
+              "product": 40,
+              "unknown": 9
+            },
             "10px": {
               "package": 585,
               "product": 195,
               "unknown": 0
-            },
-            "6px": {
-              "package": 636,
-              "product": 40,
-              "unknown": 9
             },
             "0px 0px 10px 10px": {
               "package": 0,
@@ -387,16 +371,6 @@
             }
           },
           "offenders": {
-            "10px": [
-              "/bento",
-              "/bento/admin/activity",
-              "/bento/admin/auth-providers",
-              "/bento/admin/auth-providers/:authProviderId",
-              "/bento/admin/email-config",
-              "/bento/admin/exchange-providers",
-              "/bento/admin/exchange-providers/:exchangeProviderId",
-              "/bento/admin/groups"
-            ],
             "6px": [
               "/bento/admin/activity",
               "/bento/admin/auth-providers",
@@ -406,6 +380,16 @@
               "/bento/admin/exchange-providers/:exchangeProviderId",
               "/bento/admin/groups",
               "/bento/admin/groups/:groupId"
+            ],
+            "10px": [
+              "/bento",
+              "/bento/admin/activity",
+              "/bento/admin/auth-providers",
+              "/bento/admin/auth-providers/:authProviderId",
+              "/bento/admin/email-config",
+              "/bento/admin/exchange-providers",
+              "/bento/admin/exchange-providers/:exchangeProviderId",
+              "/bento/admin/groups"
             ],
             "0px 0px 10px 10px": [
               "/bento/graphql"
