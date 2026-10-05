@@ -9,7 +9,13 @@ import { describe, expect, it } from "vitest"
 
 import "@/styles/index.css"
 
+import "@/bento/bento.css"
+
 import { BentoActionsMenu } from "@/bento/bento-actions-menu"
+import { BentoCalendar } from "@/bento/bento-calendar"
+import { BentoDataTable } from "@/bento/bento-data-table"
+import { BentoDiff } from "@/bento/bento-diff"
+import { BentoEntityShell } from "@/bento/bento-entity-shell"
 import { BentoEntityTile } from "@/bento/bento-entity-tile"
 import { BentoListPage } from "@/bento/bento-list-page"
 
@@ -135,6 +141,56 @@ describe("every exported control sits on the closed height scale", () => {
     await userEvent.click(screen.getByRole("button", { name: /customize/i }))
     const grip = screen.getAllByRole("button", { name: /reorder/i })[0]
     expect(grip.getBoundingClientRect().height).toBe(SCALE[0])
+    unmount()
+  })
+
+  // VDS201. Shio's census still read 16 to 37 px buttons from these. The controls
+  // among them are on the scale; the rest are text a reader clicks (an inline
+  // edit's value, a sort header, a fold, a calendar entry) and say so.
+  it("draws every bento button that is not text on the scale", async () => {
+    if (!i18next.isInitialized) {
+      await i18next.use(initReactI18next).init({ lng: "en", resources: { en: { translation: {} } } })
+    }
+    const { container, unmount } = render(
+      <I18nextProvider i18n={i18next}>
+        <MemoryRouter>
+          <BentoCalendar
+            entries={[{ id: "launch", start: "2026-09-10T17:00:00Z", label: "Launch" }]}
+            defaultDate="2026-09-15T12:00:00Z"
+          />
+          <BentoDataTable<{ id: string }>
+            rows={[{ id: "a" }]}
+            getRowId={(row) => row.id}
+            getRowLabel={(row) => row.id}
+            columns={[{ id: "id", header: "Name", cell: (row) => row.id, sortValue: (row) => row.id }]}
+            label="Rows"
+            rowHeight={40}
+            height={200}
+          />
+          <BentoDiff before={{ a: "1", b: "x" }} after={{ a: "1", b: "y" }} fields={[{ id: "a", label: "A" }, { id: "b", label: "B" }]} />
+          <BentoEntityShell<{ id: string; title: string; description: string; icon: string | null; enabled: number }>
+            entity={{ id: "1", title: "Editors", description: "Who edits", icon: null, enabled: 1 }}
+            isNew={false}
+            headlineFallback="Untitled"
+            eyebrow="All groups"
+            listRoute="/groups"
+            icon={IconCpu2}
+            tone="blue"
+            formId="group-form"
+            feature="group"
+            hasStatus
+            hideIcon
+          >
+            {() => <div />}
+          </BentoEntityShell>
+        </MemoryRouter>
+      </I18nextProvider>,
+    )
+    const buttons = [...container.querySelectorAll("button")]
+    const controls = buttons.filter((button) => !button.matches('[data-look="text"]'))
+    expect(buttons.length - controls.length).toBeGreaterThanOrEqual(5)
+    expect(controls.length).toBeGreaterThanOrEqual(6)
+    for (const button of controls) expect(SCALE).toContain(button.getBoundingClientRect().height)
     unmount()
   })
 

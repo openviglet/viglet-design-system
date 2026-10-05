@@ -17,3 +17,4 @@
 
 ## Block C — One look across products
 
+- ⏸ **VDS201** (deps: —) **Seven button heights in a consumer still come from package components the control-height parity test does not list** — set aside (Needs a live Shio census.): A fresh Shio census must name what still draws its 16, 18 and 29 px buttons and lower the allowance with --write. → §VDS201

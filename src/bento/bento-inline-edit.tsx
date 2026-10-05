@@ -203,6 +203,7 @@ export function BentoInlineEdit({
       <button
         ref={displayRef}
         type="button"
+        data-look="text"
         onClick={() => setEditing(true)}
         className={cn(displayClass, "text-left", className)}
         aria-label={ariaLabel ?? t("forms.formActions.edit")}

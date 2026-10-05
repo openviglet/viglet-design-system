@@ -393,7 +393,7 @@ export function BentoEntityShell<TEntity extends BentoEntityLike>({
             {badge}
             {hasStatus && (readOnly ? (
               <span
-                className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] uppercase tracking-wider ${
+                className={`flex h-(--vg-control-dense) items-center gap-1.5 rounded-full border px-2.5 text-[10px] uppercase tracking-wider ${
                   enabled
                     ? "bento-status bento-status-on"
                     : "border-border bg-muted text-muted-foreground"
@@ -408,7 +408,7 @@ export function BentoEntityShell<TEntity extends BentoEntityLike>({
                 onClick={() => persistField({ enabled: enabled ? 0 : 1 })}
                 aria-label={t("forms.common.enabled")}
                 title={enabled ? t("common.activeToggleHint") : t("common.idleToggleHint")}
-                className={`bento-tile-clickable flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] uppercase tracking-wider transition-colors duration-200 ${
+                className={`bento-tile-clickable flex h-(--vg-control-dense) items-center gap-1.5 rounded-full border px-2.5 text-[10px] uppercase tracking-wider transition-colors duration-200 ${
                   enabled
                     ? "bento-status bento-status-on"
                     : "border-border bg-muted text-muted-foreground hover:bg-muted/80"

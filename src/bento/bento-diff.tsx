@@ -172,6 +172,7 @@ export function BentoDiff({ before, after, fields, showUnchanged = false, layout
         <div className="flex flex-col gap-3">
           <button
             type="button"
+            data-look="text"
             aria-expanded={open ? "true" : "false"}
             onClick={() => setOpen(!open)}
             className="inline-flex items-center gap-1 self-start rounded-md text-sm text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
@@ -444,6 +445,7 @@ function LinesChange({
         <td colSpan={span} className="bg-muted/40 px-2">
           <button
             type="button"
+            data-look="text"
             aria-expanded={open ? "true" : "false"}
             onClick={() => toggle(segment.key)}
             className="inline-flex items-center gap-1 rounded-md font-sans text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"

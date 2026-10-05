@@ -449,6 +449,7 @@ export function BentoDataTable<TRow extends RowData>({
                   {column.sortValue ? (
                     <button
                       type="button"
+                      data-look="text"
                       onClick={() => toggleSort(column.id)}
                       className="inline-flex max-w-full items-center gap-1 rounded-md py-1 hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
                     >

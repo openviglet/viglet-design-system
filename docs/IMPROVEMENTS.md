@@ -131,20 +131,17 @@ measure is what shows it done in every consumer that mounts a dock.
 
 ### §VDS201 Package buttons off the control scale
 
-VDS197 and VDS200 put every control in control-height.parity.test.tsx on the dense, form
-or touch height, yet the look census run against Shio on 2026.3.17 (SH1199, 2026-10-05)
-still attributes seven button heights to this package: 16 px on the content object page,
-18 px on the admin entity editors (auth and exchange providers, tokens, webhooks, email
-settings), 21, 33 and 37 px on the group and role pages, 24 px on the admin lists, and
-29 px on the scheduled page. Those are buttons the parity test does not list, most
-likely the entity shell's hero actions, the list page's sort headers, BentoInlineEdit,
-BentoTrail, a calendar cell or a tab trigger, rendered as a native button with its own
-padding instead of a control size. Start from the census JSON (look:census --json on
-Shio's dev server) to name the component behind each value, then either put it on a
-control token or, where the element is not a control (a sortable header, a link styled
-as text), say so in the census's own rule so it is not counted as one. Add each
-component to the parity test with the height it resolves to, and lower Shio's
-button-height allowance with --write when the reading drops.
+The package half landed: BentoCalendar's previous, next, Today and view buttons and the
+entity shell's status pill sit on --vg-control-dense, and the buttons that are text a
+reader clicks (BentoInlineEdit's value, BentoDataTable's sort header, BentoDiff's folds,
+a calendar entry) carry data-look="text", which look-census-probe.mjs leaves out of the
+button-height figure. Measured in Chromium, those explain the 24 px (sort header) and
+the 21, 33 and 37 px (the entity hero's inline-edit description and title) readings. The
+16, 18 and 29 px readings are still unnamed: the status pill measured 25 px, not 18, and
+the calendar header measured 24 to 30 px. What is left needs Shio's dev server and an
+account: run look:census --json against it, name the component behind each of those
+three values, put it on a control token or mark it as text, add it to
+control-height.parity.test.tsx, and lower Shio's button-height allowance with --write.
 
 ### §VDS202 Cards are not control heights
 
@@ -163,7 +160,8 @@ image). Either way, a button 45 px or taller should stop reading as a control, w
 short pill or a link-styled button keeps counting, since those are the hand-drawn
 controls the figure was built to catch. Apply it in look-census-probe.mjs, cover it in
 look-census.parity.test.ts with a card and a pill, and rewrite Shio's allowance from a
-fresh reading.
+fresh reading. VDS201 lets a button drawn as text opt out with data-look=text, so a card
+could declare itself the same way.
 
 ### §VDS203 One face, one mono
 

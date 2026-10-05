@@ -211,6 +211,7 @@
 - ✅ **VDS199** **The package declares no monospace family, so ids, paths and diffs render in three different monos** — font-mono, code, the diff and the formulas backdrop share one --vg-font-mono stack with a 12 px text-mono step, held by a source scan and a browser test (design recorded in `src/styles/preset.css`).
 - ✅ **VDS200** **Sidebar rows, the navigation trigger and two bento controls still set heights the control scale does not hold** — Sidebar menu and sub buttons, the navigation trigger and the bento reorder grip read the control tokens; the two rows left off say why.
   checked **Every interactive element the package exports measures dense, form or touch** control-height.parity.test.tsx lists each control and fails on any other height; a row left off says why beside its class.
+- ✅ **VDS201 (package half)** **Seven button heights in a consumer still come from package components the control-height parity test does not list** — Calendar header controls and the entity status pill sit on the dense height, and a button drawn as text declares data-look=text so the census skips it.
 
 ## Block D — The package in a server-rendered framework
 

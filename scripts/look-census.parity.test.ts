@@ -45,6 +45,16 @@ describe("counting what a reader sees", () => {
     expect(read.samples.filter(([figure]) => figure === "primary-fill")).toHaveLength(1)
   })
 
+  it("leaves a button drawn as text out of the control heights", () => {
+    const read = page(`
+      <h1>Group</h1>
+      <button style="height:32px">Save</button>
+      <button data-look="text" style="height:33px">Editors</button>
+    `)
+    const heights = read.samples.filter(([figure]) => figure === "button-height").map(([, value]) => value)
+    expect(heights).toEqual(["32"])
+  })
+
   it("does not read a control scrolled under a sticky header as covered by its dock", () => {
     const read = page(`
       <header style="position:sticky;top:0;height:60px;z-index:30">

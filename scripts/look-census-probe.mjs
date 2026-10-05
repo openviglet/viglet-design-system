@@ -89,7 +89,9 @@ export function probe() {
   const buttons = [...document.querySelectorAll('button, [role="button"]')].filter(visible)
   let primaries = 0
   for (const b of buttons) {
-    add("button-height", Math.round(b.getBoundingClientRect().height), b)
+    // VDS201 — a button drawn as text (an inline edit's value, a sort header, a
+    // fold) takes its line's height, so it declares itself and is not a control.
+    if (!b.matches('[data-look="text"]')) add("button-height", Math.round(b.getBoundingClientRect().height), b)
     if (b.matches(STATEFUL)) continue
     const fill = rgba(getComputedStyle(b).backgroundColor)
     if (saturated(fill)) add("primary-fill", hex(fill), b)

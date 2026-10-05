@@ -280,7 +280,7 @@ export function BentoCalendar({
           <button
             type="button"
             onClick={() => setFocused(dayOf(Date.now()))}
-            className="rounded-md border border-border px-2 py-1 text-sm hover:bg-muted/50 focus-visible:outline-2 focus-visible:outline-ring"
+            className="inline-flex h-(--vg-control-dense) items-center rounded-md border border-border px-3 text-sm hover:bg-muted/50 focus-visible:outline-2 focus-visible:outline-ring"
           >
             {t("bento.calendar.today", { defaultValue: "Today" })}
           </button>
@@ -288,7 +288,7 @@ export function BentoCalendar({
             {title}
           </h2>
         </div>
-        <div role="group" aria-label={t("bento.calendar.views", { defaultValue: "View" })} className="flex rounded-md border border-border p-0.5">
+        <div role="group" aria-label={t("bento.calendar.views", { defaultValue: "View" })} className="flex gap-1">
           {(["month", "week"] as const).map((option) => (
             <button
               key={option}
@@ -296,7 +296,7 @@ export function BentoCalendar({
               aria-pressed={shown === option ? "true" : "false"}
               onClick={() => changeView(option)}
               className={cn(
-                "rounded-sm px-2 py-0.5 text-sm focus-visible:outline-2 focus-visible:outline-ring",
+                "inline-flex h-(--vg-control-dense) items-center rounded-md border border-border px-3 text-sm focus-visible:outline-2 focus-visible:outline-ring",
                 shown === option ? "bg-primary text-primary-foreground" : "hover:bg-muted/50",
               )}
             >
@@ -389,6 +389,7 @@ export function BentoCalendar({
                         <li key={entry.id}>
                           <button
                             type="button"
+                            data-look="text"
                             tabIndex={-1}
                             draggable={onEntryMove ? true : undefined}
                             aria-describedby={hint}
@@ -433,7 +434,7 @@ function NavButton({ label, onClick, children }: Readonly<{ label: string; onCli
       type="button"
       aria-label={label}
       onClick={onClick}
-      className="grid size-7 place-items-center rounded-md border border-border hover:bg-muted/50 focus-visible:outline-2 focus-visible:outline-ring"
+      className="grid size-(--vg-control-dense) place-items-center rounded-md border border-border hover:bg-muted/50 focus-visible:outline-2 focus-visible:outline-ring"
     >
       {children}
     </button>
