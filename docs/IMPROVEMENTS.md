@@ -142,25 +142,8 @@ the calendar header measured 24 to 30 px. What is left needs Shio's dev server a
 account: run look:census --json against it, name the component behind each of those
 three values, put it on a control token or mark it as text, add it to
 control-height.parity.test.tsx, and lower Shio's button-height allowance with --write,
-which also drops the cards VDS202 now skips.
-
-### §VDS203 One face, one mono
-
-look-census-probe.mjs records the mono figure as the element's whole font stack, so two
-elements drawing the same face count as two monos when one stack carries extra
-fallbacks. Shio hit it on 2026-10-05 (SH1212): its GraphQL explorer's Monaco editors
-take --vg-font-mono through the font option (SH1199), and Monaco appends its own
-platform fallbacks, so the stack reads JetBrains Mono, ui-monospace, ... monospace,
-Consolas, Courier New, monospace. Home's compact BentoChangeMark draws font-mono from
-the package and reads the token's stack as written. Both render JetBrains Mono where it
-is loaded and the platform's ui-monospace where it is not, yet the figure went from one
-to two and failed the run. No consumer can lower it, because Monaco adds the fallbacks
-after it has read the option. The font figure already compares the first family, which
-is why it did not move. Make the mono figure do the same, or compare the stack only up
-to its first generic family (monospace or ui-monospace), so that trailing fallbacks a
-library appends are not a second face. Cover it in look-census.parity.test.ts with the
-token stack and the same stack with Monaco's tail, which must count as one. Then rewrite
-Shio's allowance, whose mono figure is recorded at two only because of this.
+which also drops the cards VDS202 now skips and the second mono VDS203 now reads as one
+face.
 
 ### §VDS204 A table that scrolls with its page
 

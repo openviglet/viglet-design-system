@@ -115,6 +115,13 @@ export function probe() {
 
   const MONO = /mono|courier|consolas|menlo|monaco/i
   const family = (stack) => stack.split(",").map((f) => f.trim().replace(/^["']|["']$/g, ""))
+  // VDS203 — a stack up to its first generic family: past it nothing is drawn
+  // that the generic would not, so a library's appended fallbacks are one face.
+  const GENERIC = /^(?:ui-)?monospace$/i
+  const face = (stack) => {
+    const end = stack.findIndex((f) => GENERIC.test(f))
+    return end < 0 ? stack : stack.slice(0, end + 1)
+  }
   let seen = 0
   for (const el of document.querySelectorAll("body *")) {
     if (seen++ > 6000) break
@@ -125,7 +132,7 @@ export function probe() {
     if (text) {
       const stack = family(s.fontFamily)
       add("font", stack[0], el)
-      if (MONO.test(s.fontFamily)) add("mono", stack.join(", "), el)
+      if (MONO.test(s.fontFamily)) add("mono", face(stack).join(", "), el)
     }
   }
 

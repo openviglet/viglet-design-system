@@ -67,6 +67,18 @@ describe("counting what a reader sees", () => {
     expect(read.cards).toBe(1)
   })
 
+  it("reads a mono stack with a library's appended fallbacks as the same face", () => {
+    const token = `"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace`
+    const read = page(`
+      <h1>Explorer</h1>
+      <code style='font-family:${token}'>query</code>
+      <code style='font-family:${token}, Consolas, "Courier New", monospace'>mutation</code>
+      <code style='font-family:Menlo, monospace'>other</code>
+    `)
+    const monos = new Set(read.samples.filter(([figure]) => figure === "mono").map(([, value]) => value))
+    expect([...monos].sort()).toEqual(["JetBrains Mono, ui-monospace", "Menlo, monospace"])
+  })
+
   it("does not read a control scrolled under a sticky header as covered by its dock", () => {
     const read = page(`
       <header style="position:sticky;top:0;height:60px;z-index:30">
