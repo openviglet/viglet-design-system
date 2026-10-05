@@ -2,9 +2,9 @@
 
 ## Block A — The gate the design system never had
 
-## Block F — What a consuming CMS needs from the package next
+- 📋 **VDS210** (deps: —) **the dist-stability case that imports vite.config runs under the 5s default and failed once in a loaded full suite** — A gate that fails on load and not on code teaches people to rerun it until it is green. → §VDS210
 
-- 📋 **VDS209** (deps: —) **a paged BentoDataTable's selection bar scrolls out of view, so the bulk verbs are off screen down a long list** — Only the header row is sticky, so rows ticked low in a long list leave the selection actions at the top of the page. → §VDS209
+## Block F — What a consuming CMS needs from the package next
 
 ## Block E — The assistant every product shares
 
@@ -29,6 +29,11 @@
 - **A story file whose browser drops fails, and npm test exits instead of hanging**
   Failing fast is what the gate lacked: every test passed, and the run still never
   ended.
+
+## Done when — VDS210
+
+- **The vite.config import case declares a timeout sized for the loaded suite** Read the
+  case's options, then run npm test and see it pass
 
 ## Non-goals
 

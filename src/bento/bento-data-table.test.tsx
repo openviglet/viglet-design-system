@@ -295,4 +295,32 @@ describe("BentoDataTable with a controlled selection", () => {
     rerender(withScope("published", ["p4"]))
     expect(selectedTitles()).toEqual(["Post 4"])
   })
+
+  // VDS209 — down a long page-scrolled list, the selection's actions stay in view
+  // above the header row, and give their place back when the selection clears.
+  it("holds the selection bar above the header row while a paged table has a selection", async () => {
+    const user = userEvent.setup()
+    const trash = [{ id: "trash", label: "Move to trash", icon: IconTrash, onSelect: () => {} }]
+    const { container } = draw(table({ height: undefined, selectionActions: trash }))
+    const bar = () => container.querySelector<HTMLElement>("[data-slot='bento-data-table-bar']")!
+    const head = screen.getByRole("grid", { name: "Posts" }).querySelector<HTMLElement>("[role='rowgroup']")!
+
+    expect(bar()).not.toHaveClass("sticky")
+    expect(head).toHaveClass("sticky", "top-[calc(var(--bento-shell-header,0px)+var(--bento-table-bar,0px))]")
+
+    await user.click(screen.getByRole("checkbox", { name: "Select Post 2" }))
+    expect(bar()).toHaveClass("sticky", "top-(--bento-shell-header,0px)", "z-20")
+
+    await user.click(screen.getByRole("button", { name: "Clear selection" }))
+    expect(bar()).not.toHaveClass("sticky")
+  })
+
+  it("keeps the selection bar in the flow of a table that scrolls inside its own height", async () => {
+    const user = userEvent.setup()
+    const trash = [{ id: "trash", label: "Move to trash", icon: IconTrash, onSelect: () => {} }]
+    const { container } = draw(table({ selectionActions: trash }))
+
+    await user.click(screen.getByRole("checkbox", { name: "Select Post 2" }))
+    expect(container.querySelector("[data-slot='bento-data-table-bar']")).not.toHaveClass("sticky")
+  })
 })

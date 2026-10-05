@@ -435,17 +435,39 @@ export function BentoDataTable<TRow extends RowData>({
   const hideable = columns.filter((c) => c.hideable !== false);
   const selectedRows = ordered.filter((row) => selected.has(getRowId(row)));
   const allSelected = total > 0 && selectedRows.length === total;
+
+  // VDS209 — while rows are selected down a page-scrolled list, the bar with the
+  // selection's actions sticks under the shell's header, and the header row sticks
+  // below it, at the bar's height as `--bento-table-bar`.
+  const barSticks = paged && selectedRows.length > 0;
+  const frame = useRef<HTMLDivElement>(null);
+  const bar = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const host = frame.current;
+    const el = bar.current;
+    if (!host || !el || !barSticks || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(() => host.style.setProperty("--bento-table-bar", `${el.offsetHeight}px`));
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      host.style.removeProperty("--bento-table-bar");
+    };
+  }, [barSticks]);
+
   return (
     // Clipped rather than hidden: `overflow: hidden` would make the table a scroll
     // container, and its header row would stick to the table instead of the page.
-    <div data-slot="bento-data-table" className="bento-glass overflow-clip rounded-2xl">
+    <div ref={frame} data-slot="bento-data-table" className="bento-glass overflow-clip rounded-2xl">
       {/*
         VDS205 — one bar: the list's controls, or the selection's, with Columns at
         the end. With nothing to show it is hidden but kept, for its live region.
       */}
       <div
+        ref={bar}
+        data-slot="bento-data-table-bar"
         className={cn(
           "flex min-h-12 flex-wrap items-center gap-2 border-b border-border/50 px-3 py-2",
+          barSticks && "sticky top-(--bento-shell-header,0px) z-20 bg-card/95 backdrop-blur",
           toolbar == null && hideable.length === 0 && selectedRows.length === 0 && "sr-only",
         )}
       >
@@ -514,7 +536,10 @@ export function BentoDataTable<TRow extends RowData>({
         <div
           role="rowgroup"
           ref={head}
-          className={cn(paged && "sticky top-(--bento-shell-header,0px) z-10 bg-card/95 backdrop-blur")}
+          className={cn(
+            paged &&
+              "sticky top-[calc(var(--bento-shell-header,0px)+var(--bento-table-bar,0px))] z-10 bg-card/95 backdrop-blur",
+          )}
         >
           <div
             role="row"

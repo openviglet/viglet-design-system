@@ -91,6 +91,20 @@ timestamped), and check whether `browser.connectTimeout`, a bound on the stories
 project's workers, or `teardownTimeout` turns the hang into a failure. The setting
 belongs in `vitest.config.ts` beside that project, with the measurement in its comment.
 
+### §VDS210 The dist-stability import runs on a loaded suite's timeout
+
+`scripts/dist-stability.test.ts` has a case, "strips every library plugin that writes a
+bundle", that imports `../vite.config` at run time. That import loads the library's
+whole plugin chain. On a quiet machine the file passes in under half a second. During
+the VDS209 gates, one full `npm test` run failed only this case, and the next run of the
+same tree was green. It ran under the 5s default, so this is the same failure VDS148 and
+VDS166 fixed in their neighbours.
+
+Give the case `{ timeout: 30_000 }` with the comment its neighbours carry, sized for the
+loaded suite and not a quiet machine. Leave the other cases in the file on the default,
+since they build plugin lists in memory and import nothing. Done when the case declares
+the longer timeout and the full suite passes.
+
 ## Block F — What a consuming CMS needs from the package next
 
 ### §VDS152 The deprecation ends
@@ -106,28 +120,6 @@ through, and delete warnWithoutId and its test. The change note in the ledger na
 release that warned. Before shipping, run viglet-ds-check-duplicates and a type-check in
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
-
-### §VDS209 The selection bar stays in view while a paged table scrolls
-
-Shio's SH1223 dropped the content browser's fixed table height (VDS204), so a long
-folder scrolls with the page. `BentoDataTable` then holds its header row under the
-shell's header (`sticky` on the `rowgroup` when paged), but the bar above it, with the
-selection count and the `selectionActions`, is not sticky. A curator who ticks rows low
-in a long list must scroll back up to reach Move or Delete. Shio tracks the consumer
-side as SH1239.
-
-While rows are selected and the table is paged (no `height`), make the bar sticky as
-well, at `top-(--bento-shell-header,0px)`, on the card background with the same blur.
-Stack the header row below it rather than under it: measure the bar's height with a ref
-and a `ResizeObserver`, expose it as a CSS variable on the table, and offset the
-header's `top` by it. With nothing selected the bar keeps its place in the flow, holding
-the toolbar and the column menu, and the header returns to the shell's offset. A table
-with a `height` scrolls inside itself and is unchanged.
-
-Cover it with a test that renders a paged table with a selection and asserts the sticky
-classes, and one with no selection that asserts they are absent. Done when, in a paged
-table with rows selected, the selection bar and the header row stay in view while the
-page scrolls, in that order, and the bar leaves when the selection is cleared.
 
 ## Block E — The assistant every product shares
 

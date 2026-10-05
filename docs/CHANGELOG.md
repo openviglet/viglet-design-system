@@ -295,6 +295,8 @@
 - ✅ **VDS184** **A hero's way back names one parent, so a post five folders deep does not say where the reader is** — Heroes take a trail of ancestors and render it as linked steps, collapsed past four; a trail of one keeps the arrow back link.
   checked **Heroes accept an ancestor list and render it as linked steps** A nested entity needs its location, not only its parent.
   checked **A route with one parent still renders the arrow back link** Flat products must see no change.
+- ✅ **VDS209** **a paged BentoDataTable's selection bar scrolls out of view, so the bulk verbs are off screen down a long list** — A paged BentoDataTable with rows selected holds its selection bar under the shell header and its header row below it, so bulk actions stay in reach down a long list.
+  checked **With rows selected, a paged table keeps its bar, then its header row, in view** Unit tests assert the bar's sticky classes appear with a selection, leave when it clears, and stay off a table with a height
 
 ## Block G — The package knows one chrome
 
