@@ -126,3 +126,22 @@ count sit above the user menu. It opens as a popover anchored to the rail, and o
 phone, where there is no rail, it moves to the header's trailing edge. The second is the
 proposal, because the rail foot is empty today and costs nothing. The census's overlap
 measure is what shows it done in every consumer that mounts a dock.
+
+## Block C — One look across products
+
+### §VDS201 Package buttons off the control scale
+
+VDS197 and VDS200 put every control in control-height.parity.test.tsx on the dense, form
+or touch height, yet the look census run against Shio on 2026.3.17 (SH1199, 2026-10-05)
+still attributes seven button heights to this package: 16 px on the content object page,
+18 px on the admin entity editors (auth and exchange providers, tokens, webhooks, email
+settings), 21, 33 and 37 px on the group and role pages, 24 px on the admin lists, and
+29 px on the scheduled page. Those are buttons the parity test does not list, most
+likely the entity shell's hero actions, the list page's sort headers, BentoInlineEdit,
+BentoTrail, a calendar cell or a tab trigger, rendered as a native button with its own
+padding instead of a control size. Start from the census JSON (look:census --json on
+Shio's dev server) to name the component behind each value, then either put it on a
+control token or, where the element is not a control (a sortable header, a link styled
+as text), say so in the census's own rule so it is not counted as one. Add each
+component to the parity test with the height it resolves to, and lower Shio's
+button-height allowance with --write when the reading drops.

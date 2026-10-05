@@ -6,6 +6,10 @@
 
 ## Block E — The assistant every product shares
 
+## Block C — One look across products
+
+- 📋 **VDS201** (deps: —) **Seven button heights in a consumer still come from package components the control-height parity test does not list** — A closed scale the package's own buttons step outside is one no consumer can reach by fixing its own code. → §VDS201
+
 ## Done when — VDS185
 
 - **The dock rests at the rail's foot and opens as an anchored popover** A reserved slot
