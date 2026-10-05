@@ -38,10 +38,10 @@
       "routes": 35,
       "figures": {
         "button-height": {
-          "distinct": 21,
+          "distinct": 18,
           "byOwner": {
             "package": 10,
-            "product": 13,
+            "product": 10,
             "unknown": 1
           },
           "values": {
@@ -67,7 +67,7 @@
             },
             "24": {
               "package": 45,
-              "product": 3,
+              "product": 0,
               "unknown": 0
             },
             "26": {
@@ -80,14 +80,9 @@
               "product": 0,
               "unknown": 0
             },
-            "31": {
-              "package": 0,
-              "product": 3,
-              "unknown": 0
-            },
             "32": {
               "package": 231,
-              "product": 0,
+              "product": 15,
               "unknown": 0
             },
             "33": {
@@ -97,27 +92,17 @@
             },
             "36": {
               "package": 300,
-              "product": 0,
-              "unknown": 0
+              "product": 18,
+              "unknown": 9
             },
             "37": {
               "package": 4,
               "product": 0,
               "unknown": 0
             },
-            "39": {
-              "package": 0,
-              "product": 9,
-              "unknown": 0
-            },
-            "40": {
-              "package": 0,
-              "product": 3,
-              "unknown": 9
-            },
             "44": {
               "package": 108,
-              "product": 15,
+              "product": 0,
               "unknown": 0
             },
             "49": {
@@ -177,17 +162,13 @@
               "/bento/admin/tokens",
               "/bento/admin/users",
               "/bento/content",
-              "/bento/content/object/:objectId",
-              "/bento/graphql"
+              "/bento/content/object/:objectId"
             ],
             "26": [
               "/bento/content/files"
             ],
             "29": [
               "/bento/content/scheduled"
-            ],
-            "31": [
-              "/bento/graphql"
             ],
             "32": [
               "/bento/admin/activity",
@@ -206,12 +187,6 @@
             "37": [
               "/bento/admin/groups/:groupId",
               "/bento/admin/roles/:roleId"
-            ],
-            "39": [
-              "/bento/graphql"
-            ],
-            "40": [
-              "/bento/graphql"
             ],
             "44": [
               "/bento",
@@ -259,7 +234,7 @@
             "JetBrains Mono": {
               "package": 0,
               "product": 0,
-              "unknown": 126
+              "unknown": 128
             }
           },
           "offenders": {
@@ -304,7 +279,7 @@
             "JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Consolas, Liberation Mono, monospace, Consolas, Courier New, monospace": {
               "package": 0,
               "product": 0,
-              "unknown": 126
+              "unknown": 128
             }
           },
           "offenders": {}
@@ -358,10 +333,10 @@
           }
         },
         "radius": {
-          "distinct": 12,
+          "distinct": 9,
           "byOwner": {
             "package": 5,
-            "product": 10,
+            "product": 7,
             "unknown": 1
           },
           "values": {
@@ -372,20 +347,15 @@
             },
             "10px": {
               "package": 585,
-              "product": 192,
+              "product": 195,
               "unknown": 0
             },
             "6px": {
               "package": 636,
-              "product": 10,
-              "unknown": 0
-            },
-            "4px": {
-              "package": 0,
-              "product": 27,
+              "product": 40,
               "unknown": 9
             },
-            "0px 0px 12px 12px": {
+            "0px 0px 10px 10px": {
               "package": 0,
               "product": 3,
               "unknown": 0
@@ -395,12 +365,12 @@
               "product": 0,
               "unknown": 0
             },
-            "12px 12px 0px 0px": {
+            "10px 10px 0px 0px": {
               "package": 0,
               "product": 3,
               "unknown": 0
             },
-            "20px": {
+            "6px 0px 0px": {
               "package": 0,
               "product": 3,
               "unknown": 0
@@ -410,17 +380,7 @@
               "product": 0,
               "unknown": 0
             },
-            "8px": {
-              "package": 0,
-              "product": 3,
-              "unknown": 0
-            },
-            "8px 0px 0px": {
-              "package": 0,
-              "product": 3,
-              "unknown": 0
-            },
-            "8px 8px 0px 0px": {
+            "6px 6px 0px 0px": {
               "package": 0,
               "product": 3,
               "unknown": 0
@@ -447,31 +407,22 @@
               "/bento/admin/groups",
               "/bento/admin/groups/:groupId"
             ],
-            "4px": [
-              "/bento/graphql"
-            ],
-            "0px 0px 12px 12px": [
+            "0px 0px 10px 10px": [
               "/bento/graphql"
             ],
             "0px 6px 6px 0px": [
               "/bento/content/object/:objectId"
             ],
-            "12px 12px 0px 0px": [
+            "10px 10px 0px 0px": [
               "/bento/graphql"
             ],
-            "20px": [
+            "6px 0px 0px": [
               "/bento/graphql"
             ],
             "6px 0px 0px 6px": [
               "/bento/content/object/:objectId"
             ],
-            "8px": [
-              "/bento/graphql"
-            ],
-            "8px 0px 0px": [
-              "/bento/graphql"
-            ],
-            "8px 8px 0px 0px": [
+            "6px 6px 0px 0px": [
               "/bento/graphql"
             ]
           }
