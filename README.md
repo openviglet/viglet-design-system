@@ -785,6 +785,8 @@ Three utility classes cover the common shapes: `vg-accent-chip` (the tinted grad
 
 This is separate from a component's **colour palette**. `SectionCard` (`blue | violet | emerald | amber | rose | cyan`) and `StickySaveBar` (`gray | blue | orange | green`) are keyed by hue — the caller picked that colour deliberately — so re-keying the accent leaves them alone, the same way it leaves the [bento tones](#the-bento-layer) alone.
 
+**Control heights are a closed scale.** `Button`, `GradientButton`, `Toggle`, `Input` and `SelectTrigger` take their height from two tokens: `--vg-control-dense` (32 px — tables, filter bars, toolbars, the `sm` and `icon-sm` sizes) and `--vg-control-form` (36 px — fields and their actions, the `default`, `lg`, `icon` and `icon-lg` sizes). `lg` keeps its wider padding and is no longer a third height. Under `pointer: coarse` both rise to `--vg-control-touch` (44 px). A control of your own reads the same tokens — `h-(--vg-control-form)` — rather than a fixed `h-*`, and the `button-height` and `input-height` figures of `look:census` count what a console still draws off the scale.
+
 ### i18n
 
 Base translations (EN/PT) for common UI strings: buttons, form labels, dialog text, navigation, theme, and the assistant dock.

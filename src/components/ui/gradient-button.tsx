@@ -74,12 +74,14 @@ const gradientButtonVariants = cva(
                 ].join(" "),
             },
             size: {
-                default: "h-11 px-5 py-2 has-[>svg]:px-4",
-                sm: "h-9 rounded-md gap-1.5 px-4 has-[>svg]:px-3 text-xs",
-                lg: "h-12 rounded-md px-8 has-[>svg]:px-6 text-base",
-                icon: "size-11",
-                "icon-sm": "size-9",
-                "icon-lg": "size-12",
+                // The closed control scale in preset.css (VDS197), as Button
+                // reads it: `lg` keeps its padding and type, not a third height.
+                default: "h-(--vg-control-form) px-5 py-2 has-[>svg]:px-4",
+                sm: "h-(--vg-control-dense) rounded-md gap-1.5 px-4 has-[>svg]:px-3 text-xs",
+                lg: "h-(--vg-control-form) rounded-md px-8 has-[>svg]:px-6 text-base",
+                icon: "size-(--vg-control-form)",
+                "icon-sm": "size-(--vg-control-dense)",
+                "icon-lg": "size-(--vg-control-form)",
             },
         },
         defaultVariants: {

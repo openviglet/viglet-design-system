@@ -221,6 +221,16 @@
   --vg-accent-shadow: color-mix(in oklab, var(--vg-accent-from) 25%, transparent);
   --vg-accent-shadow-hover: color-mix(in oklab, var(--vg-accent-from) 30%, transparent);
 
+  /* Control heights (VDS197) — a closed scale of two heights and a touch step.
+     Dense is a table row's, a filter bar's and a toolbar's control; form is a
+     field's and its actions'. Button, Input, Select, Toggle and GradientButton
+     read these and nothing else, so `lg` is form and not a third height. A
+     coarse pointer raises both to the touch step, in the block below. Shio's
+     console measured fifteen control heights before this scale existed. */
+  --vg-control-dense: 2rem;
+  --vg-control-form: 2.25rem;
+  --vg-control-touch: 2.75rem;
+
   /* Brand palette */
   --vg-brand: #c2410c;
   --vg-brand-dark: #9a3412;
@@ -281,6 +291,16 @@
   --sidebar-accent-foreground: var(--vg-sidebar-accent-foreground);
   --sidebar-border: var(--vg-sidebar-border);
   --sidebar-ring: var(--vg-sidebar-ring);
+}
+
+/* A finger needs a larger target than a cursor, so both control heights meet
+   at the touch step there. A product that redeclares the two heights on its own
+   :root overrides this as well, which is why the scale is not for re-keying. */
+@media (pointer: coarse) {
+  :root {
+    --vg-control-dense: var(--vg-control-touch);
+    --vg-control-form: var(--vg-control-touch);
+  }
 }
 
 /* Dark surfaces sit one step above pure black on purpose. Near-black (0.145)

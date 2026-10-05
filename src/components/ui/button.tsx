@@ -22,12 +22,14 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-        icon: "size-9",
-        "icon-sm": "size-8",
-        "icon-lg": "size-10",
+        // Heights come from the closed control scale in preset.css (VDS197):
+        // `lg` keeps its wider padding and takes the form height.
+        default: "h-(--vg-control-form) px-4 py-2 has-[>svg]:px-3",
+        sm: "h-(--vg-control-dense) rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
+        lg: "h-(--vg-control-form) rounded-md px-6 has-[>svg]:px-4",
+        icon: "size-(--vg-control-form)",
+        "icon-sm": "size-(--vg-control-dense)",
+        "icon-lg": "size-(--vg-control-form)",
       },
     },
     defaultVariants: {

@@ -90,7 +90,7 @@ export function BentoActionsMenu({ actions, triggerLabel }: Readonly<BentoAction
         <button
           type="button"
           aria-label={triggerLabel ?? t("forms.formActions.moreActions", { defaultValue: "More actions" })}
-          className="bento-tile-clickable inline-flex h-9 w-9 items-center justify-center rounded-full border border-border/60 bg-card/60 text-muted-foreground backdrop-blur transition-colors duration-200 hover:text-foreground"
+          className="bento-tile-clickable inline-flex size-(--vg-control-form) items-center justify-center rounded-full border border-border/60 bg-card/60 text-muted-foreground backdrop-blur transition-colors duration-200 hover:text-foreground"
         >
           <IconDotsVertical size={18} />
         </button>

@@ -51,7 +51,8 @@ describe("Button", () => {
 
     const button = screen.getByRole("button", { name: "Delete" })
     expect(button.className).toContain("bg-destructive")
-    expect(button.className).toContain("h-10")
+    // `lg` is the form height on the closed scale (VDS197), not a third one.
+    expect(button.className).toContain("h-(--vg-control-form)")
   })
 
   it("keeps a caller's className rather than dropping it for the variant class", () => {

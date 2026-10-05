@@ -8,9 +8,9 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS197** (deps: —) **Controls take any height a consumer passes, and the package itself ships three, so a console renders fifteen** — Two control heights and a touch step as tokens make a consistent console the default rather than a review finding. → §VDS197
 - 📋 **VDS198** (deps: —) **Radii are arithmetic on one --vg-radius plus two bento sizes, so a console renders ten** — Three radii as tokens (control, panel, full) leave a consumer nothing to improvise and nothing to drift. → §VDS198
 - 📋 **VDS199** (deps: —) **The package declares no monospace family, so ids, paths and diffs render in three different monos** — One mono token, mapped to Tailwind's font-mono, gives every consumer one family without bundling a font. → §VDS199
+- 📋 **VDS200** (deps: —) **Sidebar rows, the navigation trigger and two bento controls still set heights the control scale does not hold** — A scale that only some controls read leaves the census counting the rest as the same drift. → §VDS200
 
 ## Done when — VDS185
 
@@ -31,6 +31,12 @@
 - **A story file whose browser drops fails, and npm test exits instead of hanging**
   Failing fast is what the gate lacked: every test passed, and the run still never
   ended.
+
+## Done when — VDS200
+
+- **Every interactive element the package exports measures dense, form or touch**
+  control-height.parity.test.tsx lists each control and fails on any other height; a row
+  left off says why beside its class.
 
 ## Non-goals
 

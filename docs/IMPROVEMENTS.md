@@ -129,22 +129,6 @@ measure is what shows it done in every consumer that mounts a dock.
 
 ## Block C — One look across products
 
-### §VDS197 A closed control-height scale
-
-Button, Input and Select take their height from a size variant, and the variants span
-three values: sm is h-8, default is h-9, lg is h-10, with icon twins at the same three
-sizes. Nothing stops a consumer passing its own h-7 or h-11 through className, and
-Shio's console measured fifteen distinct control heights (SH1199, section LV.36 in
-Shio's IMPROVEMENTS). The closed scale the concept's system board proposes is two
-heights and a touch step: 32 px dense (tables, filter bars, toolbars), 36 px form
-(fields and their actions), and 44 px on a coarse pointer. Build it as tokens in
-preset.css (--vg-control-dense, --vg-control-form, --vg-control-touch), point Button,
-Input, Select and the bento controls at them, map lg to form rather than a third height,
-and raise both to the touch step under pointer: coarse. Keep the variant names so no
-consumer breaks; lg becomes an alias. Add a test that reads every exported control's
-resolved height and fails on a value outside the scale, and a census figure consumers
-can report. Shio adopts it in SH1199 once the package is published.
-
 ### §VDS198 A closed radius scale
 
 The radius tokens are arithmetic on one value: --radius-sm, md, lg and xl are
@@ -173,3 +157,18 @@ not bundled: the stack names the family and falls back to ui-monospace, so a con
 that does not load it still gets one mono. Add a test that fails when a stylesheet in
 the package names a monospace family other than the token, and a census reading of
 distinct font families per consumer. Shio adopts it in SH1199.
+
+### §VDS200 Controls still off the height scale
+
+The closed control-height scale in preset.css covers Button, GradientButton, Toggle,
+Input, SelectTrigger, SidebarInput and the bento actions trigger, and a browser test
+holds each of them to dense or form. Other interactive elements still set a fixed
+height. SidebarMenuButton draws h-8, h-7 and h-12 for its three sizes, the
+SidebarMenuSub button h-7, the navigation-menu trigger h-9, the bento list page's
+reorder grip h-7 and the command palette's search field h-12. Each one is a height a
+look census counts. Decide per element whether it is a control on the scale (the grip
+and the sidebar's sm and default rows are dense, the navigation trigger is form) or a
+row that is not a control at all (sidebar lg, the palette field), move the controls onto
+the tokens, and add the controls to the CONTROLS table in
+control-height.parity.test.tsx. A row left off the scale says why in a comment beside
+its class.
