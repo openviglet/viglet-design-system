@@ -107,6 +107,28 @@ release that warned. Before shipping, run viglet-ds-check-duplicates and a type-
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
 
+### §VDS209 The selection bar stays in view while a paged table scrolls
+
+Shio's SH1223 dropped the content browser's fixed table height (VDS204), so a long
+folder scrolls with the page. `BentoDataTable` then holds its header row under the
+shell's header (`sticky` on the `rowgroup` when paged), but the bar above it, with the
+selection count and the `selectionActions`, is not sticky. A curator who ticks rows low
+in a long list must scroll back up to reach Move or Delete. Shio tracks the consumer
+side as SH1239.
+
+While rows are selected and the table is paged (no `height`), make the bar sticky as
+well, at `top-(--bento-shell-header,0px)`, on the card background with the same blur.
+Stack the header row below it rather than under it: measure the bar's height with a ref
+and a `ResizeObserver`, expose it as a CSS variable on the table, and offset the
+header's `top` by it. With nothing selected the bar keeps its place in the flow, holding
+the toolbar and the column menu, and the header returns to the shell's offset. A table
+with a `height` scrolls inside itself and is unchanged.
+
+Cover it with a test that renders a paged table with a selection and asserts the sticky
+classes, and one with no selection that asserts they are absent. Done when, in a paged
+table with rows selected, the selection bar and the header row stay in view while the
+page scrolls, in that order, and the bar leaves when the selection is cleared.
+
 ## Block E — The assistant every product shares
 
 ### §VDS185 The dock rests at the foot of the rail

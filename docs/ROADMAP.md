@@ -4,6 +4,8 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
+- 📋 **VDS209** (deps: —) **a paged BentoDataTable's selection bar scrolls out of view, so the bulk verbs are off screen down a long list** — Only the header row is sticky, so rows ticked low in a long list leave the selection actions at the top of the page. → §VDS209
+
 ## Block E — The assistant every product shares
 
 ## Block C — One look across products
