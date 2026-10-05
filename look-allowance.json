@@ -205,7 +205,7 @@
         "font": {
           "distinct": 2,
           "byOwner": {
-            "package": 1,
+            "package": 2,
             "product": 1,
             "unknown": 2
           },
@@ -216,13 +216,14 @@
               "unknown": 6
             },
             "JetBrains Mono": {
-              "package": 0,
+              "package": 48,
               "product": 0,
               "unknown": 128
             }
           },
           "offenders": {
             "JetBrains Mono": [
+              "/bento",
               "/bento/graphql"
             ]
           }
@@ -253,9 +254,9 @@
           }
         },
         "mono": {
-          "distinct": 1,
+          "distinct": 2,
           "byOwner": {
-            "package": 0,
+            "package": 1,
             "product": 0,
             "unknown": 1
           },
@@ -264,12 +265,21 @@
               "package": 0,
               "product": 0,
               "unknown": 128
+            },
+            "JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Consolas, Liberation Mono, monospace": {
+              "package": 48,
+              "product": 0,
+              "unknown": 0
             }
           },
-          "offenders": {}
+          "offenders": {
+            "JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Consolas, Liberation Mono, monospace": [
+              "/bento"
+            ]
+          }
         },
         "primary-fill": {
-          "distinct": 4,
+          "distinct": 2,
           "byOwner": {
             "package": 2,
             "product": 2,
@@ -278,21 +288,11 @@
           "values": {
             "#ff8904": {
               "package": 24,
-              "product": 0,
+              "product": 2,
               "unknown": 0
             },
             "#ca3500": {
               "package": 12,
-              "product": 0,
-              "unknown": 0
-            },
-            "#ff5794": {
-              "package": 0,
-              "product": 2,
-              "unknown": 0
-            },
-            "#d60590": {
-              "package": 0,
               "product": 1,
               "unknown": 0
             }
@@ -307,12 +307,6 @@
               "/bento/admin/tokens/:tokenId",
               "/bento/admin/users/:userId",
               "/bento/admin/webhooks/:webhookId"
-            ],
-            "#ff5794": [
-              "/bento/graphql"
-            ],
-            "#d60590": [
-              "/bento/graphql"
             ]
           }
         },
@@ -325,7 +319,7 @@
           },
           "values": {
             "3.35544e+07px": {
-              "package": 972,
+              "package": 996,
               "product": 39,
               "unknown": 0
             },
