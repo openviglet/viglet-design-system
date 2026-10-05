@@ -8,7 +8,6 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS199** (deps: —) **The package declares no monospace family, so ids, paths and diffs render in three different monos** — One mono token, mapped to Tailwind's font-mono, gives every consumer one family without bundling a font. → §VDS199
 - 📋 **VDS200** (deps: —) **Sidebar rows, the navigation trigger and two bento controls still set heights the control scale does not hold** — A scale that only some controls read leaves the census counting the rest as the same drift. → §VDS200
 
 ## Done when — VDS185

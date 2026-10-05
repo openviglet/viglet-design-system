@@ -208,6 +208,7 @@
   checked **WRITES_TO_DIST names layer-package-utilities** The set is the rule's enforcement, so a dist writer missing from it is the defect.
 - ✅ **VDS197** **Controls take any height a consumer passes, and the package itself ships three, so a console renders fifteen** — Every exported control reads a dense or form height token, a coarse pointer raises both to the touch step, and a browser test holds them (design recorded in `src/styles/preset.css`).
 - ✅ **VDS198** **Radii are arithmetic on one --vg-radius plus two bento sizes, so a console renders ten** — Every Tailwind radius key lands on a control or panel token, the bento surfaces are panels, and a source scan plus a browser test hold the three values (design recorded in `src/styles/preset.css`).
+- ✅ **VDS199** **The package declares no monospace family, so ids, paths and diffs render in three different monos** — font-mono, code, the diff and the formulas backdrop share one --vg-font-mono stack with a 12 px text-mono step, held by a source scan and a browser test (design recorded in `src/styles/preset.css`).
 
 ## Block D — The package in a server-rendered framework
 

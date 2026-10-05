@@ -129,20 +129,6 @@ measure is what shows it done in every consumer that mounts a dock.
 
 ## Block C — One look across products
 
-### §VDS199 One monospace family
-
-The package declares no monospace family. Tailwind's font-mono falls back to the
-browser's stack, floating-formulas-bg.css names JetBrains Mono and Fira Code, and
-bento-diff renders its rows in whatever font-mono resolves to, so a consumer gets three
-different monos on one screen; Shio's console measured three (SH1199, section LV.36 in
-Shio's IMPROVEMENTS). Declare one family as --vg-font-mono in preset.css, map Tailwind's
---font-mono to it, point floating-formulas-bg and bento-diff at the token, and set the
-12 px mono step the type scale reserves for ids, paths, keys and diffs. The font file is
-not bundled: the stack names the family and falls back to ui-monospace, so a consumer
-that does not load it still gets one mono. Add a test that fails when a stylesheet in
-the package names a monospace family other than the token, and a census reading of
-distinct font families per consumer. Shio adopts it in SH1199.
-
 ### §VDS200 Controls still off the height scale
 
 The closed control-height scale in preset.css covers Button, GradientButton, Toggle,

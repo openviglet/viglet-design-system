@@ -458,7 +458,7 @@ function LinesChange({
   }
 
   const inline = (className?: string) => (
-    <table data-layout="inline" className={cn("min-w-full border-collapse font-mono text-xs leading-5", className)}>
+    <table data-layout="inline" className={cn("min-w-full border-collapse font-mono text-mono leading-5", className)}>
       <tbody>
         {foldLines(rows, (row) => row.op !== "same", rowKey).map((segment) => {
           const draw = (row: LineRow) => <LineRowView key={rowKey(row)} row={row} />;
@@ -469,7 +469,7 @@ function LinesChange({
   );
 
   const split = (className: string) => (
-    <table data-layout="split" className={cn("w-full table-fixed border-collapse font-mono text-xs leading-5", className)}>
+    <table data-layout="split" className={cn("w-full table-fixed border-collapse font-mono text-mono leading-5", className)}>
       <colgroup>
         <col className="w-14" />
         <col className="w-5" />

@@ -10,7 +10,9 @@
 /* ── Floating formula terms ─────────────────────────── */
 .ff-term {
   position: absolute;
-  font-family: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+  /* The preset's one mono (VDS199); this sheet is imported on its own, so the
+     fallback is the platform's mono rather than a second named family. */
+  font-family: var(--vg-font-mono, ui-monospace, monospace);
   font-weight: 700;
   color: var(--ff-color, #2563eb);
   white-space: nowrap;

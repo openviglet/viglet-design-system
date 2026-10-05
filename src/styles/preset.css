@@ -32,6 +32,13 @@
 }
 
 @theme inline {
+  /* One monospace family (VDS199): `font-mono` and Tailwind's code/pre default
+     read --vg-font-mono, so ids, paths, keys and diffs share one face. The
+     `text-mono` step is the 12 px size the type scale reserves for them. */
+  --font-mono: var(--vg-font-mono);
+  --text-mono: var(--vg-text-mono);
+  --text-mono--line-height: 1rem;
+
   /* The closed radius scale (VDS198): every Tailwind radius key is a control or
      a panel, so a class name written for the old arithmetic still compiles and
      lands on one of the three values. `rounded-full` is Tailwind's own. */
@@ -246,6 +253,12 @@
   --vg-control-dense: 2rem;
   --vg-control-form: 2.25rem;
   --vg-control-touch: 2.75rem;
+
+  /* The one monospace stack (VDS199). The face is named and not bundled: a
+     product that loads JetBrains Mono gets it, and one that does not falls to
+     the platform's ui-monospace, which is still one mono and not three. */
+  --vg-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --vg-text-mono: 0.75rem;
 
   /* Brand palette */
   --vg-brand: #c2410c;

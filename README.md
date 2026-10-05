@@ -789,6 +789,8 @@ This is separate from a component's **colour palette**. `SectionCard` (`blue | v
 
 **Radii are a closed scale too.** `--vg-radius-control` (6 px — buttons, fields, menu items), `--vg-radius-panel` (10 px — cards, dialogs, popovers, every bento surface) and `--vg-radius-full` (pills, avatars, the state dot). The preset points every Tailwind radius key at the first two — `rounded-xs`, `-sm` and `-md` are control, `rounded-lg` through `-4xl` are panel — so existing class names keep compiling and land on the scale. Tailwind's bare `rounded` is a fixed 4 px the theme never sees; write `rounded-sm`. `--vg-radius` still resolves, as the panel value. The `radius` figure of `look:census` counts what a console draws off the scale.
 
+**One monospace family.** `--vg-font-mono` is the stack — `"JetBrains Mono", ui-monospace, …` — and the preset maps Tailwind's `font-mono` (and so `code`, `pre` and `kbd`) to it, with `text-mono` as the 12 px step for ids, paths, keys and diffs. The face is not bundled: load JetBrains Mono to get it, or every mono falls to the platform's `ui-monospace` together. Write `font-mono` rather than naming a family, and the `mono` figure of `look:census` stays at one.
+
 ### i18n
 
 Base translations (EN/PT) for common UI strings: buttons, form labels, dialog text, navigation, theme, and the assistant dock.
