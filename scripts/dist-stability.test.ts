@@ -60,7 +60,9 @@ describe("the catalogue build leaves dist alone", () => {
   // VDS196 — `layer-package-utilities` was the third, and nothing asked. The
   // library config is the list of candidates, so it is read rather than restated:
   // a plugin with a writeBundle hook is one that can write into dist.
-  it("strips every library plugin that writes a bundle", async () => {
+  // VDS210 — the timeout is sized for the loaded suite, as VDS148 sized its
+  // neighbour: importing the library config loads its whole plugin chain.
+  it("strips every library plugin that writes a bundle", { timeout: 30_000 }, async () => {
     const { default: libraryConfig } = await import("../vite.config")
     // A plugin entry may be an array of plugins; two levels is what Vite accepts.
     const writers = ((libraryConfig.plugins ?? []) as unknown[])

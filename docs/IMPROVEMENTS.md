@@ -91,20 +91,6 @@ timestamped), and check whether `browser.connectTimeout`, a bound on the stories
 project's workers, or `teardownTimeout` turns the hang into a failure. The setting
 belongs in `vitest.config.ts` beside that project, with the measurement in its comment.
 
-### §VDS210 The dist-stability import runs on a loaded suite's timeout
-
-`scripts/dist-stability.test.ts` has a case, "strips every library plugin that writes a
-bundle", that imports `../vite.config` at run time. That import loads the library's
-whole plugin chain. On a quiet machine the file passes in under half a second. During
-the VDS209 gates, one full `npm test` run failed only this case, and the next run of the
-same tree was green. It ran under the 5s default, so this is the same failure VDS148 and
-VDS166 fixed in their neighbours.
-
-Give the case `{ timeout: 30_000 }` with the comment its neighbours carry, sized for the
-loaded suite and not a quiet machine. Leave the other cases in the file on the default,
-since they build plugin lists in memory and import nothing. Done when the case declares
-the longer timeout and the full suite passes.
-
 ## Block F — What a consuming CMS needs from the package next
 
 ### §VDS152 The deprecation ends

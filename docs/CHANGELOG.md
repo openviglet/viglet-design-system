@@ -148,6 +148,8 @@
 - ✅ **VDS193** **The census names a page it crawled in dark by its folded path, where light and phone name it by router pattern** — The look census names every reading once all views finish, from the final pattern set, and each unmeasured route says why.
   checked **All three views name a page by the same route** A split name is a gap in a view that did read the page.
   checked **A route still missing from a view names why it was not read** What remains after naming is a load or settle failure, and the run must say which.
+- ✅ **VDS210** **the dist-stability case that imports vite.config runs under the 5s default and failed once in a loaded full suite** — The dist-stability case that imports vite.config runs on a 30s timeout sized for the loaded suite, as its neighbours do.
+  checked **The vite.config import case declares a timeout sized for the loaded suite** Read the case's options, then run npm test and see it pass
 
 ## Block B — Bento becomes a design-system layer
 
