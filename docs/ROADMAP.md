@@ -8,8 +8,6 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS207** (deps: —) **No shared cell for a record's identity, or for when and by whom it last changed** — Each product draws its own name cell and its own absolute date, so two products disagree on how a record is recognised and how recent it is. → §VDS207
-
 ## Done when — VDS185
 
 - **The dock rests at the rail's foot and opens as an anchored popover** A reserved slot

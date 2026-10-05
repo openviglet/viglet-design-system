@@ -217,6 +217,7 @@
 - ✅ **VDS204** **BentoDataTable's body has a fixed height, so a list scrolls inside a page that also scrolls** — A BentoDataTable with no height is as tall as its rows and scrolls with the page, its header row held under the shell's header; height opts into an inner scroll.
 - ✅ **VDS205** **A list's controls sit in three places, and the table's toolbar is a band holding only Columns** — A list's filter and secondary actions open the table's own bar beside Columns, and a selection turns that bar into the selection bar; headerAction is drawn there for one release.
 - ✅ **VDS206** **BentoListPage renders tiles or a table and offers no way to switch between them** — A BentoListPage given both renderTile and columns shows a Grid and List switch in its bar, opens in defaultView, and restores the reader's choice through view and onViewChange.
+- ✅ **VDS207** **No shared cell for a record's identity, or for when and by whom it last changed** — BentoIdentityCell draws a record's initials, name and detail line, and BentoChangeCell its relative change time with the exact instant as tooltip and name, plus an actor marked when an agent.
 
 ## Block D — The package in a server-rendered framework
 

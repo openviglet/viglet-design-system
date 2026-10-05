@@ -145,22 +145,6 @@ control-height.parity.test.tsx, and lower Shio's button-height allowance with --
 which also drops the cards VDS202 now skips and the second mono VDS203 now reads as one
 face.
 
-### §VDS207 The identity cell and the change cell
-
-Every console list has a first column naming the record and a column saying when it
-changed. Both are hand-drawn per screen today: a bold name and nothing under it, and a
-toLocaleDateString that repeats one date six times and never says who. The redraw in
-Shio's docs/design/shio-site-list.dc.html wants two cells the package should own so
-Turing gets them too. BentoIdentityCell: a square of initials in a hue derived from the
-name, the name, and a muted second line that carries a description or an address,
-truncating rather than wrapping. BentoChangeCell: a relative time (2 days ago, then a
-short date past a month) in the reader's locale with the absolute instant as its tooltip
-and accessible name, and an optional actor line with an agent marker when the change
-came from an agent. Neither fetches anything; both take values. Done when both are
-exported from the bento entry, documented in the catalogue with their props, and render
-the same in both grounds. Drawn in Shio's docs/design/shio-site-list.dc.html, pins 2, 3
-and 5.
-
 ### §VDS208 Remove the headerAction alias
 
 VDS205 gave BentoListPage a toolbar prop that a table draws in its own bar, beside

@@ -725,9 +725,9 @@ AppFooter, AppSwitcher, BackendStatusBanner, BackendStatusProvider, BadgeColorfu
 
 `DialogDelete`, `GradientButtonLink` and `LoadProvider` are imported from `@viglet/viglet-design-system/router`; every other name above comes from the package root. `Login` and `StartupFirst` are compounds — each is a root with named parts on it, the way `Card` is.
 
-### Bento Layer (35 components)
+### Bento Layer (37 components)
 
-AdaptiveSectionCard, BentoActionsMenu, BentoBackLink, BentoBackToTop, BentoCalendar, BentoChangeMark, BentoCommandPalette, BentoCountTile, BentoDataTable, BentoDiff, BentoEmptyState, BentoEntityShell, BentoEntityTile, BentoFilterBar, BentoFormHero, BentoFormSection, BentoHero, BentoHeroIconPicker, BentoInlineEdit, BentoListPage, BentoNavRail, BentoPaletteTrigger, BentoPanel, BentoSaveBar, BentoScrollSaveBar, BentoSection, BentoShell, BentoShortcutsDialog, BentoSplitPage, BentoStatusMarker, BentoTile, BentoTileGrid, BentoTrail, BentoUserMenu, BentoVersionRail
+AdaptiveSectionCard, BentoActionsMenu, BentoBackLink, BentoBackToTop, BentoCalendar, BentoChangeCell, BentoChangeMark, BentoCommandPalette, BentoCountTile, BentoDataTable, BentoDiff, BentoEmptyState, BentoEntityShell, BentoEntityTile, BentoFilterBar, BentoFormHero, BentoFormSection, BentoHero, BentoHeroIconPicker, BentoIdentityCell, BentoInlineEdit, BentoListPage, BentoNavRail, BentoPaletteTrigger, BentoPanel, BentoSaveBar, BentoScrollSaveBar, BentoSection, BentoShell, BentoShortcutsDialog, BentoSplitPage, BentoStatusMarker, BentoTile, BentoTileGrid, BentoTrail, BentoUserMenu, BentoVersionRail
 
 All from `@viglet/viglet-design-system/bento`, with `@viglet/viglet-design-system/bento.css` beside it. [The bento layer](#the-bento-layer) is what each one is for and how a page composes them; this is the inventory.
 
@@ -966,6 +966,21 @@ as `selectionScope` too, so a selection clears when the filters change the rows:
   }
   …
 />
+```
+
+Two cells give a list's columns one look in every product. `BentoIdentityCell`
+is the first column: a square of initials in a tone derived from `name` (or the
+`tone` you pass), the name, and a muted `detail` line such as an address, both
+truncated. `BentoChangeCell` is the "changed" column: `at` drawn as a relative
+time in the reader's language ("2 days ago", a short date past a month), with the
+exact instant as its tooltip and accessible name, and an optional `actor` line
+that `agent` marks. Give the table a `rowHeight` of 56 or so for the two lines.
+
+```tsx
+columns={[
+  { id: "name", header: t("name"), cell: (s) => <BentoIdentityCell name={s.name} detail={s.host} /> },
+  { id: "changed", header: t("changed"), cell: (s) => <BentoChangeCell at={s.updated} actor={s.updatedBy} /> },
+]}
 ```
 
 `BentoDiff` compares two versions of structured content field by field, for
