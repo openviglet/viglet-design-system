@@ -4,6 +4,8 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
+- 📋 **VDS211** (deps: —) **exportToXlsx pulls xlsx 0.18.5, whose prototype pollution and ReDoS no consumer can override** — SheetJS ships fixes only from its CDN, and pnpm 11 refuses a URL subdependency, so every consumer keeps the alerts. → §VDS211
+
 ## Block E — The assistant every product shares
 
 ## Block C — One look across products
