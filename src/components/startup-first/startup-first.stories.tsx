@@ -27,7 +27,7 @@ export const FirstStep: Story = {
         <StartupFirst.Logo>
           <Sparkles className="h-10 w-10 text-[var(--ff-color,#2563eb)]" />
         </StartupFirst.Logo>
-        <StartupFirst.Title>Welcome to Viglet Turing ES</StartupFirst.Title>
+        <StartupFirst.Title>Welcome to Viglet Turing</StartupFirst.Title>
         <StartupFirst.Description>
           Let&apos;s create your first administrator account so you can start
           indexing content.
@@ -73,7 +73,7 @@ export const FirstStep: Story = {
           </button>
         </StartupFirst.Actions>
         <StartupFirst.Footer>
-          Viglet Turing ES — Initial setup
+          Viglet Turing · Initial setup
         </StartupFirst.Footer>
       </StartupFirst.Content>
     </StartupFirst>

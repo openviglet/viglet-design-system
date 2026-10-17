@@ -280,8 +280,8 @@
 
   /* Product accent colors (match viglet.org) */
   --vg-product-turing: #4169e1;
-  --vg-product-shio: #ff6347;
-  --vg-product-dumont: #006400;
+  --vg-product-shio: #7c3aed;
+  --vg-product-dumont: #0f766e;
 
   /* ── Back-compat aliases ──────────────────────────────────────────────
      Older consumers (and pre-2026.2.42 DS versions) defined these names

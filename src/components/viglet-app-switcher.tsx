@@ -2,9 +2,9 @@ import { useTranslation } from "react-i18next";
 import { Book, Cloud } from "lucide-react";
 import { AppSwitcher, type AppSwitcherItem } from "./app-switcher";
 import {
-  dumontLogoUrl,
-  shioLogoUrl,
-  turingLogoUrl,
+  dumontSmallLogoUrl,
+  shioSmallLogoUrl,
+  turingSmallLogoUrl,
 } from "../assets/products";
 
 export type VigletProduct = "cloud" | "turing" | "shio" | "dumont";
@@ -78,24 +78,24 @@ export function VigletAppSwitcher({
     },
     {
       id: "turing",
-      name: "Turing ES",
-      image: turingLogoUrl,
+      name: "Viglet Turing",
+      image: turingSmallLogoUrl,
       href: activeProduct === "turing" ? "/" : u.turing,
       external: activeProduct !== "turing",
       active: activeProduct === "turing",
     },
     {
       id: "shio",
-      name: "Shio CMS",
-      image: shioLogoUrl,
+      name: "Viglet Shio",
+      image: shioSmallLogoUrl,
       href: activeProduct === "shio" ? "/" : u.shio,
       external: activeProduct !== "shio",
       active: activeProduct === "shio",
     },
     {
       id: "dumont",
-      name: "Dumont DEP",
-      image: dumontLogoUrl,
+      name: "Viglet Dumont",
+      image: dumontSmallLogoUrl,
       href: activeProduct === "dumont" ? "/" : u.dumont,
       external: activeProduct !== "dumont",
       active: activeProduct === "dumont",

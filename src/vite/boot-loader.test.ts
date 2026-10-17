@@ -10,7 +10,7 @@ import { vigletBootLoader, type VigletBootLoaderOptions } from "./boot-loader"
 // with no loader in it.
 
 const BASE: VigletBootLoaderOptions = {
-  title: "Viglet Turing ES",
+  title: "Viglet Turing",
   subtitle: "Enterprise Search Intelligence",
   color: "#4169E1",
 }
@@ -172,14 +172,14 @@ describe("vigletBootLoader", () => {
     it("keeps the English default for a product that supplies nothing", () => {
       // Four consumers predate the option. Defaulting is the difference between
       // an upgrade and silently relabelling their loaders.
-      expect(labelOf(transform({}).html)).toBe("Loading Viglet Turing ES")
+      expect(labelOf(transform({}).html)).toBe("Loading Viglet Turing")
     })
 
     it("says the product's own phrase when it supplies one", () => {
-      const { html } = transform({ loadingLabel: "Carregando o Viglet Turing ES" })
+      const { html } = transform({ loadingLabel: "Carregando o Viglet Turing" })
 
-      expect(labelOf(html)).toBe("Carregando o Viglet Turing ES")
-      expect(html).not.toContain("Loading Viglet Turing ES")
+      expect(labelOf(html)).toBe("Carregando o Viglet Turing")
+      expect(html).not.toContain("Loading Viglet Turing")
     })
 
     it("escapes it, like every other option that reaches the HTML", () => {

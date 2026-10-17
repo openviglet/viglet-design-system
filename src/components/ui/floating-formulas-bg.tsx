@@ -48,7 +48,7 @@ function useDensityFactor(): number {
 
 /**
  * FloatingFormulasBg — rich animated background shared by every Viglet product
- * (Turing ES, Dumont, Shio, Viglet Cloud, viglet.org).
+ * (Viglet Turing, Dumont, Shio, Viglet Cloud, viglet.org).
  * viglet-ds-consumer-pair -- a list of products, and already a superset of the
  * consumer set: viglet.org installs nothing from here.
  *

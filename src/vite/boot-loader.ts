@@ -9,7 +9,7 @@ import type { IndexHtmlTransformResult, Plugin } from "vite";
  *
  * ```ts
  * vigletBootLoader({
- *   title: "Viglet Turing ES",
+ *   title: "Viglet Turing",
  *   subtitle: "Enterprise Search Intelligence",
  *   color: "#4169E1",
  *   prefix: "turing",
@@ -17,7 +17,7 @@ import type { IndexHtmlTransformResult, Plugin } from "vite";
  * ```
  */
 export interface VigletBootLoaderOptions {
-  /** Product title shown under the orb, e.g. `"Viglet Turing ES"`. */
+  /** Product title shown under the orb, e.g. `"Viglet Turing"`. */
   title: string;
   /** Uppercase subtitle under the title, e.g. `"Enterprise Search Intelligence"`. */
   subtitle: string;
@@ -62,7 +62,7 @@ export interface VigletBootLoaderOptions {
    * name falls in the sentence is not the same in every language.
    *
    * ```ts
-   * vigletBootLoader({ …, loadingLabel: "Carregando o Viglet Turing ES" });
+   * vigletBootLoader({ …, loadingLabel: "Carregando o Viglet Turing" });
    * ```
    */
   loadingLabel?: string;

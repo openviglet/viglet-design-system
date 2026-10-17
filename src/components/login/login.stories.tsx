@@ -26,7 +26,7 @@ export const Default: Story = {
         <Login.Logo>
           <Zap className="h-8 w-8 text-[var(--ff-color,#2563eb)]" />
         </Login.Logo>
-        <Login.Title>Viglet Turing ES</Login.Title>
+        <Login.Title>Viglet Turing</Login.Title>
         <Login.Tagline>
           Enterprise search intelligence — secure, fast, and AI-powered.
         </Login.Tagline>
@@ -67,7 +67,7 @@ export const Default: Story = {
           </form>
         </Login.Card>
         <Login.Footer>
-          Viglet Turing ES — Enterprise Search Intelligence
+          Viglet Turing · Enterprise Search
         </Login.Footer>
       </Login.Content>
     </Login>

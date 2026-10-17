@@ -28,7 +28,7 @@ const sampleApps: AppSwitcherItem[] = [
   },
   {
     id: "turing",
-    name: "Turing ES",
+    name: "Viglet Turing",
     icon: <Search className="h-4 w-4" />,
     iconBg: "bg-linear-to-br from-sky-500 to-blue-600",
     href: "https://turing.viglet.cloud",
@@ -36,7 +36,7 @@ const sampleApps: AppSwitcherItem[] = [
   },
   {
     id: "shio",
-    name: "Shio CMS",
+    name: "Viglet Shio",
     icon: <Home className="h-4 w-4" />,
     iconBg: "bg-linear-to-br from-emerald-500 to-green-600",
     href: "https://shio.viglet.cloud",

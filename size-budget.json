@@ -1,19 +1,19 @@
 {
   "root-only": {
-    "raw": 393069,
-    "gzip": 94587
+    "raw": 370155,
+    "gzip": 73858
   },
   "bento": {
-    "raw": 139961,
-    "gzip": 41115
+    "raw": 140434,
+    "gzip": 41281
   },
   "router": {
     "raw": 18004,
     "gzip": 6297
   },
   "assets": {
-    "raw": 93075,
-    "gzip": 63900
+    "raw": 14626,
+    "gzip": 2637
   },
   "fonts": {
     "raw": 282177,
