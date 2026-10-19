@@ -67,8 +67,25 @@ export function ruleBlocks(css) {
   return blocks
 }
 
-function groundOf(block) {
+const TONE_ATTRIBUTE = /\[data-tone=["']?([\w-]+)["']?\]/
+
+/**
+ * VDS213 — a tone is a `[data-tone="…"]` block over the grounds. `cool` is the
+ * default and declares nothing, so it reads only the untoned blocks; another
+ * tone reads those and then its own, the tone's light block on both grounds and
+ * its dark block (the attribute beside or around a dark selector) on the dark.
+ * A block for a tone other than the one measured is no ground at all: read as
+ * one, a `.dark [data-tone="warm"]` would overwrite the cool dark values.
+ */
+function groundOf(block, tone = "cool") {
   if (block.atRules.some((rule) => /^@theme/.test(rule))) return null
+  const toned = block.selectors.filter((s) => TONE_ATTRIBUTE.test(s))
+  if (toned.length > 0) {
+    const ours = toned.filter((s) => TONE_ATTRIBUTE.exec(s)[1] === tone).map((s) => s.replace(TONE_ATTRIBUTE, " ").trim())
+    if (ours.length === 0) return null
+    if (ours.some((s) => s === "" || ROOT_SELECTOR.test(s))) return "light"
+    return ours.some((s) => DARK_SELECTOR.test(s)) ? "dark" : null
+  }
   const darkMedia = block.atRules.some((rule) => /prefers-color-scheme:\s*dark/.test(rule))
   if (block.selectors.some((s) => DARK_SELECTOR.test(s))) return "dark"
   if (block.selectors.some((s) => ROOT_SELECTOR.test(s))) return darkMedia ? "dark" : "light"
@@ -79,12 +96,12 @@ function groundOf(block) {
  * One ground's tokens across the stylesheets, in cascade order, with where each
  * was last declared, so a finding can name the product's line and not the preset's.
  */
-export function groundTokens(sheets, ground) {
+export function groundTokens(sheets, ground, tone = "cool") {
   const tokens = new Map()
   const origin = new Map()
   for (const { name, css } of sheets) {
     for (const block of ruleBlocks(css)) {
-      const which = groundOf(block)
+      const which = groundOf(block, tone)
       if (which === "light" || (ground === "dark" && which === "dark")) {
         for (const [token, value] of block.declarations) {
           tokens.set(token, value)
@@ -289,8 +306,8 @@ export function pairsOf(tokens) {
  * Every pair on one ground, measured: `ratio` is null where either side does not
  * resolve to an opaque colour this reads, and `unread` names which.
  */
-export function measurePairs(sheets, ground) {
-  const { tokens, origin } = groundTokens(sheets, ground)
+export function measurePairs(sheets, ground, tone = "cool") {
+  const { tokens, origin } = groundTokens(sheets, ground, tone)
 
   /**
    * Every stylesheet a token's value passes through on its way to a colour.

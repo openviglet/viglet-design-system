@@ -53,11 +53,24 @@ const preview: Preview = {
       matchers: { color: /(background|color)$/i, date: /Date$/i },
     },
   },
+  // VDS213 — the ground tone, beside the mode. It goes on the document element,
+  // where a product sets it, so the toolbar shows what a product renders.
+  globalTypes: {
+    tone: {
+      description: "Ground tone",
+      toolbar: { title: "Tone", icon: "paintbrush", items: ["cool", "warm"], dynamicTitle: true },
+    },
+  },
+  initialGlobals: { tone: "cool" },
   decorators: [
     withThemeByClassName({
       themes: { light: "light", dark: "dark" },
       defaultTheme: "light",
     }),
+    (Story, context) => {
+      document.documentElement.dataset.tone = (context.globals.tone as string | undefined) ?? "cool";
+      return <Story />;
+    },
     (Story) => (
       <I18nextProvider i18n={i18n}>
         <MemoryRouter>

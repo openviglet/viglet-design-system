@@ -183,31 +183,6 @@ prop does not fail a build that spreads props.
 
 ## Block H — Product sites on the package
 
-### §VDS213 A tone above the accent
-
-VDS23 made the accent a token so a product could re-key without forking a header, and
-Roadkeep GUI is the one consumer that did (`accent: amber`). The accent is only the
-highlight, though. The brand palette (`--vg-brand*`, `--vg-gradient`), the footer
-tokens, the display face and the neutrals stay fixed to Viglet, so a family whose ground
-is warm, like the alegauss hub and its product sites (clay `#D97757` on `#15100C`),
-still has to override the preset to get it.
-
-The change is a tone layer above the accent, selected by `data-tone` on any ancestor:
-
-- `cool`, the default: today's values, with no visual change for any consumer.
-- `warm`: clay neutrals, a clay brand, an amber gradient and a warm footer.
-
-The name is generic on purpose. A tone describes a ground temperature, not a product.
-Two names were already taken: `data-theme` is the colour mode, and "ground" means light
-or dark in `docs/reference`. A tone composes with the mode, so `warm` has a light and a
-dark set, and the accent still re-keys on top of either.
-
-`consumers.json` gains a `tone` field next to `accent`, measured in the same way.
-
-Done when `data-tone="warm"` re-keys every brand, footer and neutral token in both
-modes, `cool` output is byte-identical to today's, and the parity digest carries each
-tone in use.
-
 ### §VDS214 A site layer for product pages
 
 Eight product sites (claude-tray, freewilly, pportal, quickshell, roadkeep, winwright,

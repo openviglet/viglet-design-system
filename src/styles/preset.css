@@ -414,3 +414,144 @@
   --vg-brand-border: rgba(249, 115, 22, 0.3);
   --vg-gradient: linear-gradient(135deg, #f97316 0%, #fdba74 100%);
 }
+
+/* ── Tone (VDS213) ─────────────────────────────────────────────────────
+   The accent re-keys the highlight; a tone re-keys the ground under it: the
+   neutrals, the brand palette, the gradient, the footer and the display face.
+   Selected by `data-tone` on any ancestor, and it composes with the mode, so
+   each tone has a light and a dark set and the accent still re-keys on top.
+
+   `cool` is the default and declares nothing: everything above is cool, so a
+   page with no tone, or with `data-tone="cool"`, renders exactly as before.
+   `warm` is clay on a dark-brown ground, for a product family whose ground is
+   warm. The name is a temperature, never a product.
+
+   A product's own :root still wins over a tone set on the root element: the two
+   have the same specificity and the product's stylesheet comes later, so the
+   primary inputs and the accent re-key on top of either tone.
+
+   The back-compat aliases and --vg-primary are restated here because a custom
+   property substitutes its var() where it is declared. Declared only on :root,
+   they would keep the cool values inside a warm subtree. */
+[data-tone="warm"] {
+  --font-brand: var(--font-sans);
+
+  --vg-background: #fbf7f4;
+  --vg-foreground: #1d1408;
+  --vg-card: #ffffff;
+  --vg-card-foreground: #1d1408;
+  --vg-popover: #ffffff;
+  --vg-popover-foreground: #1d1408;
+  --vg-primary-base: #1d1408;
+  --vg-primary-base-dark: #f4ece4;
+  --vg-primary-foreground-base: #fbf7f4;
+  --vg-primary-foreground-base-dark: #1d1408;
+  --vg-primary: var(--vg-primary-base);
+  --vg-primary-foreground: var(--vg-primary-foreground-base);
+  --vg-secondary: #f4ece6;
+  --vg-secondary-foreground: #1d1408;
+  --vg-muted: #f4ece6;
+  --vg-muted-foreground: #5c4a3d;
+  --vg-accent: #f4ece6;
+  --vg-accent-foreground: #1d1408;
+  --vg-border: #e6d8cf;
+  --vg-input: #e6d8cf;
+  --vg-ring: #b6a596;
+  --vg-sidebar: #f8f1ec;
+  --vg-sidebar-foreground: #1d1408;
+  --vg-sidebar-primary: #1d1408;
+  --vg-sidebar-primary-foreground: #fbf7f4;
+  --vg-sidebar-accent: #efe4dc;
+  --vg-sidebar-accent-foreground: #1d1408;
+  --vg-sidebar-border: #e6d8cf;
+  --vg-sidebar-ring: #b6a596;
+
+  --vg-brand: #a64b2e;
+  --vg-brand-dark: #98452a;
+  --vg-brand-light: #d97757;
+  --vg-brand-lighter: #e89070;
+  --vg-brand-bg: #fbefe9;
+  --vg-brand-mid: #f6dfd4;
+  --vg-brand-border: #edc3b1;
+  --vg-brand-on: #ffe2d4;
+  --vg-gradient: linear-gradient(135deg, #b85c3c 0%, #e9a33a 100%);
+
+  --vg-footer-bg: #15100c;
+  --vg-footer-fg: #f4ece4;
+  --vg-footer-muted: #b6a596;
+  --vg-footer-dim: #8a7868;
+  --vg-footer-border: rgba(244, 236, 228, 0.08);
+
+  --background: var(--vg-background);
+  --foreground: var(--vg-foreground);
+  --card: var(--vg-card);
+  --card-foreground: var(--vg-card-foreground);
+  --popover: var(--vg-popover);
+  --popover-foreground: var(--vg-popover-foreground);
+  --primary: var(--vg-primary);
+  --primary-foreground: var(--vg-primary-foreground);
+  --secondary: var(--vg-secondary);
+  --secondary-foreground: var(--vg-secondary-foreground);
+  --muted: var(--vg-muted);
+  --muted-foreground: var(--vg-muted-foreground);
+  --accent: var(--vg-accent);
+  --accent-foreground: var(--vg-accent-foreground);
+  --border: var(--vg-border);
+  --input: var(--vg-input);
+  --ring: var(--vg-ring);
+  --sidebar: var(--vg-sidebar);
+  --sidebar-foreground: var(--vg-sidebar-foreground);
+  --sidebar-primary: var(--vg-sidebar-primary);
+  --sidebar-primary-foreground: var(--vg-sidebar-primary-foreground);
+  --sidebar-accent: var(--vg-sidebar-accent);
+  --sidebar-accent-foreground: var(--vg-sidebar-accent-foreground);
+  --sidebar-border: var(--vg-sidebar-border);
+  --sidebar-ring: var(--vg-sidebar-ring);
+}
+
+/* Warm on the dark ground. Spelled out rather than through :is(), so the mode
+   and the tone can sit on the same element or either above the other, and so
+   every selector carries two classes or attributes: (0,2,0) beats both the cool
+   dark block and the warm block above, whatever their order. The surfaces keep
+   the cool ramp's rule that a higher surface is lighter. */
+.dark[data-tone="warm"],
+.dark [data-tone="warm"],
+[data-theme="dark"][data-tone="warm"],
+[data-theme="dark"] [data-tone="warm"],
+[data-tone="warm"] .dark,
+[data-tone="warm"] [data-theme="dark"] {
+  --vg-background: #15100c;
+  --vg-foreground: #f4ece4;
+  --vg-card: #221a14;
+  --vg-card-foreground: #f4ece4;
+  --vg-popover: #2c2118;
+  --vg-popover-foreground: #f4ece4;
+  --vg-primary: var(--vg-primary-base-dark);
+  --vg-primary-foreground: var(--vg-primary-foreground-base-dark);
+  --vg-secondary: #2c2118;
+  --vg-secondary-foreground: #f4ece4;
+  --vg-muted: #2c2118;
+  --vg-muted-foreground: #b6a596;
+  --vg-accent: #2c2118;
+  --vg-accent-foreground: #f4ece4;
+  --vg-border: rgba(244, 236, 228, 0.14);
+  --vg-input: rgba(244, 236, 228, 0.34);
+  --vg-ring: var(--vg-accent-text-dark);
+  --vg-sidebar: #221a14;
+  --vg-sidebar-foreground: #f4ece4;
+  --vg-sidebar-primary: #d97757;
+  --vg-sidebar-primary-foreground: #15100c;
+  --vg-sidebar-accent: #2c2118;
+  --vg-sidebar-accent-foreground: #f4ece4;
+  --vg-sidebar-border: rgba(244, 236, 228, 0.14);
+  --vg-sidebar-ring: var(--vg-accent-text-dark);
+
+  --vg-brand: #d97757;
+  --vg-brand-dark: #b85c3c;
+  --vg-brand-light: #e89070;
+  --vg-brand-lighter: #f0b49a;
+  --vg-brand-bg: rgba(217, 119, 87, 0.1);
+  --vg-brand-mid: rgba(217, 119, 87, 0.15);
+  --vg-brand-border: rgba(217, 119, 87, 0.3);
+  --vg-gradient: linear-gradient(135deg, #d97757 0%, #e9a33a 100%);
+}

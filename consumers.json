@@ -51,6 +51,12 @@
     "and no product has re-keyed yet. The parity digest reads this, so the day one",
     "does, the digest is required to carry that set.",
     "",
+    "`tone` is the ground under the accent (VDS213): the neutrals, the brand",
+    "palette, the footer and the display face, selected by `data-tone`. Every",
+    "consumer here renders `cool`, the default. The parity digest carries every",
+    "tone this file names, so a product that moves to `warm` lands in the digest",
+    "the day it is recorded here.",
+    "",
     "VDS122 widened it a third time, to nine, and the two it added were invisible",
     "for a third reason: both take the package by caret range rather than pinning",
     "it, so each receives a release the moment it installs one, and neither is a",
@@ -91,6 +97,7 @@
       "framework": "vite",
       "chrome": "bento",
       "accent": "cool",
+      "tone": "cool",
       "sourceRoots": ["src", "vite.config.ts"],
       "entries": [".", "./bento", "./bento.css", "./i18n", "./router", "./styles", "./vite"]
     },
@@ -102,6 +109,7 @@
       "framework": "vite",
       "chrome": "bento",
       "accent": "cool",
+      "tone": "cool",
       "sourceRoots": ["src", "vite.config.ts"],
       "entries": [".", "./bento", "./bento.css", "./i18n", "./router", "./styles", "./vite"]
     },
@@ -113,6 +121,7 @@
       "framework": "vite",
       "chrome": "bento",
       "accent": "cool",
+      "tone": "cool",
       "sourceRoots": ["src", "vite.config.ts"],
       "entries": [".", "./bento", "./bento.css", "./i18n", "./router", "./styles", "./vite"]
     },
@@ -124,6 +133,7 @@
       "framework": "next",
       "chrome": "platform-console",
       "accent": "cool",
+      "tone": "cool",
       "sourceRoots": ["src", "next.config.ts"],
       "entries": [".", "./assets", "./i18n", "./styles"]
     },
@@ -135,6 +145,7 @@
       "framework": "vite",
       "chrome": "platform-home",
       "accent": "cool",
+      "tone": "cool",
       "sourceRoots": ["src", "vite.config.ts"],
       "entries": [".", "./assets", "./i18n", "./styles", "./vite"]
     },
@@ -146,6 +157,7 @@
       "framework": "next",
       "chrome": "front-door",
       "accent": "cool",
+      "tone": "cool",
       "sourceRoots": ["src", "next.config.ts"],
       "entries": [".", "./fonts", "./preset", "./styles"]
     },
@@ -157,6 +169,7 @@
       "framework": "vite",
       "chrome": "bento",
       "accent": "amber",
+      "tone": "cool",
       "sourceRoots": ["src", "vite.config.ts"],
       "entries": [".", "./bento", "./bento.css", "./fonts", "./i18n", "./styles"]
     },
@@ -168,6 +181,7 @@
       "framework": "vite",
       "chrome": "marketing-site",
       "accent": "cool",
+      "tone": "cool",
       "sourceRoots": ["src", "vite.config.ts"],
       "entries": [".", "./floating-formulas-bg.css", "./preset", "./styles"]
     },
@@ -179,6 +193,7 @@
       "framework": "docusaurus",
       "chrome": "docs-site",
       "accent": "cool",
+      "tone": "cool",
       "sourceRoots": ["src", "docusaurus.config.ts"],
       "entries": ["./floating-formulas-bg", "./floating-formulas-bg.css", "./preset"]
     }

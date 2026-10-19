@@ -84,6 +84,14 @@ const TOKEN_SETS = {
 } as const
 
 /**
+ * VDS213 — the ground tones, set as `data-tone` on the document element. A tone
+ * re-keys the neutrals, the brand and the footer rather than the accent, and the
+ * claim is the same: the layout does not move, and the colours do.
+ * `consumers.test.ts` asserts that every tone named in `consumers.json` is here.
+ */
+const TONES = ["cool", "warm"] as const
+
+/**
  * Properties that describe *where things are and how big they are*. A token
  * re-key must not move a single one of them — that is what "the same layout"
  * means, and it is the half a person eyeballing two browsers is worst at.
@@ -359,5 +367,41 @@ describe("every token set renders the same layer", () => {
     for (const other of rest) {
       expect(other.tones, `${other.name} repainted a tone the caller chose`).toEqual(first.tones)
     }
+  })
+})
+
+describe("every ground tone renders the same layer", () => {
+  const digests = TONES.map((tone) => {
+    document.documentElement.dataset.tone = tone
+    const host = renderUnder({}, <Composition />)
+    const measured = {
+      name: tone,
+      structure: digest(host, STRUCTURAL),
+      colour: digest(host, CHROMATIC),
+      chips: toneChips(host),
+    }
+    host.remove()
+    delete document.documentElement.dataset.tone
+    return measured
+  })
+
+  const [cool, ...others] = digests
+
+  it("moves nothing: every structural property is identical", () => {
+    for (const other of others) {
+      expect(other.structure, `${other.name} changed the layout`).toEqual(cool.structure)
+    }
+  })
+
+  it("differs in colour, so the tone reached the components", () => {
+    for (const other of others) {
+      const differing = cool.colour.filter((line, i) => line !== other.colour[i])
+      expect(differing.length, `${other.name}: the tone reached nothing`).toBeGreaterThan(3)
+    }
+  })
+
+  it("leaves the bento tones alone — a ground tone is not a chip's colour", () => {
+    expect(cool.chips.length).toBeGreaterThan(0)
+    for (const other of others) expect(other.chips, `${other.name} repainted a chip`).toEqual(cool.chips)
   })
 })

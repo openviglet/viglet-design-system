@@ -4,6 +4,9 @@ export declare const AA_TEXT: number
 
 export type Ground = "light" | "dark"
 
+/** VDS213 — the `data-tone` a ground is measured under; `cool` when omitted. */
+export type Tone = string
+
 /** A stylesheet, named the way a finding should name it. */
 export interface Sheet {
   name: string
@@ -39,6 +42,7 @@ export declare function ruleBlocks(
 export declare function groundTokens(
   sheets: readonly Sheet[],
   ground: Ground,
+  tone?: Tone,
 ): { tokens: Map<string, string>; origin: Map<string, string> }
 
 export declare function resolveToken(tokens: Map<string, string>, value: string, depth?: number): string
@@ -47,8 +51,11 @@ export declare function parseColour(value: string, tokens?: Map<string, string>)
 
 export declare function luminance(colour: Colour | null): number | null
 
+/** A translucent colour laid over an opaque one; null where the ground is not opaque. */
+export declare function over(top: Colour | null, ground: Colour | null): Colour | null
+
 export declare function ratio(front: number, behind: number): number
 
 export declare function pairsOf(tokens: Map<string, string>): [surface: string, foreground: string][]
 
-export declare function measurePairs(sheets: readonly Sheet[], ground: Ground): MeasuredPair[]
+export declare function measurePairs(sheets: readonly Sheet[], ground: Ground, tone?: Tone): MeasuredPair[]

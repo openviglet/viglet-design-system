@@ -16,6 +16,8 @@ const manifest = JSON.parse(readFileSync(join(root, "consumers.json"), "utf8")) 
     framework: "vite" | "next" | "docusaurus"
     chrome: string
     accent: string
+    // VDS213 — the ground tone under the accent.
+    tone: string
     // VDS129 — where the product's own source is, so its entries are measured
     // by `viglet-ds-consumer-entries` rather than typed in and left to drift.
     sourceRoots: string[]
@@ -217,5 +219,20 @@ describe("the consumer set is declared, not remembered", () => {
       sets.length,
       "the digest proves the token mechanism across hues, and needs more than one",
     ).toBeGreaterThanOrEqual(3)
+  })
+
+  it("holds the render contract to every ground tone a consumer renders with", () => {
+    // VDS213 — the same contract as the accent, one layer down. A tone is a
+    // declared name, and the digest has to render under it.
+    const parity = readFileSync(join(root, "src", "bento", "render-parity.parity.test.tsx"), "utf8")
+    const declared = /const TONES = \[([^\]]*)\]/.exec(parity)
+    expect(declared, "the parity digest declares no TONES").not.toBeNull()
+    const tones = [...declared![1].matchAll(/"([a-z]+)"/g)].map((m) => m[1])
+
+    for (const c of manifest.consumers) {
+      expect(c.tone, `${c.id} declares no tone`).toBeTruthy()
+      expect(tones, `${c.id} renders the "${c.tone}" tone and the parity digest has no such tone`).toContain(c.tone)
+    }
+    expect(tones).toContain("cool")
   })
 })

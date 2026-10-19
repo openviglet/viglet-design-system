@@ -7,6 +7,7 @@ import {
   groundTokens,
   luminance,
   measurePairs,
+  over,
   parseColour,
   ratio,
 } from "../../scripts/lib/contrast.mjs"
@@ -66,6 +67,46 @@ describe.each(["light", "dark"] as const)("VDS92: every named token pair on the 
   it.each(measured.map((p) => [`${p.foreground} on ${p.surface}`, p] as const))("keeps %s legible", (_, pair) => {
     expect(pair.unread, `${pair.unread.join(" and ")} does not resolve to an opaque colour`).toEqual([])
     expect(pair.ratio, `${pair.foreground} on ${pair.surface} is ${pair.ratio?.toFixed(2)}:1`).toBeGreaterThanOrEqual(AA_TEXT)
+  })
+})
+
+/**
+ * VDS213 — the warm tone is a second set of grounds, held to the same pairs. Warm
+ * muted text on the light ground is the pairing most likely to fail, so the
+ * check that it does not is the same one the cool grounds take.
+ */
+describe.each(["light", "dark"] as const)("VDS213: every named token pair, warm, on the %s ground", (ground) => {
+  const measured = measurePairs(sheets, ground, "warm")
+  const cool = measurePairs(sheets, ground)
+
+  it("measures the tone's own values, not the cool ones", () => {
+    const page = (pairs: typeof measured) =>
+      pairs.find((p) => p.foreground === "--vg-muted-foreground" && p.surface === "--vg-background")?.ratio
+    expect(measured).toHaveLength(cool.length)
+    expect(page(measured)).not.toBe(page(cool))
+  })
+
+  it.each(measured.map((p) => [`${p.foreground} on ${p.surface}`, p] as const))("keeps %s legible", (_, pair) => {
+    expect(pair.unread, `${pair.unread.join(" and ")} does not resolve to an opaque colour`).toEqual([])
+    expect(pair.ratio, `${pair.foreground} on ${pair.surface} is ${pair.ratio?.toFixed(2)}:1`).toBeGreaterThanOrEqual(AA_TEXT)
+  })
+
+  it("keeps the brand badge's label legible on its own tint", () => {
+    const { tokens } = groundTokens(sheets, ground, "warm")
+    const page = parseColour(tokens.get("--vg-background")!, tokens)
+    const tint = parseColour(tokens.get("--vg-brand-bg")!, tokens)!
+    const behind = luminance(tint.alpha < 1 ? over(tint, page) : tint)!
+    const label = luminance(parseColour(tokens.get("--vg-brand")!, tokens))!
+    expect(ratio(label, behind)).toBeGreaterThanOrEqual(AA_TEXT)
+  })
+})
+
+describe("VDS213: a tone block is no ground when another tone is measured", () => {
+  it("reads the cool grounds exactly as if no tone were declared", () => {
+    const untoned = preset.slice(0, preset.indexOf("/* ── Tone (VDS213)"))
+    for (const ground of ["light", "dark"] as const) {
+      expect(groundTokens(sheets, ground).tokens).toEqual(groundTokens([{ name: "preset.css", css: untoned }], ground).tokens)
+    }
   })
 })
 

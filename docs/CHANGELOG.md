@@ -317,3 +317,7 @@
 
 ## Block H — Product sites on the package
 
+- ✅ **VDS213** **Brand, footer, display face and neutrals are fixed to Viglet, so the accent re-keys only the highlight** — data-tone=warm re-keys the neutrals, brand, gradient, footer and display face on both grounds; cool stays as it was, and the digest renders each tone (design recorded in `src/styles/preset.css`).
+  checked **data-tone=warm re-keys every brand, footer and neutral token in both modes** tone.parity.test.tsx reads each governed token in a browser under warm and cool, light and dark.
+  checked **cool output is identical to having no tone** The same test compares every governed token under data-tone=cool and under no attribute.
+  checked **The parity digest carries each tone in use** render-parity declares TONES and consumers.test fails if a consumer's tone is missing from it.
