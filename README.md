@@ -40,6 +40,19 @@ copy in your tree is a second React context, and `useFormContext` then returns
 null inside a form that looks correctly wired. Declaring it is what keeps the
 install to one copy — `npm ls react-hook-form` should say `deduped`.
 
+**Declare `xlsx` yourself, from SheetJS's CDN.** It is a required peer since
+2026.3.21: the root entry exports `exportToXlsx`, which imports it. The last
+version on npm, 0.18.5, has open prototype-pollution and ReDoS advisories, and
+SheetJS publishes the fixed releases only as a tarball. pnpm accepts that as a
+direct dependency, but refuses it as a subdependency of this package:
+
+```bash
+pnpm add xlsx@https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz
+```
+
+If you leave it undeclared, pnpm's peer auto-install fetches 0.18.5 from npm,
+and you get the alerts back.
+
 ## Trying a change in a product before publishing
 
 A change here is a change to shared chrome, so the question is always what it
@@ -1084,8 +1097,10 @@ do, and npm cannot mark a peer required for one entry point and optional for
 another. `pnpm run build` fails if any other entry starts importing it, so the
 split above stays true rather than becoming folklore.
 
-**`react-hook-form` is a required peer, and `react-router-dom` is the only
-optional one.** It was a plain dependency until VDS77, which is the one case
+**`react-hook-form` and `xlsx` are required peers, and `react-router-dom` is the
+only optional one.** `xlsx` became a peer so each product can install the fixed
+release from SheetJS's CDN (see Installation). `react-hook-form` was a plain
+dependency until VDS77, which is the one case
 where that is wrong: every other library this package shares state through is a
 peer, and this is the one carrying a React context a duplicate would split. The
 build already left it for the consumer to supply, so the manifest was promising

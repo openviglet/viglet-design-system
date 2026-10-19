@@ -26,6 +26,12 @@ export const PEER_EXTERNALS = [
   "react-hook-form",
   "sonner",
   "next-themes",
+  // A peer since VDS211: every release with the parser fixes is served only from
+  // SheetJS's CDN, and pnpm refuses a URL subdependency, so the consumer has to
+  // be the one that declares it. Required, not optional — the root entry exports
+  // `exportToXlsx`, and a Vite build fails on an import it cannot resolve even
+  // when nothing calls it.
+  "xlsx",
   // The `./vite` plugin entry imports types/runtime from Vite itself.
   "vite",
 ]
@@ -35,9 +41,7 @@ export const PEER_EXTERNALS = [
  *
  * Heavy trees a consumer should tree-shake alongside its own usage rather than
  * receive whole: without this the bundle inlines the union of every Radix
- * component and every icon used internally, about 2 MB on every page. `xlsx` is
- * here because only the few admin pages that export a report need it, and a
- * consumer that declares it can lazy-load it with the route.
+ * component and every icon used internally, about 2 MB on every page.
  *
  * Note: `lucide-react` stays bundled — this package uses it internally and a
  * consumer does not need it as a direct dependency.
@@ -45,7 +49,6 @@ export const PEER_EXTERNALS = [
 export const EXACT_EXTERNALS = [
   "@tabler/icons-react",
   "@iconify/react",
-  "xlsx",
   "@tanstack/react-table",
   "react-resizable-panels",
   "vaul",

@@ -4,7 +4,7 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS211** (deps: —) **exportToXlsx pulls xlsx 0.18.5, whose prototype pollution and ReDoS no consumer can override** — SheetJS ships fixes only from its CDN, and pnpm 11 refuses a URL subdependency, so every consumer keeps the alerts. → §VDS211
+- 📋 **VDS219** (deps: VDS211 ✅) **A product that never exports a sheet must still install xlsx, because the root entry imports it** — Vite fails on an unresolved import even when nothing calls it, so the peer VDS211 made cannot be optional while the root carries exportToXlsx. → §VDS219
 
 ## Block E — The assistant every product shares
 
@@ -38,6 +38,12 @@
 - **A story file whose browser drops fails, and npm test exits instead of hanging**
   Failing fast is what the gate lacked: every test passed, and the run still never
   ended.
+
+## Done when — VDS219
+
+- **A Vite consumer that imports only the root entry builds with no xlsx installed** A
+  scratch Vite app importing the root of the built dist, with xlsx absent, completes
+  vite build.
 
 ## Non-goals
 

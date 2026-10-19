@@ -99,7 +99,7 @@ describe("the externals are declared once", () => {
    * second copy in a consumer's tree is a second React context and
    * `useFormContext` returns null where a form was expected.
    *
-   * `EXACT_EXTERNALS` is the other arrangement and stays as it is: those are
+   * `EXACT_EXTERNALS` is the other arrangement: those are
    * declared dependencies a consumer receives transitively and tree-shakes
    * against its own usage. Nothing there carries a context, so a duplicate costs
    * bytes rather than correctness.
@@ -139,6 +139,24 @@ describe("the externals are declared once", () => {
         manifest.devDependencies,
         "react-hook-form is a peer this repository does not install for itself",
       ).toHaveProperty("react-hook-form")
+    })
+
+    /**
+     * VDS211 — `xlsx` 0.18.5 is the last release on npm, and its parser carries
+     * prototype pollution and a ReDoS. The fixed releases come only from
+     * SheetJS's CDN, which pnpm refuses as a subdependency, so a dependency here
+     * left every consumer with the alerts and no override that would install.
+     */
+    it("tests exportToXlsx against a fixed xlsx, not the last one npm has", () => {
+      expect(manifest.devDependencies.xlsx ?? "").toMatch(/^https:\/\/cdn\.sheetjs\.com\//)
+    })
+
+    it("keeps xlsx a required peer, because the root entry imports it", () => {
+      // Optional would let a consumer skip it, and a Vite build then fails on
+      // the root entry's import of a package it cannot resolve, called or not.
+      const meta = (manifest as { peerDependenciesMeta?: Record<string, { optional?: boolean }> })
+        .peerDependenciesMeta
+      expect(meta?.xlsx?.optional ?? false).toBe(false)
     })
   })
 

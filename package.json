@@ -112,7 +112,8 @@
     "react-hook-form": "^7.71.2",
     "react-i18next": ">=15.0.0",
     "react-router-dom": "^7.0.0",
-    "sonner": ">=2.0.0"
+    "sonner": ">=2.0.0",
+    "xlsx": ">=0.18.5"
   },
   "peerDependenciesMeta": {
     "react-router-dom": {
@@ -154,8 +155,7 @@
     "radix-ui": "^1.4.3",
     "react-resizable-panels": "^4.7.3",
     "tailwind-merge": "^3.5.0",
-    "vaul": "^1.1.2",
-    "xlsx": "^0.18.5"
+    "vaul": "^1.1.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",
@@ -199,7 +199,8 @@
     "typescript-eslint": "^8.58.0",
     "vite": "^8.0.8",
     "vite-plugin-dts": "^5.0.0",
-    "vitest": "^4.1.11"
+    "vitest": "^4.1.11",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "packageManager": "pnpm@11.8.0",
   "engines": {

@@ -107,29 +107,29 @@ release that warned. Before shipping, run viglet-ds-check-duplicates and a type-
 each declared consumer's checkout, or read their source, and list any menu still built
 without ids, so the breaking release is not the first they hear of it.
 
-### §VDS211 xlsx as an optional peer
+### §VDS219 exportToXlsx on its own entry point
 
-Filed from Dumont (D134, deferred on this line) after Dependabot reported four high
-alerts, prototype pollution and a ReDoS, on `xlsx` 0.18.5 in `openviglet/dumont`.
+VDS211 moved `xlsx` from `dependencies` to `peerDependencies` so each product can
+install the fixed release from `cdn.sheetjs.com`. It had to be a required peer, not the
+optional one that design asked for: the root entry re-exports `exportToXlsx`, and
+`dist/index.es.js` imports `xlsx` at the top. A Vite 8 build fails with "Rolldown failed
+to resolve import" when a dependency imports a package that is not installed, whether
+the import is static or dynamic and whether anything calls it or not (checked against a
+scratch package on this repository's Vite). So Shio, which never exports a sheet, now
+has to declare `xlsx`. If it does not, pnpm's peer auto-install brings 0.18.5 back from
+npm.
 
-`exportToXlsx` (`src/lib/export-xlsx.ts`) is the package's only use of `xlsx`, and
-`package.json` declares it as a dependency at ^0.18.5. That is the last version SheetJS
-published to npm; every fixed release (0.20.3 today) is served only from
-`https://cdn.sheetjs.com`. So every consumer resolves the vulnerable parser through this
-package, and none of them can fix it locally: a pnpm 11 consumer that overrides `xlsx`
-to the CDN tarball is refused with `ERR_PNPM_EXOTIC_SUBDEP` (`blockExoticSubdeps`
-forbids a subdependency resolved by URL). Depending on the tarball here would hit the
-same refusal in every consumer.
+Expected: `exportToXlsx` gets its own entry point, `./xlsx`: an `exports` row in
+`package.json`, a build input in `vite.config.ts` and a line in `check-exports`. It is
+the only module there that imports `xlsx`. Once nothing reachable from the root imports
+it, `peerDependenciesMeta` can mark `xlsx` optional, and `scripts/externals.test.ts`
+flips its required-peer assertion.
 
-Expected: `xlsx` moves to `peerDependencies` (optional through `peerDependenciesMeta`,
-since only `exportToXlsx` needs it) and the package's own devDependency points at the
-CDN tarball, so its tests run on the fixed parser. A consumer that exports declares
-`"xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"` itself, which pnpm
-allows for a direct dependency. The release notes name the change, since a consumer that
-relied on the transitive copy must now declare it.
-
-Exposure until then is low: `exportToXlsx` only writes workbooks (`aoa_to_sheet`,
-`writeFile`), and both CVEs are in the parser.
+The root re-export stays until Turing and Dumont import from `./xlsx`. The non-goal
+forbids removing console-era exports before both consoles cut over. Until then, the root
+keeps the static import and the peer stays required. So this lands in two commits: first
+the subpath, then, after both shims (`src/lib/export-xlsx.ts` in each console) point at
+it, the root export goes and the peer becomes optional.
 
 ## Block E — The assistant every product shares
 
