@@ -180,3 +180,120 @@ headerAction` fallback in bento-list-page.tsx, drop the test that draws it, and 
 the README's BentoListPage paragraph that it is gone. Do not remove it while any
 consumer still passes it: its content would silently stop rendering, since an unknown
 prop does not fail a build that spreads props.
+
+## Block H — Product sites on the package
+
+### §VDS213 A tone above the accent
+
+VDS23 made the accent a token so a product could re-key without forking a header, and
+Roadkeep GUI is the one consumer that did (`accent: amber`). The accent is only the
+highlight, though. The brand palette (`--vg-brand*`, `--vg-gradient`), the footer
+tokens, the display face and the neutrals stay fixed to Viglet, so a family whose ground
+is warm, like the alegauss hub and its product sites (clay `#D97757` on `#15100C`),
+still has to override the preset to get it.
+
+The change is a tone layer above the accent, selected by `data-tone` on any ancestor:
+
+- `cool`, the default: today's values, with no visual change for any consumer.
+- `warm`: clay neutrals, a clay brand, an amber gradient and a warm footer.
+
+The name is generic on purpose. A tone describes a ground temperature, not a product.
+Two names were already taken: `data-theme` is the colour mode, and "ground" means light
+or dark in `docs/reference`. A tone composes with the mode, so `warm` has a light and a
+dark set, and the accent still re-keys on top of either.
+
+`consumers.json` gains a `tone` field next to `accent`, measured in the same way.
+
+Done when `data-tone="warm"` re-keys every brand, footer and neutral token in both
+modes, `cool` output is byte-identical to today's, and the parity digest carries each
+tone in use.
+
+### §VDS214 A site layer for product pages
+
+Eight product sites (claude-tray, freewilly, pportal, quickshell, roadkeep, winwright,
+polyweave, mini-gpt) are Vite + React + Tailwind v4 pages prerendered by SSR, and their
+`site/src` trees carry the same components under the same names: `Nav`, `Hero`,
+`Footer`, `Feature`, `FeatureIndex`, `CopyButton`, `ThemeToggle`, `Rich`, `NonGoals`,
+`RawSvg`, the `Ad` sponsor slot and `entry-server.tsx`. They started as one template and
+have been diverging since.
+
+The change is a `./site` subpath: those components, built from the package's tokens,
+SSR- safe (no `window` at render), reading tone (VDS213) and accent from the page.
+Content stays in each product. A component takes its copy as props or children and never
+fetches it, so a prerendered page still carries every word in its HTML. The sponsor slot
+renders `sponsor.json`'s shape at build, which keeps the sponsor indexable without the
+`sync-sponsor.mjs` markup.
+
+The first cut is what all eight share. A component only two sites use stays in those
+sites.
+
+Done when one product site renders its Nav, Hero, Footer, feature index and sponsor from
+`./site` with none of those files left in its `src/`, and its prerendered HTML holds the
+same text as before.
+
+### §VDS215 Prerender and OG cards in ./vite
+
+Every React product site's `build` script runs the same chain: `vite build`,
+`scripts/og-image.mjs` (resvg), an SSR build of `entry-server.tsx`, then
+`scripts/prerender.mjs` (node-html-parser). Each site holds its own copy of both
+scripts.
+
+The change adds two helpers to `./vite`, which already ships `boot-loader`: a prerender
+step that takes the routes and the SSR entry, and an OG card generator that takes a
+title, a line and an accent and renders with the tone's tokens. A site's build script
+then names helpers rather than carrying files.
+
+Done when one product site builds with no `prerender.mjs` or `og-image.mjs` of its own,
+its output is byte-identical apart from asset hashes, and the helpers are covered by the
+package's own tests.
+
+### §VDS216 The site layer as plain CSS
+
+`preset.css` resolves only through Tailwind, and `dist/viglet-design-system.css` is 221
+KB of utilities for the React components. A plain HTML page has nothing it can link.
+Three of the alegauss pages are exactly that: commitclerk's `docs/index.html`, the usage
+simulator's `index.html` and the time study's `docs/index.html`, each with its CSS
+inline.
+
+The change is two compiled entries: `./tokens.css`, the `--vg-*` properties including
+the tones, and `./site.css`, the `./site` layer (VDS214) as classes. A page links them
+from jsDelivr at a pinned version. `preset.css` maps from the same token source, so the
+two cannot drift. `site.css` gets its own line in `size-budget.json`, because a page
+that links one stylesheet pays for all of it.
+
+Done when a plain page that links both files and sets `data-tone` and the accent renders
+the nav, hero, card, footer and sponsor with no CSS of its own, and the budget holds.
+
+### §VDS217 Counting product sites
+
+The eight React product sites import the package, so `viglet-ds-consumer-entries` can
+measure them once they are listed. They need a `chrome` value, since a single-product
+landing is not `marketing-site`. The three plain pages take it with `<link
+href=".../@viglet/viglet-design-system@<version>/dist/site.css">`, which is not an
+import, so the census would count them as taking nothing.
+
+The change has three parts:
+
+- `chrome` gains `product-site`. The alegauss hub joins as `marketing-site`.
+- The census also reads `<link>` and `@import` URLs naming this package in `.html` files
+  under a consumer's roots, maps each to its entry and records the pinned version.
+- The hub and all eleven product sites join `consumers.json`, with tone and accent.
+
+Done when every alegauss site appears with its entries counted from source or HTML, and
+removing the package from any one of them fails the census.
+
+### §VDS218 A reference page for product sites
+
+`docs/reference` holds a page per shape (shell, panel, list, grounds, and the rest), and
+none of them is a product site. A new tone would therefore be accepted by eye. Warm on
+light is the pairing most likely to fail AA, because clay neutrals compress the gap
+between muted text and its ground.
+
+The change is `docs/reference/site.dc.html`: a hero, a product card row with three
+accents, the footer and the sponsor block, as a two-by-two of tone against ground, with
+the contrast ratios of body, muted and accent text against their surfaces printed under
+each. It joins the reference README's table.
+
+Done when the page renders all four combinations, every ratio is computed from the
+shipped tokens rather than typed in, and a ratio under 4.5:1 for body or muted text is
+marked on the page itself.

@@ -313,3 +313,6 @@
   checked **No type, export or branch in the package names a chrome other than bento** The bento barrel exports neither SectionChrome, SectionCardChromeProvider nor useSectionChrome, and no source file reads a chrome value.
   checked **AdaptiveSectionCard still renders every child it is given** A section whose header the adapter cannot read keeps its fields on the frosted surface instead of losing them, which is the failure hardest to notice.
   checked **The census reads a console-era import as a regression, not a declaration** No consumer can declare console or mixed to make chrome-census green; a console-era name counted in any source file is a finding on its own.
+
+## Block H — Product sites on the package
+
