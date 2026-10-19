@@ -22,3 +22,4 @@
 
 ## Block H — Product sites on the package
 
+- ⏸ **VDS220** (deps: VDS214 ✅) **No product site renders its chrome from ./site yet, so the layer is unproven against a real page** — set aside (a release with ./site, then a commit in a site repo): Each site still carries its own copies, so no prerendered page has been diffed. → §VDS220

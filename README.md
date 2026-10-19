@@ -392,7 +392,7 @@ directive of its own:
 
 | Entry | |
 |---|---|
-| `.`, `./bento`, `./router`, `./floating-formulas-bg`, `./i18n` | client — they reach React state, context or a browser API |
+| `.`, `./bento`, `./router`, `./floating-formulas-bg`, `./i18n`, `./site` | client — they reach React state, context or a browser API |
 | `./assets`, `./vite` | server-renderable — logo data, and a build-time Vite plugin |
 
 `./i18n` is the one worth pointing at: it looks pure, and it pulls
@@ -743,6 +743,12 @@ AppFooter, AppSwitcher, BackendStatusBanner, BackendStatusProvider, BadgeColorfu
 AdaptiveSectionCard, BentoActionsMenu, BentoBackLink, BentoBackToTop, BentoCalendar, BentoChangeCell, BentoChangeMark, BentoCommandPalette, BentoCountTile, BentoDataTable, BentoDiff, BentoEmptyState, BentoEntityShell, BentoEntityTile, BentoFilterBar, BentoFormHero, BentoFormSection, BentoHero, BentoHeroIconPicker, BentoIdentityCell, BentoInlineEdit, BentoListPage, BentoNavRail, BentoPaletteTrigger, BentoPanel, BentoSaveBar, BentoScrollSaveBar, BentoSection, BentoShell, BentoShortcutsDialog, BentoSplitPage, BentoStatusMarker, BentoTile, BentoTileGrid, BentoTrail, BentoUserMenu, BentoVersionRail
 
 All from `@viglet/viglet-design-system/bento`, with `@viglet/viglet-design-system/bento.css` beside it. [The bento layer](#the-bento-layer) is what each one is for and how a page composes them; this is the inventory.
+
+### Site Layer (10 components)
+
+SiteButton, SiteCopyButton, SiteFeatureIndex, SiteFooter, SiteHero, SiteNav, SiteRich, SiteSectionHead, SiteSponsor, SiteThemeToggle
+
+All from `@viglet/viglet-design-system/site`, with `@viglet/viglet-design-system/site.css` beside it. [Product sites](#product-sites) is how a page composes them.
 
 Removed with the console era — see [where each one went](#moving-off-the-console-era): BlankSlate, GridList, InternalSidebar, NavMain, NavUser, Page, PageContent, PageHeader, StickyPageHeader, SubPage, SubPageHeader
 
@@ -1130,6 +1136,43 @@ one per decision that makes two products built from this package stop looking
 like one — the header's set, who owns the reading column, what `--primary`
 reaches, the four page shapes, the panel, and both grounds with their ratios.
 The catalogue proves a component; these prove the arrangement.
+
+## Product sites
+
+`./site` is the chrome a prerendered product page shares with its family: the
+nav, the hero, the section head, the feature index, the footer with its sponsor
+block, a copy button and the theme toggle. Every component takes its copy as
+props or children and fetches nothing, so a prerendered page holds every word
+in its HTML, and none reads `window` while rendering. That includes the small
+words: the copy button's, the toggle's accessible name and the feature cards'
+link line are required props, in the product's language.
+
+```tsx
+import { SiteFooter, SiteHero, SiteNav, SiteSponsor, SiteThemeToggle } from "@viglet/viglet-design-system/site"
+import sponsor from "./sponsor.json"
+
+<SiteNav
+  brand={{ href: "/tool/", name: "Tool", logo: "/tool/logo.png" }}
+  parent={{ href: "https://example.org/", name: "family", pre: "part of" }}
+  links={[{ href: "#install", label: "Install" }]}
+  actions={<SiteThemeToggle storageKey="tool-theme" label={(next) => `Switch to ${next} theme`} />}
+/>
+<SiteHero title="Says what it does," titleAccent="in one line." sub="…" />
+<SiteFooter
+  brand={{ href: "/tool/", name: "Tool" }}
+  sponsor={<SiteSponsor declaration={sponsor} assetBase="/tool/" moreLabel="More at" />}
+/>
+```
+
+The styles are `./site.css`, plain CSS over the preset tokens, so the page
+needs the preset and no Tailwind build. Put `class="vg-site"` on `<body>` for
+the face, ground and glow. For the clay family, set `data-tone="warm"` on
+`<html>` ([tones](#design-tokens)). The mode is `data-theme`:
+`siteThemeScript(key)` returns the pre-paint script to inline in `<head>` (the
+stored choice, else the OS preference), and
+`SiteThemeToggle` flips the mode at runtime under the same key. `SiteSponsor`
+renders a `sponsor.json` declaration (`SponsorDeclaration` is its type), with
+the logos resolved against `assetBase`.
 
 ## Contributing
 

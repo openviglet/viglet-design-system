@@ -1,0 +1,596 @@
+/* =============================================================
+   Viglet Design System — product-site layer (VDS214)
+   ---------------------------------------------------------------
+   The rules behind `./site`, as plain CSS so a page needs no Tailwind
+   build to take them. Every colour is a preset token, so the ground
+   follows `data-tone` and the mode follows `data-theme`: set
+   `data-tone="warm"` on <html> for the clay family.
+
+   Import after the preset (or `./styles`):
+     @import "@viglet/viglet-design-system/preset";
+     @import "@viglet/viglet-design-system/site.css";
+
+   `.vg-site` on <body> gives the page its face, ground and glow; the
+   components work without it.
+   ============================================================= */
+
+:root {
+  --vg-site-max-width: 1120px;
+  --vg-site-glow: color-mix(in oklab, var(--vg-brand-light) 12%, transparent);
+}
+
+.vg-site {
+  font-family: var(--font-sans);
+  background: var(--vg-background);
+  color: var(--vg-foreground);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+.vg-site::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(900px 500px at 80% -5%, var(--vg-site-glow), transparent 60%),
+    radial-gradient(700px 600px at -10% 20%, color-mix(in oklab, var(--vg-brand-light) 6%, transparent), transparent 55%),
+    var(--vg-background);
+}
+
+.vg-site a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.vg-site code,
+.vg-site kbd {
+  font-family: var(--vg-font-mono);
+}
+
+.vg-site-wrap {
+  max-width: var(--vg-site-max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ---------- nav ---------- */
+.vg-site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  background: color-mix(in oklab, var(--vg-background) 80%, transparent);
+  border-bottom: 1px solid var(--vg-border);
+}
+.vg-site-nav .vg-site-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  gap: 16px;
+}
+.vg-site-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 0 0 auto;
+}
+.vg-site-brand,
+.vg-site-foot-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-brand);
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  color: var(--vg-foreground);
+  text-decoration: none;
+}
+.vg-site-brand img {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--vg-radius-control);
+  flex: 0 0 auto;
+}
+.vg-site-parent {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  padding: 7px 13px;
+  border-radius: var(--vg-radius-full);
+  border: 1px solid var(--vg-border);
+  color: var(--vg-muted-foreground);
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.vg-site-parent b {
+  color: var(--vg-foreground);
+  font-weight: 600;
+}
+.vg-site-parent svg {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.2s, color 0.2s;
+}
+.vg-site-parent:hover {
+  background: var(--vg-card);
+  border-color: var(--vg-brand-light);
+  color: var(--vg-foreground);
+}
+.vg-site-parent:hover svg {
+  color: var(--vg-brand-light);
+  transform: translate(1.5px, -1.5px);
+}
+.vg-site-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+.vg-site-nav-links a:not(.vg-site-btn) {
+  color: var(--vg-muted-foreground);
+  font-weight: 500;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.vg-site-nav-links a:not(.vg-site-btn):hover {
+  color: var(--vg-foreground);
+}
+/* The lead-in goes first and the labels next: a reader who cannot reach the
+   download has lost more than one who cannot reach an anchor. */
+@media (max-width: 1320px) {
+  .vg-site-parent-pre {
+    display: none;
+  }
+  .vg-site-nav-links {
+    gap: 16px;
+  }
+}
+@media (max-width: 1180px) {
+  .vg-site-nav-links a:not(.vg-site-btn) {
+    display: none;
+  }
+}
+
+/* ---------- buttons ---------- */
+.vg-site-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 20px;
+  border-radius: var(--vg-radius-control);
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s;
+}
+.vg-site-btn-primary {
+  background: linear-gradient(135deg, var(--vg-brand-light), var(--vg-brand-dark));
+  color: #fff;
+  box-shadow: 0 8px 24px -8px color-mix(in oklab, var(--vg-brand-light) 70%, transparent);
+}
+.vg-site-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px -10px color-mix(in oklab, var(--vg-brand-light) 85%, transparent);
+}
+.vg-site-btn-ghost {
+  background: var(--vg-card);
+  color: var(--vg-foreground);
+  border: 1px solid var(--vg-border);
+}
+.vg-site-btn-ghost:hover {
+  background: var(--vg-muted);
+  transform: translateY(-2px);
+}
+
+/* ---------- theme toggle ---------- */
+.vg-site-theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  border-radius: var(--vg-radius-control);
+  border: 1px solid var(--vg-border);
+  background: var(--vg-card);
+  color: var(--vg-muted-foreground);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.vg-site-theme-toggle:hover {
+  color: var(--vg-foreground);
+  border-color: var(--vg-brand-light);
+}
+.vg-site-theme-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ---------- hero ---------- */
+.vg-site-hero {
+  padding: 84px 0 96px;
+  text-align: center;
+  position: relative;
+}
+.vg-site-hero .vg-site-wrap {
+  position: relative;
+  z-index: 1;
+}
+.vg-site-hero-icon {
+  display: block;
+  width: 104px;
+  height: 104px;
+  border-radius: var(--vg-radius-panel);
+  margin: 0 auto 30px;
+  box-shadow: 0 18px 30px -12px color-mix(in oklab, var(--vg-brand-dark) 45%, transparent);
+}
+.vg-site-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 15px;
+  border-radius: var(--vg-radius-full);
+  background: var(--vg-brand-bg);
+  border: 1px solid var(--vg-brand-border);
+  color: var(--vg-brand);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  margin-bottom: 28px;
+}
+.vg-site-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--vg-brand-light);
+  box-shadow: 0 0 10px var(--vg-brand-light);
+  animation: vg-site-pulse 2s infinite;
+}
+@keyframes vg-site-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+.vg-site-hero h1 {
+  font-family: var(--font-brand);
+  font-size: clamp(2.6rem, 6.5vw, 4.6rem);
+  line-height: 1.04;
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  margin: 0 0 22px;
+}
+.vg-site-grad {
+  background: var(--vg-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.vg-site-sub {
+  font-size: clamp(1.05rem, 2.2vw, 1.32rem);
+  color: var(--vg-muted-foreground);
+  max-width: 700px;
+  margin: 0 auto 36px;
+  line-height: 1.55;
+}
+.vg-site-sub code {
+  color: var(--vg-brand);
+  font-size: 0.86em;
+}
+.vg-site-hero-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.vg-site-hero-meta {
+  display: flex;
+  gap: 22px;
+  justify-content: center;
+  flex-wrap: wrap;
+  color: var(--vg-muted-foreground);
+  font-size: 0.85rem;
+  margin-top: 8px;
+}
+.vg-site-pills {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 34px;
+}
+.vg-site-pill {
+  padding: 8px 14px;
+  border-radius: var(--vg-radius-control);
+  background: var(--vg-card);
+  border: 1px solid var(--vg-border);
+  font-size: 0.82rem;
+  color: var(--vg-muted-foreground);
+  font-weight: 500;
+}
+.vg-site-pill b {
+  color: var(--vg-foreground);
+}
+
+/* ---------- sections ---------- */
+.vg-site-section {
+  padding: 72px 0;
+  position: relative;
+}
+.vg-site-sec-head {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 52px;
+}
+.vg-site-eyebrow {
+  color: var(--vg-brand);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.vg-site-sec-head h2 {
+  font-family: var(--font-brand);
+  font-size: clamp(1.9rem, 4vw, 2.7rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+  margin: 0 0 16px;
+}
+.vg-site-sec-head p {
+  color: var(--vg-muted-foreground);
+  font-size: 1.05rem;
+  margin: 0;
+}
+.vg-site-sec-head p b {
+  color: var(--vg-foreground);
+}
+
+.vg-site-feature-index {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+.vg-site-feature-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--vg-border);
+  border-radius: var(--vg-radius-panel);
+  padding: 22px 24px;
+  background: linear-gradient(180deg, var(--vg-card), var(--vg-muted));
+  color: var(--vg-foreground);
+  text-decoration: none;
+  transition: transform 0.2s, border-color 0.2s, box-shadow 0.25s;
+}
+.vg-site-feature-card:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in oklab, var(--vg-brand-light) 50%, transparent);
+  box-shadow: 0 18px 40px -22px color-mix(in oklab, var(--vg-brand-light) 60%, transparent);
+}
+.vg-site-feature-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+.vg-site-feature-card p {
+  color: var(--vg-muted-foreground);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  flex: 1 1 auto;
+  margin: 0;
+}
+.vg-site-feature-card-go {
+  margin-top: 14px;
+  color: var(--vg-brand);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* ---------- copy button ---------- */
+.vg-site-copy {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  border-radius: var(--vg-radius-control);
+  cursor: pointer;
+  background: var(--vg-muted);
+  border: 1px solid var(--vg-border);
+  color: var(--vg-muted-foreground);
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.vg-site-copy:hover {
+  background: var(--vg-brand-dark);
+  border-color: var(--vg-brand-dark);
+  color: #fff;
+}
+.vg-site-copy.copied {
+  background: color-mix(in oklab, var(--vg-bento-on-mark) 20%, transparent);
+  border-color: color-mix(in oklab, var(--vg-bento-on-mark) 50%, transparent);
+  color: var(--vg-foreground);
+}
+
+/* ---------- footer ---------- */
+.vg-site-footer {
+  padding: 56px 0 38px;
+  margin-top: 30px;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid var(--vg-border);
+}
+.vg-site-footer .vg-site-wrap {
+  position: relative;
+  z-index: 1;
+}
+.vg-site-foot-grid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.vg-site-foot-brand img {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--vg-radius-control);
+}
+.vg-site-foot-links {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.vg-site-foot-links a {
+  color: var(--vg-muted-foreground);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.vg-site-foot-links a:hover {
+  color: var(--vg-brand);
+}
+.vg-site-disclaimer {
+  color: var(--vg-muted-foreground);
+  font-size: 0.8rem;
+  margin: 22px auto 0;
+  text-align: center;
+  max-width: 820px;
+  line-height: 1.6;
+}
+
+/* The sponsor's marks keep a white plate, so they render as published on
+   either ground and are never recoloured to fit the palette. */
+.vg-site-sponsor {
+  margin-top: 30px;
+  padding-top: 26px;
+  border-top: 1px solid var(--vg-border);
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.vg-site-sponsor-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--vg-radius-control);
+  background: #fff;
+  padding: 3px;
+  flex: none;
+}
+.vg-site-sponsor-body {
+  min-width: 0;
+}
+.vg-site-sponsor-label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--vg-muted-foreground);
+}
+.vg-site-sponsor-name {
+  display: block;
+  margin-top: 2px;
+  font-weight: 800;
+  font-size: 1.02rem;
+  letter-spacing: -0.01em;
+  color: var(--vg-foreground);
+  text-decoration: none;
+}
+.vg-site-sponsor-name:hover {
+  color: var(--vg-brand);
+}
+.vg-site-sponsor-body p {
+  margin: 6px 0 0;
+  max-width: 640px;
+  color: var(--vg-muted-foreground);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.vg-site-sponsor-body p a {
+  color: var(--vg-brand);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.vg-site-sponsor-products {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+.vg-site-sponsor-product {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px 9px 10px;
+  border: 1px solid var(--vg-border);
+  border-radius: var(--vg-radius-panel);
+  background: var(--vg-card);
+  color: var(--vg-foreground);
+  text-decoration: none;
+  transition: border-color 0.2s, transform 0.15s ease;
+}
+.vg-site-sponsor-product:hover {
+  border-color: var(--vg-brand);
+  transform: translateY(-2px);
+}
+.vg-site-sponsor-product img {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--vg-radius-control);
+  background: #fff;
+  padding: 2px;
+  flex: none;
+}
+.vg-site-sponsor-product b {
+  display: block;
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.vg-site-sponsor-product small {
+  display: block;
+  max-width: 280px;
+  color: var(--vg-muted-foreground);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+@media (max-width: 620px) {
+  .vg-site-sponsor {
+    flex-direction: column;
+  }
+  .vg-site-sponsor-product {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vg-site-dot {
+    animation: none;
+  }
+  .vg-site-btn:hover,
+  .vg-site-feature-card:hover,
+  .vg-site-sponsor-product:hover {
+    transform: none;
+  }
+}

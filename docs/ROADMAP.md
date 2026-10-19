@@ -12,11 +12,10 @@
 
 ## Block H — Product sites on the package
 
-- 📋 **VDS214** (deps: VDS213 ✅) **No product-site layer, so eight alegauss sites each keep their own copy of one template** — Nav, Hero, Footer, Feature, CopyButton, ThemeToggle and the sponsor slot are copied per site and drift apart. → §VDS214
-- 📋 **VDS215** (deps: VDS214) **Each product site keeps its own prerender.mjs and og-image.mjs, so a build fix lands eight times** — The prerender and OG steps are copied with the template, and ./vite already exists as the place for build-time helpers. → §VDS215
-- 📋 **VDS216** (deps: VDS214) **A page with no build cannot take the tokens or the site layer, since both need Tailwind or React** — Three alegauss pages are plain HTML (commitclerk, the usage simulator and the time study), and they belong to the same family. → §VDS216
-- 📋 **VDS217** (deps: VDS214, VDS216) **consumers.json has no chrome for a product site and no way to count a page that links the package** — The census reads imports only, so the plain pages would join as offMachine claims, the drift VDS129 made a failure. → §VDS217
-- 📋 **VDS218** (deps: VDS213 ✅, VDS214) **No reference page shows a product site on both tones and both grounds with its contrast ratios** — A tone would be accepted by eye, and warm on light is the pairing most likely to fail AA on muted text. → §VDS218
+- 📋 **VDS215** (deps: VDS214 ✅) **Each product site keeps its own prerender.mjs and og-image.mjs, so a build fix lands eight times** — The prerender and OG steps are copied with the template, and ./vite already exists as the place for build-time helpers. → §VDS215
+- 📋 **VDS216** (deps: VDS214 ✅) **A page with no build cannot take the tokens or the site layer, since both need Tailwind or React** — Three alegauss pages are plain HTML (commitclerk, the usage simulator and the time study), and they belong to the same family. → §VDS216
+- 📋 **VDS217** (deps: VDS214 ✅, VDS216) **consumers.json has no chrome for a product site and no way to count a page that links the package** — The census reads imports only, so the plain pages would join as offMachine claims, the drift VDS129 made a failure. → §VDS217
+- 📋 **VDS218** (deps: VDS213 ✅, VDS214 ✅) **No reference page shows a product site on both tones and both grounds with its contrast ratios** — A tone would be accepted by eye, and warm on light is the pairing most likely to fail AA on muted text. → §VDS218
 
 ## Done when — VDS185
 
@@ -43,6 +42,14 @@
 - **A Vite consumer that imports only the root entry builds with no xlsx installed** A
   scratch Vite app importing the root of the built dist, with xlsx absent, completes
   vite build.
+
+## Done when — VDS220
+
+- **One product site renders its chrome from ./site with its own copies deleted** The
+  site's src no longer holds Nav, Hero, Footer, FeatureIndex, ThemeToggle, CopyButton or
+  Rich.
+- **Its prerendered HTML holds the same text as before** The text of each route's output
+  is diffed before and after the switch.
 
 ## Non-goals
 

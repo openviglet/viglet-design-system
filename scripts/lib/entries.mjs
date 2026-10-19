@@ -47,6 +47,9 @@ export const ENTRIES = {
     boundary: "client",
     router: false,
   },
+  // VDS214 — the product-site layer. Client: the theme toggle and the copy
+  // button hold state, though nothing reads `window` while rendering.
+  site: { source: "src/site/index.ts", boundary: "client", router: false },
 }
 
 const named = (predicate) =>

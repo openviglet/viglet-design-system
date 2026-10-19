@@ -321,3 +321,4 @@
   checked **data-tone=warm re-keys every brand, footer and neutral token in both modes** tone.parity.test.tsx reads each governed token in a browser under warm and cool, light and dark.
   checked **cool output is identical to having no tone** The same test compares every governed token under data-tone=cool and under no attribute.
   checked **The parity digest carries each tone in use** render-parity declares TONES and consumers.test fails if a consumer's tone is missing from it.
+- ✅ **VDS214** **No product-site layer, so eight alegauss sites each keep their own copy of one template** — ./site and ./site.css ship the shared chrome: SSR-safe, copy as props, styled from the tone tokens; adopting it in a product site is VDS220 (design recorded in `README.md`).

@@ -183,29 +183,6 @@ prop does not fail a build that spreads props.
 
 ## Block H — Product sites on the package
 
-### §VDS214 A site layer for product pages
-
-Eight product sites (claude-tray, freewilly, pportal, quickshell, roadkeep, winwright,
-polyweave, mini-gpt) are Vite + React + Tailwind v4 pages prerendered by SSR, and their
-`site/src` trees carry the same components under the same names: `Nav`, `Hero`,
-`Footer`, `Feature`, `FeatureIndex`, `CopyButton`, `ThemeToggle`, `Rich`, `NonGoals`,
-`RawSvg`, the `Ad` sponsor slot and `entry-server.tsx`. They started as one template and
-have been diverging since.
-
-The change is a `./site` subpath: those components, built from the package's tokens,
-SSR- safe (no `window` at render), reading tone (VDS213) and accent from the page.
-Content stays in each product. A component takes its copy as props or children and never
-fetches it, so a prerendered page still carries every word in its HTML. The sponsor slot
-renders `sponsor.json`'s shape at build, which keeps the sponsor indexable without the
-`sync-sponsor.mjs` markup.
-
-The first cut is what all eight share. A component only two sites use stays in those
-sites.
-
-Done when one product site renders its Nav, Hero, Footer, feature index and sponsor from
-`./site` with none of those files left in its `src/`, and its prerendered HTML holds the
-same text as before.
-
 ### §VDS215 Prerender and OG cards in ./vite
 
 Every React product site's `build` script runs the same chain: `vite build`,
@@ -272,3 +249,34 @@ each. It joins the reference README's table.
 Done when the page renders all four combinations, every ratio is computed from the
 shipped tokens rather than typed in, and a ratio under 4.5:1 for body or muted text is
 marked on the page itself.
+
+### §VDS220 A product site on the site layer
+
+VDS214 shipped `./site` and `./site.css` in the package: `SiteNav`, `SiteHero`,
+`SiteSectionHead`, `SiteFeatureIndex`, `SiteFooter`, `SiteSponsor`, `SiteButton`,
+`SiteCopyButton`, `SiteThemeToggle` (with `createSiteTheme` and `siteThemeScript`) and
+`SiteRich`. They are tested by a server render in a node environment, which checks that
+every word given to them is in the HTML. No product site renders from them yet, so the
+layer has never been checked against a real page.
+
+Expected: one of the eight sites (claude-tray is the closest to the template) takes the
+release that carries `./site`. It deletes `Nav.tsx`, `Hero.tsx`, `Footer.tsx`,
+`FeatureIndex.tsx`, `ThemeToggle.tsx`, `lib/theme.ts`, `CopyButton.tsx` and `Rich.tsx`,
+and renders those parts from the package, with `data-tone="warm"` on `<html>` and
+`class="vg-site"` on `<body>`. Its prerendered HTML holds the same text as before: diff
+the text of each route's output before and after.
+
+Differences to expect at adoption, all by design:
+
+- Radii follow the package's closed scale (control, panel, full), so the 18 px cards
+  become 10 px.
+- Every label is a required prop (`copyLabel`, `copiedLabel`, the toggle's `label`,
+  `goLabel`, `moreLabel`), because the i18n literal gate forbids English defaults in
+  a shipped component.
+- The sponsor marks carry an empty `alt`, since each sits beside its name.
+- The pre-paint script sets `data-theme` from the OS when nothing is stored, since the
+  preset has no dark media query.
+
+Left in the sites, as the first cut said: the house `Ad` slot (japode-ads, five sites),
+`NonGoals` and `RawSvg` (four each), and each product's decoration, which `SiteHero` and
+`SiteFooter` take as children.

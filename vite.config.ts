@@ -22,6 +22,9 @@ import { layerUtilities } from "./scripts/lib/layer-utilities.mjs"
 const STANDALONE_CSS: Array<[from: string, to: string]> = [
   ["src/components/ui/floating-formulas-bg.css", "dist/floating-formulas-bg.css"],
   ["src/bento/bento.css", "dist/bento.css"],
+  // VDS214 — plain CSS over the preset tokens, imported by nothing in src/site
+  // for the reason bento.css is not: a page may take the rules without React.
+  ["src/site/site.css", "dist/site.css"],
 ]
 
 const copyStandaloneCss = (): Plugin => ({
