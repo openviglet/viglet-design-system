@@ -60,6 +60,26 @@ describe("resolveCheckouts", () => {
     expect(offMachine.map((o: { consumer: { id: string } }) => o.consumer.id)).toEqual(["elsewhere"])
   })
 
+  it("finds a static consumer by its directory and keeps it out of found", () => {
+    // VDS224 — a page that links the package by URL has no package.json, and
+    // `use:local` must not push dist into it.
+    mkdirSync(join(base, "page", "guide"), { recursive: true })
+
+    const { found, linked, missing } = resolveCheckouts(
+      {
+        consumers: [
+          { id: "page", framework: "static", checkout: "../../page" },
+          { id: "absent", framework: "static", checkout: "../../absent" },
+        ],
+      },
+      repoRoot,
+      "2026.3",
+    )
+    expect(found).toEqual([])
+    expect(linked.map((l: { consumer: { id: string } }) => l.consumer.id)).toEqual(["page"])
+    expect(missing.map((m: { consumer: { id: string } }) => m.consumer.id)).toEqual(["absent"])
+  })
+
   it("keeps an older worktree on its own line", () => {
     packageAt("product/2026.3/app")
 

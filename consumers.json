@@ -255,6 +255,30 @@
       "tone": "navy",
       "sourceRoots": ["src", "scripts", "vite.config.ts"],
       "entries": ["./fonts", "./preset", "./site", "./site.css", "./vite"]
+    },
+    {
+      "id": "claude-code-first-site",
+      "name": "Claude Code First Site",
+      "package": "claude-code-first",
+      "checkout": "../../../alegauss/claude-code-first",
+      "framework": "static",
+      "chrome": "product-site",
+      "accent": "cool",
+      "tone": "cool",
+      "sourceRoots": ["guide"],
+      "entries": ["./fonts.css", "./site.css", "./tokens.css"]
+    },
+    {
+      "id": "polyweave-site",
+      "name": "Polyweave Site",
+      "package": "polyweave-site",
+      "checkout": "../../../alegauss/polyweave/site",
+      "framework": "vite",
+      "chrome": "product-site",
+      "accent": "cool",
+      "tone": "cool",
+      "sourceRoots": ["src", "scripts", "vite.config.ts"],
+      "entries": ["./site", "./site.css", "./tokens.css", "./vite"]
     }
   ]
 }

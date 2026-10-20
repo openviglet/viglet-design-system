@@ -32,9 +32,15 @@ export function checkoutPath(consumer, repoRoot, line) {
  *
  * A checkout counts as found when it holds a `package.json`: a directory that
  * exists and is not a package is the layout having moved underneath the path.
+ *
+ * VDS224 — a `static` consumer has no package: it links the dist files by a
+ * pinned CDN URL, so its checkout is present when the directory is, and it goes
+ * in `linked` rather than `found`. `use:local` writes into `found` alone, since
+ * a page that takes the package by URL has no node_modules to push dist into.
  */
 export function resolveCheckouts(register, repoRoot, line) {
   const found = []
+  const linked = []
   const missing = []
   const offMachine = []
   for (const consumer of register.consumers) {
@@ -43,8 +49,11 @@ export function resolveCheckouts(register, repoRoot, line) {
       continue
     }
     const path = checkoutPath(consumer, repoRoot, line)
-    if (path && existsSync(join(path, "package.json"))) found.push({ consumer, path })
+    if (consumer.framework === "static") {
+      if (path && existsSync(path)) linked.push({ consumer, path })
+      else missing.push({ consumer, path })
+    } else if (path && existsSync(join(path, "package.json"))) found.push({ consumer, path })
     else missing.push({ consumer, path })
   }
-  return { found, missing, offMachine }
+  return { found, linked, missing, offMachine }
 }

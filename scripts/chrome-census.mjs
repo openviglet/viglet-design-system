@@ -120,8 +120,8 @@ export function chromeFinding(consumer, measured) {
 }
 
 export function census(register, repoRoot, line) {
-  const { found, missing, offMachine } = resolveCheckouts(register, repoRoot, line)
-  const rows = found.map(({ consumer, path }) => {
+  const { found, linked, missing, offMachine } = resolveCheckouts(register, repoRoot, line)
+  const rows = [...found, ...linked].map(({ consumer, path }) => {
     const measured = measureConsumer(path, consumer.sourceRoots ?? [])
     return { id: consumer.id, chrome: consumer.chrome, ...measured, finding: chromeFinding(consumer, measured) }
   })

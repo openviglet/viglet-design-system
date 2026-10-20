@@ -14,7 +14,9 @@ const manifest = JSON.parse(readFileSync(join(root, "consumers.json"), "utf8")) 
     // viglet-docs is Docusaurus, which takes neither `./router` nor `./vite`
     // and no root entry either.
     // VDS217 — winwright-docs is Astro and takes only `./tokens.css`.
-    framework: "vite" | "next" | "docusaurus" | "astro"
+    // VDS224 — claude-code-first-site has no build: a Python script writes its
+    // pages, and they link the three files by a pinned CDN URL.
+    framework: "vite" | "next" | "docusaurus" | "astro" | "static"
     chrome: string
     accent: string
     // VDS213 — the ground tone under the accent.
