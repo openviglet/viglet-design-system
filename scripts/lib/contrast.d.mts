@@ -51,6 +51,9 @@ export declare function parseColour(value: string, tokens?: Map<string, string>)
 
 export declare function luminance(colour: Colour | null): number | null
 
+/** An opaque colour as `#rrggbb`; null for a translucent one. */
+export declare function hex(colour: Colour | null): string | null
+
 /** A translucent colour laid over an opaque one; null where the ground is not opaque. */
 export declare function over(top: Colour | null, ground: Colour | null): Colour | null
 

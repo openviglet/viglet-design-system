@@ -1138,10 +1138,11 @@ of this package and which stay in the product, and why. Four of them are one
 product's commercial offer rendered as cards, and shipping those as chrome would
 put that offer in every console.
 
-[docs/reference/](docs/reference/) is the same contract drawn: ten artboards,
+[docs/reference/](docs/reference/) is the same contract drawn: eleven artboards,
 one per decision that makes two products built from this package stop looking
 like one — the header's set, who owns the reading column, what `--primary`
-reaches, the four page shapes, the panel, and both grounds with their ratios.
+reaches, the four page shapes, the panel, both grounds with their ratios, and a
+product site on both tones.
 The catalogue proves a component; these prove the arrangement.
 
 ## Product sites

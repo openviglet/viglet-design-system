@@ -13,7 +13,6 @@
 ## Block H — Product sites on the package
 
 - ⏳ **VDS217** (deps: VDS220 ⏸) **No alegauss site is in consumers.json, so the census holds none of them to the entries it takes** — The hub and the eleven product sites join consumers.json with tone and accent once they take the package, so removing it from any one fails the census. → §VDS217
-- 📋 **VDS218** (deps: VDS213 ✅, VDS214 ✅) **No reference page shows a product site on both tones and both grounds with its contrast ratios** — A tone would be accepted by eye, and warm on light is the pairing most likely to fail AA on muted text. → §VDS218
 
 ## Done when — VDS185
 

@@ -201,22 +201,6 @@ The change has three parts:
 Done when every alegauss site appears with its entries counted from source or HTML, and
 removing the package from any one of them fails the census.
 
-### §VDS218 A reference page for product sites
-
-`docs/reference` holds a page per shape (shell, panel, list, grounds, and the rest), and
-none of them is a product site. A new tone would therefore be accepted by eye. Warm on
-light is the pairing most likely to fail AA, because clay neutrals compress the gap
-between muted text and its ground.
-
-The change is `docs/reference/site.dc.html`: a hero, a product card row with three
-accents, the footer and the sponsor block, as a two-by-two of tone against ground, with
-the contrast ratios of body, muted and accent text against their surfaces printed under
-each. It joins the reference README's table.
-
-Done when the page renders all four combinations, every ratio is computed from the
-shipped tokens rather than typed in, and a ratio under 4.5:1 for body or muted text is
-marked on the page itself.
-
 ### §VDS220 A product site on the site layer
 
 VDS214 shipped `./site` and `./site.css`, and VDS215 shipped the build steps in `./vite`

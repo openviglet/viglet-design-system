@@ -1,6 +1,6 @@
 # The page reference
 
-Ten artboards, one per decision that makes two products built from this package stop
+Eleven artboards, one per decision that makes two products built from this package stop
 looking like one. They are the composition half of the catalogue: a story proves a component
 in isolation, and these prove the arrangement.
 
@@ -21,6 +21,7 @@ prose. Where the two disagree, the contract is right and an artboard is stale.
 | The shapes | `panel.dc.html`         | the plain card with no heading, and why it has none                       |
 | The shapes | `grounds.dc.html`       | the same components on both grounds, with the ratios                      |
 | The shapes | `split.dc.html`         | a two-pane screen: who scrolls, who owns the ratio, and phone width       |
+| The shapes | `site.dc.html`          | a product site on both tones and both grounds, every ratio measured       |
 
 `canvas.json` places them and names the two pages.
 
@@ -38,7 +39,9 @@ the package's non-goals forbid it for the same reason they forbid a nav array.
 
 **The values are the resolved tokens**, not an impression of them. Colour, type, radius,
 the rail's width and the header's height come from `src/styles/preset.css`, so an artboard
-is checkable against the preset. The accent shown is the one this package ships, because a
+is checkable against the preset. `site.dc.html` goes one step further: it is generated
+from the preset by `node scripts/site-reference.mjs`, ratios included, and a test fails when
+the committed page is stale. The accent shown is the one this package ships, because a
 product's own is a re-key and `primary.dc.html` is where that is drawn.
 
 ## Editing them

@@ -93,6 +93,15 @@
       "h": 760,
       "title": "A two-pane screen",
       "page": "vds-shapes"
+    },
+    {
+      "file": "site.dc.html",
+      "x": 4000,
+      "y": 0,
+      "w": 1280,
+      "h": 940,
+      "title": "A product site, both tones",
+      "page": "vds-shapes"
     }
   ],
   "annotations": [

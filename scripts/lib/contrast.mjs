@@ -253,6 +253,15 @@ export function over(top, ground) {
   return { ...linearToOklab(mixed.map(srgbToLinear)), alpha: 1 }
 }
 
+/**
+ * VDS218 — an opaque colour as the `#rrggbb` a browser paints, so a page drawn
+ * from the tokens can state them in a form every renderer reads.
+ */
+export function hex(colour) {
+  if (!colour || colour.alpha < 1) return null
+  return "#" + oklabToLinear(colour).map((v) => Math.round(linearToSrgb(v) * 255).toString(16).padStart(2, "0")).join("")
+}
+
 /** WCAG relative luminance of an opaque colour; a translucent one has no single answer. */
 export function luminance(colour) {
   if (!colour || colour.alpha < 1) return null
