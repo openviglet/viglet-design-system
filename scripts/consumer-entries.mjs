@@ -21,6 +21,13 @@
 // inside them is not the product taking a subpath — a census test that greps for
 // `./bento` would otherwise record the product importing what it only counts —
 // so those files are skipped, and so is anything inside a comment.
+//
+// VDS217 — a page with no build takes the package by URL, not by import:
+// `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@viglet/viglet-design-system@<v>/dist/site.css">`.
+// Such a link in an `.html` file, or a CSS `@import` of the same URL, counts as
+// taking the entry whose export points at that file, and the pinned version is
+// recorded beside it. Only a real `<link>` counts: a snippet shown in a page's
+// docs is escaped (`&lt;link`) and is not the page taking anything.
 
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs"
 import { dirname, isAbsolute, join, relative, resolve } from "node:path"
@@ -39,6 +46,7 @@ const EXTENSIONS = new Set([
   ".mdx",
   ".css",
   ".scss",
+  ".html",
 ])
 const SKIP_DIRS = new Set([
   "node_modules",
@@ -129,8 +137,10 @@ if (missing.length > 0) {
 // Only a comment that opens its line: a glob such as "src/**" in a config file
 // opens a block anywhere else and would swallow the imports after it.
 const blank = (text) => text.replace(/[^\n]/g, " ")
-const withoutComments = (source) =>
-  source.replace(/^[ \t]*\/\*[\s\S]*?\*\//gm, blank).replace(/^[ \t]*\/\/.*$/gm, blank)
+const withoutComments = (source, file) =>
+  file.endsWith(".html")
+    ? source.replace(/<!--[\s\S]*?-->/g, blank)
+    : source.replace(/^[ \t]*\/\*[\s\S]*?\*\//gm, blank).replace(/^[ \t]*\/\/.*$/gm, blank)
 
 // `from "x"`, `import "x"`, `import("x")`, `require("x")` and CSS `@import "x"` or
 // `@import url("x")`. The specifier is the package name alone or a subpath of it.
@@ -143,19 +153,55 @@ const SPECIFIER = new RegExp(
 const entryOf = (specifier) =>
   specifier === PACKAGE_NAME ? "." : `.${specifier.slice(PACKAGE_NAME.length)}`
 
+// A CDN URL naming this package at a version, then a file inside it. The host is
+// not checked: jsDelivr and unpkg spell it the same way after the host.
+const PINNED = String.raw`(?:https?:)?//[^"'\s)]*?/${PACKAGE_NAME}@([^/"'\s]+)/([^"'\s)?#]+)`
+const LINKED = new RegExp(String.raw`<link\b[^>]*?\bhref\s*=\s*["']${PINNED}["']`, "gi")
+const CSS_IMPORTED = new RegExp(String.raw`@import\s+(?:url\(\s*)?["']?${PINNED}`, "g")
+
+/** This package's exports, from the file a URL names to the entry that exports it. */
+const byFile = (() => {
+  const manifest = JSON.parse(readFileSync(join(dirname(fileURLToPath(import.meta.url)), "..", "package.json"), "utf8"))
+  const map = new Map()
+  for (const [entry, target] of Object.entries(manifest.exports ?? {})) {
+    const files = typeof target === "string" ? [target] : Object.values(target ?? {})
+    for (const file of files) if (typeof file === "string" && !map.has(file)) map.set(file.replace(/^\.\//, ""), entry)
+  }
+  return map
+})()
+
+/** Each entry a page takes by URL, with the version it pins. */
+function linkedEntries(source, file) {
+  const found = []
+  const patterns = file.endsWith(".html") ? [LINKED, CSS_IMPORTED] : [CSS_IMPORTED]
+  for (const pattern of patterns) {
+    for (const match of source.matchAll(pattern)) {
+      const entry = byFile.get(match[2])
+      if (entry) found.push({ entry, version: match[1], index: match.index })
+    }
+  }
+  return found
+}
+
 const imported = new Map()
 let scanned = 0
 for (const sourceRoot of sourceRoots) {
   for (const file of collect(join(root, sourceRoot))) {
     scanned++
-    const source = withoutComments(readFileSync(file, "utf8"))
-    for (const match of source.matchAll(SPECIFIER)) {
-      const entry = entryOf(match[1])
-      if (imported.has(entry)) continue
-      imported.set(entry, {
-        file: relative(root, file).replaceAll("\\", "/"),
-        line: source.slice(0, match.index).split("\n").length,
-      })
+    const source = withoutComments(readFileSync(file, "utf8"), file)
+    const at = (index) => ({
+      file: relative(root, file).replaceAll("\\", "/"),
+      line: source.slice(0, index).split("\n").length,
+    })
+    // An HTML page imports nothing; the bare specifier in one is text about code.
+    if (!file.endsWith(".html")) {
+      for (const match of source.matchAll(SPECIFIER)) {
+        const entry = entryOf(match[1])
+        if (!imported.has(entry)) imported.set(entry, at(match.index))
+      }
+    }
+    for (const { entry, version, index } of linkedEntries(source, file)) {
+      if (!imported.has(entry)) imported.set(entry, { ...at(index), version })
     }
   }
 }
@@ -179,6 +225,10 @@ if (asJson) {
         scanned,
         declared: [...declared].sort(),
         imported: [...imported.keys()].sort(),
+        // VDS217 — the version each entry taken by URL pins; an import pins none here.
+        pinned: Object.fromEntries(
+          [...imported.entries()].filter(([, at]) => at.version).map(([entry, at]) => [entry, at.version]).sort(),
+        ),
         undeclared,
         unused,
       },

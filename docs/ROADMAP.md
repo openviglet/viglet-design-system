@@ -12,7 +12,7 @@
 
 ## Block H — Product sites on the package
 
-- 📋 **VDS217** (deps: VDS214 ✅, VDS216 ✅) **consumers.json has no chrome for a product site and no way to count a page that links the package** — The census reads imports only, so the plain pages would join as offMachine claims, the drift VDS129 made a failure. → §VDS217
+- ⏳ **VDS217** (deps: VDS220 ⏸) **No alegauss site is in consumers.json, so the census holds none of them to the entries it takes** — The hub and the eleven product sites join consumers.json with tone and accent once they take the package, so removing it from any one fails the census. → §VDS217
 - 📋 **VDS218** (deps: VDS213 ✅, VDS214 ✅) **No reference page shows a product site on both tones and both grounds with its contrast ratios** — A tone would be accepted by eye, and warm on light is the pairing most likely to fail AA on muted text. → §VDS218
 
 ## Done when — VDS185
@@ -48,6 +48,12 @@
   Rich.
 - **Its prerendered HTML holds the same text as before** The text of each route's output
   is diffed before and after the switch.
+
+## Done when — VDS217
+
+- **Every alegauss site is in consumers.json with its entries counted**
+  viglet-ds-consumer-entries passes in each site, from its imports or its pinned links,
+  and fails once the package is removed.
 
 ## Non-goals
 

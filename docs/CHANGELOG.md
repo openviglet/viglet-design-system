@@ -327,3 +327,4 @@
 - ✅ **VDS216** **A page with no build cannot take the tokens or the site layer, since both need Tailwind or React** — ./tokens.css, derived from the preset at build, and ./site.css let a page with no build take the tokens, tones and site layer; size-budget.json records the pair (design recorded in `README.md`).
   checked **A page linking only tokens.css and site.css renders the layer** site-plain.parity.test.tsx styles static markup with those two files alone and reads the computed styles on both tones.
   checked **site.css has its own size budget line, and it holds** check-size measures a site fixture of tokens.css plus site.css against size-budget.json.
+- ✅ **VDS217 (census half)** **consumers.json has no chrome for a product site and no way to count a page that links the package** — The census counts a pinned CDN link or CSS @import naming a dist file as taking that entry and records its version; product-site joins the chrome values.

@@ -163,6 +163,65 @@ describe("viglet-ds-consumer-entries", () => {
     expect(empty.stderr).toContain("vacuously")
   })
 
+  describe("VDS217: a page that links the package instead of importing it", () => {
+    const CDN = `https://cdn.jsdelivr.net/npm/${PKG}@2026.3.21/dist`
+
+    function pinned() {
+      const { stdout } = run("--register", register, "--json")
+      return JSON.parse(stdout) as { imported: string[]; pinned: Record<string, string> }
+    }
+
+    it("counts a <link> to a file an entry exports, and records the version it pins", () => {
+      declare(["./tokens.css", "./site.css"], ["docs"])
+      write(
+        "docs/index.html",
+        `<html data-tone="warm"><head>\n<link rel="stylesheet" href="${CDN}/tokens.css">\n` +
+          `<link href='https://unpkg.com/${PKG}@2026.3.21/dist/site.css' rel="stylesheet" />\n</head></html>\n`,
+      )
+
+      expect(run("--register", register).status).toBe(0)
+      expect(pinned()).toMatchObject({
+        imported: ["./site.css", "./tokens.css"],
+        pinned: { "./site.css": "2026.3.21", "./tokens.css": "2026.3.21" },
+      })
+    })
+
+    it("fails when a page stops linking an entry it declares", () => {
+      declare(["./tokens.css", "./site.css"], ["docs"])
+      write("docs/index.html", `<link rel="stylesheet" href="${CDN}/tokens.css">\n`)
+
+      const result = run("--register", register)
+      expect(result.status).toBe(1)
+      expect(result.stderr).toContain("./site.css")
+    })
+
+    it("counts a CSS @import of the same URL", () => {
+      declare(["./site.css"], ["docs"])
+      write("docs/page.css", `@import url("${CDN}/site.css");\n`)
+      expect(pinned().imported).toEqual(["./site.css"])
+    })
+
+    it("does not count a snippet the page shows, a commented link, or a bare name in prose", () => {
+      declare(["./tokens.css"], ["docs"])
+      write(
+        "docs/index.html",
+        [
+          `<link rel="stylesheet" href="${CDN}/tokens.css">`,
+          `<pre><code>&lt;link rel="stylesheet" href="${CDN}/site.css"&gt;</code></pre>`,
+          `<!-- <link rel="stylesheet" href="${CDN}/site.css"> -->`,
+          `<p>Install with npm i ${PKG}, then import "${PKG}/bento".</p>`,
+        ].join("\n"),
+      )
+      expect(pinned().imported).toEqual(["./tokens.css"])
+    })
+
+    it("ignores a file no entry exports", () => {
+      declare(["./tokens.css"], ["docs"])
+      write("docs/index.html", `<link rel="stylesheet" href="${CDN}/tokens.css">\n<link href="${CDN}/chunk-abc.css">\n`)
+      expect(pinned().imported).toEqual(["./tokens.css"])
+    })
+  })
+
   it("reads the register this package ships when none is named", () => {
     // How a consumer calls it: no --register, so the bin reads consumers.json
     // from beside itself, which is where `files` puts it in the tarball.

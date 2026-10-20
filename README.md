@@ -208,6 +208,13 @@ the entry here is wrong, so the fix is a change to `consumers.json` in this
 repository. `--json` prints the measurement; `--root <dir>` measures a checkout
 other than the current directory.
 
+A page with no build takes the package by URL, and that counts too. A `<link>`
+in an `.html` file under the roots, or a CSS `@import`, naming
+`@viglet/viglet-design-system@<version>/dist/<file>` on a CDN counts as taking
+the entry that exports that file (`./tokens.css`, `./site.css`). `--json`
+reports the version each one pins under `pinned`. A snippet the page shows
+(escaped as `&lt;link`) or a link inside an HTML comment does not count.
+
 ## Using it from Claude Code
 
 This repository publishes a Claude Code plugin, `viglet-ds`, for a product that
