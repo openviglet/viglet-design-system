@@ -400,7 +400,7 @@ directive of its own:
 | Entry | |
 |---|---|
 | `.`, `./bento`, `./router`, `./floating-formulas-bg`, `./i18n`, `./site` | client — they reach React state, context or a browser API |
-| `./assets`, `./vite` | server-renderable — logo data, and a build-time Vite plugin with the site build helpers |
+| `./assets`, `./vite`, `./xlsx` | server-renderable — logo data, a build-time Vite plugin with the site build helpers, and a plain export function |
 
 `./i18n` is the one worth pointing at: it looks pure, and it pulls
 `i18next-browser-languagedetector`. `./assets` staying unmarked is deliberate —
@@ -700,6 +700,15 @@ import {
   getFlagEmoji,
   exportToXlsx,
 } from "@viglet/viglet-design-system";
+```
+
+**Import `exportToXlsx` from `@viglet/viglet-design-system/xlsx`.** The root
+re-export still works, but it is deprecated: it is the reason every consumer has
+to install `xlsx`. Once the consoles import from the subpath, the root export
+goes and `xlsx` becomes an optional peer, needed only by a product that exports.
+
+```tsx
+import { exportToXlsx } from "@viglet/viglet-design-system/xlsx";
 ```
 
 `exportToXlsx(data, headers, filename, sheetName?)` takes an optional sheet name; without one the sheet is named after `filename` (it used to be `Logging`, whatever you exported). The header row is written from `headers`, so an export with no rows still arrives with its column titles rather than as an empty file.

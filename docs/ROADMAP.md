@@ -4,8 +4,6 @@
 
 ## Block F — What a consuming CMS needs from the package next
 
-- 📋 **VDS219** (deps: VDS211 ✅) **A product that never exports a sheet must still install xlsx, because the root entry imports it** — Vite fails on an unresolved import even when nothing calls it, so the peer VDS211 made cannot be optional while the root carries exportToXlsx. → §VDS219
-
 ## Block E — The assistant every product shares
 
 ## Block C — One look across products

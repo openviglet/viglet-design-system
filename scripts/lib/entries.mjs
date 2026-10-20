@@ -50,6 +50,10 @@ export const ENTRIES = {
   // VDS214 — the product-site layer. Client: the theme toggle and the copy
   // button hold state, though nothing reads `window` while rendering.
   site: { source: "src/site/index.ts", boundary: "client", router: false },
+  // VDS219 — the one module that imports `xlsx`, on its own entry so a consumer
+  // that never exports a sheet can stop installing it once the root re-export
+  // goes. A plain function that writes a download, so no directive.
+  xlsx: { source: "src/lib/export-xlsx.ts", boundary: "server", router: false },
 }
 
 const named = (predicate) =>

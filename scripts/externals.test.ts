@@ -1,7 +1,8 @@
-import { readFileSync } from "node:fs"
-import { join, resolve } from "node:path"
+import { readFileSync, readdirSync } from "node:fs"
+import { join, relative, resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 
+import { ENTRIES } from "./lib/entries.mjs"
 import {
   EXACT_EXTERNALS,
   EXTERNAL_PATTERNS,
@@ -149,6 +150,29 @@ describe("the externals are declared once", () => {
      */
     it("tests exportToXlsx against a fixed xlsx, not the last one npm has", () => {
       expect(manifest.devDependencies.xlsx ?? "").toMatch(/^https:\/\/cdn\.sheetjs\.com\//)
+    })
+
+    /**
+     * VDS219 — the first half of making the peer optional: the one module that
+     * imports `xlsx` is an entry of its own. The root still re-exports it, so
+     * the peer stays required until that re-export goes.
+     */
+    it("imports xlsx from one shipped module, which is the ./xlsx entry", () => {
+      const importers: string[] = []
+      const walk = (dir: string) => {
+        for (const entry of readdirSync(dir, { withFileTypes: true })) {
+          const full = join(dir, entry.name)
+          if (entry.isDirectory()) walk(full)
+          else if (/\.tsx?$/.test(entry.name) && !/\.(test|stories)\./.test(entry.name)) {
+            if (/from\s+["']xlsx["']/.test(readFileSync(full, "utf8"))) importers.push(relative(root, full).replaceAll("\\", "/"))
+          }
+        }
+      }
+      walk(join(root, "src"))
+      expect(importers).toEqual(["src/lib/export-xlsx.ts"])
+      expect(ENTRIES.xlsx?.source).toBe("src/lib/export-xlsx.ts")
+      const exportsMap = (manifest as unknown as { exports: Record<string, { import?: string }> }).exports
+      expect(exportsMap["./xlsx"]?.import).toBe("./dist/xlsx.es.js")
     })
 
     it("keeps xlsx a required peer, because the root entry imports it", () => {

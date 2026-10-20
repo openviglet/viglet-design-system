@@ -63,6 +63,11 @@
       "require": "./dist/site.cjs"
     },
     "./site.css": "./dist/site.css",
+    "./xlsx": {
+      "types": "./dist/lib/export-xlsx.d.ts",
+      "import": "./dist/xlsx.es.js",
+      "require": "./dist/xlsx.cjs"
+    },
     "./vite": {
       "types": "./dist/vite/index.d.ts",
       "import": "./dist/vite.es.js",

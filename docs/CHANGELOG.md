@@ -301,6 +301,7 @@
 - ✅ **VDS209** **a paged BentoDataTable's selection bar scrolls out of view, so the bulk verbs are off screen down a long list** — A paged BentoDataTable with rows selected holds its selection bar under the shell header and its header row below it, so bulk actions stay in reach down a long list.
   checked **With rows selected, a paged table keeps its bar, then its header row, in view** Unit tests assert the bar's sticky classes appear with a selection, leave when it clears, and stay off a table with a height
 - ✅ **VDS211** **exportToXlsx pulls xlsx 0.18.5, whose prototype pollution and ReDoS no consumer can override** — xlsx is a required peer, so each product installs the fixed 0.20.3 from SheetJS's CDN, which the package tests on (design superseded: optional: the root entry imports xlsx).
+- ✅ **VDS219 (subpath half)** **A product that never exports a sheet must still install xlsx, because the root entry imports it** — exportToXlsx has its own ./xlsx entry, the one module importing xlsx; the root re-export stays, deprecated, until the consoles move.
 
 ## Block G — The package knows one chrome
 
