@@ -51,7 +51,7 @@ afterAll(() => {
 
 const css = (selector: string) => getComputedStyle(host.querySelector(selector)!)
 
-function under(tone: "cool" | "warm", theme: "light" | "dark") {
+function under(tone: "cool" | "warm" | "navy", theme: "light" | "dark") {
   root.dataset.tone = tone
   root.dataset.theme = theme
 }
@@ -81,6 +81,18 @@ describe("the site layer on a page with no build", () => {
     expect(css(".vg-site").backgroundColor).toBe("rgb(21, 16, 12)")
     expect(css(".vg-site-hero h1").color).toBe("rgb(244, 236, 228)")
     expect(css(".vg-site-badge").color).toBe("rgb(217, 119, 87)")
+  })
+
+  // VDS223 — SiteButton is always an anchor, and the link reset used to outweigh
+  // its class, so the primary label took the page's foreground.
+  it.each([
+    ["warm", "light"],
+    ["warm", "dark"],
+    ["navy", "light"],
+    ["cool", "light"],
+  ] as const)("paints the primary button's label white under %s on the %s ground", (tone, theme) => {
+    under(tone, theme)
+    expect(css("a.vg-site-btn-primary").color).toBe("rgb(255, 255, 255)")
   })
 
   it("moves with the tone: cool is the preset's ground and face", () => {

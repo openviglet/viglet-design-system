@@ -40,7 +40,9 @@
     var(--vg-background);
 }
 
-.vg-site a {
+/* Weightless (VDS223): at (0,1,1) this reset outweighed every component class,
+   so the primary button, always an anchor, took the page's foreground. */
+:where(.vg-site) a {
   color: inherit;
   text-decoration: none;
 }

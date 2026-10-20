@@ -10,8 +10,6 @@
 
 ## Block H — Product sites on the package
 
-- 📋 **VDS223** (deps: —) **A primary SiteButton rendered as a link takes the page foreground, since the site link reset outweighs the button class** — The label goes dark on the light ground's gradient, and the hub already restates the rule in its own CSS to fix it. → §VDS223
-
 ## Done when — VDS185
 
 - **The dock rests at the rail's foot and opens as an anchored popover** A reserved slot
@@ -48,12 +46,6 @@
 
 - **The hub renders navy from the package and is in consumers.json** Its tone.css is
   gone, and the tone contract and the entry census both pass with tone navy.
-
-## Done when — VDS223
-
-- **An anchor carrying vg-site-btn-primary paints white on both grounds**
-  site-plain.parity reads the computed colour, and the hub's override is no longer
-  needed.
 
 ## Non-goals
 

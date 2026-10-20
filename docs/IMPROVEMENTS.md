@@ -216,20 +216,3 @@ What is left is in the hub, and it needs a release that carries navy, since the 
   to `ogCardSvg` instead.
 - Compare the built pages before and after: the tokens are the same values, so
   nothing should move.
-
-### §VDS223 Button classes lose to the link reset
-
-`site.css` resets links with `.vg-site a { color: inherit }`, which weighs (0,1,1). The
-button classes weigh (0,1,0), so `.vg-site-btn-primary { color: #fff }` loses whenever
-`SiteButton` renders an `<a>`, which is its usual form on a product page. On the light
-ground the label then takes the page's dark foreground over the brand gradient.
-
-The alegauss hub works around it in its own `tone.css` with `.vg-site
-a.vg-site-btn-primary { color: #fff }`, which is a product restating package CSS, the
-drift the package exists to prevent.
-
-Build: lower the reset with `:where(.vg-site) a`, so every component class wins over it
-without each one naming the anchor, and check the other button variants and the nav and
-footer links that relied on the reset. Hold it with a case in
-`site-plain.parity.test.tsx` that reads the computed colour of an anchor carrying
-`vg-site-btn-primary` on both grounds. Once released, the hub deletes its override.

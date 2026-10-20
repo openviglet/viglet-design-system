@@ -338,3 +338,5 @@
   checked **Its prerendered HTML holds the same text as before** The text of each route's output is diffed before and after the switch.
 - ✅ **VDS222** **Three alegauss sites take the package and are not in consumers.json, so the census measures none of them** — The Claude Tray Site, the Winwright Site and Winwright Docs are in consumers.json with tone and accent, and the census, now reading .astro files, passes in each.
 - ✅ **VDS221 (package half)** **The package ships no blue ground tone, so the alegauss hub keeps a local navy one and stays out of consumers.json** — data-tone=navy ships on both grounds and the hub is registered.
+- ✅ **VDS223** **A primary SiteButton rendered as a link takes the page foreground, since the site link reset outweighs the button class** — The site link reset weighs nothing, so a primary SiteButton paints a white label on every tone and ground.
+  checked **An anchor carrying vg-site-btn-primary paints white on both grounds** site-plain.parity reads the computed colour, and the hub's override is no longer needed.
