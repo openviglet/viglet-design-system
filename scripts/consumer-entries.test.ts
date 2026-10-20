@@ -215,6 +215,23 @@ describe("viglet-ds-consumer-entries", () => {
       expect(pinned().imported).toEqual(["./tokens.css"])
     })
 
+    it("reads an Astro component's frontmatter imports and its template links", () => {
+      declare(["./site", "./tokens.css"], ["src"])
+      write(
+        "src/Layout.astro",
+        [
+          "---",
+          `import { SiteFooter } from "${PKG}/site"`,
+          `// import { BentoPanel } from "${PKG}/bento"`,
+          "---",
+          `<link rel="stylesheet" href="${CDN}/tokens.css">`,
+          `<!-- <link rel="stylesheet" href="${CDN}/site.css"> -->`,
+        ].join("\n"),
+      )
+      expect(run("--register", register).status).toBe(0)
+      expect(pinned().imported).toEqual(["./site", "./tokens.css"])
+    })
+
     it("ignores a file no entry exports", () => {
       declare(["./tokens.css"], ["docs"])
       write("docs/index.html", `<link rel="stylesheet" href="${CDN}/tokens.css">\n<link href="${CDN}/chunk-abc.css">\n`)

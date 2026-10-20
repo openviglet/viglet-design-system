@@ -1,31 +1,33 @@
 # Viglet Design System
 
 Shared component library, design tokens, hooks, utilities, and i18n for the
-nine applications that install it: the Turing, Dumont and Shio consoles,
+twelve applications that install it: the Turing, Dumont and Shio consoles,
 the Cloud Console, the Cloud Home, Schools, the Roadkeep GUI,
-the Openviglet Website and Viglet Docs. `consumers.json` is the list, and it is
-what the guards read.
+the Openviglet Website, Viglet Docs, the Claude Tray Site, the Winwright Site
+and Winwright Docs. `consumers.json` is the list, and it is what the guards
+read.
 
 **[Browse the component catalogue](https://openviglet.github.io/viglet-design-system/)** — every
 component, its variants and its props, rebuilt on each commit to `2026.3`. Look
 there before writing a component: the catalogue is the answer to "does this
 already exist".
 
-The nine applications that install this package are the consumers it holds itself
-to, declared in [`consumers.json`](consumers.json) rather than remembered: each
-entry names its framework, its chrome, the accent it renders with, where its
-source is and the subpaths it takes, and CI refuses prose that names a subset as
-though it were the whole set. A tenth is one entry there, and the checks widen
-with it. The file ships in the package, and a consumer holds its own entry to its
+The twelve applications that install this package are the consumers it holds
+itself to, declared in [`consumers.json`](consumers.json) rather than remembered:
+each entry names its framework, its chrome, the accent and tone it renders with,
+where its source is and the subpaths it takes, and CI refuses prose that names a
+subset as though it were the whole set. A thirteenth is one entry there, and the
+checks widen with it. The file ships in the package, and a consumer holds its own entry to its
 source with [`viglet-ds-consumer-entries`](#keeping-your-entry-in-the-register-true).
 
 Three are Vite consoles (Turing, Shio, Dumont), one is a Vite platform home
 (the Cloud Home), one is a Vite desktop shell (the Roadkeep GUI), one is a Vite
-marketing site (the Openviglet Website), two are Next applications
-(the Cloud Console and Schools), and one is Docusaurus (Viglet Docs). The split
-matters: a
-Next consumer takes no `./router` and no `./vite`, and Viglet Docs takes no root
-entry at all — only `./preset` and the background.
+marketing site (the Openviglet Website), two are Vite product sites on `./site`
+(the Claude Tray Site and the Winwright Site), two are Next applications
+(the Cloud Console and Schools), one is Docusaurus (Viglet Docs) and one is Astro
+(Winwright Docs). The split matters: a Next consumer takes no `./router` and no
+`./vite`, Viglet Docs takes no root entry at all — only `./preset` and the
+background — and Winwright Docs takes only `./tokens.css`.
 
 ## Installation
 
@@ -57,10 +59,11 @@ and you get the alerts back.
 
 A change here is a change to shared chrome, so the question is always what it
 does to Shio, Turing, Dumont, the Cloud Console, the Cloud Home, Schools,
-the Roadkeep GUI, the Openviglet Website and Viglet Docs — and the answer should
-not require a publish. The last two take the package by caret range rather than
-pinning it, so they also receive each release the moment they install one. From
-this checkout:
+the Roadkeep GUI, the Openviglet Website, Viglet Docs, the Claude Tray Site, the
+Winwright Site and Winwright Docs — and the answer should not require a publish.
+The Openviglet Website and Viglet Docs take the package by caret range rather
+than pinning it, so they also receive each release the moment they install one.
+From this checkout:
 
 ```bash
 pnpm use:local           # build, then push dist into every consumer checked out here
@@ -1243,8 +1246,9 @@ the site's devDependencies.
 
 The package manager here is pnpm, matching the Shio, Turing, Dumont, Cloud Home
 and Schools workspaces. The Cloud Console, the Roadkeep GUI,
-the Openviglet Website and Viglet Docs install with npm, which is a fact about
-those repositories and not about this one.
+the Openviglet Website, Viglet Docs, the Claude Tray Site, the Winwright Site
+and Winwright Docs install with npm, which is a fact about those repositories
+and not about this one.
 
 ```bash
 pnpm install

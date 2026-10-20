@@ -336,3 +336,4 @@
 - ✅ **VDS220** **No product site renders its chrome from ./site yet, so the layer is unproven against a real page** — claude-tray renders its chrome from ./site on the warm tone and builds through prerenderSite and renderOgCard; its twins, sitemap, robots and manifest match the old build.
   checked **One product site renders its chrome from ./site with its own copies deleted** The site's src no longer holds Nav, Hero, Footer, FeatureIndex, ThemeToggle, CopyButton or Rich.
   checked **Its prerendered HTML holds the same text as before** The text of each route's output is diffed before and after the switch.
+- ✅ **VDS222** **Three alegauss sites take the package and are not in consumers.json, so the census measures none of them** — The Claude Tray Site, the Winwright Site and Winwright Docs are in consumers.json with tone and accent, and the census, now reading .astro files, passes in each.

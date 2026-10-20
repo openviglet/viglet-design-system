@@ -22,3 +22,5 @@
 - ⏸ **VDS208** (deps: —) **BentoListPage still accepts headerAction, a deprecated alias for toolbar promised for one release** — set aside (Waits for the consumers to pass toolbar.): Two props for one slot invite a page to pass both, and the alias outlives its promise unless a line tracks its removal. → §VDS208
 
 ## Block H — Product sites on the package
+
+- ⏸ **VDS217** (deps: VDS220 ✅, VDS221) **The hub and the product sites still on their own copies are not in consumers.json** — set aside (VDS221, then a commit in each remaining site): Each joins with tone and accent once it takes the package, so removing it then fails the census. → §VDS217

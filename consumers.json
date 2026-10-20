@@ -63,8 +63,10 @@
     "a page with no build takes the package by a pinned CDN `<link>` rather than",
     "an import, so `viglet-ds-consumer-entries` counts those as entries too.",
     "Otherwise a plain page would have to join as an `offMachine` claim, the kind",
-    "of unmeasured entry VDS129 made a failure. The sites join once they take the",
-    "package (VDS220).",
+    "of unmeasured entry VDS129 made a failure. A site joins once it takes the",
+    "package: the Claude Tray Site and the Winwright Site on `./site`, and",
+    "Winwright Docs on `./tokens.css` alone. The hub waits for a blue tone,",
+    "since it renders a local `navy` one the parity digest cannot hold.",
     "",
     "VDS122 widened it a third time, to nine, and the two it added were invisible",
     "for a third reason: both take the package by caret range rather than pinning",
@@ -205,6 +207,42 @@
       "tone": "cool",
       "sourceRoots": ["src", "docusaurus.config.ts"],
       "entries": ["./floating-formulas-bg", "./floating-formulas-bg.css", "./preset"]
+    },
+    {
+      "id": "claude-tray-site",
+      "name": "Claude Tray Site",
+      "package": "claude-tray-site",
+      "checkout": "../../../alegauss/claude-tray/site",
+      "framework": "vite",
+      "chrome": "product-site",
+      "accent": "cool",
+      "tone": "warm",
+      "sourceRoots": ["src", "scripts", "vite.config.ts"],
+      "entries": ["./site", "./site.css", "./tokens.css", "./vite"]
+    },
+    {
+      "id": "winwright-site",
+      "name": "Winwright Site",
+      "package": "winwright-site",
+      "checkout": "../../../alegauss/winwright/site",
+      "framework": "vite",
+      "chrome": "product-site",
+      "accent": "cool",
+      "tone": "cool",
+      "sourceRoots": ["src", "scripts", "vite.config.ts"],
+      "entries": ["./site", "./site.css", "./tokens.css", "./vite"]
+    },
+    {
+      "id": "winwright-docs",
+      "name": "Winwright Docs",
+      "package": "winwright-docs",
+      "checkout": "../../../alegauss/winwright/site/docs",
+      "framework": "astro",
+      "chrome": "docs-site",
+      "accent": "cool",
+      "tone": "cool",
+      "sourceRoots": ["src", "astro.config.mjs"],
+      "entries": ["./tokens.css"]
     }
   ]
 }

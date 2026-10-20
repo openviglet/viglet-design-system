@@ -185,18 +185,42 @@ prop does not fail a build that spreads props.
 
 ### §VDS217 Counting product sites
 
-The eight React product sites import the package, so `viglet-ds-consumer-entries` can
-measure them once they are listed. They need a `chrome` value, since a single-product
-landing is not `marketing-site`. The three plain pages take it with `<link
-href=".../@viglet/viglet-design-system@<version>/dist/site.css">`, which is not an
-import, so the census would count them as taking nothing.
+Two steps have landed. `chrome` has `product-site`, and the census reads pinned `<link>`
+and `@import` URLs in `.html` and `.astro` files. VDS222 added the three sites already
+on the package: the Claude Tray Site and the Winwright Site on `./site`, and Winwright
+Docs (Astro) on `./tokens.css` alone.
 
-The change has three parts:
+What is left:
 
-- `chrome` gains `product-site`. The alegauss hub joins as `marketing-site`.
-- The census also reads `<link>` and `@import` URLs naming this package in `.html` files
-  under a consumer's roots, maps each to its entry and records the pinned version.
-- The hub and all eleven product sites join `consumers.json`, with tone and accent.
+- The alegauss hub takes `./site`, `./preset`, `./fonts` and `./vite`, but renders
+  a local `navy` tone the parity digest cannot hold. It joins as `marketing-site`
+  once VDS221 ships that tone.
+- Each other product site joins in the commit where it moves onto `./site`
+  (as claude-tray did in 01d6b8f). Measure its entries with
+  `node scripts/consumer-entries.mjs --consumer <id> --root <checkout>`, and
+  widen the README and code paragraphs that name every consumer, since
+  `consumers.test.ts` refuses a paragraph naming a subset.
 
 Done when every alegauss site appears with its entries counted from source or HTML, and
 removing the package from any one of them fails the census.
+
+### §VDS221 A navy ground tone
+
+The package ships two ground tones, `cool` and `warm` (VDS213). The alegauss hub needed
+a third to match its blue mark, so `alegauss.github.io/src/tone.css` restates the warm
+token set block for block on a navy ground, selected by `data-tone="navy"`. Its header
+says the file goes once the design system has a blue tone. Until then the hub cannot
+join `consumers.json`: the tone contract in `scripts/consumers.test.ts` requires every
+declared tone to be in the parity digest's `TONES`, and recording it as `cool` would
+misdescribe what it renders.
+
+Build: add `navy` as a third tone in the preset, taking the hub's values as the starting
+palette, so `tokens.css` and `site.css` carry it. Then:
+
+- `TONES` in `render-parity.parity.test.tsx` and `tone.parity.test.tsx` cover it
+  in both modes.
+- `OG_CARD_TONES` in `src/vite/og-card.ts` gains its dark-ground hex, which the
+  hub's `prerender.mjs` duplicates today.
+- `site-reference.mjs` draws it, so the contrast ratios are measured.
+- The hub then deletes `tone.css` and joins `consumers.json` as `marketing-site`
+  with `tone: "navy"`. That last step is the hub's own commit.

@@ -10,7 +10,7 @@
 
 ## Block H — Product sites on the package
 
-- ⏳ **VDS217** (deps: VDS220 ✅) **No alegauss site is in consumers.json, so the census holds none of them to the entries it takes** — The hub and the eleven product sites join consumers.json with tone and accent once they take the package, so removing it from any one fails the census. → §VDS217
+- 📋 **VDS221** (deps: —) **The package ships no blue ground tone, so the alegauss hub keeps a local navy one and stays out of consumers.json** — A tone restated outside the preset drifts from it, and the parity digest cannot hold a tone it does not render. → §VDS221
 
 ## Done when — VDS185
 
@@ -43,6 +43,11 @@
 - **Every alegauss site is in consumers.json with its entries counted**
   viglet-ds-consumer-entries passes in each site, from its imports or its pinned links,
   and fails once the package is removed.
+
+## Done when — VDS221
+
+- **The hub renders navy from the package and is in consumers.json** Its tone.css is
+  gone, and the tone contract and the entry census both pass with tone navy.
 
 ## Non-goals
 

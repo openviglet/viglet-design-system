@@ -28,6 +28,9 @@
 // taking the entry whose export points at that file, and the pinned version is
 // recorded beside it. Only a real `<link>` counts: a snippet shown in a page's
 // docs is escaped (`&lt;link`) and is not the page taking anything.
+//
+// An `.astro` component is both: its frontmatter imports, and its template can
+// carry the same `<link>` an HTML page does, so it is read both ways.
 
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs"
 import { dirname, isAbsolute, join, relative, resolve } from "node:path"
@@ -47,6 +50,7 @@ const EXTENSIONS = new Set([
   ".css",
   ".scss",
   ".html",
+  ".astro",
 ])
 const SKIP_DIRS = new Set([
   "node_modules",
@@ -137,10 +141,14 @@ if (missing.length > 0) {
 // Only a comment that opens its line: a glob such as "src/**" in a config file
 // opens a block anywhere else and would swallow the imports after it.
 const blank = (text) => text.replace(/[^\n]/g, " ")
-const withoutComments = (source, file) =>
-  file.endsWith(".html")
-    ? source.replace(/<!--[\s\S]*?-->/g, blank)
-    : source.replace(/^[ \t]*\/\*[\s\S]*?\*\//gm, blank).replace(/^[ \t]*\/\/.*$/gm, blank)
+const withoutMarkupComments = (source) => source.replace(/<!--[\s\S]*?-->/g, blank)
+const withoutCodeComments = (source) =>
+  source.replace(/^[ \t]*\/\*[\s\S]*?\*\//gm, blank).replace(/^[ \t]*\/\/.*$/gm, blank)
+function withoutComments(source, file) {
+  if (file.endsWith(".html")) return withoutMarkupComments(source)
+  if (file.endsWith(".astro")) return withoutCodeComments(withoutMarkupComments(source))
+  return withoutCodeComments(source)
+}
 
 // `from "x"`, `import "x"`, `import("x")`, `require("x")` and CSS `@import "x"` or
 // `@import url("x")`. The specifier is the package name alone or a subpath of it.
@@ -173,7 +181,7 @@ const byFile = (() => {
 /** Each entry a page takes by URL, with the version it pins. */
 function linkedEntries(source, file) {
   const found = []
-  const patterns = file.endsWith(".html") ? [LINKED, CSS_IMPORTED] : [CSS_IMPORTED]
+  const patterns = /\.(html|astro)$/.test(file) ? [LINKED, CSS_IMPORTED] : [CSS_IMPORTED]
   for (const pattern of patterns) {
     for (const match of source.matchAll(pattern)) {
       const entry = byFile.get(match[2])

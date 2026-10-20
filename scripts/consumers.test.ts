@@ -13,7 +13,8 @@ const manifest = JSON.parse(readFileSync(join(root, "consumers.json"), "utf8")) 
     // VDS122 — a third, and the reason the field exists rather than a boolean:
     // viglet-docs is Docusaurus, which takes neither `./router` nor `./vite`
     // and no root entry either.
-    framework: "vite" | "next" | "docusaurus"
+    // VDS217 — winwright-docs is Astro and takes only `./tokens.css`.
+    framework: "vite" | "next" | "docusaurus" | "astro"
     chrome: string
     accent: string
     // VDS213 — the ground tone under the accent.
