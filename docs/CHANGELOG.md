@@ -337,3 +337,4 @@
   checked **One product site renders its chrome from ./site with its own copies deleted** The site's src no longer holds Nav, Hero, Footer, FeatureIndex, ThemeToggle, CopyButton or Rich.
   checked **Its prerendered HTML holds the same text as before** The text of each route's output is diffed before and after the switch.
 - ✅ **VDS222** **Three alegauss sites take the package and are not in consumers.json, so the census measures none of them** — The Claude Tray Site, the Winwright Site and Winwright Docs are in consumers.json with tone and accent, and the census, now reading .astro files, passes in each.
+- ✅ **VDS221 (package half)** **The package ships no blue ground tone, so the alegauss hub keeps a local navy one and stays out of consumers.json** — data-tone=navy ships on both grounds and the hub is registered.

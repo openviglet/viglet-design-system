@@ -89,7 +89,7 @@ const TOKEN_SETS = {
  * claim is the same: the layout does not move, and the colours do.
  * `consumers.test.ts` asserts that every tone named in `consumers.json` is here.
  */
-const TONES = ["cool", "warm"] as const
+const TONES = ["cool", "warm", "navy"] as const
 
 /**
  * Properties that describe *where things are and how big they are*. A token

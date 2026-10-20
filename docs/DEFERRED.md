@@ -23,4 +23,5 @@
 
 ## Block H — Product sites on the package
 
-- ⏸ **VDS217** (deps: VDS220 ✅, VDS221) **The hub and the product sites still on their own copies are not in consumers.json** — set aside (VDS221, then a commit in each remaining site): Each joins with tone and accent once it takes the package, so removing it then fails the census. → §VDS217
+- ⏸ **VDS221** (deps: —) **The alegauss hub still restates the navy tone in its own tone.css and OG colour map** — set aside (a release carrying navy, then a commit in the hub): After a release carrying navy, the hub deletes tone.css and its OG colour map. → §VDS221
+- ⏸ **VDS217** (deps: VDS220 ✅) **The product sites still on their own copies are not in consumers.json** — set aside (a commit in each remaining site, as it moves onto ./site): Each joins with tone and accent once it takes the package, so removing it then fails the census. → §VDS217

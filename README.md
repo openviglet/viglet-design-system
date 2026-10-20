@@ -1,28 +1,29 @@
 # Viglet Design System
 
 Shared component library, design tokens, hooks, utilities, and i18n for the
-twelve applications that install it: the Turing, Dumont and Shio consoles,
+thirteen applications that install it: the Turing, Dumont and Shio consoles,
 the Cloud Console, the Cloud Home, Schools, the Roadkeep GUI,
-the Openviglet Website, Viglet Docs, the Claude Tray Site, the Winwright Site
-and Winwright Docs. `consumers.json` is the list, and it is what the guards
-read.
+the Openviglet Website, Viglet Docs, the Alegauss Hub, the Claude Tray Site,
+the Winwright Site and Winwright Docs. `consumers.json` is the list, and it is
+what the guards read.
 
 **[Browse the component catalogue](https://openviglet.github.io/viglet-design-system/)** — every
 component, its variants and its props, rebuilt on each commit to `2026.3`. Look
 there before writing a component: the catalogue is the answer to "does this
 already exist".
 
-The twelve applications that install this package are the consumers it holds
+The thirteen applications that install this package are the consumers it holds
 itself to, declared in [`consumers.json`](consumers.json) rather than remembered:
 each entry names its framework, its chrome, the accent and tone it renders with,
 where its source is and the subpaths it takes, and CI refuses prose that names a
-subset as though it were the whole set. A thirteenth is one entry there, and the
+subset as though it were the whole set. A fourteenth is one entry there, and the
 checks widen with it. The file ships in the package, and a consumer holds its own entry to its
 source with [`viglet-ds-consumer-entries`](#keeping-your-entry-in-the-register-true).
 
 Three are Vite consoles (Turing, Shio, Dumont), one is a Vite platform home
-(the Cloud Home), one is a Vite desktop shell (the Roadkeep GUI), one is a Vite
-marketing site (the Openviglet Website), two are Vite product sites on `./site`
+(the Cloud Home), one is a Vite desktop shell (the Roadkeep GUI), two are Vite
+marketing sites (the Openviglet Website and the Alegauss Hub), two are Vite
+product sites on `./site`
 (the Claude Tray Site and the Winwright Site), two are Next applications
 (the Cloud Console and Schools), one is Docusaurus (Viglet Docs) and one is Astro
 (Winwright Docs). The split matters: a Next consumer takes no `./router` and no
@@ -59,8 +60,9 @@ and you get the alerts back.
 
 A change here is a change to shared chrome, so the question is always what it
 does to Shio, Turing, Dumont, the Cloud Console, the Cloud Home, Schools,
-the Roadkeep GUI, the Openviglet Website, Viglet Docs, the Claude Tray Site, the
-Winwright Site and Winwright Docs — and the answer should not require a publish.
+the Roadkeep GUI, the Openviglet Website, Viglet Docs, the Alegauss Hub, the
+Claude Tray Site, the Winwright Site and Winwright Docs — and the answer should
+not require a publish.
 The Openviglet Website and Viglet Docs take the package by caret range rather
 than pinning it, so they also receive each release the moment they install one.
 From this checkout:
@@ -829,7 +831,7 @@ This is separate from a component's **colour palette**. `SectionCard` (`blue | v
 <html data-tone="warm" class="dark">
 ```
 
-`cool` is the default and changes nothing. `warm` is clay on a dark-brown ground, with an amber gradient, a warm footer, and Inter as the display face. A tone composes with the mode, since each one has a light and a dark set, and it composes with the accent too: your `:root` re-key still lands on top. Unlike the accent, a tone also works on a subtree, because the preset restates the derived tokens inside the tone block. `viglet-ds-page-lint --contrast` and the package's own contrast gate measure the cool tone. The Storybook toolbar has a Tone switch beside the mode switch.
+`cool` is the default and changes nothing. `warm` is clay on a dark-brown ground, with an amber gradient, a warm footer, and Inter as the display face. `navy` is the same set in blue: a clear blue brand on a navy ground, with a blue-to-sky gradient and a navy footer. A tone composes with the mode, since each one has a light and a dark set, and it composes with the accent too: your `:root` re-key still lands on top. Unlike the accent, a tone also works on a subtree, because the preset restates the derived tokens inside the tone block. `viglet-ds-page-lint --contrast` and the package's own contrast gate measure the cool tone. The Storybook toolbar has a Tone switch beside the mode switch.
 
 **Control heights are a closed scale.** `Button`, `GradientButton`, `Toggle`, `Input`, `SelectTrigger`, `NavigationMenuTrigger` and the sidebar's menu buttons take their height from two tokens: `--vg-control-dense` (32 px — tables, filter bars, toolbars, the `sm` and `icon-sm` sizes) and `--vg-control-form` (36 px — fields and their actions, the `default`, `lg`, `icon` and `icon-lg` sizes). `lg` keeps its wider padding and is no longer a third height. Under `pointer: coarse` both rise to `--vg-control-touch` (44 px). A control of your own reads the same tokens — `h-(--vg-control-form)` — rather than a fixed `h-*`, and the `button-height` and `input-height` figures of `look:census` count what a console still draws off the scale. Two kinds of button are not counted as controls: one taller than the touch step is read as a card (a file tile, a row with a description), and one drawn as text a reader clicks (an inline edit's value, a sort header) says so with `data-look="text"`.
 
@@ -1154,7 +1156,7 @@ put that offer in every console.
 one per decision that makes two products built from this package stop looking
 like one — the header's set, who owns the reading column, what `--primary`
 reaches, the four page shapes, the panel, both grounds with their ratios, and a
-product site on both tones.
+product site on every tone.
 The catalogue proves a component; these prove the arrangement.
 
 ## Product sites
@@ -1204,7 +1206,7 @@ it from the Storybook story. `tokens.css` is generated from `preset.css` at
 build time, so the two cannot disagree. The pair is about 5 KB gzipped, which
 `size-budget.json` records as `site`. Put `class="vg-site"` on `<body>` for
 the face, ground and glow. For the clay family, set `data-tone="warm"` on
-`<html>` ([tones](#design-tokens)). The mode is `data-theme`:
+`<html>`, and `data-tone="navy"` for a blue one ([tones](#design-tokens)). The mode is `data-theme`:
 `siteThemeScript(key)` returns the pre-paint script to inline in `<head>` (the
 stored choice, else the OS preference), and
 `SiteThemeToggle` flips the mode at runtime under the same key. `SiteSponsor`
@@ -1246,8 +1248,8 @@ the site's devDependencies.
 
 The package manager here is pnpm, matching the Shio, Turing, Dumont, Cloud Home
 and Schools workspaces. The Cloud Console, the Roadkeep GUI,
-the Openviglet Website, Viglet Docs, the Claude Tray Site, the Winwright Site
-and Winwright Docs install with npm, which is a fact about those repositories
+the Openviglet Website, Viglet Docs, the Alegauss Hub, the Claude Tray Site,
+the Winwright Site and Winwright Docs install with npm, which is a fact about those repositories
 and not about this one.
 
 ```bash

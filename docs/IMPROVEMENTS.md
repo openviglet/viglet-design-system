@@ -185,42 +185,51 @@ prop does not fail a build that spreads props.
 
 ### §VDS217 Counting product sites
 
-Two steps have landed. `chrome` has `product-site`, and the census reads pinned `<link>`
-and `@import` URLs in `.html` and `.astro` files. VDS222 added the three sites already
-on the package: the Claude Tray Site and the Winwright Site on `./site`, and Winwright
-Docs (Astro) on `./tokens.css` alone.
+Three steps have landed. `chrome` has `product-site`, and the census reads pinned
+`<link>` and `@import` URLs in `.html` and `.astro` files. VDS222 added the three sites
+already on the package: the Claude Tray Site and the Winwright Site on `./site`, and
+Winwright Docs (Astro) on `./tokens.css` alone. VDS221 added the Alegauss Hub as
+`marketing-site` with the new `navy` tone.
 
-What is left:
-
-- The alegauss hub takes `./site`, `./preset`, `./fonts` and `./vite`, but renders
-  a local `navy` tone the parity digest cannot hold. It joins as `marketing-site`
-  once VDS221 ships that tone.
-- Each other product site joins in the commit where it moves onto `./site`
-  (as claude-tray did in 01d6b8f). Measure its entries with
-  `node scripts/consumer-entries.mjs --consumer <id> --root <checkout>`, and
-  widen the README and code paragraphs that name every consumer, since
-  `consumers.test.ts` refuses a paragraph naming a subset.
+What is left: each other product site joins in the commit where it moves onto `./site`
+(as claude-tray did in 01d6b8f). Measure its entries with `node
+scripts/consumer-entries.mjs --consumer <id> --root <checkout>`, and widen the README
+and code paragraphs that name every consumer, since `consumers.test.ts` refuses a
+paragraph naming a subset.
 
 Done when every alegauss site appears with its entries counted from source or HTML, and
 removing the package from any one of them fails the census.
 
 ### §VDS221 A navy ground tone
 
-The package ships two ground tones, `cool` and `warm` (VDS213). The alegauss hub needed
-a third to match its blue mark, so `alegauss.github.io/src/tone.css` restates the warm
-token set block for block on a navy ground, selected by `data-tone="navy"`. Its header
-says the file goes once the design system has a blue tone. Until then the hub cannot
-join `consumers.json`: the tone contract in `scripts/consumers.test.ts` requires every
-declared tone to be in the parity digest's `TONES`, and recording it as `cool` would
-misdescribe what it renders.
+The package half has landed: `navy` is a third tone in the preset, carried by
+`tokens.css` and `site.css`, drawn in `OG_CARD_TONES` and on the site reference, held to
+the contrast pairs and rendered by the parity digest. The Alegauss Hub is in
+`consumers.json` with `tone: "navy"`.
 
-Build: add `navy` as a third tone in the preset, taking the hub's values as the starting
-palette, so `tokens.css` and `site.css` carry it. Then:
+What is left is in the hub, and it needs a release that carries navy, since the hub pins
+2026.3.21:
 
-- `TONES` in `render-parity.parity.test.tsx` and `tone.parity.test.tsx` cover it
-  in both modes.
-- `OG_CARD_TONES` in `src/vite/og-card.ts` gains its dark-ground hex, which the
-  hub's `prerender.mjs` duplicates today.
-- `site-reference.mjs` draws it, so the contrast ratios are measured.
-- The hub then deletes `tone.css` and joins `consumers.json` as `marketing-site`
-  with `tone: "navy"`. That last step is the hub's own commit.
+- Bump the pin and delete `src/tone.css`. The hub's own lint lets that file
+  declare colours by name, so the exemption goes with it.
+- Drop the `NAVY` colour map in `scripts/prerender.mjs` and pass `tone: "navy"`
+  to `ogCardSvg` instead.
+- Compare the built pages before and after: the tokens are the same values, so
+  nothing should move.
+
+### §VDS223 Button classes lose to the link reset
+
+`site.css` resets links with `.vg-site a { color: inherit }`, which weighs (0,1,1). The
+button classes weigh (0,1,0), so `.vg-site-btn-primary { color: #fff }` loses whenever
+`SiteButton` renders an `<a>`, which is its usual form on a product page. On the light
+ground the label then takes the page's dark foreground over the brand gradient.
+
+The alegauss hub works around it in its own `tone.css` with `.vg-site
+a.vg-site-btn-primary { color: #fff }`, which is a product restating package CSS, the
+drift the package exists to prevent.
+
+Build: lower the reset with `:where(.vg-site) a`, so every component class wins over it
+without each one naming the anchor, and check the other button variants and the nav and
+footer links that relied on the reset. Hold it with a case in
+`site-plain.parity.test.tsx` that reads the computed colour of an anchor carrying
+`vg-site-btn-primary` on both grounds. Once released, the hub deletes its override.

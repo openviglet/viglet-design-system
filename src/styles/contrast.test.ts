@@ -73,10 +73,13 @@ describe.each(["light", "dark"] as const)("VDS92: every named token pair on the 
 /**
  * VDS213 — the warm tone is a second set of grounds, held to the same pairs. Warm
  * muted text on the light ground is the pairing most likely to fail, so the
- * check that it does not is the same one the cool grounds take.
+ * check that it does not is the same one the cool grounds take. VDS221 adds navy
+ * under the same pairs.
  */
-describe.each(["light", "dark"] as const)("VDS213: every named token pair, warm, on the %s ground", (ground) => {
-  const measured = measurePairs(sheets, ground, "warm")
+describe.each(
+  (["warm", "navy"] as const).flatMap((tone) => (["light", "dark"] as const).map((ground) => [tone, ground] as const)),
+)("VDS213: every named token pair, %s, on the %s ground", (tone, ground) => {
+  const measured = measurePairs(sheets, ground, tone)
   const cool = measurePairs(sheets, ground)
 
   it("measures the tone's own values, not the cool ones", () => {
@@ -92,7 +95,7 @@ describe.each(["light", "dark"] as const)("VDS213: every named token pair, warm,
   })
 
   it("keeps the brand badge's label legible on its own tint", () => {
-    const { tokens } = groundTokens(sheets, ground, "warm")
+    const { tokens } = groundTokens(sheets, ground, tone)
     const page = parseColour(tokens.get("--vg-background")!, tokens)
     const tint = parseColour(tokens.get("--vg-brand-bg")!, tokens)!
     const behind = luminance(tint.alpha < 1 ? over(tint, page) : tint)!

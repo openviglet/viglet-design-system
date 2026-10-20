@@ -4,7 +4,7 @@
    The rules behind `./site`, as plain CSS so a page needs no Tailwind
    build to take them. Every colour is a preset token, so the ground
    follows `data-tone` and the mode follows `data-theme`: set
-   `data-tone="warm"` on <html> for the clay family.
+   `data-tone="warm"` on <html> for the clay family, `navy` for a blue one.
 
    Import after the preset (or `./styles`):
      @import "@viglet/viglet-design-system/preset";

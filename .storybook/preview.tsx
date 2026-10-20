@@ -58,7 +58,7 @@ const preview: Preview = {
   globalTypes: {
     tone: {
       description: "Ground tone",
-      toolbar: { title: "Tone", icon: "paintbrush", items: ["cool", "warm"], dynamicTitle: true },
+      toolbar: { title: "Tone", icon: "paintbrush", items: ["cool", "warm", "navy"], dynamicTitle: true },
     },
   },
   initialGlobals: { tone: "cool" },

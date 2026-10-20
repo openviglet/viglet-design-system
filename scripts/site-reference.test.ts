@@ -3,7 +3,7 @@ import { join, resolve } from "node:path"
 import { describe, expect, it } from "vitest"
 
 import { AA_TEXT } from "./lib/contrast.mjs"
-import { HEIGHT, OUTPUT, WIDTH, measureCell, siteReference } from "./site-reference.mjs"
+import { HEIGHT, OUTPUT, TONES, WIDTH, measureCell, siteReference } from "./site-reference.mjs"
 
 /**
  * VDS218 — the product-site artboard is generated from the tokens, so what has
@@ -20,14 +20,14 @@ describe("docs/reference/site.dc.html", () => {
     expect(page, "the page is stale: run node scripts/site-reference.mjs").toBe(siteReference(preset))
   })
 
-  it("draws all four combinations of tone and ground", () => {
+  it("draws every combination of tone and ground", () => {
     const cells = [...page.matchAll(/class="cell" data-tone="(\w+)" data-ground="(\w+)"/g)].map((m) => `${m[1]}/${m[2]}`)
-    expect(cells).toEqual(["cool/light", "cool/dark", "warm/light", "warm/dark"])
+    expect(cells).toEqual(["cool/light", "cool/dark", "warm/light", "warm/dark", "navy/light", "navy/dark"])
   })
 
   it("prints every ratio the measurement makes, body and muted text included", () => {
     const printed = [...page.matchAll(/data-ratio="([\d.]+)"/g)].map((m) => m[1])
-    const measured = ["cool", "warm"].flatMap((tone) =>
+    const measured = TONES.flatMap((tone) =>
       ["light", "dark"].flatMap((ground) => {
         const cell = measureCell(preset, tone, ground)
         return [...cell.accents.map((a) => a.ratio), ...cell.ratios].map((r) => r.value.toFixed(2))

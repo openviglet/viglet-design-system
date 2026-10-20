@@ -13,16 +13,24 @@ import preset from "@/styles/preset.css?raw"
  * what the browser resolves, not what the stylesheet says:
  *
  *   * `cool` is today's output, value for value, with or without the attribute;
- *   * `warm` moves every token the tone governs, on both grounds;
+ *   * `warm` and `navy` (VDS221) each move every token a tone governs, on
+ *     both grounds;
  *   * it works from a wrapper as well as from the root, aliases included.
  */
 
-/** The tokens the warm block declares: what the tone governs, read from the preset. */
-const governed = (() => {
-  const open = preset.indexOf('[data-tone="warm"] {')
+/** Every tone the preset declares besides `cool`, which declares nothing. */
+const TONES = ["warm", "navy"] as const
+
+/** The tokens a tone's light block declares, read from the preset. */
+function declaredBy(tone: string): string[] {
+  const open = preset.indexOf(`[data-tone="${tone}"] {`)
+  if (open === -1) return []
   const body = preset.slice(open, preset.indexOf("}", open))
   return [...body.matchAll(/^\s*(--[\w-]+):/gm)].map((m) => m[1])
-})()
+}
+
+/** What a tone governs: the warm block's tokens, which every other tone matches. */
+const governed = declaredBy("warm")
 
 /** Every brand, footer and neutral token the cool :root declares. */
 const coolGround = (() => {
@@ -64,6 +72,10 @@ describe("VDS213: a tone above the accent", () => {
     expect(governed).toContain("--font-brand")
   })
 
+  it.each(TONES)("declares in %s exactly the tokens warm does", (tone) => {
+    expect([...declaredBy(tone)].sort()).toEqual([...governed].sort())
+  })
+
   it.each([false, true])("leaves cool exactly as it was, dark=%s", (dark) => {
     const none = underRoot(null, dark)
     const cool = underRoot("cool", dark)
@@ -73,33 +85,43 @@ describe("VDS213: a tone above the accent", () => {
     expect(none["--vg-footer-bg"]).not.toBe("")
   })
 
-  it.each([false, true])("moves every governed token under warm, dark=%s", (dark) => {
-    const cool = underRoot("cool", dark)
-    const warm = underRoot("warm", dark)
-    const unmoved = governed.filter((n) => {
-      if (n.startsWith("--vg-") === false && n !== "--font-brand") return false
-      if (INPUTS.test(n)) return false
-      if (dark && FOLLOWS_THE_ACCENT_ON_DARK.has(n)) return false
-      return warm[n] === cool[n]
-    })
-    expect(unmoved, "warm declares these and the browser resolved the cool value").toEqual([])
-    expect(warm["--font-brand"], "the display face resolved to nothing").toContain("Inter")
-    expect(warm["--font-brand"]).toBe(warm["--font-sans"])
+  it.each(TONES.flatMap((tone) => [false, true].map((dark) => [tone, dark] as const)))(
+    "moves every governed token under %s, dark=%s",
+    (tone, dark) => {
+      const cool = underRoot("cool", dark)
+      const toned = underRoot(tone, dark)
+      const unmoved = governed.filter((n) => {
+        if (n.startsWith("--vg-") === false && n !== "--font-brand") return false
+        if (INPUTS.test(n)) return false
+        if (dark && FOLLOWS_THE_ACCENT_ON_DARK.has(n)) return false
+        return toned[n] === cool[n]
+      })
+      expect(unmoved, `${tone} declares these and the browser resolved the cool value`).toEqual([])
+      expect(toned["--font-brand"], "the display face resolved to nothing").toContain("Inter")
+      expect(toned["--font-brand"]).toBe(toned["--font-sans"])
+    },
+  )
+
+  it("keeps warm and navy apart on both grounds", () => {
+    for (const dark of [false, true]) {
+      expect(underRoot("navy", dark)["--vg-background"]).not.toBe(underRoot("warm", dark)["--vg-background"])
+      expect(underRoot("navy", dark)["--vg-brand"]).not.toBe(underRoot("warm", dark)["--vg-brand"])
+    }
   })
 
-  it("keeps the focus ring on the accent on the dark ground, whatever the tone", () => {
-    const warm = underRoot("warm", true)
+  it.each(TONES)("keeps the focus ring on the accent on the dark ground under %s", (tone) => {
+    const toned = underRoot(tone, true)
     const cool = underRoot("cool", true)
-    for (const n of FOLLOWS_THE_ACCENT_ON_DARK) expect(warm[n], n).toBe(cool[n])
+    for (const n of FOLLOWS_THE_ACCENT_ON_DARK) expect(toned[n], n).toBe(cool[n])
   })
 
-  it("gives the dark ground its own warm set, wherever the mode sits", () => {
-    const sameElement = underRoot("warm", true)["--vg-background"]
-    expect(sameElement).not.toBe(underRoot("warm", false)["--vg-background"])
+  it.each(TONES)("gives the dark ground its own %s set, wherever the mode sits", (tone) => {
+    const sameElement = underRoot(tone, true)["--vg-background"]
+    expect(sameElement).not.toBe(underRoot(tone, false)["--vg-background"])
 
     // The mode below the tone, and the tone below the mode.
     const root = document.documentElement
-    root.dataset.tone = "warm"
+    root.dataset.tone = tone
     const darkInside = document.createElement("div")
     darkInside.className = "dark"
     document.body.appendChild(darkInside)
@@ -108,11 +130,11 @@ describe("VDS213: a tone above the accent", () => {
 
     delete root.dataset.tone
     root.classList.add("dark")
-    const warmInside = document.createElement("div")
-    warmInside.dataset.tone = "warm"
-    document.body.appendChild(warmInside)
-    expect(read(warmInside, ["--vg-background"])["--vg-background"]).toBe(sameElement)
-    warmInside.remove()
+    const tonedInside = document.createElement("div")
+    tonedInside.dataset.tone = tone
+    document.body.appendChild(tonedInside)
+    expect(read(tonedInside, ["--vg-background"])["--vg-background"]).toBe(sameElement)
+    tonedInside.remove()
   })
 
   it("re-keys a subtree, the back-compat aliases and the primary fill included", () => {

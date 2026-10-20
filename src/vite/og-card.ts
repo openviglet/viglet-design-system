@@ -20,6 +20,13 @@ export const OG_CARD_TONES = {
     brand: "#d97757",
     gradient: ["#d97757", "#e9a33a"],
   },
+  navy: {
+    background: "#0b1220",
+    foreground: "#e6edf7",
+    muted: "#93a4bc",
+    brand: "#4c9aff",
+    gradient: ["#2f8bff", "#7dd3fc"],
+  },
 } as const
 
 export type OgCardTone = keyof typeof OG_CARD_TONES

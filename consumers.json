@@ -65,8 +65,8 @@
     "Otherwise a plain page would have to join as an `offMachine` claim, the kind",
     "of unmeasured entry VDS129 made a failure. A site joins once it takes the",
     "package: the Claude Tray Site and the Winwright Site on `./site`, and",
-    "Winwright Docs on `./tokens.css` alone. The hub waits for a blue tone,",
-    "since it renders a local `navy` one the parity digest cannot hold.",
+    "Winwright Docs on `./tokens.css` alone. The Alegauss Hub joined with",
+    "`navy`, the third tone (VDS221), which the parity digest renders.",
     "",
     "VDS122 widened it a third time, to nine, and the two it added were invisible",
     "for a third reason: both take the package by caret range rather than pinning",
@@ -243,6 +243,18 @@
       "tone": "cool",
       "sourceRoots": ["src", "astro.config.mjs"],
       "entries": ["./tokens.css"]
+    },
+    {
+      "id": "alegauss-hub",
+      "name": "Alegauss Hub",
+      "package": "alegauss-hub",
+      "checkout": "../../../alegauss/alegauss.github.io",
+      "framework": "vite",
+      "chrome": "marketing-site",
+      "accent": "cool",
+      "tone": "navy",
+      "sourceRoots": ["src", "scripts", "vite.config.ts"],
+      "entries": ["./fonts", "./preset", "./site", "./site.css", "./vite"]
     }
   ]
 }

@@ -40,6 +40,8 @@ describe("tokens.css, derived from the preset", () => {
     ["cool", "dark"],
     ["warm", "light"],
     ["warm", "dark"],
+    ["navy", "light"],
+    ["navy", "dark"],
   ] as const)("resolves the %s tone on the %s ground exactly as the preset does", (tone, ground) => {
     const from = (css: string) => groundTokens([{ name: "x", css }], ground, tone).tokens
     const derived = from(tokens)

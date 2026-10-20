@@ -19,7 +19,10 @@ import { fileURLToPath } from "node:url"
 import { AA_TEXT, groundTokens, hex, luminance, over, parseColour, ratio } from "./lib/contrast.mjs"
 
 export const WIDTH = 1280
-export const HEIGHT = 940
+export const HEIGHT = 1360
+
+/** Every tone the preset declares, one row each (VDS221 added navy). */
+export const TONES = ["cool", "warm", "navy"]
 
 /**
  * Three accents a product card might carry: the package's own, and two a product
@@ -71,7 +74,7 @@ export function measureCell(preset, tone, ground) {
       brandBorder: paint("--vg-brand-border"),
       gradient,
     },
-    face: tone === "warm" ? "Inter" : "Plus Jakarta Sans",
+    face: tone === "cool" ? "Plus Jakarta Sans" : "Inter",
     accents,
     ratios: [
       measure("Body on the page", token("--vg-foreground"), page, true),
@@ -134,7 +137,7 @@ function cell(m) {
 
 /** The whole artboard, for the preset's current tokens. */
 export function siteReference(preset) {
-  const cells = ["cool", "warm"].flatMap((tone) => ["light", "dark"].map((ground) => measureCell(preset, tone, ground)))
+  const cells = TONES.flatMap((tone) => ["light", "dark"].map((ground) => measureCell(preset, tone, ground)))
   return `<!doctype html>
 <html>
 <head>
@@ -163,11 +166,11 @@ export function siteReference(preset) {
   <div style="padding:16px 24px 0">
     <div class="eyebrow" style="color:#1447e6">REFERENCE</div>
     <div style="display:flex;align-items:baseline;gap:12px;margin-top:4px">
-      <div style="font-size:21px;font-weight:600;letter-spacing:-0.015em">A product site on both tones and both grounds</div>
+      <div style="font-size:21px;font-weight:600;letter-spacing:-0.015em">A product site on every tone and both grounds</div>
       <div style="font-size:12.5px;color:#696969">Every colour is a token and every ratio is measured from it. Red marks a pair under 4.5:1.</div>
     </div>
   </div>
-  <div style="flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:16px;padding:14px 24px 20px">${cells.map(cell).join("")}
+  <div style="flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(${TONES.length},1fr);gap:16px;padding:14px 24px 20px">${cells.map(cell).join("")}
   </div>
 </div>
 </x-dc>

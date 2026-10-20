@@ -21,7 +21,7 @@ prose. Where the two disagree, the contract is right and an artboard is stale.
 | The shapes | `panel.dc.html`         | the plain card with no heading, and why it has none                       |
 | The shapes | `grounds.dc.html`       | the same components on both grounds, with the ratios                      |
 | The shapes | `split.dc.html`         | a two-pane screen: who scrolls, who owns the ratio, and phone width       |
-| The shapes | `site.dc.html`          | a product site on both tones and both grounds, every ratio measured       |
+| The shapes | `site.dc.html`          | a product site on every tone and both grounds, every ratio measured       |
 
 `canvas.json` places them and names the two pages.
 
