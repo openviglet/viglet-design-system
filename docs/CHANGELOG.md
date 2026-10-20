@@ -322,3 +322,5 @@
   checked **cool output is identical to having no tone** The same test compares every governed token under data-tone=cool and under no attribute.
   checked **The parity digest carries each tone in use** render-parity declares TONES and consumers.test fails if a consumer's tone is missing from it.
 - ✅ **VDS214** **No product-site layer, so eight alegauss sites each keep their own copy of one template** — ./site and ./site.css ship the shared chrome: SSR-safe, copy as props, styled from the tone tokens; adopting it in a product site is VDS220 (design recorded in `README.md`).
+- ✅ **VDS215** **Each product site keeps its own prerender.mjs and og-image.mjs, so a build fix lands eight times** — ./vite ships prerenderSite (pages, twins, manifest, sitemap, robots) and ogCardSvg with renderOgCard; adopting them in a site is VDS220 (design recorded in `README.md`).
+  checked **The prerender and OG helpers are covered by the package's own tests** prerender.test.ts and og-card.test.ts run in a node environment against a temporary directory and a real resvg raster.

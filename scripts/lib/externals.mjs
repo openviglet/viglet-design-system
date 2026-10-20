@@ -34,6 +34,10 @@ export const PEER_EXTERNALS = [
   "xlsx",
   // The `./vite` plugin entry imports types/runtime from Vite itself.
   "vite",
+  // VDS215 — `renderOgCard` in `./vite` rasterises with it. An optional peer,
+  // imported only when the helper is called, so a site that draws no card
+  // installs no native binary.
+  "@resvg/resvg-js",
 ]
 
 /**
@@ -67,6 +71,9 @@ export const PREFIX_EXTERNALS = [
   "@iconify/react/",
   "@dnd-kit/",
   "date-fns/",
+  // VDS215 — Node's builtins, which the `./vite` build helpers run on. Left to
+  // the runtime rather than shimmed for a browser they never reach.
+  "node:",
 ]
 
 /** True when the consumer supplies this module rather than this package. */

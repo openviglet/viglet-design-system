@@ -393,7 +393,7 @@ directive of its own:
 | Entry | |
 |---|---|
 | `.`, `./bento`, `./router`, `./floating-formulas-bg`, `./i18n`, `./site` | client — they reach React state, context or a browser API |
-| `./assets`, `./vite` | server-renderable — logo data, and a build-time Vite plugin |
+| `./assets`, `./vite` | server-renderable — logo data, and a build-time Vite plugin with the site build helpers |
 
 `./i18n` is the one worth pointing at: it looks pure, and it pulls
 `i18next-browser-languagedetector`. `./assets` staying unmarked is deliberate —
@@ -1173,6 +1173,37 @@ stored choice, else the OS preference), and
 `SiteThemeToggle` flips the mode at runtime under the same key. `SiteSponsor`
 renders a `sponsor.json` declaration (`SponsorDeclaration` is its type), with
 the logos resolved against `assetBase`.
+
+The build steps come from `./vite`, so a site's `build` script names helpers
+instead of carrying its own `prerender.mjs` and `og-image.mjs`:
+
+```js
+// scripts/prerender.mjs, after `vite build` and `vite build --ssr src/entry-server.tsx`
+import { prerenderSite } from "@viglet/viglet-design-system/vite"
+import { render, renderStatic, ROUTE_META, canonicalUrl, outputDir, OG_IMAGE } from "../dist-server/entry-server.js"
+import { htmlToMarkdown } from "./markdown.mjs"
+
+prerenderSite({
+  distDir: "dist",
+  routes: ROUTE_META,
+  render, canonicalUrl, outputDir,
+  ogImage: OG_IMAGE,
+  twin: (path) => htmlToMarkdown(renderStatic(path)),
+  manifest: { name: "Tool", base: "/tool/", llms: "llms.txt" },
+  git: { cwd: "." },
+})
+```
+
+`prerenderSite` fills the client build's `index.html` once per route. It
+replaces the title, the description and the `</head>` anchor, and throws when
+the template no longer has one, so a drifted template fails the build. Beside
+each page it writes the Markdown twin, plus `manifest.json`, `sitemap.xml`
+(`lastmod` from the last git commit under `src`, `public` and `index.html`)
+and `robots.txt`. The same input builds the same bytes.
+`ogCardSvg({ title, titleAccent, line, eyebrow, mark, tone, accent })` draws a
+1200 × 630 card on a tone's dark ground, and `renderOgCard({ svg, out })`
+rasterises it. That one needs `@resvg/resvg-js`, an optional peer, so add it to
+the site's devDependencies.
 
 ## Contributing
 

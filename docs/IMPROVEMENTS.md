@@ -183,22 +183,6 @@ prop does not fail a build that spreads props.
 
 ## Block H — Product sites on the package
 
-### §VDS215 Prerender and OG cards in ./vite
-
-Every React product site's `build` script runs the same chain: `vite build`,
-`scripts/og-image.mjs` (resvg), an SSR build of `entry-server.tsx`, then
-`scripts/prerender.mjs` (node-html-parser). Each site holds its own copy of both
-scripts.
-
-The change adds two helpers to `./vite`, which already ships `boot-loader`: a prerender
-step that takes the routes and the SSR entry, and an OG card generator that takes a
-title, a line and an accent and renders with the tone's tokens. A site's build script
-then names helpers rather than carrying files.
-
-Done when one product site builds with no `prerender.mjs` or `og-image.mjs` of its own,
-its output is byte-identical apart from asset hashes, and the helpers are covered by the
-package's own tests.
-
 ### §VDS216 The site layer as plain CSS
 
 `preset.css` resolves only through Tailwind, and `dist/viglet-design-system.css` is 221
@@ -252,31 +236,29 @@ marked on the page itself.
 
 ### §VDS220 A product site on the site layer
 
-VDS214 shipped `./site` and `./site.css` in the package: `SiteNav`, `SiteHero`,
-`SiteSectionHead`, `SiteFeatureIndex`, `SiteFooter`, `SiteSponsor`, `SiteButton`,
-`SiteCopyButton`, `SiteThemeToggle` (with `createSiteTheme` and `siteThemeScript`) and
-`SiteRich`. They are tested by a server render in a node environment, which checks that
-every word given to them is in the HTML. No product site renders from them yet, so the
-layer has never been checked against a real page.
+VDS214 shipped `./site` and `./site.css`, and VDS215 shipped the build steps in `./vite`
+(`prerenderSite`, `ogCardSvg`, `renderOgCard`). Both are tested inside the package only:
+a server render in a node environment, and a prerender into a temporary directory. No
+product site uses either yet.
 
 Expected: one of the eight sites (claude-tray is the closest to the template) takes the
-release that carries `./site`. It deletes `Nav.tsx`, `Hero.tsx`, `Footer.tsx`,
-`FeatureIndex.tsx`, `ThemeToggle.tsx`, `lib/theme.ts`, `CopyButton.tsx` and `Rich.tsx`,
-and renders those parts from the package, with `data-tone="warm"` on `<html>` and
-`class="vg-site"` on `<body>`. Its prerendered HTML holds the same text as before: diff
-the text of each route's output before and after.
+release that carries them. It deletes its `Nav`, `Hero`, `Footer`, `FeatureIndex`,
+`ThemeToggle`, `CopyButton`, `Rich`, `lib/theme.ts`, `scripts/prerender.mjs` and
+`scripts/og-image.mjs`, renders from `./site` with `data-tone="warm"` on `<html>` and
+`class="vg-site"` on `<body>`, and builds through the helpers. Diff the text of each
+route's output before and after, and the manifest, sitemap and robots byte for byte.
 
-Differences to expect at adoption, all by design:
+Differences to expect, all by design:
 
-- Radii follow the package's closed scale (control, panel, full), so the 18 px cards
-  become 10 px.
-- Every label is a required prop (`copyLabel`, `copiedLabel`, the toggle's `label`,
-  `goLabel`, `moreLabel`), because the i18n literal gate forbids English defaults in
-  a shipped component.
-- The sponsor marks carry an empty `alt`, since each sits beside its name.
-- The pre-paint script sets `data-theme` from the OS when nothing is stored, since the
-  preset has no dark media query.
+- Radii follow the closed scale, so the 18 px cards become 10 px.
+- Every label is a required prop, because the i18n literal gate forbids English
+  defaults.
+- Sponsor marks carry an empty `alt`, since each sits beside its name.
+- The pre-paint script states the OS preference, since the preset has no dark media
+  query.
+- A site whose card is a hand-drawn template (freewilly, polyweave) may keep it and
+  use `renderOgCard` alone.
 
-Left in the sites, as the first cut said: the house `Ad` slot (japode-ads, five sites),
-`NonGoals` and `RawSvg` (four each), and each product's decoration, which `SiteHero` and
-`SiteFooter` take as children.
+Left in the sites: the house `Ad` slot, `NonGoals`, `RawSvg`, the Markdown converter
+(passed to `prerenderSite` as `twin`) and each product's decoration, which `SiteHero`
+and `SiteFooter` take as children.
