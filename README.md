@@ -1165,7 +1165,24 @@ import sponsor from "./sponsor.json"
 ```
 
 The styles are `./site.css`, plain CSS over the preset tokens, so the page
-needs the preset and no Tailwind build. Put `class="vg-site"` on `<body>` for
+needs the tokens and no Tailwind build.
+
+**A page with no build at all** links two files: `./tokens.css`, which is the
+preset made readable by a browser (the `--vg-*` properties, both grounds and
+the tones, with the faces in `:root`), and `./site.css`. Pin the version:
+
+```html
+<html data-tone="warm">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@viglet/viglet-design-system@2026.3.21/dist/tokens.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@viglet/viglet-design-system@2026.3.21/dist/site.css">
+  <body class="vg-site"><nav class="vg-site-nav">…</nav></body>
+</html>
+```
+
+The markup is the components' output, class for class: render it once, or copy
+it from the Storybook story. `tokens.css` is generated from `preset.css` at
+build time, so the two cannot disagree. The pair is about 5 KB gzipped, which
+`size-budget.json` records as `site`. Put `class="vg-site"` on `<body>` for
 the face, ground and glow. For the clay family, set `data-tone="warm"` on
 `<html>` ([tones](#design-tokens)). The mode is `data-theme`:
 `siteThemeScript(key)` returns the pre-paint script to inline in `<head>` (the

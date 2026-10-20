@@ -183,23 +183,6 @@ prop does not fail a build that spreads props.
 
 ## Block H — Product sites on the package
 
-### §VDS216 The site layer as plain CSS
-
-`preset.css` resolves only through Tailwind, and `dist/viglet-design-system.css` is 221
-KB of utilities for the React components. A plain HTML page has nothing it can link.
-Three of the alegauss pages are exactly that: commitclerk's `docs/index.html`, the usage
-simulator's `index.html` and the time study's `docs/index.html`, each with its CSS
-inline.
-
-The change is two compiled entries: `./tokens.css`, the `--vg-*` properties including
-the tones, and `./site.css`, the `./site` layer (VDS214) as classes. A page links them
-from jsDelivr at a pinned version. `preset.css` maps from the same token source, so the
-two cannot drift. `site.css` gets its own line in `size-budget.json`, because a page
-that links one stylesheet pays for all of it.
-
-Done when a plain page that links both files and sets `data-tone` and the accent renders
-the nav, hero, card, footer and sponsor with no CSS of its own, and the budget holds.
-
 ### §VDS217 Counting product sites
 
 The eight React product sites import the package, so `viglet-ds-consumer-entries` can

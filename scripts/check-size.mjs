@@ -152,6 +152,14 @@ export const FIXTURES = {
     bentoExpected: false,
     mustEmbedFonts: true,
   },
+  // VDS216 — what a page with no build links: the tokens and the site layer, as
+  // two stylesheets from a CDN. That page pays for every byte of both, so they
+  // get a number of their own rather than hiding inside `./styles`.
+  site: {
+    source: [`import "${PKG}/tokens.css";`, `import "${PKG}/site.css";`, "globalThis.__vdsProbe = 1;"].join("\n"),
+    bentoExpected: false,
+    i18nExpected: false,
+  },
 }
 
 /**
