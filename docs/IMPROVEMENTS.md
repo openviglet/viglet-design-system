@@ -200,32 +200,3 @@ The change has three parts:
 
 Done when every alegauss site appears with its entries counted from source or HTML, and
 removing the package from any one of them fails the census.
-
-### §VDS220 A product site on the site layer
-
-VDS214 shipped `./site` and `./site.css`, and VDS215 shipped the build steps in `./vite`
-(`prerenderSite`, `ogCardSvg`, `renderOgCard`). Both are tested inside the package only:
-a server render in a node environment, and a prerender into a temporary directory. No
-product site uses either yet.
-
-Expected: one of the eight sites (claude-tray is the closest to the template) takes the
-release that carries them. It deletes its `Nav`, `Hero`, `Footer`, `FeatureIndex`,
-`ThemeToggle`, `CopyButton`, `Rich`, `lib/theme.ts`, `scripts/prerender.mjs` and
-`scripts/og-image.mjs`, renders from `./site` with `data-tone="warm"` on `<html>` and
-`class="vg-site"` on `<body>`, and builds through the helpers. Diff the text of each
-route's output before and after, and the manifest, sitemap and robots byte for byte.
-
-Differences to expect, all by design:
-
-- Radii follow the closed scale, so the 18 px cards become 10 px.
-- Every label is a required prop, because the i18n literal gate forbids English
-  defaults.
-- Sponsor marks carry an empty `alt`, since each sits beside its name.
-- The pre-paint script states the OS preference, since the preset has no dark media
-  query.
-- A site whose card is a hand-drawn template (freewilly, polyweave) may keep it and
-  use `renderOgCard` alone.
-
-Left in the sites: the house `Ad` slot, `NonGoals`, `RawSvg`, the Markdown converter
-(passed to `prerenderSite` as `twin`) and each product's decoration, which `SiteHero`
-and `SiteFooter` take as children.

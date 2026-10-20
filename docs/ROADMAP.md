@@ -10,7 +10,7 @@
 
 ## Block H — Product sites on the package
 
-- ⏳ **VDS217** (deps: VDS220 ⏸) **No alegauss site is in consumers.json, so the census holds none of them to the entries it takes** — The hub and the eleven product sites join consumers.json with tone and accent once they take the package, so removing it from any one fails the census. → §VDS217
+- ⏳ **VDS217** (deps: VDS220 ✅) **No alegauss site is in consumers.json, so the census holds none of them to the entries it takes** — The hub and the eleven product sites join consumers.json with tone and accent once they take the package, so removing it from any one fails the census. → §VDS217
 
 ## Done when — VDS185
 
@@ -37,14 +37,6 @@
 - **A Vite consumer that imports only the root entry builds with no xlsx installed** A
   scratch Vite app importing the root of the built dist, with xlsx absent, completes
   vite build.
-
-## Done when — VDS220
-
-- **One product site renders its chrome from ./site with its own copies deleted** The
-  site's src no longer holds Nav, Hero, Footer, FeatureIndex, ThemeToggle, CopyButton or
-  Rich.
-- **Its prerendered HTML holds the same text as before** The text of each route's output
-  is diffed before and after the switch.
 
 ## Done when — VDS217
 

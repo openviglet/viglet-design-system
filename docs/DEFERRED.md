@@ -22,5 +22,3 @@
 - ⏸ **VDS208** (deps: —) **BentoListPage still accepts headerAction, a deprecated alias for toolbar promised for one release** — set aside (Waits for the consumers to pass toolbar.): Two props for one slot invite a page to pass both, and the alias outlives its promise unless a line tracks its removal. → §VDS208
 
 ## Block H — Product sites on the package
-
-- ⏸ **VDS220** (deps: VDS214 ✅) **No product site renders its chrome from ./site yet, so the layer is unproven against a real page** — set aside (a release with ./site, then a commit in a site repo): Each site still carries its own copies, so no prerendered page has been diffed. → §VDS220
