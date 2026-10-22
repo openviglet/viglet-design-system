@@ -1,5 +1,6 @@
 import { renderToStaticMarkup } from "react-dom/server"
 import { afterAll, beforeAll, describe, expect, it } from "vitest"
+import { page } from "vitest/browser"
 
 import preset from "@/styles/preset.css?raw"
 import siteCss from "./site.css?raw"
@@ -93,6 +94,34 @@ describe("the site layer on a page with no build", () => {
   ] as const)("paints the primary button's label white under %s on the %s ground", (tone, theme) => {
     under(tone, theme)
     expect(css("a.vg-site-btn-primary").color).toBe("rgb(255, 255, 255)")
+  })
+
+  // VDS225 — a 300px grid track cannot shrink, so on a 320px phone the single
+  // card ran to 324px: past the gutter, and past the screen wherever .vg-site's
+  // overflow clip is not the scroller. Measured on the card, which the clip hides.
+  it("fits the feature index on a 320px phone", async () => {
+    under("warm", "light")
+    const phone = document.createElement("div")
+    phone.innerHTML = renderToStaticMarkup(
+      <div className="vg-site">
+        <SiteFeatureIndex title="Pages" goLabel="Read" items={[{ href: "/a/", heading: "A", description: "About A." }]} />
+      </div>,
+    )
+    host.hidden = true
+    document.body.style.margin = "0"
+    document.body.appendChild(phone)
+    try {
+      await page.viewport(320, 640)
+      const index = phone.querySelector<HTMLElement>(".vg-site-feature-index")!
+      expect(document.documentElement.clientWidth).toBe(320)
+      expect(index.scrollWidth).toBe(index.clientWidth)
+      expect(phone.querySelector(".vg-site-feature-card")!.getBoundingClientRect().right).toBe(320 - 24)
+      expect(document.documentElement.scrollWidth).toBe(320)
+    } finally {
+      phone.remove()
+      host.hidden = false
+      document.body.style.margin = ""
+    }
   })
 
   it("moves with the tone: cool is the preset's ground and face", () => {

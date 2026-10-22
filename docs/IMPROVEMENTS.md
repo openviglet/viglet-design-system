@@ -217,27 +217,6 @@ What is left is in the hub, and it needs a release that carries navy, since the 
 - Compare the built pages before and after: the tokens are the same values, so
   nothing should move.
 
-### §VDS225 A feature index that fits a 320px phone
-
-`.vg-site-feature-index` lays its cards out as `repeat(auto-fit, minmax(300px, 1fr))`. A
-minmax track cannot shrink below its minimum, so on a viewport narrower than 300px plus
-the wrap's 48px of gutter the single card holds the document wider than the screen. On a
-320px phone, still sold, the page measures 324px and scrolls sideways on every route
-that draws the index.
-
-FreeWilly found and fixed this in its own copy (its DD233), then had to restate the fix
-as a local override when it moved onto `./site` (its DD285): `minmax(min(300px, 100%),
-1fr)`. That reads as "300 unless the column has less", which is what auto-fit was
-already trying to say, and it changes nothing at any width where the 300px track fits.
-
-The fix goes in `site.css`. The site layer's tests gain a case rendering
-`SiteFeatureIndex` in a 320px viewport and asserting `scrollWidth` equals the viewport
-width. The plain-page parity test should cover the same markup, since a page with no
-build takes this rule from `site.css` too.
-
-On ship: tell the FreeWilly site to drop its `.vg-site-feature-index` override in
-`site/src/index.css` once it installs the release carrying this.
-
 ### §VDS226 Marks that are not tiles
 
 `site.css` sizes every product mark as a tile: `.vg-site-brand img` at 32 by 32,
