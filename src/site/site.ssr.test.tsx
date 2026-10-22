@@ -127,6 +127,22 @@ describe("the site layer, rendered where there is no DOM", () => {
     expect(html).toMatch(/class="vg-site-hero-actions" data-twin="omit"/)
   })
 
+  // VDS227 — what a product shows under its call to action sits between the
+  // actions and the meta line, and is content: a Markdown twin keeps it.
+  it("places the feature between the actions and the meta line, outside the omitted block", () => {
+    const hero = renderToString(
+      <SiteHero title="T" actions={<a href="#">Install</a>} feature={<pre>agent session</pre>} meta={["No setup"]} pills={["Windows 11"]} />,
+    )
+    const at = (marker: string) => hero.indexOf(marker)
+    expect(at('class="vg-site-hero-actions"')).toBeLessThan(at('class="vg-site-hero-feature"'))
+    expect(at('class="vg-site-hero-feature"')).toBeLessThan(at('class="vg-site-hero-meta"'))
+    expect(hero).toContain('<div class="vg-site-hero-feature"><pre>agent session</pre></div>')
+    // The omitted block closes before the feature opens.
+    const omitted = hero.slice(at('data-twin="omit"'), at('class="vg-site-hero-feature"'))
+    expect(omitted).not.toContain("agent session")
+    expect(renderToString(<SiteHero title="T" />)).not.toContain("vg-site-hero-feature")
+  })
+
   // VDS226 — a mark that is not a tile opts out of the square, in all three places.
   it("draws the brand and hero images as tiles unless told they are marks", () => {
     expect(html).not.toContain("vg-site-mark")

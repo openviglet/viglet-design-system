@@ -10,8 +10,6 @@
 
 ## Block H — Product sites on the package
 
-- 📋 **VDS227** (deps: —) **SiteHero has no slot between the actions and the meta line, so a site redraws the meta and pills itself** — FreeWilly's session sits under its call to action, so it copies the shared meta and pill markup back into the product to keep that order. → §VDS227
-
 ## Done when — VDS185
 
 - **The dock rests at the rail's foot and opens as an anchored popover** A reserved slot

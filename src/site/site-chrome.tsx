@@ -94,12 +94,14 @@ export function SiteNav({
 
 /**
  * The landing hero: the product tile (or mark, by `icon.logoShape`), a badge, a two-part headline whose second
- * half takes the brand gradient, the lead sentence, the actions, a meta line and
- * the pills. `children` renders after the content, inside the header, for a
- * decoration the product draws itself.
+ * half takes the brand gradient, the lead sentence, the actions, the `feature`,
+ * a meta line and the pills. `children` renders after the content, inside the
+ * header, for a decoration the product draws itself.
  *
  * The actions carry `data-twin="omit"`: a Markdown twin made from this markup
  * drops the call to action, which converts a reader and costs an agent words.
+ * The `feature` does not: what a product shows under its call to action (a
+ * session, a demo) is content, and the twin keeps it.
  */
 export function SiteHero({
   icon,
@@ -108,6 +110,7 @@ export function SiteHero({
   titleAccent,
   sub,
   actions,
+  feature,
   meta = [],
   pills = [],
   id = "top",
@@ -119,6 +122,7 @@ export function SiteHero({
   titleAccent?: ReactNode
   sub?: ReactNode
   actions?: ReactNode
+  feature?: ReactNode
   meta?: readonly ReactNode[]
   pills?: readonly ReactNode[]
   id?: string
@@ -150,6 +154,7 @@ export function SiteHero({
             {actions}
           </div>
         ) : null}
+        {feature ? <div className="vg-site-hero-feature">{feature}</div> : null}
         {meta.length > 0 ? (
           <div className="vg-site-hero-meta">
             {meta.map((item, i) => (

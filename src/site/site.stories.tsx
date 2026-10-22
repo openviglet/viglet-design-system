@@ -59,6 +59,29 @@ export const MarkNotTile: StoryObj = {
   },
 }
 
+/**
+ * VDS227 — `feature` is the place under the call to action and above the meta
+ * line, for what the page argues with: a session, a demo, a screenshot.
+ */
+export const HeroFeature: StoryObj = {
+  render: () => (
+    <div className="vg-site">
+      <SiteHero
+        title="Says what it does,"
+        titleAccent="in one line."
+        actions={<SiteButton href="#install">Install</SiteButton>}
+        feature={
+          <pre style={{ textAlign: "left", maxWidth: 560, margin: "0 auto" }}>
+            <code>{"> example run\nReading config.json\nDone in 0.4 s"}</code>
+          </pre>
+        }
+        meta={["No API key", "No admin rights"]}
+        pills={[<SiteRich key="a" runs={[{ b: "Burn rate" }, " projected"]} />]}
+      />
+    </div>
+  ),
+}
+
 export const Page: StoryObj = {
   render: () => (
     <div className="vg-site">

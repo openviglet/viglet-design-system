@@ -1216,6 +1216,11 @@ stored choice, else the OS preference), and
 renders a `sponsor.json` declaration (`SponsorDeclaration` is its type), with
 the logos resolved against `assetBase`.
 
+`SiteHero` draws, in order, the icon, the badge, the headline, the sub, the
+actions, `feature`, the meta line and the pills. `feature` is the place for what
+the page argues with right under its call to action (a session transcript, a
+demo), and unlike the actions it stays in a Markdown twin.
+
 The brand logo and the hero icon draw as a square app tile with rounded corners.
 A mark with its own silhouette (taller than it is wide, say) passes
 `logoShape: "mark"` on the brand or on `SiteHero`'s `icon`. The image then keeps

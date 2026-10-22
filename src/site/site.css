@@ -317,6 +317,10 @@
   flex-wrap: wrap;
   margin-bottom: 18px;
 }
+/* What a product shows under its call to action (feature); spacing only */
+.vg-site-hero-feature {
+  margin: 34px auto 26px;
+}
 .vg-site-hero-meta {
   display: flex;
   gap: 22px;

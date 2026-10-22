@@ -216,29 +216,3 @@ What is left is in the hub, and it needs a release that carries navy, since the 
   to `ogCardSvg` instead.
 - Compare the built pages before and after: the tokens are the same values, so
   nothing should move.
-
-### §VDS227 A hero slot under the call to action
-
-`SiteHero` renders, in order and inside its wrap: the icon, the badge, the headline, the
-sub, the actions, the meta line and the pills. `children` renders after the wrap, for a
-decoration. Nothing can go between the actions and the meta line.
-
-FreeWilly needs exactly that place: its hero shows a scripted agent session (an eyebrow
-and a transcript) right under the call to action and above the meta line, and the order
-is the argument of the page. To keep it, the site passes no `meta` or `pills` and
-redraws them itself inside `children`, in a second `vg-site-wrap`, with the layer's own
-class names. So the shared meta and pill markup is copied back into a product, which is
-what the layer exists to stop, and a change to how `SiteHero` draws them will not reach
-that page.
-
-Proposal: a `feature?: ReactNode` prop, rendered inside the wrap between the actions and
-the meta line, in a `vg-site-hero-feature` block with no styling beyond spacing. Not
-`data-twin="omit"`: what goes there is content a Markdown twin should keep (FreeWilly's
-twin test asserts the session is in it), unlike the actions.
-
-Tests: render with `feature` and assert its position between `.vg-site-hero-actions` and
-`.vg-site-hero-meta`, and that it survives `renderToStaticMarkup` outside any omit
-block.
-
-On ship: tell the FreeWilly site to pass the session as `feature`, hand `meta` and
-`pills` back to `SiteHero`, and drop the hand-drawn tail in `pages/Landing.tsx`.
