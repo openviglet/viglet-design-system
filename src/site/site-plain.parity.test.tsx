@@ -124,6 +124,39 @@ describe("the site layer on a page with no build", () => {
     }
   })
 
+  // VDS226 — a mark taller than it is wide keeps its proportions: the tile's
+  // square, corner and box-shadow are the tile's, not every image's.
+  it("draws a tall mark at its own width, unrounded, with a shadow that follows it", async () => {
+    under("warm", "light")
+    const tall = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="20" height="40"><rect width="20" height="40"/></svg>')}`
+    const brand = { href: "/", name: "Tool", logo: tall, logoShape: "mark" as const }
+    const marked = document.createElement("div")
+    marked.innerHTML = renderToStaticMarkup(
+      <div className="vg-site">
+        <SiteNav brand={brand} />
+        <SiteHero icon={{ src: tall, alt: "Tool", logoShape: "mark" }} title="T" />
+        <SiteFooter brand={brand} />
+      </div>,
+    )
+    document.body.appendChild(marked)
+    try {
+      await Promise.all([...marked.querySelectorAll("img")].map((img) => img.decode()))
+      const box = (selector: string) => {
+        const img = marked.querySelector(selector)!
+        return { ...img.getBoundingClientRect().toJSON(), style: getComputedStyle(img) }
+      }
+      const nav = box(".vg-site-brand img")
+      expect([nav.width, nav.height, nav.style.borderRadius]).toEqual([16, 32, "0px"])
+      const foot = box(".vg-site-foot-brand img")
+      expect([foot.width, foot.height, foot.style.borderRadius]).toEqual([15, 30, "0px"])
+      const hero = box(".vg-site-hero-icon")
+      expect([hero.width, hero.height, hero.style.borderRadius, hero.style.boxShadow]).toEqual([52, 104, "0px", "none"])
+      expect(hero.style.filter).toMatch(/^drop-shadow/)
+    } finally {
+      marked.remove()
+    }
+  })
+
   it("moves with the tone: cool is the preset's ground and face", () => {
     under("cool", "light")
     // Chromium reports an oklch() token in its own space rather than as rgb().

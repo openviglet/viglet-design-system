@@ -10,7 +10,6 @@
 
 ## Block H — Product sites on the package
 
-- 📋 **VDS226** (deps: —) **The brand and hero marks are forced into a rounded square, which squashes a mark that is not a tile** — A product whose mark carries its own silhouette has to undo the size, the radius and the hero's box-shadow in its own stylesheet. → §VDS226
 - 📋 **VDS227** (deps: —) **SiteHero has no slot between the actions and the meta line, so a site redraws the meta and pills itself** — FreeWilly's session sits under its call to action, so it copies the shared meta and pill markup back into the product to keep that order. → §VDS227
 
 ## Done when — VDS185

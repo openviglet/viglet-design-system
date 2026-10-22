@@ -126,4 +126,19 @@ describe("the site layer, rendered where there is no DOM", () => {
   it("marks the hero's call to action for a Markdown twin to drop", () => {
     expect(html).toMatch(/class="vg-site-hero-actions" data-twin="omit"/)
   })
+
+  // VDS226 — a mark that is not a tile opts out of the square, in all three places.
+  it("draws the brand and hero images as tiles unless told they are marks", () => {
+    expect(html).not.toContain("vg-site-mark")
+    const brand = { href: "/", name: "Tool", logo: "/orca.png", logoShape: "mark" as const }
+    const marked = renderToString(
+      <>
+        <SiteNav brand={brand} />
+        <SiteHero icon={{ src: "/orca.png", alt: "Tool", logoShape: "mark" }} title="T" />
+        <SiteFooter brand={brand} />
+      </>,
+    )
+    expect(marked.match(/<img class="vg-site-mark"/g)).toHaveLength(2)
+    expect(marked).toContain('class="vg-site-hero-icon vg-site-mark"')
+  })
 })

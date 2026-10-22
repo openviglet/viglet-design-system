@@ -217,33 +217,6 @@ What is left is in the hub, and it needs a release that carries navy, since the 
 - Compare the built pages before and after: the tokens are the same values, so
   nothing should move.
 
-### §VDS226 Marks that are not tiles
-
-`site.css` sizes every product mark as a tile: `.vg-site-brand img` at 32 by 32,
-`.vg-site-foot-brand img` at 30 by 30 and `.vg-site-hero-icon` at 104 by 104, each with
-a corner radius, and the hero icon with a box-shadow. That is right for a square app
-icon like Claude Code Tray's and wrong for a mark that carries its own silhouette.
-FreeWilly's orca is taller than it is wide: forced into a square it is squashed, the
-radius rounds nothing, and the box-shadow hangs a rectangle behind a shape that has
-none.
-
-FreeWilly undoes all three locally (`width: auto`, no radius, a `drop-shadow` filter
-that follows the alpha channel). A second product with a non-square mark would copy the
-same overrides.
-
-Proposal: `SiteBrand` gains `logoShape?: "tile" | "mark"`, defaulting to `tile`, and
-`SiteHero`'s `icon` takes the same field. `mark` puts a `vg-site-mark` class on the
-image: sized by height only (`width: auto`), no radius, and in the hero a `filter:
-drop-shadow(...)` in place of the box-shadow. `SiteNav` and `SiteFooter` pass it through
-from the brand. The tile stays the default, so nothing changes for a site that does not
-ask.
-
-Tests: render each component with both shapes and assert the class, and a plain-page
-parity shot of a tall mark.
-
-On ship: tell the FreeWilly site to pass `logoShape: "mark"` and delete its
-`.vg-site-brand img`, `.vg-site-foot-brand img` and `.vg-site-hero-icon` overrides.
-
 ### §VDS227 A hero slot under the call to action
 
 `SiteHero` renders, in order and inside its wrap: the icon, the badge, the headline, the

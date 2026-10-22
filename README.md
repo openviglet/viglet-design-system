@@ -1216,6 +1216,13 @@ stored choice, else the OS preference), and
 renders a `sponsor.json` declaration (`SponsorDeclaration` is its type), with
 the logos resolved against `assetBase`.
 
+The brand logo and the hero icon draw as a square app tile with rounded corners.
+A mark with its own silhouette (taller than it is wide, say) passes
+`logoShape: "mark"` on the brand or on `SiteHero`'s `icon`. The image then keeps
+its proportions at the tile's height, loses the corner radius, and the hero's
+shadow follows its outline. On a page with no build, that is the `vg-site-mark`
+class on the `<img>`.
+
 The build steps come from `./vite`, so a site's `build` script names helpers
 instead of carrying its own `prerender.mjs` and `og-image.mjs`:
 

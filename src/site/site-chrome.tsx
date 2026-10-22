@@ -6,13 +6,23 @@ export interface SiteLink {
   label: string
 }
 
+/**
+ * How a product's image is drawn: `tile` is a square app icon, sized square
+ * with a corner radius; `mark` is a shape that carries its own silhouette,
+ * sized by height alone, unrounded, its shadow following the alpha channel.
+ */
+export type SiteLogoShape = "tile" | "mark"
+
 /** The product's mark and name, linking home. */
 export interface SiteBrand {
   href: string
   name: string
-  /** A square tile; drawn at 32 px with a corner radius. */
+  /** Drawn at 32 px; a square tile with a corner radius unless `logoShape` is `mark`. */
   logo?: string
+  logoShape?: SiteLogoShape
 }
+
+const shapeClass = (shape: SiteLogoShape | undefined) => (shape === "mark" ? "vg-site-mark" : undefined)
 
 /**
  * A call to action drawn as a button: `primary` is the brand fill, `ghost` the
@@ -29,7 +39,7 @@ export function SiteButton({
 function BrandLink({ brand, className }: { brand: SiteBrand; className: string }) {
   return (
     <a className={className} href={brand.href}>
-      {brand.logo ? <img src={brand.logo} alt="" /> : null}
+      {brand.logo ? <img className={shapeClass(brand.logoShape)} src={brand.logo} alt="" /> : null}
       {brand.name}
     </a>
   )
@@ -83,7 +93,7 @@ export function SiteNav({
 }
 
 /**
- * The landing hero: the product tile, a badge, a two-part headline whose second
+ * The landing hero: the product tile (or mark, by `icon.logoShape`), a badge, a two-part headline whose second
  * half takes the brand gradient, the lead sentence, the actions, a meta line and
  * the pills. `children` renders after the content, inside the header, for a
  * decoration the product draws itself.
@@ -103,7 +113,7 @@ export function SiteHero({
   id = "top",
   children,
 }: {
-  icon?: { src: string; alt: string }
+  icon?: { src: string; alt: string; logoShape?: SiteLogoShape }
   badge?: ReactNode
   title: ReactNode
   titleAccent?: ReactNode
@@ -117,7 +127,9 @@ export function SiteHero({
   return (
     <header className="vg-site-hero" id={id}>
       <div className="vg-site-wrap">
-        {icon ? <img className="vg-site-hero-icon" src={icon.src} alt={icon.alt} /> : null}
+        {icon ? (
+          <img className={["vg-site-hero-icon", shapeClass(icon.logoShape)].filter(Boolean).join(" ")} src={icon.src} alt={icon.alt} />
+        ) : null}
         {badge ? (
           <div className="vg-site-badge">
             <span className="vg-site-dot" /> {badge}

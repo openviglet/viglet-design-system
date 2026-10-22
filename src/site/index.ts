@@ -7,7 +7,7 @@
  * while rendering. The ground follows `data-tone` and the mode `data-theme`.
  */
 export { SiteButton, SiteFeatureIndex, SiteFooter, SiteHero, SiteNav, SiteSectionHead } from "./site-chrome"
-export type { SiteBrand, SiteLink } from "./site-chrome"
+export type { SiteBrand, SiteLink, SiteLogoShape } from "./site-chrome"
 export { SiteCopyButton } from "./site-copy-button"
 export { SiteRich } from "./site-rich"
 export type { SiteRichRuns, SiteRun } from "./site-rich"

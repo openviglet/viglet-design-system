@@ -39,6 +39,26 @@ const declaration: SponsorDeclaration = {
 
 const brand = { href: "#", name: "Example Tool" }
 
+/** VDS226 — a mark taller than it is wide, which a square tile would squash. */
+const MARK = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 16"><path d="M5 0 10 9 5 16 0 9Z" fill="#888"/></svg>')
+
+/**
+ * A product whose image is a mark, not a tile: `logoShape: "mark"` keeps its
+ * proportions, drops the corner and lets the hero's shadow follow the shape.
+ */
+export const MarkNotTile: StoryObj = {
+  render: () => {
+    const marked = { href: "#", name: "Example Tool", logo: MARK, logoShape: "mark" as const }
+    return (
+      <div className="vg-site">
+        <SiteNav brand={marked} />
+        <SiteHero icon={{ src: MARK, alt: "Example Tool", logoShape: "mark" }} title="Says what it does," titleAccent="in one line." />
+        <SiteFooter brand={marked} />
+      </div>
+    )
+  },
+}
+
 export const Page: StoryObj = {
   render: () => (
     <div className="vg-site">
