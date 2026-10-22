@@ -216,3 +216,77 @@ What is left is in the hub, and it needs a release that carries navy, since the 
   to `ogCardSvg` instead.
 - Compare the built pages before and after: the tokens are the same values, so
   nothing should move.
+
+### §VDS225 A feature index that fits a 320px phone
+
+`.vg-site-feature-index` lays its cards out as `repeat(auto-fit, minmax(300px, 1fr))`. A
+minmax track cannot shrink below its minimum, so on a viewport narrower than 300px plus
+the wrap's 48px of gutter the single card holds the document wider than the screen. On a
+320px phone, still sold, the page measures 324px and scrolls sideways on every route
+that draws the index.
+
+FreeWilly found and fixed this in its own copy (its DD233), then had to restate the fix
+as a local override when it moved onto `./site` (its DD285): `minmax(min(300px, 100%),
+1fr)`. That reads as "300 unless the column has less", which is what auto-fit was
+already trying to say, and it changes nothing at any width where the 300px track fits.
+
+The fix goes in `site.css`. The site layer's tests gain a case rendering
+`SiteFeatureIndex` in a 320px viewport and asserting `scrollWidth` equals the viewport
+width. The plain-page parity test should cover the same markup, since a page with no
+build takes this rule from `site.css` too.
+
+On ship: tell the FreeWilly site to drop its `.vg-site-feature-index` override in
+`site/src/index.css` once it installs the release carrying this.
+
+### §VDS226 Marks that are not tiles
+
+`site.css` sizes every product mark as a tile: `.vg-site-brand img` at 32 by 32,
+`.vg-site-foot-brand img` at 30 by 30 and `.vg-site-hero-icon` at 104 by 104, each with
+a corner radius, and the hero icon with a box-shadow. That is right for a square app
+icon like Claude Code Tray's and wrong for a mark that carries its own silhouette.
+FreeWilly's orca is taller than it is wide: forced into a square it is squashed, the
+radius rounds nothing, and the box-shadow hangs a rectangle behind a shape that has
+none.
+
+FreeWilly undoes all three locally (`width: auto`, no radius, a `drop-shadow` filter
+that follows the alpha channel). A second product with a non-square mark would copy the
+same overrides.
+
+Proposal: `SiteBrand` gains `logoShape?: "tile" | "mark"`, defaulting to `tile`, and
+`SiteHero`'s `icon` takes the same field. `mark` puts a `vg-site-mark` class on the
+image: sized by height only (`width: auto`), no radius, and in the hero a `filter:
+drop-shadow(...)` in place of the box-shadow. `SiteNav` and `SiteFooter` pass it through
+from the brand. The tile stays the default, so nothing changes for a site that does not
+ask.
+
+Tests: render each component with both shapes and assert the class, and a plain-page
+parity shot of a tall mark.
+
+On ship: tell the FreeWilly site to pass `logoShape: "mark"` and delete its
+`.vg-site-brand img`, `.vg-site-foot-brand img` and `.vg-site-hero-icon` overrides.
+
+### §VDS227 A hero slot under the call to action
+
+`SiteHero` renders, in order and inside its wrap: the icon, the badge, the headline, the
+sub, the actions, the meta line and the pills. `children` renders after the wrap, for a
+decoration. Nothing can go between the actions and the meta line.
+
+FreeWilly needs exactly that place: its hero shows a scripted agent session (an eyebrow
+and a transcript) right under the call to action and above the meta line, and the order
+is the argument of the page. To keep it, the site passes no `meta` or `pills` and
+redraws them itself inside `children`, in a second `vg-site-wrap`, with the layer's own
+class names. So the shared meta and pill markup is copied back into a product, which is
+what the layer exists to stop, and a change to how `SiteHero` draws them will not reach
+that page.
+
+Proposal: a `feature?: ReactNode` prop, rendered inside the wrap between the actions and
+the meta line, in a `vg-site-hero-feature` block with no styling beyond spacing. Not
+`data-twin="omit"`: what goes there is content a Markdown twin should keep (FreeWilly's
+twin test asserts the session is in it), unlike the actions.
+
+Tests: render with `feature` and assert its position between `.vg-site-hero-actions` and
+`.vg-site-hero-meta`, and that it survives `renderToStaticMarkup` outside any omit
+block.
+
+On ship: tell the FreeWilly site to pass the session as `feature`, hand `meta` and
+`pills` back to `SiteHero`, and drop the hand-drawn tail in `pages/Landing.tsx`.
