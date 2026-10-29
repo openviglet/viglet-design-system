@@ -1,8 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { IconArchive, IconFileText, IconTrash } from "@tabler/icons-react";
+import { IconArchive, IconFileText, IconPlus, IconTrash } from "@tabler/icons-react";
 import { useState } from "react";
 
+import { Button } from "@/components/ui/button";
+
 import { BentoDataTable, type BentoDataTableColumn, type BentoDataTableLayout } from "./bento-data-table";
+import { BentoHero } from "./bento-hero";
 
 /**
  * The table a console lists thousands of things in. Five thousand rows here, and
@@ -139,5 +142,37 @@ export const Empty: Story = {
       label="Posts"
       empty="No posts in this folder yet."
     />
+  ),
+};
+
+/**
+ * A page people work in all day, in the `work` grammar: the header on one line
+ * under a small way back, and the table flat on the page ground.
+ */
+export const WorkSurface: Story = {
+  render: () => (
+    <div>
+      <BentoHero
+        grammar="work"
+        backTo="/sites"
+        backLabel="Sites"
+        title="Posts"
+        trailing={
+          <Button size="sm">
+            <IconPlus size={16} aria-hidden="true" />
+            New post
+          </Button>
+        }
+      />
+      <BentoDataTable<Post>
+        grammar="work"
+        rows={POSTS}
+        getRowId={(p) => p.id}
+        getRowLabel={(p) => p.title}
+        columns={COLUMNS}
+        label="Posts"
+        height={480}
+      />
+    </div>
   ),
 };

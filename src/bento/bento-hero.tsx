@@ -37,6 +37,14 @@ export function heroWayBack(
   return backTo != null ? <BentoBackLink to={backTo}>{backLabel}</BentoBackLink> : null;
 }
 
+/**
+ * VDS235 — which frame a page is drawn in. `showcase` is bento's: a large hero
+ * and frosted panels, for a home or a dashboard. `work` is for the pages people
+ * work in all day: a compact header and content flat on the page ground, so the
+ * content is the largest thing on screen. A product chooses per route.
+ */
+export type BentoGrammar = "showcase" | "work";
+
 export interface BentoHeroProps {
   /**
    * Small label above the headline. Typically the parent section
@@ -73,6 +81,11 @@ export interface BentoHeroProps {
   leading?: ReactNode;
   /** Trailing slot — actions, chips, etc. Pushed to the far right. */
   trailing?: ReactNode;
+  /**
+   * `work` draws the compact header: the way back in small type above, the title
+   * and the trailing actions on one line, a subtitle only if you pass one.
+   */
+  grammar?: BentoGrammar;
 }
 
 /**
@@ -98,10 +111,25 @@ export function BentoHero({
   subtitle,
   leading,
   trailing,
+  grammar = "showcase",
 }: Readonly<BentoHeroProps>) {
   // `eyebrow` wins for bespoke content; otherwise a trail or `backTo` renders
   // the canonical way back so no page has to re-type it.
   const eyebrowContent = eyebrow ?? heroWayBack(trail, backTo, backLabel);
+
+  if (grammar === "work") {
+    return (
+      <header data-grammar="work" className="bento-shell-header mb-4 flex flex-col gap-1">
+        {eyebrowContent && <span className="text-xs text-muted-foreground">{eyebrowContent}</span>}
+        <div className="flex w-full min-w-0 items-center gap-3">
+          {leading && <div className="shrink-0">{leading}</div>}
+          <h1 className="min-w-0 flex-1 truncate text-xl font-semibold tracking-tight">{title}</h1>
+          {trailing && <div className="ml-auto flex shrink-0 items-center gap-2">{trailing}</div>}
+        </div>
+        {subtitle && <p className="max-w-2xl truncate text-sm text-muted-foreground">{subtitle}</p>}
+      </header>
+    );
+  }
 
   return (
     <header className="bento-shell-header mb-6 flex flex-col items-start gap-3 md:mb-10">

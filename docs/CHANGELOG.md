@@ -227,6 +227,7 @@
 - ✅ **VDS232** **Two-line identity and change cells sit in a 44px row with about 4px of air** — A column marked lines: 2 gives the table a 56px default row while shown, and BentoChangeCell inline keeps a compact log at 44px with the actor on the time's line.
 - ✅ **VDS233** **The entity shell title is drawn inside a visible box at rest, with a second box inside it** — An inline title is one underline while edited, no longer a padless box with the select-all inside it; at rest it measures frameless, and a parity test holds both.
 - ✅ **VDS234** **The shell header theme toggle carries an accent border at rest, as if focused or selected** — ModeToggle is a neutral ghost icon button at rest, like the avatar beside it, with the accent kept to its focus ring.
+- ✅ **VDS235 (hero and table)** **Every page is drawn as a showcase: a 150px hero and a frosted card, including the pages people work in all day** — BentoHero and BentoDataTable take grammar=work: a one-line header under a small way back, and a flat table with hairlines on the page ground.
 
 ## Block D — The package in a server-rendered framework
 

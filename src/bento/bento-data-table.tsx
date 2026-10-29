@@ -33,6 +33,7 @@ import {
 import { cn } from "@/lib/utils";
 
 import { BentoActionsMenu, type BentoActionTone } from "./bento-actions-menu";
+import type { BentoGrammar } from "./bento-hero";
 
 export interface BentoDataTableColumn<TRow> {
   /** Stable id, also what a layout's `hidden` list names. */
@@ -121,6 +122,11 @@ export interface BentoDataTableProps<TRow> {
    * shows only while rows are selected, and Columns is an icon in the header row.
    */
   toolbar?: ReactNode;
+  /**
+   * `work` draws the table flat on the page ground, flush with the page and
+   * separated by hairlines, with no frosted card around it.
+   */
+  grammar?: BentoGrammar;
 }
 
 /** Rows mounted beyond each edge of the window, so a fast scroll does not show blank space. */
@@ -183,6 +189,7 @@ export function BentoDataTable<TRow extends RowData>({
   height,
   empty,
   toolbar,
+  grammar = "showcase",
 }: Readonly<BentoDataTableProps<TRow>>) {
   const { t } = useTranslation();
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -491,7 +498,12 @@ export function BentoDataTable<TRow extends RowData>({
   return (
     // Clipped rather than hidden: `overflow: hidden` would make the table a scroll
     // container, and its header row would stick to the table instead of the page.
-    <div ref={frame} data-slot="bento-data-table" className="bento-glass overflow-clip rounded-2xl">
+    <div
+      ref={frame}
+      data-slot="bento-data-table"
+      data-grammar={grammar}
+      className={cn("overflow-clip", grammar === "work" ? "border-y border-border/50" : "bento-glass rounded-2xl")}
+    >
       {/*
         VDS205 — one bar: the list's controls, or the selection's, with Columns at
         the end. With nothing to show it is hidden but kept, for its live region;

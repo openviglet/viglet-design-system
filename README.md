@@ -945,6 +945,13 @@ first and the parent last. Two or more render as linked steps where the back
 link sits, with the middle collapsed past four. A trail of one renders the usual
 arrow back link. `BentoTrail` is the same trail on its own, for a custom eyebrow.
 
+Bento's frame suits a home or a dashboard. For a page people work in all day,
+such as a content browser, an editor or a log, pass `grammar="work"` to
+`BentoHero` and `BentoDataTable`. The header becomes compact, with the way back
+in small type above and the title and actions on one line, and the table sits
+flat on the page ground with hairlines instead of a frosted card. The shell
+stays the same, so a product can move one route at a time.
+
 `BentoDataTable` is the list a curator sorts, range-selects and acts on at scale.
 It mounts only the rows in view, so ten thousand cost what twenty do. The table is
 as tall as its rows and scrolls with the page, its header row held under the
