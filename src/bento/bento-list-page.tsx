@@ -37,7 +37,7 @@ import {
   type BentoDataTableLayout,
 } from "./bento-data-table";
 import { BentoEmptyState } from "./bento-empty-state";
-import { BentoHero } from "./bento-hero";
+import { type BentoGrammar, BentoHero } from "./bento-hero";
 import type { BentoTrailStep } from "./bento-trail";
 import {
   BENTO_EMPHASIS_SPAN,
@@ -103,6 +103,11 @@ export interface BentoListPageProps<T> {
    * is given, for one release.
    */
   headerAction?: ReactNode;
+  /**
+   * VDS235 — `work` for a list people work in all day: the compact header with
+   * no hero icon and no subtitle, and the table flat on the page ground.
+   */
+  grammar?: BentoGrammar;
 
   // --- "new" tile ---
   newRoute: string;
@@ -230,6 +235,7 @@ export function BentoListPage<T>({
   subtitle,
   toolbar: ownToolbar,
   headerAction,
+  grammar = "showcase",
   newRoute,
   newLabel,
   newSubtitle,
@@ -293,11 +299,14 @@ export function BentoListPage<T>({
     [items, itemKey, layout?.data?.entries],
   );
 
-  const leading = HeroIcon ? (
-    <span className="bento-well grid h-12 w-12 place-items-center rounded-2xl">
-      <HeroIcon size={24} />
-    </span>
-  ) : undefined;
+  const work = grammar === "work";
+  const leading =
+    HeroIcon && !work ? (
+      <span className="bento-well grid h-12 w-12 place-items-center rounded-2xl">
+        <HeroIcon size={24} />
+      </span>
+    ) : undefined;
+  const heroSubtitle = work ? undefined : subtitle;
 
   if (view === "list" || !renderTile) {
     return (
@@ -309,10 +318,11 @@ export function BentoListPage<T>({
           trail={trail}
           leading={leading}
           title={title}
-          subtitle={subtitle}
+          subtitle={heroSubtitle}
+          grammar={grammar}
           trailing={
             hideNew ? undefined : (
-              <Button asChild className="gap-2">
+              <Button asChild size={work ? "sm" : "default"} className="gap-2">
                 <Link to={newRoute}>
                   <IconPlus size={16} />
                   {newLabel}
@@ -339,6 +349,7 @@ export function BentoListPage<T>({
             layout={columnLayout}
             onLayoutChange={onColumnLayoutChange}
             toolbar={controls}
+            grammar={grammar}
           />
         )}
       </LoadProvider>
@@ -356,7 +367,8 @@ export function BentoListPage<T>({
         trail={trail}
         leading={leading}
         title={title}
-        subtitle={subtitle}
+        subtitle={heroSubtitle}
+        grammar={grammar}
       />
 
       {(controls != null || (canCustomize && !editing)) && (

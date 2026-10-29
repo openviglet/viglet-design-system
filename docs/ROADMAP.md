@@ -8,8 +8,6 @@
 
 ## Block C — One look across products
 
-- ⏳ **VDS235** (deps: —) **Every page is drawn as a showcase: a 150px hero and a frosted card, including the pages people work in all day** — BentoListPage, BentoFormHero and BentoEntityShell still draw the showcase frame; they need grammar passed through, with one toolbar per page. → §VDS235
-
 ## Block H — Product sites on the package
 
 ## Done when — VDS185
@@ -48,12 +46,6 @@
 
 - **The hub renders navy from the package and is in consumers.json** Its tone.css is
   gone, and the tone contract and the entry census both pass with tone navy.
-
-## Done when — VDS235
-
-- **ListPage, FormHero and EntityShell draw the work frame given grammar** A parity test
-  measures each composite's header height and frame the way
-  bento-grammar.parity.test.tsx measures the hero and the table.
 
 ## Non-goals
 

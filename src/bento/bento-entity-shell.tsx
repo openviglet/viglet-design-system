@@ -7,7 +7,7 @@ import { useRef, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { BentoActionsMenu, type BentoActionsMenuItem } from "./bento-actions-menu";
-import { BentoBackLink, BentoHero } from "./bento-hero";
+import { BentoBackLink, type BentoGrammar, BentoHero } from "./bento-hero";
 import { BentoTrail, type BentoTrailStep } from "./bento-trail";
 import { BentoHeroIconPicker } from "./bento-hero-icon-picker";
 import { BentoInlineEdit } from "./bento-inline-edit";
@@ -137,6 +137,11 @@ export interface BentoEntityShellProps<TEntity extends BentoEntityLike> {
   onDelete?: () => Promise<boolean>;
   /** Extra `⋮` menu actions rendered above the built-in Delete. */
   extraActions?: BentoActionsMenuItem[];
+  /**
+   * VDS235 — `work` for an editor people work in all day: the compact header,
+   * with the title at its size and no hero icon.
+   */
+  grammar?: BentoGrammar;
   children: (args: BentoEntityShellRenderArgs) => ReactNode;
 }
 
@@ -180,6 +185,7 @@ export function BentoEntityShell<TEntity extends BentoEntityLike>({
   onUpdate,
   onDelete,
   extraActions,
+  grammar = "showcase",
   children,
 }: Readonly<BentoEntityShellProps<TEntity>>) {
   const { t } = useTranslation();
@@ -326,24 +332,29 @@ export function BentoEntityShell<TEntity extends BentoEntityLike>({
             )}
           </span>
         }
+        grammar={grammar}
         leading={
-          <BentoHeroIconPicker
-            value={staged.icon}
-            onChange={(nextIcon) => persistField({ icon: nextIcon })}
-            onClear={() => persistField({ icon: null })}
-            defaultIcon={icon}
-            tone={tone}
-            title={staged.title}
-            description={staged.description}
-            readOnly={readOnly || hideIcon}
-          />
+          grammar === "work" ? undefined : (
+            <BentoHeroIconPicker
+              value={staged.icon}
+              onChange={(nextIcon) => persistField({ icon: nextIcon })}
+              onClear={() => persistField({ icon: null })}
+              defaultIcon={icon}
+              tone={tone}
+              title={staged.title}
+              description={staged.description}
+              readOnly={readOnly || hideIcon}
+            />
+          )
         }
         title={
           <BentoInlineEdit
             value={staged.title}
             onSave={(title) => persistField({ title })}
             placeholder={headlineFallback}
-            className="text-2xl font-semibold tracking-tight md:text-3xl"
+            className={
+              grammar === "work" ? "text-xl font-semibold tracking-tight" : "text-2xl font-semibold tracking-tight md:text-3xl"
+            }
             ariaLabel={t("forms.common.title")}
             // Open in edit mode when creating so the user immediately sees a
             // focused input — a clear cue this is the first field to fill.

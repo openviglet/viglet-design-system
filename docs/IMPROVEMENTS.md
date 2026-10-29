@@ -181,28 +181,6 @@ the README's BentoListPage paragraph that it is gone. Do not remove it while any
 consumer still passes it: its content would silently stop rendering, since an unknown
 prop does not fail a build that spreads props.
 
-### §VDS235 A work grammar beside bento
-
-Bento was designed as a showcase look: frosted panels, generous tiles, a hero of
-eyebrow, large title and subtitle on every page. Measured in Shio at 1920px, the hero
-alone takes about 150px on every route, every list sits inside a frosted card, and pages
-that are tools people work in for hours (a content browser, a post editor, an activity
-log) are drawn with the same weight as a home dashboard. The curator who uses it daily
-called it suffocating, and this is the third redesign of that console.
-
-Bento suits a landing surface and a dashboard. A working surface needs density, flat
-ground and a compact header, so that the content is the largest thing on the screen.
-
-Direction: a second page grammar in the package, beside bento, for work surfaces. A
-compact header (title and actions on one line, breadcrumb above in small type, no
-subtitle by default), content on the page ground without a frosted card, lists flush
-with the page and separated by hairlines, one toolbar per page. Same tokens, same
-components inside; what changes is the frame. A product chooses per route, and the shell
-stays the same, so a product can move one page at a time.
-
-Reported by Shio with its own measurement of curator tasks (SH1315 in that repository)
-as the judge.
-
 ## Block H — Product sites on the package
 
 ### §VDS217 Counting product sites

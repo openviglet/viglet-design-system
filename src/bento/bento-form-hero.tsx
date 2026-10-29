@@ -110,6 +110,7 @@ export function BentoFormHero({
   saveDisabled,
   stickyTitle,
   stickyBadges,
+  grammar,
 }: Readonly<BentoFormHeroProps>) {
   const { t } = useTranslation();
   const disabled = saveDisabled ?? (Boolean(titleMissing) || !dirty);
@@ -126,6 +127,7 @@ export function BentoFormHero({
         leading={leading}
         title={title}
         subtitle={subtitle}
+        grammar={grammar}
         trailing={
           <>
             {/*
