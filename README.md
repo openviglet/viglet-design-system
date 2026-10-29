@@ -1,10 +1,11 @@
 # Viglet Design System
 
 Shared component library, design tokens, hooks, utilities, and i18n for the
-fifteen applications that install it: the Turing, Dumont and Shio consoles,
+sixteen applications that install it: the Turing, Dumont and Shio consoles,
 the Cloud Console, the Cloud Home, Schools, the Roadkeep GUI,
 the Openviglet Website, Viglet Docs, the Alegauss Hub, the Claude Tray Site,
-the Winwright Site, the Polyweave Site, Winwright Docs and the Claude Code First Site.
+the Winwright Site, the Polyweave Site, the Quickshell Site, Winwright Docs and
+the Claude Code First Site.
 `consumers.json` is the list, and it is what the guards read.
 
 **[Browse the component catalogue](https://openviglet.github.io/viglet-design-system/)** — every
@@ -12,19 +13,20 @@ component, its variants and its props, rebuilt on each commit to `2026.3`. Look
 there before writing a component: the catalogue is the answer to "does this
 already exist".
 
-The fifteen applications that install this package are the consumers it holds
+The sixteen applications that install this package are the consumers it holds
 itself to, declared in [`consumers.json`](consumers.json) rather than remembered:
 each entry names its framework, its chrome, the accent and tone it renders with,
 where its source is and the subpaths it takes, and CI refuses prose that names a
-subset as though it were the whole set. A sixteenth is one entry there, and the
+subset as though it were the whole set. A seventeenth is one entry there, and the
 checks widen with it. The file ships in the package, and a consumer holds its own entry to its
 source with [`viglet-ds-consumer-entries`](#keeping-your-entry-in-the-register-true).
 
 Three are Vite consoles (Turing, Shio, Dumont), one is a Vite platform home
 (the Cloud Home), one is a Vite desktop shell (the Roadkeep GUI), two are Vite
-marketing sites (the Openviglet Website and the Alegauss Hub), three are Vite
+marketing sites (the Openviglet Website and the Alegauss Hub), four are Vite
 product sites on `./site`
-(the Claude Tray Site, the Winwright Site and the Polyweave Site), two are Next applications
+(the Claude Tray Site, the Winwright Site, the Polyweave Site and the Quickshell Site),
+two are Next applications
 (the Cloud Console and Schools), one is Docusaurus (Viglet Docs), one is Astro
 (Winwright Docs) and one is a static page with no build
 (the Claude Code First Site). The split matters: a Next consumer takes no
@@ -64,8 +66,9 @@ and you get the alerts back.
 A change here is a change to shared chrome, so the question is always what it
 does to Shio, Turing, Dumont, the Cloud Console, the Cloud Home, Schools,
 the Roadkeep GUI, the Openviglet Website, Viglet Docs, the Alegauss Hub, the
-Claude Tray Site, the Winwright Site, the Polyweave Site, Winwright Docs and
-the Claude Code First Site — and the answer should not require a publish.
+Claude Tray Site, the Winwright Site, the Polyweave Site, the Quickshell Site,
+Winwright Docs and the Claude Code First Site — and the answer should not require
+a publish.
 The Openviglet Website and Viglet Docs take the package by caret range rather
 than pinning it, so they also receive each release the moment they install one.
 From this checkout:
@@ -1264,7 +1267,8 @@ the site's devDependencies.
 The package manager here is pnpm, matching the Shio, Turing, Dumont, Cloud Home
 and Schools workspaces. The Cloud Console, the Roadkeep GUI,
 the Openviglet Website, Viglet Docs, the Alegauss Hub, the Claude Tray Site,
-the Winwright Site, the Polyweave Site and Winwright Docs install with npm, and the Claude Code First Site
+the Winwright Site, the Polyweave Site, the Quickshell Site and Winwright Docs install with npm,
+and the Claude Code First Site
 installs nothing, which is a fact about those repositories and not about this one.
 
 ```bash
