@@ -4,7 +4,7 @@ import type { ReactElement } from "react"
 import { I18nextProvider, initReactI18next } from "react-i18next"
 import { beforeAll, describe, expect, it } from "vitest"
 
-import { BentoChangeCell, BentoIdentityCell } from "./index"
+import { BentoChangeCell, BentoIdentityCell, bentoToneOf } from "./index"
 
 // VDS207 — the two cells every list draws: who a row is, and when and by whom it
 // last changed. Asserted as a reader meets them, sighted or not.
@@ -32,12 +32,26 @@ describe("BentoIdentityCell", () => {
     expect(square).toHaveTextContent("VD")
   })
 
-  it("gives the same name the same tone, and a named tone wins", () => {
-    const tone = (ui: ReactElement) =>
-      [...draw(ui).container.querySelector("[aria-hidden='true']")!.classList].find((c) => c.startsWith("bento-tone-"))
+  // VDS230 — a hashed hue per row was a column of colour that meant nothing.
+  it("draws a neutral square unless a tone is passed", () => {
+    const square = (ui: ReactElement) => draw(ui).container.querySelector("[aria-hidden='true']")!
+    const tone = (el: Element) => [...el.classList].find((c) => c.startsWith("bento-tone-"))
 
-    expect(tone(<BentoIdentityCell name="Marketing" />)).toBe(tone(<BentoIdentityCell name="Marketing" />))
-    expect(tone(<BentoIdentityCell name="Marketing" tone="rose" />)).toBe("bento-tone-rose")
+    const plain = square(<BentoIdentityCell name="Marketing" />)
+    expect(tone(plain)).toBeUndefined()
+    expect(plain).toHaveClass("bg-muted", "text-foreground")
+    expect(tone(square(<BentoIdentityCell name="Marketing" tone="rose" />))).toBe("bento-tone-rose")
+    expect(tone(square(<BentoIdentityCell name="Marketing" tone={bentoToneOf("Marketing")} />))).toBe(
+      `bento-tone-${bentoToneOf("Marketing")}`,
+    )
+  })
+
+  it("draws the record's picture in place of the initials", () => {
+    const { container } = draw(<BentoIdentityCell name="Viglet Docs" image="/thumb.png" />)
+    const img = container.querySelector("img")!
+    expect(img).toHaveAttribute("src", "/thumb.png")
+    expect(img).toHaveAttribute("alt", "")
+    expect(container).not.toHaveTextContent("VD")
   })
 
   it("leaves out the second line when there is none", () => {

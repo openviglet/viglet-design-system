@@ -38,6 +38,20 @@ const SITES: Site[] = [
 
 export const Identity: Story = {};
 
+/** A tone where the colour names a category, and a picture where the record has one. */
+export const IdentityVariants: Story = {
+  render: () => (
+    <div className="flex flex-col gap-4 text-sm">
+      <BentoIdentityCell name="Publisher" detail="Agent" tone="violet" />
+      <BentoIdentityCell
+        name="Viglet Docs"
+        detail="docs.viglet.org"
+        image={`data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><rect width="32" height="32" fill="#4b6bfb"/></svg>')}`}
+      />
+    </div>
+  ),
+};
+
 export const Change: Story = {
   render: () => (
     <div className="flex flex-col gap-4 text-sm">

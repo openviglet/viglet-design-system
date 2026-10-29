@@ -181,26 +181,6 @@ the README's BentoListPage paragraph that it is gone. Do not remove it while any
 consumer still passes it: its content would silently stop rendering, since an unknown
 prop does not fail a build that spreads props.
 
-### §VDS230 Initials in a colour that means nothing
-
-Measured in Shio at 1920px on the site list (sixteen rows) and the post-type list
-(twenty-eight): `BentoIdentityCell` derives a tone from the name, so each row gets a
-saturated square in one of the bento tones with white initials. Down a list that is a
-column of orange, blue, violet, pink and teal squares that carries no information (the
-hue is a hash, so two similar records differ for no reason and four sites starting with
-V wear four colours) and competes with every mark that does mean something, including
-the product accent.
-
-The square is useful as a shape: it anchors the row and gives the eye a column to scan.
-The colour is what is loud.
-
-Direction: the default becomes neutral, a muted square (`bg-muted`, foreground
-initials), and a tone is drawn only when the consumer passes `tone`, which is how a list
-that does carry a category (an agent versus a person, a system type) can still say so. A
-record with an image (a site thumbnail, a user avatar) should be able to pass it and get
-the picture instead of initials. The hash stays available for a consumer that wants it,
-as an exported helper rather than the default.
-
 ### §VDS231 A ring on every row
 
 Measured in Shio at 1920px: every row of a `BentoDataTable` with `rowActions` ends in

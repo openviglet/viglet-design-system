@@ -1025,9 +1025,11 @@ as `selectionScope` too, so a selection clears when the filters change the rows:
 ```
 
 Two cells give a list's columns one look in every product. `BentoIdentityCell`
-is the first column: a square of initials in a tone derived from `name` (or the
-`tone` you pass), the name, and a muted `detail` line such as an address, both
-truncated. `BentoChangeCell` is the "changed" column: `at` drawn as a relative
+is the first column: a square of initials on a neutral ground, the name, and a
+muted `detail` line such as an address, both truncated. Pass `image` to draw the
+record's picture instead of the initials, and `tone` only where the colour says
+something (an agent or a person, a system type); `bentoToneOf(name)` gives the
+same tone for the same name if a list wants one per record. `BentoChangeCell` is the "changed" column: `at` drawn as a relative
 time in the reader's language ("2 days ago", a short date past a month), with the
 exact instant as its tooltip and accessible name, and an optional `actor` line
 that `agent` marks. Give the table a `rowHeight` of 56 or so for the two lines.
