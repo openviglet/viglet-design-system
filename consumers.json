@@ -279,6 +279,18 @@
       "tone": "cool",
       "sourceRoots": ["src", "scripts", "vite.config.ts"],
       "entries": ["./site", "./site.css", "./tokens.css", "./vite"]
+    },
+    {
+      "id": "quickshell-site",
+      "name": "Quickshell Site",
+      "package": "quickshell-site",
+      "checkout": "../../../alegauss/quickshell/site",
+      "framework": "vite",
+      "chrome": "product-site",
+      "accent": "cool",
+      "tone": "cool",
+      "sourceRoots": ["src", "scripts", "vite.config.ts"],
+      "entries": ["./site", "./site.css", "./tokens.css", "./vite"]
     }
   ]
 }
