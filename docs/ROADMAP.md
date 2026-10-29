@@ -8,7 +8,6 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS231** (deps: —) **Every table row ends in an outlined circle for its actions menu** — Sixteen rings down the right edge weigh as much as the rows, and on a long log they are the strongest line on the page. → §VDS231
 - 📋 **VDS232** (deps: —) **Two-line identity and change cells sit in a 44px row with about 4px of air** — The default row height was set for one line, and the package now ships two-line cells, so text touches both dividers. → §VDS232
 - 📋 **VDS233** (deps: —) **The entity shell title is drawn inside a visible box at rest, with a second box inside it** — An inline edit should read as a title until the reader shows intent; at rest it looks like an open field or a fault. → §VDS233
 - 📋 **VDS234** (deps: —) **The shell header theme toggle carries an accent border at rest, as if focused or selected** — A utility control drawn in the accent competes with the page primary action on every route of every product. → §VDS234

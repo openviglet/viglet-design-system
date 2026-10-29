@@ -649,7 +649,7 @@ export function BentoDataTable<TRow extends RowData>({
                       if (event.target === event.currentTarget) setFocused(index);
                     }}
                     className={cn(
-                      "absolute inset-x-0 grid items-center border-b border-border/30 px-1 text-sm outline-none transition-colors",
+                      "group/row absolute inset-x-0 grid items-center border-b border-border/30 px-1 text-sm outline-none transition-colors",
                       "hover:bg-muted/40 focus-visible:bg-muted/60 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring",
                       isSelected && "bg-primary/10 hover:bg-primary/15",
                     )}
@@ -674,6 +674,7 @@ export function BentoDataTable<TRow extends RowData>({
                     {rowActions?.length ? (
                       <div role="gridcell" className="grid place-items-center">
                         <BentoActionsMenu
+                          trigger="ghost"
                           triggerLabel={t("bento.table.rowActions", { defaultValue: "Actions for {{row}}", row: name })}
                           actions={rowActions.map((action) => ({
                             id: action.id,

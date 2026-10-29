@@ -43,7 +43,21 @@ export interface BentoActionsMenuProps {
   actions: BentoActionsMenuItem[];
   /** Override the trigger's accessible label. Defaults to "More actions". */
   triggerLabel?: string;
+  /**
+   * How the trigger is drawn. `outline` is the frosted ring a card's corner or a
+   * hero carries; `ghost` is borderless and muted until its row (a `group/row`
+   * ancestor) is hovered or focused, for a menu repeated down a list.
+   */
+  trigger?: "outline" | "ghost";
 }
+
+const TRIGGER_CLASSES = {
+  outline:
+    "bento-tile-clickable rounded-full border border-border/60 bg-card/60 text-muted-foreground backdrop-blur hover:text-foreground",
+  // VDS231 — a ring on every row was the strongest line down a long list.
+  ghost:
+    "rounded-md text-muted-foreground/70 hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring group-hover/row:text-foreground group-focus-within/row:text-foreground data-[state=open]:bg-muted data-[state=open]:text-foreground",
+} as const;
 
 const TONE_CLASSES: Record<BentoActionTone, string> = {
   default: "",
@@ -79,7 +93,7 @@ function warnWithoutId(label: string) {
  * Hidden by default behind a single icon — keeps the hero's primary
  * content uncluttered while keeping every action one click away.
  */
-export function BentoActionsMenu({ actions, triggerLabel }: Readonly<BentoActionsMenuProps>) {
+export function BentoActionsMenu({ actions, triggerLabel, trigger = "outline" }: Readonly<BentoActionsMenuProps>) {
   const { t } = useTranslation();
   if (actions.length === 0) return null;
   for (const action of actions) if (!action.id) warnWithoutId(action.label);
@@ -90,7 +104,8 @@ export function BentoActionsMenu({ actions, triggerLabel }: Readonly<BentoAction
         <button
           type="button"
           aria-label={triggerLabel ?? t("forms.formActions.moreActions", { defaultValue: "More actions" })}
-          className="bento-tile-clickable inline-flex size-(--vg-control-form) items-center justify-center rounded-full border border-border/60 bg-card/60 text-muted-foreground backdrop-blur transition-colors duration-200 hover:text-foreground"
+          data-trigger={trigger}
+          className={`inline-flex size-(--vg-control-form) items-center justify-center transition-colors duration-200 ${TRIGGER_CLASSES[trigger]}`}
         >
           <IconDotsVertical size={18} />
         </button>

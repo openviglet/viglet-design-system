@@ -216,6 +216,9 @@ describe("BentoDataTable", () => {
     await user.tab()
     const trigger = screen.getByRole("button", { name: "Actions for Post 2" })
     expect(trigger).toHaveFocus()
+    // VDS231 — borderless in a row, brought up by the row's hover or focus.
+    expect(trigger).toHaveAttribute("data-trigger", "ghost")
+    expect(bodyRows()[2]).toHaveClass("group/row")
 
     await user.keyboard("{Enter}")
     const menu = await screen.findByRole("menu")

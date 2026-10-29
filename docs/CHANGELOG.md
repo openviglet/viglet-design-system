@@ -223,6 +223,7 @@
 - ✅ **VDS212** **The product logos the package ships are the old PNGs, with acronyms and the old Shio and Dumont colours** — ./assets serves the October 2026 vector marks with a small variant per product, the switcher draws the cubes and the new names, and the Shio and Dumont tokens match the marks.
 - ✅ **VDS229** **BentoDataTable spends a 48px bar on a lone Columns button when the consumer passes no toolbar** — A BentoDataTable with no toolbar draws no bar until a row is selected; Columns is an icon in the header row's actions column, and the live region stays.
 - ✅ **VDS230** **BentoIdentityCell paints each row a different hue derived from a hash of the name** — BentoIdentityCell draws neutral initials by default, a tone only when passed and a picture when given image; the name hash is the exported bentoToneOf helper.
+- ✅ **VDS231** **Every table row ends in an outlined circle for its actions menu** — A table row's actions menu is a borderless ghost trigger, muted until the row is hovered or focused; the standalone menu keeps its ring.
 
 ## Block D — The package in a server-rendered framework
 

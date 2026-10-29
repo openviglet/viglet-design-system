@@ -181,23 +181,6 @@ the README's BentoListPage paragraph that it is gone. Do not remove it while any
 consumer still passes it: its content would silently stop rendering, since an unknown
 prop does not fail a build that spreads props.
 
-### §VDS231 A ring on every row
-
-Measured in Shio at 1920px: every row of a `BentoDataTable` with `rowActions` ends in
-the `BentoActionsMenu` trigger drawn as a bordered circle. On a list of sixteen that is
-a column of sixteen rings on the right edge, as heavy as the row content, and on the
-activity log (a long list) it is the strongest vertical line on the page.
-
-The menu has to stay focusable and announced; SH899 moved the actions off hover-only
-buttons for exactly that reason, and that rule is right. What can change is the drawing.
-
-Direction: the trigger in a table row is a borderless ghost icon button at muted
-foreground, which gains its hover fill and full contrast when the row is hovered or
-focused, and always shows its focus ring. It remains in the tab order through the row's
-roving focus, so nothing a keyboard reader has today is lost. The standalone menu (a
-card's corner, a hero) can keep its outline, so this is a variant the table passes, not
-a change to every trigger.
-
 ### §VDS232 Rows with no air
 
 Measured in Shio at 1920px: `BentoDataTable` defaults to `rowHeight = 44`, and the

@@ -249,6 +249,20 @@ describe("BentoActionsMenu", () => {
     expect(onSelect).toHaveBeenCalledTimes(1)
   })
 
+  // VDS231 — the ring stays on a standalone menu; a list passes the ghost trigger.
+  it("draws its trigger as a ring by default and borderless as a ghost", () => {
+    const actions = [{ id: "item.delete", label: "Delete", icon: IconCpu2, onSelect: vi.fn() }]
+    const { unmount } = draw(<BentoActionsMenu actions={actions} />)
+    expect(screen.getByRole("button")).toHaveClass("rounded-full", "border")
+    unmount()
+
+    draw(<BentoActionsMenu actions={actions} trigger="ghost" />)
+    const ghost = screen.getByRole("button")
+    expect(ghost).toHaveAttribute("data-trigger", "ghost")
+    expect(ghost).not.toHaveClass("border")
+    expect(ghost).toHaveClass("group-hover/row:text-foreground", "focus-visible:outline-2")
+  })
+
   it("marks a destructive action so it reads as one", async () => {
     const user = userEvent.setup()
 

@@ -996,7 +996,10 @@ replaced by the bento arm of that branch.
 rendered as `data-action-id` and means nothing to the package, but it lets a
 product check its console verbs against its agent's, since a menu item is
 otherwise an anonymous `onSelect`. An item without one warns outside production
-in this release and stops type-checking in the next.
+in this release and stops type-checking in the next. `BentoDataTable` draws
+each row's menu with `trigger="ghost"`, borderless and muted until the row is
+hovered or focused; pass the same to a menu you repeat down a list of your own,
+inside an element with the `group/row` class.
 
 `BentoFilterBar` is the query row above a list: a search field, the facets you
 declare (a `choice` of options, single or `multiple`, or a `date` range), the
