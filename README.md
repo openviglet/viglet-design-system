@@ -1195,6 +1195,12 @@ import sponsor from "./sponsor.json"
 The styles are `./site.css`, plain CSS over the preset tokens, so the page
 needs the tokens and no Tailwind build.
 
+On a phone (620px and below) the nav keeps the brand, the primary action and
+the theme toggle: the family chip and any `ghost` action hide, and the brand
+name truncates before the action does. Put the action a phone reader must reach
+in the primary button. Markup written by hand wraps the name in
+`<span class="vg-site-brand-name">` so it can truncate.
+
 **A page with no build at all** links two files: `./tokens.css`, which is the
 preset made readable by a browser (the `--vg-*` properties, both grounds and
 the tones, with the faces in `:root`), and `./site.css`. Pin the version:

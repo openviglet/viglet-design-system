@@ -344,19 +344,3 @@ What is left is in the hub, and it needs a release that carries navy, since the 
   to `ogCardSvg` instead.
 - Compare the built pages before and after: the tokens are the same values, so
   nothing should move.
-
-### §VDS228 The site nav on a phone
-
-SiteNav keeps every action on one row at every width. Below 1180px it hides the section
-links, which is right, but the actions stay: a primary button, a ghost button and the
-theme toggle, beside the brand and the family chip. Measured on Quickshell's site after
-its move to ./site (QS370), at a 390px viewport the actions row ends at x=623 and the
-document's scroll width is 688px, so the page scrolls sideways and the full-page capture
-is 688px wide. The site carried the same overflow before the move (621px), so this is
-the template's, inherited by every product site that passes two buttons and a toggle.
-
-Done when:
-
-- At 320px and 390px a SiteNav with a brand, a parent chip, two buttons and the toggle has
-  a scroll width equal to the viewport.
-- The primary action is still reachable at 320px.

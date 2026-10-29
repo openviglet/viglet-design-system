@@ -40,7 +40,7 @@ function BrandLink({ brand, className }: { brand: SiteBrand; className: string }
   return (
     <a className={className} href={brand.href}>
       {brand.logo ? <img className={shapeClass(brand.logoShape)} src={brand.logo} alt="" /> : null}
-      {brand.name}
+      <span className="vg-site-brand-name">{brand.name}</span>
     </a>
   )
 }
@@ -50,6 +50,8 @@ function BrandLink({ brand, className }: { brand: SiteBrand; className: string }
  * family the product belongs to, the section links and the actions (a download,
  * the repository, the theme toggle). The links hide below 1180 px and the
  * actions stay, because a reader who cannot reach the download has lost more.
+ * On a phone (620 px) the chip and the ghost actions go too, the primary
+ * action tightens and the brand name truncates, so the bar fits a 320 px screen.
  */
 export function SiteNav({
   brand,

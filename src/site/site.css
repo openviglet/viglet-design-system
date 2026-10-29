@@ -172,6 +172,38 @@
     display: none;
   }
 }
+/* A phone keeps the brand, the primary action and the toggle (VDS228): the
+   chip and the ghost actions go, and the name gives way before the action. */
+@media (max-width: 620px) {
+  .vg-site-nav .vg-site-wrap {
+    gap: 12px;
+  }
+  .vg-site-nav-left {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+  .vg-site-nav .vg-site-brand {
+    min-width: 0;
+    gap: 10px;
+  }
+  .vg-site-nav .vg-site-brand-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .vg-site-nav .vg-site-parent,
+  .vg-site-nav-links .vg-site-btn-ghost {
+    display: none;
+  }
+  .vg-site-nav-links {
+    flex: 0 0 auto;
+    gap: 10px;
+  }
+  .vg-site-nav-links .vg-site-btn {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+  }
+}
 
 /* ---------- buttons ---------- */
 .vg-site-btn {

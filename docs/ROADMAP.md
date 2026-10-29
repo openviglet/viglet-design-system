@@ -18,8 +18,6 @@
 
 ## Block H — Product sites on the package
 
-- 📋 **VDS228** (deps: —) **SiteNav runs 233px past a 390px phone, because its actions never wrap or hide** — Quickshell's nav ends at x=623 on a 390px viewport, so every product page with two buttons and a toggle scrolls sideways on a phone. → §VDS228
-
 ## Done when — VDS185
 
 - **The dock rests at the rail's foot and opens as an anchored popover** A reserved slot

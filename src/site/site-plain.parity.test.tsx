@@ -8,6 +8,7 @@ import { tokensCss } from "../../scripts/lib/tokens-css.mjs"
 
 import { SiteButton, SiteFeatureIndex, SiteFooter, SiteHero, SiteNav } from "./site-chrome"
 import { SiteSponsor, type SponsorDeclaration } from "./site-sponsor"
+import { SiteThemeToggle } from "./site-theme-toggle"
 
 /**
  * VDS216 — a page with no build takes the site layer from two stylesheets.
@@ -117,6 +118,50 @@ describe("the site layer on a page with no build", () => {
       expect(index.scrollWidth).toBe(index.clientWidth)
       expect(phone.querySelector(".vg-site-feature-card")!.getBoundingClientRect().right).toBe(320 - 24)
       expect(document.documentElement.scrollWidth).toBe(320)
+    } finally {
+      phone.remove()
+      host.hidden = false
+      document.body.style.margin = ""
+    }
+  })
+
+  // VDS228 — the actions never wrapped or hid, so a nav with a chip, two buttons
+  // and the toggle ran to 623px on a 390px phone.
+  it.each([320, 390])("fits a full nav on a %ipx phone and keeps the primary action", async (width) => {
+    under("warm", "light")
+    const logo = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><rect width="32" height="32"/></svg>')}`
+    const phone = document.createElement("div")
+    phone.innerHTML = renderToStaticMarkup(
+      <div className="vg-site">
+        <SiteNav
+          brand={{ href: "/", name: "Quickshell", logo }}
+          parent={{ href: "#", name: "alegauss", pre: "part of" }}
+          links={[{ href: "#a", label: "A" }]}
+          actions={
+            <>
+              <SiteButton href="#">Download</SiteButton>
+              <SiteButton variant="ghost" href="#">
+                Repository
+              </SiteButton>
+              <SiteThemeToggle storageKey="t" label={(next) => `Switch to ${next}`} />
+            </>
+          }
+        />
+      </div>,
+    )
+    host.hidden = true
+    document.body.style.margin = "0"
+    document.body.appendChild(phone)
+    try {
+      await page.viewport(width, 640)
+      const wrap = phone.querySelector<HTMLElement>(".vg-site-nav .vg-site-wrap")!
+      expect(document.documentElement.clientWidth).toBe(width)
+      expect(wrap.scrollWidth).toBe(wrap.clientWidth)
+      expect(phone.querySelector(".vg-site-nav-links")!.getBoundingClientRect().right).toBeLessThanOrEqual(width - 24)
+      const primary = phone.querySelector(".vg-site-btn-primary")!.getBoundingClientRect()
+      expect(primary.width).toBeGreaterThan(0)
+      expect(primary.right).toBeLessThanOrEqual(width - 24)
+      expect(document.documentElement.scrollWidth).toBe(width)
     } finally {
       phone.remove()
       host.hidden = false
