@@ -181,6 +181,134 @@ the README's BentoListPage paragraph that it is gone. Do not remove it while any
 consumer still passes it: its content would silently stop rendering, since an unknown
 prop does not fail a build that spreads props.
 
+### §VDS229 A bar for one button
+
+Measured in Shio at 1920px on four lists built on `BentoDataTable` (post types, users,
+activity, a folder listing): when the consumer passes no `toolbar`, the bar still
+renders at `min-h-12` with a bottom border, holding one ghost button, Columns, at the
+far right. That is 48px and a rule between the hero and the column headers, for a
+control most readers never use, and it is the first thing the eye meets on every list.
+
+The bar exists for good reasons (the selection count's live region, the selection
+actions, a consumer's filter), and none of them is present in this state.
+
+Direction: when there is no toolbar and nothing is selected, the bar collapses, its live
+region stays (`sr-only`, as today when there is nothing at all), and Columns moves into
+the header row as an icon button in the actions column, where the per-row menus already
+sit. A table with a toolbar keeps today's bar. Selecting a row brings the bar back with
+its actions. The parity and screenshot tests change for the no-toolbar case only;
+consumers change nothing. Reported by Shio (SH1307 and the lists around it), and Turing
+and Dumont draw the same bar.
+
+### §VDS230 Initials in a colour that means nothing
+
+Measured in Shio at 1920px on the site list (sixteen rows) and the post-type list
+(twenty-eight): `BentoIdentityCell` derives a tone from the name, so each row gets a
+saturated square in one of the bento tones with white initials. Down a list that is a
+column of orange, blue, violet, pink and teal squares that carries no information (the
+hue is a hash, so two similar records differ for no reason and four sites starting with
+V wear four colours) and competes with every mark that does mean something, including
+the product accent.
+
+The square is useful as a shape: it anchors the row and gives the eye a column to scan.
+The colour is what is loud.
+
+Direction: the default becomes neutral, a muted square (`bg-muted`, foreground
+initials), and a tone is drawn only when the consumer passes `tone`, which is how a list
+that does carry a category (an agent versus a person, a system type) can still say so. A
+record with an image (a site thumbnail, a user avatar) should be able to pass it and get
+the picture instead of initials. The hash stays available for a consumer that wants it,
+as an exported helper rather than the default.
+
+### §VDS231 A ring on every row
+
+Measured in Shio at 1920px: every row of a `BentoDataTable` with `rowActions` ends in
+the `BentoActionsMenu` trigger drawn as a bordered circle. On a list of sixteen that is
+a column of sixteen rings on the right edge, as heavy as the row content, and on the
+activity log (a long list) it is the strongest vertical line on the page.
+
+The menu has to stay focusable and announced; SH899 moved the actions off hover-only
+buttons for exactly that reason, and that rule is right. What can change is the drawing.
+
+Direction: the trigger in a table row is a borderless ghost icon button at muted
+foreground, which gains its hover fill and full contrast when the row is hovered or
+focused, and always shows its focus ring. It remains in the tab order through the row's
+roving focus, so nothing a keyboard reader has today is lost. The standalone menu (a
+card's corner, a hero) can keep its outline, so this is a variant the table passes, not
+a change to every trigger.
+
+### §VDS232 Rows with no air
+
+Measured in Shio at 1920px: `BentoDataTable` defaults to `rowHeight = 44`, and the
+package's own cells (`BentoIdentityCell`, `BentoChangeCell`) draw two lines of text
+each. Two lines of 14px and 12px type in a 44px row leave about 4px above and below, so
+the text touches the dividers, and a row with an identity cell on the left and a change
+cell on the right is two lines tall at both ends. The curator who reported it called the
+list suffocating; the measurement says the rows have no air.
+
+Two directions, not exclusive. Give a two-line row its room: a default of 52 or 56 when
+a column declares two lines, or a `density` prop (`comfortable`, `compact`) so a long
+log can stay compact. And make the second line optional in practice: `BentoChangeCell`
+can put the actor in the tooltip or after the time on one line ("há 8 min · admin") when
+the row is single-line.
+
+The virtual scroller computes everything from `rowHeight`, so a change of default is a
+visual change for every consumer and belongs behind the screenshot tests with a release
+note, not a silent patch.
+
+### §VDS233 A title that looks like a form field
+
+Measured in Shio at 1920px on a site page (`/bento/content/object/{site}`, built on
+`BentoEntityShell`): the title "ShowCase" is drawn inside a visible rectangle that spans
+the hero to the action buttons, with a second, shorter box around the text itself, at
+rest, before any focus or hover. It reads as a form field someone left open, or as a
+rendering fault, and it is the largest element on the page.
+
+An inline edit should look like a title until the reader shows intent: no border at
+rest, a subtle fill or underline on hover, the input frame on focus. The second inner
+box suggests two elements are being outlined, the input and its measuring sizer, and
+only one should ever be.
+
+Reproduce on the entity-shell story and in Shio; fix the at-rest drawing; add a
+screenshot test of the at-rest state, since the existing tests cover editing and not
+looking.
+
+### §VDS234 The theme toggle looks pressed
+
+Measured in Shio at 1920px on every route: the shell header's theme toggle, at rest, is
+drawn with an accent-coloured border, which is how the rest of the package draws focus
+or a selected state. It sits beside the user avatar, a quiet neutral circle, and on a
+light page it is one of the three accent marks above the fold, competing with the page's
+primary action.
+
+A theme toggle is a utility control; nothing about it is pending or selected. It should
+be a ghost icon button in the header's neutral, like the avatar beside it, with the
+accent only on its focus ring. If the border is there because the toggle reads as active
+in one theme, the active state belongs to the menu it opens, not to the trigger.
+Reported by Shio; the header is shared, so every product shows it.
+
+### §VDS235 A work grammar beside bento
+
+Bento was designed as a showcase look: frosted panels, generous tiles, a hero of
+eyebrow, large title and subtitle on every page. Measured in Shio at 1920px, the hero
+alone takes about 150px on every route, every list sits inside a frosted card, and pages
+that are tools people work in for hours (a content browser, a post editor, an activity
+log) are drawn with the same weight as a home dashboard. The curator who uses it daily
+called it suffocating, and this is the third redesign of that console.
+
+Bento suits a landing surface and a dashboard. A working surface needs density, flat
+ground and a compact header, so that the content is the largest thing on the screen.
+
+Direction: a second page grammar in the package, beside bento, for work surfaces. A
+compact header (title and actions on one line, breadcrumb above in small type, no
+subtitle by default), content on the page ground without a frosted card, lists flush
+with the page and separated by hairlines, one toolbar per page. Same tokens, same
+components inside; what changes is the frame. A product chooses per route, and the shell
+stays the same, so a product can move one page at a time.
+
+Reported by Shio with its own measurement of curator tasks (SH1315 in that repository)
+as the judge.
+
 ## Block H — Product sites on the package
 
 ### §VDS217 Counting product sites

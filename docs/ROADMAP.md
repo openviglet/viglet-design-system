@@ -8,6 +8,14 @@
 
 ## Block C — One look across products
 
+- 📋 **VDS229** (deps: —) **BentoDataTable spends a 48px bar on a lone Columns button when the consumer passes no toolbar** — Every list built on the table opens with a bordered band holding one ghost button, the first thing the eye meets on four Shio lists. → §VDS229
+- 📋 **VDS230** (deps: —) **BentoIdentityCell paints each row a different hue derived from a hash of the name** — A column of saturated squares carries no information and competes with every mark that does, the product accent included. → §VDS230
+- 📋 **VDS231** (deps: —) **Every table row ends in an outlined circle for its actions menu** — Sixteen rings down the right edge weigh as much as the rows, and on a long log they are the strongest line on the page. → §VDS231
+- 📋 **VDS232** (deps: —) **Two-line identity and change cells sit in a 44px row with about 4px of air** — The default row height was set for one line, and the package now ships two-line cells, so text touches both dividers. → §VDS232
+- 📋 **VDS233** (deps: —) **The entity shell title is drawn inside a visible box at rest, with a second box inside it** — An inline edit should read as a title until the reader shows intent; at rest it looks like an open field or a fault. → §VDS233
+- 📋 **VDS234** (deps: —) **The shell header theme toggle carries an accent border at rest, as if focused or selected** — A utility control drawn in the accent competes with the page primary action on every route of every product. → §VDS234
+- 📋 **VDS235** (deps: —) **Every page is drawn as a showcase: a 150px hero and a frosted card, including the pages people work in all day** — Bento suits a dashboard, and work surfaces need density and a compact header so the content is the largest thing. → §VDS235
+
 ## Block H — Product sites on the package
 
 ## Done when — VDS185
