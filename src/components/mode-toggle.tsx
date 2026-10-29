@@ -2,17 +2,20 @@ import { Monitor, Moon, Sun } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import { useTheme } from "@/components/theme-provider"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { GradientButton } from "./ui/gradient-button"
 
 /**
  * A header button opening a menu of the light, dark and system themes. It sets
  * the theme through `ThemeProvider`, which has to be mounted above it.
+ *
+ * VDS234 — a utility control, so a neutral ghost icon like the avatar beside it:
+ * the accent outline it used to carry read as focused or selected on every route.
  */
 export function ModeToggle() {
   const { setTheme } = useTheme()
@@ -21,11 +24,11 @@ export function ModeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <GradientButton variant="outline" size="sm">
+        <Button variant="ghost" size="icon-sm" className="relative text-muted-foreground hover:text-foreground data-[state=open]:bg-accent">
           <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
           <span className="sr-only">{t("theme.toggle")}</span>
-        </GradientButton>
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme("light")}>

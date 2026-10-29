@@ -181,20 +181,6 @@ the README's BentoListPage paragraph that it is gone. Do not remove it while any
 consumer still passes it: its content would silently stop rendering, since an unknown
 prop does not fail a build that spreads props.
 
-### §VDS234 The theme toggle looks pressed
-
-Measured in Shio at 1920px on every route: the shell header's theme toggle, at rest, is
-drawn with an accent-coloured border, which is how the rest of the package draws focus
-or a selected state. It sits beside the user avatar, a quiet neutral circle, and on a
-light page it is one of the three accent marks above the fold, competing with the page's
-primary action.
-
-A theme toggle is a utility control; nothing about it is pending or selected. It should
-be a ghost icon button in the header's neutral, like the avatar beside it, with the
-accent only on its focus ring. If the border is there because the toggle reads as active
-in one theme, the active state belongs to the menu it opens, not to the trigger.
-Reported by Shio; the header is shared, so every product shows it.
-
 ### §VDS235 A work grammar beside bento
 
 Bento was designed as a showcase look: frosted panels, generous tiles, a hero of

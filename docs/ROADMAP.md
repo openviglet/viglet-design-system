@@ -8,7 +8,6 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS234** (deps: —) **The shell header theme toggle carries an accent border at rest, as if focused or selected** — A utility control drawn in the accent competes with the page primary action on every route of every product. → §VDS234
 - 📋 **VDS235** (deps: —) **Every page is drawn as a showcase: a 150px hero and a frosted card, including the pages people work in all day** — Bento suits a dashboard, and work surfaces need density and a compact header so the content is the largest thing. → §VDS235
 
 ## Block H — Product sites on the package
