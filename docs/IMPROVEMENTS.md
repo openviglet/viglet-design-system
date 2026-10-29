@@ -181,25 +181,6 @@ the README's BentoListPage paragraph that it is gone. Do not remove it while any
 consumer still passes it: its content would silently stop rendering, since an unknown
 prop does not fail a build that spreads props.
 
-### §VDS229 A bar for one button
-
-Measured in Shio at 1920px on four lists built on `BentoDataTable` (post types, users,
-activity, a folder listing): when the consumer passes no `toolbar`, the bar still
-renders at `min-h-12` with a bottom border, holding one ghost button, Columns, at the
-far right. That is 48px and a rule between the hero and the column headers, for a
-control most readers never use, and it is the first thing the eye meets on every list.
-
-The bar exists for good reasons (the selection count's live region, the selection
-actions, a consumer's filter), and none of them is present in this state.
-
-Direction: when there is no toolbar and nothing is selected, the bar collapses, its live
-region stays (`sr-only`, as today when there is nothing at all), and Columns moves into
-the header row as an icon button in the actions column, where the per-row menus already
-sit. A table with a toolbar keeps today's bar. Selecting a row brings the bar back with
-its actions. The parity and screenshot tests change for the no-toolbar case only;
-consumers change nothing. Reported by Shio (SH1307 and the lists around it), and Turing
-and Dumont draw the same bar.
-
 ### §VDS230 Initials in a colour that means nothing
 
 Measured in Shio at 1920px on the site list (sixteen rows) and the post-type list

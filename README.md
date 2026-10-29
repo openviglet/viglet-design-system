@@ -882,7 +882,9 @@ hero, with the create action as the hero's primary button. Pass `renderTile`
 to ask for the tile mosaic instead, for things a reader picks by sight. A page
 that already passes `renderTile` keeps its tiles. `heroIcon` is now optional.
 Pass the list's filter and secondary actions as `toolbar`: on a table they open
-its bar, with Columns at the end, so a list has one bar of controls.
+its bar, with Columns at the end, so a list has one bar of controls. With no
+`toolbar` the table draws no bar until a row is selected, and Columns is an icon
+at the end of the header row.
 `headerAction` is deprecated and drawn in the same place for one release.
 Pass both `renderTile` and `columns` and the reader gets a Grid and List switch
 in that bar: `defaultView` (`"grid"` or `"list"`) is the first view, and `view`

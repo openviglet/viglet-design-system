@@ -160,6 +160,30 @@ describe("BentoDataTable", () => {
     expect(screen.queryByRole("button", { name: /Columns/ })).not.toBeInTheDocument()
   })
 
+  // VDS229 — a 48px band for one Columns button opened every list with no toolbar.
+  it("keeps Columns in the header row and no bar when there is no toolbar, until a row is selected", async () => {
+    const user = userEvent.setup()
+    const { container } = draw(table({ selectionActions: [{ id: "trash", label: "Move to trash", icon: IconTrash, onSelect: () => {} }] }))
+    const bar = () => container.querySelector<HTMLElement>("[data-slot='bento-data-table-bar']")!
+
+    expect(bar()).toHaveClass("sr-only")
+    const columnsButton = screen.getByRole("button", { name: "Columns" })
+    expect(columnsButton.closest("[role='columnheader']")).not.toBeNull()
+    expect(screen.getByRole("grid", { name: "Posts" })).toHaveAttribute("aria-colcount", "4")
+    expect(within(bodyRows()[0]).getAllByRole("gridcell")).toHaveLength(4)
+
+    await user.click(within(bodyRows()[1]).getByRole("checkbox", { name: "Select Post 1" }))
+    expect(bar()).not.toHaveClass("sr-only")
+    expect(within(screen.getByRole("toolbar")).getByRole("button", { name: "Move to trash" })).toBeInTheDocument()
+  })
+
+  it("keeps Columns at the end of the bar beside a toolbar", () => {
+    draw(table({ toolbar: <button type="button">Import</button> }))
+
+    expect(screen.getByRole("button", { name: "Columns" }).closest("[data-slot='bento-data-table-bar']")).not.toBeNull()
+    expect(screen.getByRole("grid", { name: "Posts" })).toHaveAttribute("aria-colcount", "2")
+  })
+
   it("selects a range with shift-click and adds a row with ctrl-click", async () => {
     const user = userEvent.setup()
     draw(table({ selectionActions: [{ id: "x", label: "X", icon: IconTrash, onSelect: () => {} }] }))

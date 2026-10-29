@@ -8,7 +8,6 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS229** (deps: —) **BentoDataTable spends a 48px bar on a lone Columns button when the consumer passes no toolbar** — Every list built on the table opens with a bordered band holding one ghost button, the first thing the eye meets on four Shio lists. → §VDS229
 - 📋 **VDS230** (deps: —) **BentoIdentityCell paints each row a different hue derived from a hash of the name** — A column of saturated squares carries no information and competes with every mark that does, the product accent included. → §VDS230
 - 📋 **VDS231** (deps: —) **Every table row ends in an outlined circle for its actions menu** — Sixteen rings down the right edge weigh as much as the rows, and on a long log they are the strongest line on the page. → §VDS231
 - 📋 **VDS232** (deps: —) **Two-line identity and change cells sit in a 44px row with about 4px of air** — The default row height was set for one line, and the package now ships two-line cells, so text touches both dividers. → §VDS232

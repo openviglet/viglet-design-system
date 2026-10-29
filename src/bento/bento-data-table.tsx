@@ -109,7 +109,8 @@ export interface BentoDataTableProps<TRow> {
   /**
    * The list's own controls, a filter and secondary actions, drawn at the start of
    * the table's bar with Columns at its end. A selection replaces them with its
-   * actions in the same bar, so a list never has two bands.
+   * actions in the same bar, so a list never has two bands. Without it the bar
+   * shows only while rows are selected, and Columns is an icon in the header row.
    */
   toolbar?: ReactNode;
 }
@@ -247,10 +248,15 @@ export function BentoDataTable<TRow extends RowData>({
 
   const currentLayout = layout ?? ownLayout;
   const visible = columns.filter((c) => c.hideable === false || !currentLayout.hidden.includes(c.id));
+  const hideable = columns.filter((c) => c.hideable !== false);
+  // VDS229 — with no toolbar, Columns is an icon in the header's actions column,
+  // so the bar has nothing to hold until a row is selected.
+  const columnsInHead = toolbar == null && hideable.length > 0;
+  const actionsColumn = (rowActions?.length ?? 0) > 0 || columnsInHead;
   const tracks = [
     selectable ? "2.75rem" : null,
     ...visible.map((c) => c.width ?? "minmax(8rem, 1fr)"),
-    rowActions?.length ? "3.25rem" : null,
+    actionsColumn ? "3.25rem" : null,
   ]
     .filter(Boolean)
     .join(" ");
@@ -432,7 +438,6 @@ export function BentoDataTable<TRow extends RowData>({
     onLayoutChange?.(next);
   }
 
-  const hideable = columns.filter((c) => c.hideable !== false);
   const selectedRows = ordered.filter((row) => selected.has(getRowId(row)));
   const allSelected = total > 0 && selectedRows.length === total;
 
@@ -454,13 +459,33 @@ export function BentoDataTable<TRow extends RowData>({
     };
   }, [barSticks]);
 
+  const columnsLabel = t("bento.table.columns", { defaultValue: "Columns" });
+  const columnsMenu = (trigger: ReactNode) => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="bento-dropdown min-w-44 p-1.5">
+        {hideable.map((column) => (
+          <DropdownMenuCheckboxItem
+            key={column.id}
+            checked={!currentLayout.hidden.includes(column.id)}
+            onCheckedChange={(checked) => setHidden(column.id, checked !== true)}
+            onSelect={(event) => event.preventDefault()}
+          >
+            {column.header}
+          </DropdownMenuCheckboxItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+
   return (
     // Clipped rather than hidden: `overflow: hidden` would make the table a scroll
     // container, and its header row would stick to the table instead of the page.
     <div ref={frame} data-slot="bento-data-table" className="bento-glass overflow-clip rounded-2xl">
       {/*
         VDS205 — one bar: the list's controls, or the selection's, with Columns at
-        the end. With nothing to show it is hidden but kept, for its live region.
+        the end. With nothing to show it is hidden but kept, for its live region;
+        with no toolbar that is every moment nothing is selected (VDS229).
       */}
       <div
         ref={bar}
@@ -468,7 +493,7 @@ export function BentoDataTable<TRow extends RowData>({
         className={cn(
           "flex min-h-12 flex-wrap items-center gap-2 border-b border-border/50 px-3 py-2",
           barSticks && "sticky top-(--bento-shell-header,0px) z-20 bg-card/95 backdrop-blur",
-          toolbar == null && hideable.length === 0 && selectedRows.length === 0 && "sr-only",
+          toolbar == null && selectedRows.length === 0 && "sr-only",
         )}
       >
         {/* Present before anything is selected, so the first count is announced. */}
@@ -502,35 +527,21 @@ export function BentoDataTable<TRow extends RowData>({
             </Button>
           </div>
         )}
-        {hideable.length > 0 && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="ml-auto gap-1.5">
-                <IconColumns3 size={16} aria-hidden="true" />
-                {t("bento.table.columns", { defaultValue: "Columns" })}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bento-dropdown min-w-44 p-1.5">
-              {hideable.map((column) => (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  checked={!currentLayout.hidden.includes(column.id)}
-                  onCheckedChange={(checked) => setHidden(column.id, checked !== true)}
-                  onSelect={(event) => event.preventDefault()}
-                >
-                  {column.header}
-                </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
+        {hideable.length > 0 &&
+          !columnsInHead &&
+          columnsMenu(
+            <Button variant="ghost" size="sm" className="ml-auto gap-1.5">
+              <IconColumns3 size={16} aria-hidden="true" />
+              {columnsLabel}
+            </Button>,
+          )}
       </div>
 
       <div
         role="grid"
         aria-label={label}
         aria-rowcount={total + 1}
-        aria-colcount={visible.length + (selectable ? 1 : 0) + (rowActions?.length ? 1 : 0)}
+        aria-colcount={visible.length + (selectable ? 1 : 0) + (actionsColumn ? 1 : 0)}
         aria-multiselectable={selectable ? "true" : undefined}
       >
         <div
@@ -584,9 +595,15 @@ export function BentoDataTable<TRow extends RowData>({
                 </div>
               );
             })}
-            {rowActions?.length ? (
-              <div role="columnheader" className="px-2">
+            {actionsColumn ? (
+              <div role="columnheader" className="grid place-items-center">
                 <span className="sr-only">{t("bento.table.actions", { defaultValue: "Actions" })}</span>
+                {columnsInHead &&
+                  columnsMenu(
+                    <Button variant="ghost" size="icon-sm" aria-label={columnsLabel} title={columnsLabel}>
+                      <IconColumns3 size={16} aria-hidden="true" />
+                    </Button>,
+                  )}
               </div>
             ) : null}
           </div>
@@ -653,6 +670,7 @@ export function BentoDataTable<TRow extends RowData>({
                         {column.cell(row)}
                       </div>
                     ))}
+                    {actionsColumn && !rowActions?.length ? <div role="gridcell" /> : null}
                     {rowActions?.length ? (
                       <div role="gridcell" className="grid place-items-center">
                         <BentoActionsMenu
