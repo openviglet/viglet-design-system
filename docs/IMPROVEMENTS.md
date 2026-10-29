@@ -181,25 +181,6 @@ the README's BentoListPage paragraph that it is gone. Do not remove it while any
 consumer still passes it: its content would silently stop rendering, since an unknown
 prop does not fail a build that spreads props.
 
-### §VDS232 Rows with no air
-
-Measured in Shio at 1920px: `BentoDataTable` defaults to `rowHeight = 44`, and the
-package's own cells (`BentoIdentityCell`, `BentoChangeCell`) draw two lines of text
-each. Two lines of 14px and 12px type in a 44px row leave about 4px above and below, so
-the text touches the dividers, and a row with an identity cell on the left and a change
-cell on the right is two lines tall at both ends. The curator who reported it called the
-list suffocating; the measurement says the rows have no air.
-
-Two directions, not exclusive. Give a two-line row its room: a default of 52 or 56 when
-a column declares two lines, or a `density` prop (`comfortable`, `compact`) so a long
-log can stay compact. And make the second line optional in practice: `BentoChangeCell`
-can put the actor in the tooltip or after the time on one line ("há 8 min · admin") when
-the row is single-line.
-
-The virtual scroller computes everything from `rowHeight`, so a change of default is a
-visual change for every consumer and belongs behind the screenshot tests with a release
-note, not a silent patch.
-
 ### §VDS233 A title that looks like a form field
 
 Measured in Shio at 1920px on a site page (`/bento/content/object/{site}`, built on

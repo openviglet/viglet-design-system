@@ -93,6 +93,27 @@ describe("BentoDataTable", () => {
     expect(bodyOf().style.height).toBe("400px")
   })
 
+  // VDS232 — two lines of text in a 44px row touched both dividers.
+  it("gives a row 56px while a visible column draws two lines, unless rowHeight is passed", async () => {
+    const user = userEvent.setup()
+    const twoLine = [columns[0], { ...columns[1], lines: 2 as const }]
+    const bodyOf = () =>
+      screen.getByRole("grid", { name: "Posts" }).querySelector<HTMLElement>("[role='rowgroup'] + [role='rowgroup']")!
+
+    const { unmount } = draw(table({ rows: posts(1), columns: twoLine, rowHeight: undefined }))
+    expect(bodyOf().style.height).toBe("56px")
+
+    // Hiding the two-line column gives the row back its one-line height.
+    await user.click(screen.getByRole("button", { name: "Columns" }))
+    await user.click(within(await screen.findByRole("menu")).getByRole("menuitemcheckbox", { name: "Words" }))
+    await user.keyboard("{Escape}")
+    expect(bodyOf().style.height).toBe("44px")
+    unmount()
+
+    draw(table({ rows: posts(1), columns: twoLine, rowHeight: 48 }))
+    expect(bodyOf().style.height).toBe("48px")
+  })
+
   it("extends a selection with shift and the arrows, and clears it with Escape", async () => {
     const user = userEvent.setup()
     draw(table({ selectionActions: [{ id: "trash", label: "Move to trash", icon: IconTrash, onSelect: () => {} }] }))

@@ -89,6 +89,14 @@ describe("BentoChangeCell", () => {
     expect(screen.getAllByText("now")).toHaveLength(2)
   })
 
+  // VDS232 — a compact row keeps who changed it on the time's line.
+  it("puts the actor after the time on one line when inline", () => {
+    const { container } = draw(<BentoChangeCell at="2026-10-03T12:00:00Z" now={NOW} actor="admin" inline />)
+    const cell = container.querySelector("[data-slot='bento-change-cell']")!
+    expect(cell).not.toHaveClass("flex-col")
+    expect(cell).toHaveTextContent(/2 days ago.*·.*admin/)
+  })
+
   it("shows a value it cannot read as a date as it was given", () => {
     draw(<BentoChangeCell at="yesterday-ish" now={NOW} />)
     expect(screen.getAllByText("yesterday-ish").length).toBeGreaterThan(0)

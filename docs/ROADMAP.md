@@ -8,7 +8,6 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS232** (deps: —) **Two-line identity and change cells sit in a 44px row with about 4px of air** — The default row height was set for one line, and the package now ships two-line cells, so text touches both dividers. → §VDS232
 - 📋 **VDS233** (deps: —) **The entity shell title is drawn inside a visible box at rest, with a second box inside it** — An inline edit should read as a title until the reader shows intent; at rest it looks like an open field or a fault. → §VDS233
 - 📋 **VDS234** (deps: —) **The shell header theme toggle carries an accent border at rest, as if focused or selected** — A utility control drawn in the accent competes with the page primary action on every route of every product. → §VDS234
 - 📋 **VDS235** (deps: —) **Every page is drawn as a showcase: a 150px hero and a frosted card, including the pages people work in all day** — Bento suits a dashboard, and work surfaces need density and a compact header so the content is the largest thing. → §VDS235

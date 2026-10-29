@@ -13,6 +13,8 @@ export interface BentoChangeCellProps {
   agent?: boolean;
   /** What "now" is, for a relative time measured from somewhere fixed. Defaults to when the cell mounted. */
   now?: Date | number;
+  /** The actor after the time on one line ("8 min ago · admin"), for a compact row. */
+  inline?: boolean;
   className?: string;
 }
 
@@ -41,7 +43,7 @@ function relative(date: Date, now: number, format: Intl.RelativeTimeFormat) {
  * tooltip and as what a screen reader says, and an optional actor line marked
  * when the change came from an agent. It takes values and fetches nothing.
  */
-export function BentoChangeCell({ at, actor, agent = false, now, className }: Readonly<BentoChangeCellProps>) {
+export function BentoChangeCell({ at, actor, agent = false, now, inline = false, className }: Readonly<BentoChangeCellProps>) {
   const { t, i18n } = useTranslation();
   const date = new Date(at);
   const valid = !Number.isNaN(date.getTime());
@@ -61,11 +63,19 @@ export function BentoChangeCell({ at, actor, agent = false, now, className }: Re
   }
 
   return (
-    <span data-slot="bento-change-cell" className={cn("flex min-w-0 flex-col", className)}>
-      <time dateTime={valid ? date.toISOString() : undefined} title={exact} className="truncate text-foreground">
+    <span
+      data-slot="bento-change-cell"
+      className={cn("flex min-w-0", inline ? "items-baseline gap-1.5" : "flex-col", className)}
+    >
+      <time dateTime={valid ? date.toISOString() : undefined} title={exact} className="shrink-0 truncate text-foreground">
         <span aria-hidden="true">{shown}</span>
         <span className="sr-only">{exact}</span>
       </time>
+      {actor != null && inline && (
+        <span aria-hidden="true" className="text-xs text-muted-foreground">
+          ·
+        </span>
+      )}
       {actor != null && (
         <span className="flex min-w-0 items-center gap-1 text-xs text-muted-foreground">
           {agent && (

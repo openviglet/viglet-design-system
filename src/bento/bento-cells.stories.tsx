@@ -70,7 +70,6 @@ export const InATable: Story = {
       getRowId={(s) => s.id}
       getRowLabel={(s) => s.name}
       label="Sites"
-      rowHeight={56}
       height={240}
       columns={[
         {
@@ -79,12 +78,36 @@ export const InATable: Story = {
           cell: (s) => <BentoIdentityCell name={s.name} detail={s.host} />,
           sortValue: (s) => s.name,
           hideable: false,
+          lines: 2,
         },
         {
           id: "changed",
           header: "Changed",
           width: "12rem",
           cell: (s) => <BentoChangeCell at={s.changed} now={NOW} actor={s.by} agent={s.agent} />,
+          sortValue: (s) => s.changed,
+        },
+      ]}
+    />
+  ),
+};
+
+/** A long log stays compact: the change cell on one line, and the default 44px row. */
+export const Compact: Story = {
+  render: () => (
+    <BentoDataTable<Site>
+      rows={SITES}
+      getRowId={(s) => s.id}
+      getRowLabel={(s) => s.name}
+      label="Activity"
+      height={200}
+      columns={[
+        { id: "name", header: "Site", cell: (s) => s.name, sortValue: (s) => s.name, hideable: false },
+        {
+          id: "changed",
+          header: "Changed",
+          width: "16rem",
+          cell: (s) => <BentoChangeCell at={s.changed} now={NOW} actor={s.by} agent={s.agent} inline />,
           sortValue: (s) => s.changed,
         },
       ]}

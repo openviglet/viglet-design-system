@@ -47,6 +47,11 @@ export interface BentoDataTableColumn<TRow> {
   width?: string;
   /** `false` keeps the column out of the column picker, always shown. */
   hideable?: boolean;
+  /**
+   * Lines of text the cell draws: `2` for `BentoIdentityCell` or a `BentoChangeCell`
+   * with an actor. While a visible column draws two, the default row is 56px.
+   */
+  lines?: 1 | 2;
 }
 
 export interface BentoDataTableAction<TRow> {
@@ -96,7 +101,10 @@ export interface BentoDataTableProps<TRow> {
   onLayoutChange?: (layout: BentoDataTableLayout) => void;
   /** Enter or a double click on a row. */
   onRowOpen?: (row: TRow) => void;
-  /** Pixels per row. Rows are one height, which is what lets the table mount only the visible ones. */
+  /**
+   * Pixels per row. Rows are one height, which is what lets the table mount only
+   * the visible ones. Defaults to 44, or 56 while a visible column has `lines: 2`.
+   */
   rowHeight?: number;
   /**
    * The most the body grows to, in pixels, scrolling inside itself past it: for a
@@ -171,7 +179,7 @@ export function BentoDataTable<TRow extends RowData>({
   layout,
   onLayoutChange,
   onRowOpen,
-  rowHeight = 44,
+  rowHeight: givenRowHeight,
   height,
   empty,
   toolbar,
@@ -248,6 +256,8 @@ export function BentoDataTable<TRow extends RowData>({
 
   const currentLayout = layout ?? ownLayout;
   const visible = columns.filter((c) => c.hideable === false || !currentLayout.hidden.includes(c.id));
+  // VDS232 — two lines of text in a 44px row left about 4px above and below.
+  const rowHeight = givenRowHeight ?? (visible.some((c) => c.lines === 2) ? 56 : 44);
   const hideable = columns.filter((c) => c.hideable !== false);
   // VDS229 — with no toolbar, Columns is an icon in the header's actions column,
   // so the bar has nothing to hold until a row is selected.

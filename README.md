@@ -1035,11 +1035,14 @@ something (an agent or a person, a system type); `bentoToneOf(name)` gives the
 same tone for the same name if a list wants one per record. `BentoChangeCell` is the "changed" column: `at` drawn as a relative
 time in the reader's language ("2 days ago", a short date past a month), with the
 exact instant as its tooltip and accessible name, and an optional `actor` line
-that `agent` marks. Give the table a `rowHeight` of 56 or so for the two lines.
+that `agent` marks. Mark a two-line column `lines: 2` and the table's default row
+grows from 44px to 56px while that column is shown. A long log that should stay
+compact passes `inline` to `BentoChangeCell`, which puts the actor after the
+time on one line.
 
 ```tsx
 columns={[
-  { id: "name", header: t("name"), cell: (s) => <BentoIdentityCell name={s.name} detail={s.host} /> },
+  { id: "name", header: t("name"), lines: 2, cell: (s) => <BentoIdentityCell name={s.name} detail={s.host} /> },
   { id: "changed", header: t("changed"), cell: (s) => <BentoChangeCell at={s.updated} actor={s.updatedBy} /> },
 ]}
 ```
