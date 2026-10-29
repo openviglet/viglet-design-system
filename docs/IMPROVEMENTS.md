@@ -181,23 +181,6 @@ the README's BentoListPage paragraph that it is gone. Do not remove it while any
 consumer still passes it: its content would silently stop rendering, since an unknown
 prop does not fail a build that spreads props.
 
-### §VDS233 A title that looks like a form field
-
-Measured in Shio at 1920px on a site page (`/bento/content/object/{site}`, built on
-`BentoEntityShell`): the title "ShowCase" is drawn inside a visible rectangle that spans
-the hero to the action buttons, with a second, shorter box around the text itself, at
-rest, before any focus or hover. It reads as a form field someone left open, or as a
-rendering fault, and it is the largest element on the page.
-
-An inline edit should look like a title until the reader shows intent: no border at
-rest, a subtle fill or underline on hover, the input frame on focus. The second inner
-box suggests two elements are being outlined, the input and its measuring sizer, and
-only one should ever be.
-
-Reproduce on the entity-shell story and in Shio; fix the at-rest drawing; add a
-screenshot test of the at-rest state, since the existing tests cover editing and not
-looking.
-
 ### §VDS234 The theme toggle looks pressed
 
 Measured in Shio at 1920px on every route: the shell header's theme toggle, at rest, is

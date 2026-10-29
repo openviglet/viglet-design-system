@@ -225,6 +225,7 @@
 - ✅ **VDS230** **BentoIdentityCell paints each row a different hue derived from a hash of the name** — BentoIdentityCell draws neutral initials by default, a tone only when passed and a picture when given image; the name hash is the exported bentoToneOf helper.
 - ✅ **VDS231** **Every table row ends in an outlined circle for its actions menu** — A table row's actions menu is a borderless ghost trigger, muted until the row is hovered or focused; the standalone menu keeps its ring.
 - ✅ **VDS232** **Two-line identity and change cells sit in a 44px row with about 4px of air** — A column marked lines: 2 gives the table a 56px default row while shown, and BentoChangeCell inline keeps a compact log at 44px with the actor on the time's line.
+- ✅ **VDS233** **The entity shell title is drawn inside a visible box at rest, with a second box inside it** — An inline title is one underline while edited, no longer a padless box with the select-all inside it; at rest it measures frameless, and a parity test holds both.
 
 ## Block D — The package in a server-rendered framework
 

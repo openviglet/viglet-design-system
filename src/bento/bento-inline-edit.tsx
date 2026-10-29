@@ -258,7 +258,13 @@ export function BentoInlineEdit({
       placeholder={placeholder}
       aria-label={ariaLabel}
       aria-busy={saving || undefined}
-      className={cn(editClass, "h-auto px-0 py-0 shadow-none focus-visible:ring-0", className)}
+      // VDS233 — Input's own frame outlived `border-b`: the field drew a box with no
+      // padding around the title, and a select-all a second one inside it.
+      className={cn(
+        editClass,
+        "h-auto rounded-none border-x-0 border-t-0 px-0 py-0 shadow-none focus-visible:ring-0 dark:bg-transparent",
+        className,
+      )}
     />
   );
 }
