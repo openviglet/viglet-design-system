@@ -30,12 +30,6 @@
   Failing fast is what the gate lacked: every test passed, and the run still never
   ended.
 
-## Done when — VDS219
-
-- **A Vite consumer that imports only the root entry builds with no xlsx installed** A
-  scratch Vite app importing the root of the built dist, with xlsx absent, completes
-  vite build.
-
 ## Done when — VDS217
 
 - **Every alegauss site is in consumers.json with its entries counted**

@@ -134,6 +134,9 @@
     },
     "react-router-dom": {
       "optional": true
+    },
+    "xlsx": {
+      "optional": true
     }
   },
   "dependencies": {

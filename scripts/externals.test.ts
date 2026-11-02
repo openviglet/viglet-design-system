@@ -153,9 +153,8 @@ describe("the externals are declared once", () => {
     })
 
     /**
-     * VDS219 — the first half of making the peer optional: the one module that
-     * imports `xlsx` is an entry of its own. The root still re-exports it, so
-     * the peer stays required until that re-export goes.
+     * VDS219 — the one module that imports `xlsx` is an entry of its own, and
+     * nothing the root reaches imports it, so the peer is optional.
      */
     it("imports xlsx from one shipped module, which is the ./xlsx entry", () => {
       const importers: string[] = []
@@ -175,12 +174,15 @@ describe("the externals are declared once", () => {
       expect(exportsMap["./xlsx"]?.import).toBe("./dist/xlsx.es.js")
     })
 
-    it("keeps xlsx a required peer, because the root entry imports it", () => {
-      // Optional would let a consumer skip it, and a Vite build then fails on
-      // the root entry's import of a package it cannot resolve, called or not.
+    it("makes xlsx an optional peer, since only the ./xlsx entry imports it", () => {
+      // Required, every product would install it, Shio included, which never exports a
+      // sheet; and pnpm's auto-install would bring npm's 0.18.5 to any that did not.
       const meta = (manifest as { peerDependenciesMeta?: Record<string, { optional?: boolean }> })
         .peerDependenciesMeta
-      expect(meta?.xlsx?.optional ?? false).toBe(false)
+      expect(meta?.xlsx?.optional).toBe(true)
+      expect(readFileSync(join(root, "src", "lib", "index.ts"), "utf8")).not.toMatch(
+        /export-xlsx/,
+      )
     })
   })
 

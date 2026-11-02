@@ -48,18 +48,21 @@ copy in your tree is a second React context, and `useFormContext` then returns
 null inside a form that looks correctly wired. Declaring it is what keeps the
 install to one copy — `npm ls react-hook-form` should say `deduped`.
 
-**Declare `xlsx` yourself, from SheetJS's CDN.** It is a required peer since
-2026.3.21: the root entry exports `exportToXlsx`, which imports it. The last
-version on npm, 0.18.5, has open prototype-pollution and ReDoS advisories, and
-SheetJS publishes the fixed releases only as a tarball. pnpm accepts that as a
-direct dependency, but refuses it as a subdependency of this package:
+**Declare `xlsx` yourself, from SheetJS's CDN, if you export sheets.** It is an
+optional peer: only the `./xlsx` entry (`exportToXlsx`) imports it, so a product
+that never imports that entry installs nothing for it. The last version on npm,
+0.18.5, has open prototype-pollution and ReDoS advisories, and SheetJS publishes
+the fixed releases only as a tarball. pnpm accepts that as a direct dependency,
+but refuses it as a subdependency of this package:
 
 ```bash
 pnpm add xlsx@https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz
 ```
 
-If you leave it undeclared, pnpm's peer auto-install fetches 0.18.5 from npm,
-and you get the alerts back.
+pnpm 11 also wants the tarball's integrity in the lockfile
+(`sha512-oLDq3jw7AcLqKWH2AhCpVTZl8mf6X2YReP+Neh0SJUzV/BdZYjth94tG5toiMB1PPrYtxOCfaoUCkvtuH+3AJA==`
+for 0.20.3). An override such as `"xlsx@<0.20.2": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"`
+keeps anything else from bringing 0.18.5 back.
 
 ## Trying a change in a product before publishing
 
@@ -709,14 +712,12 @@ import {
   truncateMiddle,
   getHashedColor,
   getFlagEmoji,
-  exportToXlsx,
 } from "@viglet/viglet-design-system";
 ```
 
-**Import `exportToXlsx` from `@viglet/viglet-design-system/xlsx`.** The root
-re-export still works, but it is deprecated: it is the reason every consumer has
-to install `xlsx`. Once the consoles import from the subpath, the root export
-goes and `xlsx` becomes an optional peer, needed only by a product that exports.
+**`exportToXlsx` is on its own entry, `@viglet/viglet-design-system/xlsx`.** The
+root no longer exports it (since 2026.3.25), so only a product that exports sheets
+installs `xlsx`.
 
 ```tsx
 import { exportToXlsx } from "@viglet/viglet-design-system/xlsx";
