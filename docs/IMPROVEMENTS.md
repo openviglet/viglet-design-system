@@ -157,6 +157,130 @@ the README's BentoListPage paragraph that it is gone. Do not remove it while any
 consumer still passes it: its content would silently stop rendering, since an unknown
 prop does not fail a build that spreads props.
 
+### §VDS237 A browser build with a global
+
+The package ships ESM for a bundler and React 19, which is right for its sixteen
+consumers and closes it to every surface that loads a script by URL: a design canvas, a
+static mockup, a page with no build. A Shio Mobile artboard drawn on the claude.ai
+design canvas could link `tokens.css` and `fonts.css` and nothing else, so every Button,
+Tabs, Switch and status marker was redrawn by hand from the tokens. A redrawn component
+is the drift this package exists to prevent, one surface further out.
+
+A second build output, `dist/viglet-ds.global.js` beside a `viglet-ds.global.css`,
+bundles a subset of the primitives as an IIFE that takes React and ReactDOM from the
+page's globals and assigns `window.VigletDS`. The subset is the parts a mockup actually
+draws: Button, GradientButton, Badge, Card, Input, Textarea, Tabs, Switch, Checkbox,
+Progress, Separator, Avatar and BentoStatusMarker. No router, no i18n provider, no
+axios: a component that needs one is not in the subset.
+
+React 18 is the floor, because that is what the design canvas supplies; a test renders
+the subset against React 18's UMD as well as 19. The output gets its own row in
+`size-budget.json`, and `check-dist` holds the global build to the same
+no-bare-specifier rule as the CSS.
+
+Not a CDN product for applications: a consumer with a build keeps importing the ESM
+entries. The global build exists for surfaces that cannot.
+
+### §VDS238 Tokens as JSON
+
+Every token is a CSS custom property, and most colours are `oklch()` or a `color-mix()`
+over another property. A browser resolves that; a React Native StyleSheet does not (no
+custom properties, no oklch, no color-mix), and neither does a design tool's colour
+picker, which wants a list of named values. Shio Mobile is Expo, so its first screen
+would otherwise copy hex values out of a browser's computed styles, and the copy would
+never hear about the next change to `preset.css`.
+
+`scripts/build-tokens.mjs` already generates `dist/tokens.css` from the preset. It also
+writes `dist/tokens.json` in the W3C design-tokens format: colours, radii, control
+heights, font families and the mono step, the bento state and status colours, each
+resolved for the light and the dark ground and for every tone, with the default accent's
+derived values (surface, line, fill stops, shadow) computed rather than left as a mix.
+Each colour carries its oklch value and a hex an RN StyleSheet accepts. A `./tokens`
+subpath exports the same data typed, for a TypeScript consumer that would rather import
+than parse.
+
+The JSON is generated, never edited; a test regenerates it and fails when the committed
+or built copy is stale, which is the guard `site.dc.html` already has.
+
+### §VDS239 Publishing to the design canvas
+
+A claude.ai design canvas offers the design systems published there as "Design System"
+artifacts, installs the chosen one into the canvas and mounts its components by a global
+name. This package is not one, so a canvas made for a Viglet product starts on the
+organisation's default system instead, and the Shio Mobile artboard had to be re-skinned
+by hand once the right system was named.
+
+Publishing it needs four things the package does not ship today: a README written for
+someone designing rather than installing (the surfaces, the accent re-key, the tones,
+the state colours, which component to reach for), the `tokens.json` the canvas's colour
+pickers and text styles read, the global build a canvas mounts, and foundation cards
+(colour on each ground, the type scale, the radius and control scales) beside the
+existing `docs/reference` artboards.
+
+A script assembles that folder from `dist/` and `docs/reference`, the same way
+`publish-ds.cmd` assembles the npm package, and the publish itself is an operator step
+on a claude.ai account. The published copy is regenerated, never edited there: an edit
+made in the canvas is lost on the next publish, the way an edit to a vendored artboard
+already is.
+
+### §VDS240 A brand and voice guide
+
+The documentation is a set of engineering contracts: what a component accepts, which
+token a product claims, what a gate measures. None of it says how a Viglet product
+writes or what it shows, so the copy in each console, each product site and now a mobile
+app is written by whoever is there, a person or an agent, from scratch.
+
+A short `docs/BRAND.md` closes that, in the order a writer meets the questions: voice
+and person in Portuguese and English, casing for titles, labels and buttons, how
+numbers, units and dates are written, the words for the states the package already
+colours (published, draft, scheduled, changed, archived), where the gradient belongs and
+where a neutral does, what imagery the products use (product marks, the mascot, the
+formula background, photography or none), the icon sets and their stroke, and motion
+with its reduced-motion floor. Each rule carries one example to follow and one to avoid.
+
+This task writes down what the products already do and asks the owner where they
+disagree; it does not invent a voice. The README links the guide from its front door,
+and the package ships it so a consumer's agent can read it from `node_modules`.
+
+### §VDS241 Phone-first patterns
+
+The reference canvases draw the shell, the list, the detail, the form, the split and the
+product site, all from a desktop width down. BENTO-AUTHORING mentions a phone only to
+say that a page must not add a second always-visible navigation. That rule is right for
+a console that shrinks; it says nothing to an app that is phone-first, where a bottom
+tab bar is the navigation and the primary action is a thumb's reach away.
+
+Shio Mobile is that consumer: a tab bar with four destinations and a centred capture
+action, bottom sheets for confirmations, a full-screen camera, list rows that carry a
+state marker, all at the touch height. Drawn without a reference, they will be drawn
+differently by the next mobile product.
+
+Reference artboards at 390 by 844, made from resolved tokens with role labels only (no
+product data, per the non-goals): the tab bar, the bottom sheet with its confirm, a row
+list with state markers, a full-screen surface on the dark ground, and the touch-height
+control scale. A section in BENTO-AUTHORING, or a sibling `PHONE-AUTHORING.md`, states
+the rules the artboards draw. Whether web components follow is a later line: the first
+mobile consumer is React Native and reads `tokens.json`, not the React primitives.
+
+### §VDS242 Product accent presets
+
+A product claims its colour by writing four accent stops and four primary inputs on
+`:root`, values it works out and retypes. `consumers.json` records every consumer as
+`cool` except the Roadkeep GUI, so no product has done it, while the package already
+names a colour per product in `--vg-product-turing`, `--vg-product-shio` and
+`--vg-product-dumont` and uses it only for a dot. The Shio Mobile artboard re-keyed to
+Shio's violet by hand to match its mark, which is the copy this would replace.
+
+An accent preset per product, selected by `data-accent` the way a tone is selected by
+`data-tone`, would set the accent stops, the readable foreground on both grounds and the
+primary inputs, restating the derived tokens inside the block so it also works on a
+subtree (the reason a tone works there and a `:root` re-key does not). The contrast gate
+measures each preset on both grounds, as it measures the tones.
+
+This is palette, which the non-goals leave to the package; which preset a product uses
+stays the product's decision, recorded in its `consumers.json` entry. Marked as an idea
+because that decision has not been made for any product yet.
+
 ## Block H — Product sites on the package
 
 ### §VDS217 Counting product sites

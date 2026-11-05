@@ -8,6 +8,13 @@
 
 ## Block C — One look across products
 
+- 📋 **VDS237** (deps: —) **A page with no bundler can render the package's tokens but none of its components** — A design canvas or a static mockup loads scripts by URL and the package ships only ESM for a bundler, so every Button there is redrawn by hand and drifts. → §VDS237
+- 📋 **VDS238** (deps: —) **The tokens exist only as CSS custom properties, so a native app or a design tool cannot read them** — React Native and a canvas colour picker read resolved values, not var() and oklch chains, and a JSON generated from preset.css keeps one source. → §VDS238
+- 📋 **VDS239** (deps: VDS237, VDS238) **The package is not a Design System on claude.ai, so a design canvas for a Viglet product starts on another system** — Published there with a designer README, tokens.json, the global build and foundation cards, a canvas can install it and mount its components by name. → §VDS239
+- 📋 **VDS240** (deps: —) **Nothing says how a Viglet product writes or what it shows, so each product and each agent invents its voice** — The docs are engineering contracts, and a short guide to voice, casing, numbers, colour, imagery, icons and motion is what a writer reads first. → §VDS240
+- 📋 **VDS241** (deps: VDS238) **No reference shows a phone-first app, so a mobile product draws its tab bar, primary action and sheets alone** — The reference canvases and BENTO-AUTHORING stop at a shrinking console, and the first mobile consumer is about to draw these from scratch. → §VDS241
+- 💭 **VDS242** (deps: —) **A product claims its accent by retyping eight oklch values, and Shio's violet exists in the package only as a dot** — The package already names a colour per product, and a preset selected by data-accent would let a consumer claim it the way it claims a tone. → §VDS242
+
 ## Block H — Product sites on the package
 
 ## Done when — VDS185
@@ -40,6 +47,52 @@
 
 - **The hub renders navy from the package and is in consumers.json** Its tone.css is
   gone, and the tone contract and the entry census both pass with tone navy.
+
+## Done when — VDS237
+
+- **A plain HTML page mounts Button and Badge from window.VigletDS** A browser test
+  loads the global build with React 18 UMD and renders the subset, and its computed
+  styles match the ESM render.
+- **The global build has its own size budget** size-budget.json carries a row for it and
+  check-dist refuses a bare specifier in it, as it does for the CSS.
+
+## Done when — VDS238
+
+- **tokens.json is generated from preset.css and never stale** A test regenerates it and
+  fails when the built copy differs, the guard site.dc.html already has.
+- **Every colour carries a hex a React Native StyleSheet accepts** A test walks
+  tokens.json and fails on any colour value that is not a six- or eight-digit hex beside
+  its oklch.
+
+## Done when — VDS239
+
+- **A new canvas installs the system and mounts a Button by name** Checked once by hand
+  on claude.ai after each publish, and the result recorded with the release.
+- **The published folder is assembled from dist and docs/reference by a script** The
+  script is the only writer, and nothing in the published copy is edited in the canvas.
+
+## Done when — VDS240
+
+- **A consumer can read the guide from the installed package** The README links it from
+  the front door and the npm tarball contains it.
+- **The guide covers voice, casing, numbers, states, colour, imagery, icons, motion**
+  Each section has one example to follow and one to avoid, and the owner has signed off
+  the voice.
+
+## Done when — VDS241
+
+- **docs/reference holds phone artboards drawn from resolved tokens** The tab bar,
+  bottom sheet, row list with state markers and a dark full-screen surface exist at 390
+  by 844 with role labels only.
+- **The phone rules are written beside the artboards** BENTO-AUTHORING or a sibling file
+  states each rule an artboard draws, and the two agree.
+
+## Done when — VDS242
+
+- **Each product preset passes the contrast gate on both grounds** The package contrast
+  gate measures every data-accent preset the way it measures the tones.
+- **A preset works on a subtree as well as on the root** A parity story renders one
+  preset inside a cool page and its chip, fill and button all follow it.
 
 ## Non-goals
 
