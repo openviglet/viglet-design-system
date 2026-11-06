@@ -30,12 +30,13 @@
  *   node scripts/check-size.mjs --json      # machine-readable result
  */
 import { gzipSync } from "node:zlib"
-import { readFileSync, readdirSync, writeFileSync } from "node:fs"
+import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs"
 import { basename, dirname, join, resolve } from "node:path"
 import { fileURLToPath } from "node:url"
 
 import { EXTERNAL_PATTERNS } from "./lib/externals.mjs"
 import { withConsumer } from "./lib/consumer-fixture.mjs"
+import { GLOBAL_BUILD } from "./lib/global-build.mjs"
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..")
 const PKG = JSON.parse(readFileSync(join(root, "package.json"), "utf8")).name
@@ -628,6 +629,21 @@ async function main() {
         )
       }
     }
+  }
+
+  // VDS237 — the browser build, measured as the file itself. A page loads it
+  // by URL whole, so there is no consumer bundle to build first, and nothing
+  // the page supplies is in it beyond what its globals replace.
+  const globalFile = join(root, "dist", GLOBAL_BUILD.file)
+  if (existsSync(globalFile)) {
+    const buffer = readFileSync(globalFile)
+    measured.global = { raw: buffer.byteLength, gzip: gzipSync(buffer).byteLength }
+    if (!update) {
+      const d = drift("global", measured.global.gzip, baseline.global?.gzip)
+      if (d) failures.push(d)
+    }
+  } else {
+    failures.push(`global: dist/${GLOBAL_BUILD.file} is missing, so the browser build has no number`)
   }
 
   if (update) {

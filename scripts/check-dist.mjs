@@ -32,6 +32,7 @@ import {
   SERVER_ENTRIES,
   emittedFiles,
 } from "./lib/entries.mjs"
+import { GLOBAL_BUILD, moduleLoads } from "./lib/global-build.mjs"
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..")
 const dist = join(repoRoot, "dist")
@@ -186,8 +187,27 @@ for (const entry of Object.keys(ENTRIES)) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// VDS237 — the browser build is a classic script, so it loads nothing.
+//
+// It is in no `exports` row (a CDN serves it by path), so check 3 above never
+// sees it, and a build that skipped it would publish without it. And an IIFE
+// has no module system: one `import` or `require` left in it is a dependency
+// that was neither bundled nor mapped to a global, and it fails on the page.
+const globalFile = join(dist, GLOBAL_BUILD.file)
+if (existsSync(globalFile)) {
+  for (const load of moduleLoads(readFileSync(globalFile, "utf8"))) {
+    failures.push(
+      `${GLOBAL_BUILD.file} loads a module (${load}), which a classic script ` +
+        "cannot do. Bundle it, or supply it as a page global.",
+    )
+  }
+} else {
+  failures.push(`${GLOBAL_BUILD.file} is missing: the build ran without vite.global.config.ts`)
+}
+
 if (failures.length > 0) {
-  console.error(`\ncheck-dist: ${failures.length} problem(s) in dist/\n`)
+  console.error(`\ncheck-dist:${failures.length} problem(s) in dist/\n`)
   for (const failure of failures) console.error(`  - ${failure}`)
   console.error("")
   process.exit(1)

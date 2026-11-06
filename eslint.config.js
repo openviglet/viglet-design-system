@@ -26,6 +26,8 @@ export default tseslint.config([
     "node_modules",
     // Vendored to work around a dual-package hazard; not ours to lint.
     "src/shims",
+    // React 18's UMD files, which the browser build's test loads as a page does.
+    "scripts/fixtures",
   ]),
   {
     files: ["**/*.{ts,tsx}"],

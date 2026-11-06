@@ -157,31 +157,6 @@ the README's BentoListPage paragraph that it is gone. Do not remove it while any
 consumer still passes it: its content would silently stop rendering, since an unknown
 prop does not fail a build that spreads props.
 
-### §VDS237 A browser build with a global
-
-The package ships ESM for a bundler, which is right for its consumers and closes it to
-every surface that loads a script by URL: a design canvas, a static mockup, a page with
-no build. A Shio Mobile artboard on the claude.ai design canvas could link `tokens.css`
-and the styles and nothing else, so every Button, Tabs, Switch and status marker was
-redrawn by hand. A redrawn component is the drift this package exists to prevent.
-
-A second build output, `dist/viglet-ds.global.js`, bundles the parts a mockup draws
-(Button, GradientButton, Badge, Card, Input, Textarea, Tabs, Switch, Checkbox, Progress,
-Separator, Avatar, BentoStatusMarker) as an IIFE that takes React and ReactDOM from the
-page's globals and assigns `window.VigletDS`. It needs no stylesheet of its own: the
-`./styles` CSS already carries the compiled utilities and is linked by CDN today.
-
-BentoStatusMarker reads `bento.state.*` with no default, so the bundle initialises the
-package's own i18n resources once, from `<html lang>`. No router and no axios: a
-component that needs one stays out of the subset.
-
-React 18 is the floor; a test renders the subset against React 18 and 19. The output
-gets a `size-budget.json` row, and `check-dist` holds it to no `import` or `require` at
-all, which is what a bare specifier means in an IIFE.
-
-Not a CDN product for applications: a consumer with a build keeps importing the ESM
-entries.
-
 ### §VDS238 Tokens as JSON
 
 Every token is a CSS custom property, and most colours are `oklch()` or a `color-mix()`

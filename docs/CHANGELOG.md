@@ -228,6 +228,9 @@
 - ✅ **VDS233** **The entity shell title is drawn inside a visible box at rest, with a second box inside it** — An inline title is one underline while edited, no longer a padless box with the select-all inside it; at rest it measures frameless, and a parity test holds both.
 - ✅ **VDS234** **The shell header theme toggle carries an accent border at rest, as if focused or selected** — ModeToggle is a neutral ghost icon button at rest, like the avatar beside it, with the accent kept to its focus ring.
 - ✅ **VDS235** **Every page is drawn as a showcase: a 150px hero and a frosted card, including the pages people work in all day** — BentoHero, BentoDataTable, BentoListPage, BentoFormHero and BentoEntityShell take grammar=work: a compact header with no hero icon, and lists flat on the page ground.
+- ✅ **VDS237** **A page with no bundler can render the package's tokens but none of its components** — A page with no bundler mounts Button, Badge and eleven more from window.VigletDS on React 18 or 19, in one 47 KB script with its own size budget (design recorded in `scripts/lib/global-build.mjs`).
+  checked **A plain HTML page mounts Button and Badge from window.VigletDS** A browser test loads the global build with React 18 UMD and renders the subset, and its computed styles match the ESM render.
+  checked **The global build has its own size budget** size-budget.json carries a row for it and check-dist refuses a bare specifier in it, as it does for the CSS.
 
 ## Block D — The package in a server-rendered framework
 

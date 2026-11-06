@@ -63,7 +63,9 @@ export default defineConfig({
       entryRoot: "src",
       // Tests are type-checked by `tsc -b` but are not part of the published
       // surface; without this they emit .d.ts files into dist.
-      exclude: ["src/**/*.{test,spec}.{ts,tsx}", "src/test/**"],
+      // VDS237 — src/global is the browser build's entry, a script with no
+      // types to publish; vite.global.config.ts builds it.
+      exclude: ["src/**/*.{test,spec}.{ts,tsx}", "src/test/**", "src/global/**"],
     }),
     copyStandaloneCss(),
     layerPackageUtilities(),

@@ -1288,6 +1288,44 @@ and `robots.txt`. The same input builds the same bytes.
 rasterises it. That one needs `@resvg/resvg-js`, an optional peer, so add it to
 the site's devDependencies.
 
+## Components on a page with no build
+
+A design canvas, a static mockup or any page that loads scripts by URL can
+mount the real components instead of redrawing them. `dist/viglet-ds.global.js`
+is a classic script that takes React and ReactDOM from the page's globals and
+puts a subset of the package on `window.VigletDS`: Button, GradientButton,
+Badge, Card (with its parts), Input, Textarea, Tabs, Switch, Checkbox,
+Progress, Separator, Avatar and BentoStatusMarker. Link the tokens and
+`./styles` beside it for the classes they use, plus `./bento.css` when the page
+draws BentoStatusMarker, whose dot and colours are bento rules:
+
+```html
+<html lang="en">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@viglet/viglet-design-system@2026.3.26/dist/tokens.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@viglet/viglet-design-system@2026.3.26/dist/viglet-design-system.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@viglet/viglet-design-system@2026.3.26/dist/bento.css">
+  <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@viglet/viglet-design-system@2026.3.26/dist/viglet-ds.global.js"></script>
+  <div id="root"></div>
+  <script>
+    const { Button, Badge } = window.VigletDS
+    const h = React.createElement
+    ReactDOM.createRoot(document.getElementById("root")).render(
+      h("div", null, h(Button, null, "Save"), h(Badge, null, "New")),
+    )
+  </script>
+</html>
+```
+
+React 18 is the floor and React 19 works too. React 19 ships no UMD build, so
+a page on 19 sets `window.React` and `window.ReactDOM` itself before this
+script runs (`ReactDOM` needs both `react-dom` and `react-dom/client`). The
+status marker's words follow `<html lang>` (`pt` and `en`, with English as the
+fallback), and `VigletDS.i18n.changeLanguage("pt")` switches them later. The
+script is about 47 KB gzipped, recorded as `global` in `size-budget.json`. It
+is for mockups: an application with a build keeps importing the ESM entries.
+
 ## Contributing
 
 The package manager here is pnpm, matching the Shio, Turing, Dumont, Cloud Home
