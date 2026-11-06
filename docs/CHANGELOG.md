@@ -250,6 +250,8 @@
   checked **A preset works on a subtree as well as on the root** A parity story renders one preset inside a cool page and its chip, fill and button all follow it.
 - ✅ **VDS244** **Console-era strings in both locales use Title Case, three-dot ellipses and Copied! where the brand guide says otherwise** — Both locales write labels in sentence case, one-character ellipses, no exclamation or please, and a test holds every string to it.
   checked **No locale string is a Title Case label or uses three dots** A test over both locales holds the guide's casing and ellipsis, so the strings cannot drift back.
+- ✅ **VDS247** **BENTO-AUTHORING's closing sentence prints [docs/reference/] with no link and splits in two** — BENTO-AUTHORING's closing sentence is one paragraph again and links the reference artboards' README.
+  checked **The closing sentence links reference/README.md in one paragraph** A pointer that renders as a bare bracket sends no reader to the artboards.
 
 ## Block D — The package in a server-rendered framework
 

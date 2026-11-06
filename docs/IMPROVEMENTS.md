@@ -184,18 +184,6 @@ The previews follow the light and dark themes only; warm and navy list their val
 the pickers, because the bundle's stylesheet keys tones on `data-tone`, not on a theme
 id.
 
-### §VDS247 The reference link in BENTO-AUTHORING
-
-The last paragraph of `docs/BENTO-AUTHORING.md`, under "What this does not cover", reads
-"Every rule above, drawn rather than stated, is [docs/reference/]" followed by a blank
-line and "artboards, one per decision". The link target and the count were lost, so the
-sentence renders as a bracketed path with no link and breaks into two paragraphs.
-
-The document ships in the package and is served as the MCP `authoring` resource, so an
-agent reads the broken sentence too. Restore it as one paragraph linking
-`reference/README.md`, without a count (the reference README states the count, and a
-second copy here would drift the way the README's consumer counts did, VDS245).
-
 ### §VDS248 Accent presets in tokens.json
 
 `dist/tokens.json` (VDS238) resolves every colour per tone and ground, and VDS242 added

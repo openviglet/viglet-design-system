@@ -356,7 +356,6 @@ at 390 × 844, from the tokens.
 Which components are the shared layer and which stay in a product is
 [docs/BENTO-BOUNDARY.md](BENTO-BOUNDARY.md).
 
-Every rule above, drawn rather than stated, is [docs/reference/]
-
+Every rule above, drawn rather than stated, is in the [docs/reference/](reference/README.md)
 artboards, one per decision. Look there when a sentence here is clear and you still cannot
 picture the page it describes.
