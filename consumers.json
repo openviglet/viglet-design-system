@@ -176,7 +176,7 @@
       "id": "roadkeep-gui",
       "name": "Roadkeep GUI",
       "package": "@rk/ui",
-      "checkout": "../../../alegauss/roadkeep-gui/packages/ui",
+      "checkout": "../../../alegauss/roadkeep/gui/packages/ui",
       "framework": "vite",
       "chrome": "bento",
       "accent": "amber",
@@ -219,6 +219,30 @@
       "tone": "warm",
       "sourceRoots": ["src", "scripts", "vite.config.ts"],
       "entries": ["./site", "./site.css", "./tokens.css", "./vite"]
+    },
+    {
+      "id": "roadkeep-site",
+      "name": "Roadkeep Site",
+      "package": "roadkeep-site",
+      "checkout": "../../../alegauss/roadkeep/site",
+      "framework": "vite",
+      "chrome": "product-site",
+      "accent": "amber",
+      "tone": "cool",
+      "sourceRoots": ["src", "scripts", "vite.config.ts"],
+      "entries": ["./site", "./site.css", "./tokens.css", "./vite"]
+    },
+    {
+      "id": "roadkeep-gui-site",
+      "name": "Roadkeep GUI Site",
+      "package": "roadkeep-gui-site",
+      "checkout": "../../../alegauss/roadkeep/gui/site",
+      "framework": "vite",
+      "chrome": "product-site",
+      "accent": "amber",
+      "tone": "cool",
+      "sourceRoots": ["src", "scripts", "vite.config.ts"],
+      "entries": ["./site", "./site.css", "./tokens.css"]
     },
     {
       "id": "winwright-site",

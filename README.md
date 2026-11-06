@@ -4,7 +4,7 @@ Shared component library, design tokens, hooks, utilities, and i18n for the
 sixteen applications that install it: the Turing, Dumont and Shio consoles,
 the Cloud Console, the Cloud Home, Schools, the Roadkeep GUI,
 the Openviglet Website, Viglet Docs, the Alegauss Hub, the Claude Tray Site,
-the Winwright Site, the Polyweave Site, the Quickshell Site, Winwright Docs and
+the Winwright Site, the Polyweave Site, the Quickshell Site, the Roadkeep Site, the Roadkeep GUI Site, Winwright Docs and
 the Claude Code First Site.
 `consumers.json` is the list, and it is what the guards read.
 
@@ -25,7 +25,7 @@ Three are Vite consoles (Turing, Shio, Dumont), one is a Vite platform home
 (the Cloud Home), one is a Vite desktop shell (the Roadkeep GUI), two are Vite
 marketing sites (the Openviglet Website and the Alegauss Hub), four are Vite
 product sites on `./site`
-(the Claude Tray Site, the Winwright Site, the Polyweave Site and the Quickshell Site),
+(the Claude Tray Site, the Winwright Site, the Polyweave Site, the Quickshell Site, the Roadkeep Site and the Roadkeep GUI Site),
 two are Next applications
 (the Cloud Console and Schools), one is Docusaurus (Viglet Docs), one is Astro
 (Winwright Docs) and one is a static page with no build
@@ -69,7 +69,7 @@ keeps anything else from bringing 0.18.5 back.
 A change here is a change to shared chrome, so the question is always what it
 does to Shio, Turing, Dumont, the Cloud Console, the Cloud Home, Schools,
 the Roadkeep GUI, the Openviglet Website, Viglet Docs, the Alegauss Hub, the
-Claude Tray Site, the Winwright Site, the Polyweave Site, the Quickshell Site,
+Claude Tray Site, the Winwright Site, the Polyweave Site, the Quickshell Site, the Roadkeep Site, the Roadkeep GUI Site,
 Winwright Docs and the Claude Code First Site — and the answer should not require
 a publish.
 The Openviglet Website and Viglet Docs take the package by caret range rather
@@ -1293,7 +1293,7 @@ the site's devDependencies.
 The package manager here is pnpm, matching the Shio, Turing, Dumont, Cloud Home
 and Schools workspaces. The Cloud Console, the Roadkeep GUI,
 the Openviglet Website, Viglet Docs, the Alegauss Hub, the Claude Tray Site,
-the Winwright Site, the Polyweave Site, the Quickshell Site and Winwright Docs install with npm,
+the Winwright Site, the Polyweave Site, the Quickshell Site, the Roadkeep Site, the Roadkeep GUI Site and Winwright Docs install with npm,
 and the Claude Code First Site
 installs nothing, which is a fact about those repositories and not about this one.
 
