@@ -2,8 +2,6 @@
 
 ## Block A — The gate the design system never had
 
-- 📋 **VDS245** (deps: —) **The README counts sixteen consumers and four product sites while consumers.json has eighteen and six** — The consumer names are guarded but the counts beside them are read by nothing, so each new consumer leaves the number further behind. → §VDS245
-
 ## Block F — What a consuming CMS needs from the package next
 
 ## Block E — The assistant every product shares
@@ -52,11 +50,6 @@
   on claude.ai after each publish, and the result recorded with the release.
 - **The published folder is assembled from dist and docs/reference by a script** The
   script is the only writer, and nothing in the published copy is edited in the canvas.
-
-## Done when — VDS245
-
-- **A test fails when a README count disagrees with consumers.json** The counts are the
-  prose nobody reads when adding a consumer, so only a check keeps them true.
 
 ## Done when — VDS247
 

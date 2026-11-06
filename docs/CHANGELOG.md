@@ -150,6 +150,8 @@
   checked **A route still missing from a view names why it was not read** What remains after naming is a load or settle failure, and the run must say which.
 - ✅ **VDS210** **the dist-stability case that imports vite.config runs under the 5s default and failed once in a loaded full suite** — The dist-stability case that imports vite.config runs on a 30s timeout sized for the loaded suite, as its neighbours do.
   checked **The vite.config import case declares a timeout sized for the loaded suite** Read the case's options, then run npm test and see it pass
+- ✅ **VDS245** **The README counts sixteen consumers and four product sites while consumers.json has eighteen and six** — The README's consumer counts read eighteen and six, and a test compares every spelled-out count with consumers.json.
+  checked **A test fails when a README count disagrees with consumers.json** The counts are the prose nobody reads when adding a consumer, so only a check keeps them true.
 
 ## Block B — Bento becomes a design-system layer
 

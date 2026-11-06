@@ -1,7 +1,7 @@
 # Viglet Design System
 
 Shared component library, design tokens, hooks, utilities, and i18n for the
-sixteen applications that install it: the Turing, Dumont and Shio consoles,
+eighteen applications that install it: the Turing, Dumont and Shio consoles,
 the Cloud Console, the Cloud Home, Schools, the Roadkeep GUI,
 the Openviglet Website, Viglet Docs, the Alegauss Hub, the Claude Tray Site,
 the Winwright Site, the Polyweave Site, the Quickshell Site, the Roadkeep Site, the Roadkeep GUI Site, Winwright Docs and
@@ -18,17 +18,17 @@ numbers and dates, the words for a record's state, colour, icons, motion, and th
 Viglet family's voice and imagery. Read it before writing the copy for a screen;
 it ships in the package as `docs/BRAND.md`.
 
-The sixteen applications that install this package are the consumers it holds
+The eighteen applications that install this package are the consumers it holds
 itself to, declared in [`consumers.json`](consumers.json) rather than remembered:
 each entry names its framework, its chrome, the accent and tone it renders with,
 where its source is and the subpaths it takes, and CI refuses prose that names a
-subset as though it were the whole set. A seventeenth is one entry there, and the
+subset as though it were the whole set. A nineteenth is one entry there, and the
 checks widen with it. The file ships in the package, and a consumer holds its own entry to its
 source with [`viglet-ds-consumer-entries`](#keeping-your-entry-in-the-register-true).
 
 Three are Vite consoles (Turing, Shio, Dumont), one is a Vite platform home
 (the Cloud Home), one is a Vite desktop shell (the Roadkeep GUI), two are Vite
-marketing sites (the Openviglet Website and the Alegauss Hub), four are Vite
+marketing sites (the Openviglet Website and the Alegauss Hub), six are Vite
 product sites on `./site`
 (the Claude Tray Site, the Winwright Site, the Polyweave Site, the Quickshell Site, the Roadkeep Site and the Roadkeep GUI Site),
 two are Next applications

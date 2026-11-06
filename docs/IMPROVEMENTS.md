@@ -91,23 +91,6 @@ timestamped), and check whether `browser.connectTimeout`, a bound on the stories
 project's workers, or `teardownTimeout` turns the hang into a failure. The setting
 belongs in `vitest.config.ts` beside that project, with the measurement in its comment.
 
-### §VDS245 The README's consumer counts, checked
-
-The README's opening says "the sixteen applications that install it" twice and "four are
-Vite product sites", while `consumers.json` declares eighteen consumers and the list
-right after "four" names six. The names are guarded: the consumers test refuses prose
-that names a subset as though it were the whole set. The count words around them are not
-read by anything, so each new consumer leaves the number one further behind.
-
-Derive the check rather than the prose: a test reads the README's spelled-out counts
-next to the roster ("the <n> applications", "<n> are Vite product sites", and the other
-per-framework counts in that paragraph) and compares each with `consumers.json`, grouped
-the way the paragraph groups them (framework and chrome). Then correct the README to
-eighteen and six in the same commit, so the test lands green.
-
-Writing the numbers as digits does not avoid this; the check has to compare them either
-way.
-
 ## Block F — What a consuming CMS needs from the package next
 
 ### §VDS152 The deprecation ends
