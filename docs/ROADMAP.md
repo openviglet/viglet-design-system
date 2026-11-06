@@ -10,7 +10,6 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS244** (deps: —) **Console-era strings in both locales use Title Case, three-dot ellipses and Copied! where the brand guide says otherwise** — The guide makes the strings the bug, and a product reading the shared keys shows two voices on one screen until they are rewritten. → §VDS244
 - 📋 **VDS247** (deps: —) **BENTO-AUTHORING's closing sentence prints [docs/reference/] with no link and splits in two** — The document ships and is served over MCP, so every reader and agent meets the broken pointer to the artboards. → §VDS247
 - 📋 **VDS248** (deps: —) **tokens.json resolves the default accent only, so a native app cannot read the accent preset it claims** — Shio Mobile reads tokens.json rather than the CSS, so the violet it would claim with data-accent on the web is missing from it. → §VDS248
 
@@ -53,11 +52,6 @@
   on claude.ai after each publish, and the result recorded with the release.
 - **The published folder is assembled from dist and docs/reference by a script** The
   script is the only writer, and nothing in the published copy is edited in the canvas.
-
-## Done when — VDS244
-
-- **No locale string is a Title Case label or uses three dots** A test over both locales
-  holds the guide's casing and ellipsis, so the strings cannot drift back.
 
 ## Done when — VDS245
 

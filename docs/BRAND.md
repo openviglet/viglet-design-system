@@ -150,12 +150,8 @@ The system speaks as "Viglet" when it is the one acting (`Talk to Viglet`,
   and the first-run screens. ✗ behind a working page, where it competes with the content.
 - No stock photography in a product. A screenshot of the product is the illustration.
 
-## Where the package still disagrees with itself
+## Held by a test
 
-The bento layer and the site layer follow part one. Some console-era strings do not:
-`forms.common.saveChanges` and `forms.formActions.saveChanges` (`Save Changes`),
-`forms.common.generalInfo` and `forms.common.advancedOptions` (Title Case),
-`common.loading`, `backendStatus.*` and the `forms.common.search*` placeholders
-(`...`), `forms.common.copied` (`Copied!`), `forms.common.formSubmitFailed` (`Please
-try again`) and `sidebar.toggle` (`Toggle Sidebar`). Where a string and this page
-disagree, the page is the target and the string is the bug.
+The package's own strings follow part one in both locales, and `src/i18n/voice.test.ts`
+fails on a Title Case label, three dots, an exclamation mark or a "please". Where a string
+and this page disagree, the page is the target and the string is the bug.

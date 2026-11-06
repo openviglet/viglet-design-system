@@ -330,7 +330,7 @@ function SidebarTrigger({
       {...props}
     >
       {isMobile ? <MenuIcon /> : <PanelLeftIcon />}
-      <span className="sr-only">{t("sidebar.toggle", { defaultValue: "Toggle Sidebar" })}</span>
+      <span className="sr-only">{t("sidebar.toggle", { defaultValue: "Toggle sidebar" })}</span>
     </GradientButton>
   )
 }
@@ -342,7 +342,7 @@ function SidebarTrigger({
 function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
   const { toggleSidebar } = useSidebar()
   const { t } = useTranslation()
-  const label = t("sidebar.toggle", { defaultValue: "Toggle Sidebar" })
+  const label = t("sidebar.toggle", { defaultValue: "Toggle sidebar" })
 
   return (
     <button

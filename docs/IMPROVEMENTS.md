@@ -201,30 +201,6 @@ The previews follow the light and dark themes only; warm and navy list their val
 the pickers, because the bundle's stylesheet keys tones on `data-tone`, not on a theme
 id.
 
-### §VDS244 Console-era strings brought to the brand guide
-
-`docs/BRAND.md` (VDS240) writes down what the bento and site layers already do: sentence
-case, the single-character ellipsis, no exclamation marks, and errors that say what
-happened and what to do without "please". Its last section names the console-era strings
-that still disagree, in both locales:
-
-- Title Case: `forms.common.saveChanges`, `forms.formActions.saveChanges` (`Save Changes`),
-  `forms.common.generalInfo`, `forms.common.advancedOptions`, `sidebar.toggle`, and the
-  Portuguese `Salvar Alterações`, `Informações Gerais`, `Opções Avançadas`.
-- Three dots: `common.loading`, `backendStatus.offline`, `backendStatus.checking`,
-  `forms.common.search`, `forms.common.selectVendor`, `forms.common.filterFields`,
-  `forms.iconPicker.searching`, `forms.iconPicker.orClickAi`.
-- `forms.common.copied` (`Copied!`) and `forms.common.formSubmitFailed` (`Failed to submit
-  the form. Please try again.`).
-
-Rewrite those values in `src/i18n/locales/{en,pt}` to the guide, keeping every key so no
-consumer's call breaks. A product that overrides one of these keys keeps its own value,
-because `initVigI18n` lets the product's leaf win. Then add a test over both locales
-that fails on a Title Case label or on `...`, so the strings cannot drift back, and
-delete the guide's "Where the package still disagrees with itself" section.
-
-Not a redesign of any component: only string values change.
-
 ### §VDS247 The reference link in BENTO-AUTHORING
 
 The last paragraph of `docs/BENTO-AUTHORING.md`, under "What this does not cover", reads

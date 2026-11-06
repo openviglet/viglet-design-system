@@ -2,7 +2,7 @@
   "sidebar": {
     "indexing": "Indexing",
     "new": "New {{feature}}",
-    "toggle": "Toggle Sidebar",
+    "toggle": "Toggle sidebar",
     "title": "Sidebar",
     "description": "Displays the mobile sidebar."
   }

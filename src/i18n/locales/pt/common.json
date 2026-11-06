@@ -4,7 +4,7 @@
     "cancel": "Cancelar",
     "delete": "Excluir",
     "new": "Novo",
-    "loading": "Carregando...",
+    "loading": "Carregando…",
     "actions": "Ações",
     "goBack": "Voltar",
     "tryAgain": "Tentar novamente",
@@ -33,8 +33,8 @@
     "closeAppSwitcher": "Fechar o alternador de aplicativos"
   },
   "backendStatus": {
-    "offline": "Servidor indisponível. Tentando reconectar...",
-    "checking": "Reconectando ao servidor...",
+    "offline": "Servidor indisponível. Tentando reconectar…",
+    "checking": "Reconectando ao servidor…",
     "retry": "Tentar agora"
   },
   "errorBoundary": {

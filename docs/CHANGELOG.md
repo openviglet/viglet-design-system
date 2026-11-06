@@ -246,6 +246,8 @@
 - ✅ **VDS242** **A product claims its accent by retyping eight oklch values, and Shio's violet exists in the package only as a dot** — A product claims its colour with data-accent: blue, violet, teal or amber key the accent and primary on root or subtree, each passing the contrast gate.
   checked **Each product preset passes the contrast gate on both grounds** The package contrast gate measures every data-accent preset the way it measures the tones.
   checked **A preset works on a subtree as well as on the root** A parity story renders one preset inside a cool page and its chip, fill and button all follow it.
+- ✅ **VDS244** **Console-era strings in both locales use Title Case, three-dot ellipses and Copied! where the brand guide says otherwise** — Both locales write labels in sentence case, one-character ellipses, no exclamation or please, and a test holds every string to it.
+  checked **No locale string is a Title Case label or uses three dots** A test over both locales holds the guide's casing and ellipsis, so the strings cannot drift back.
 
 ## Block D — The package in a server-rendered framework
 

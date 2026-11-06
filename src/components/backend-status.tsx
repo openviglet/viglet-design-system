@@ -140,7 +140,7 @@ export function BackendStatusBanner() {
 
   const isChecking = status === "checking";
   const messageKey = isChecking ? "backendStatus.checking" : "backendStatus.offline";
-  const fallback = isChecking ? "Reconnecting to the server..." : "Server unavailable. Retrying...";
+  const fallback = isChecking ? "Reconnecting to the server…" : "Server unavailable. Retrying…";
 
   return (
     <div
