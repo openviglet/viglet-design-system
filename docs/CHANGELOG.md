@@ -238,6 +238,8 @@
   checked **A consumer can read the guide from the installed package** The README links it from the front door and the npm tarball contains it.
   checked **The guide covers voice, casing, numbers, states, colour, imagery, icons, motion** Each section has one example to follow and one to avoid, and the owner has signed off the voice.
 - ✅ **VDS239 (the foundation cards)** **The package is not a Design System on claude.ai, so a design canvas for a Viglet product starts on another system** — A canvas reads type, radius and control height from a generated foundations card.
+- ✅ **VDS246** **Nothing assembles the folder a claude.ai design canvas installs, so the VDS239 publish has nothing to send** — npm run design-system assembles the canvas folder: list-grammar tokens, the bundle, a README from BRAND.md and live previews (design recorded in `scripts/design-system.mjs`).
+  checked **The assembled folder passes the canvas grammar test** A value the canvas cannot read is dropped there silently, so the test is where it fails.
 
 ## Block D — The package in a server-rendered framework
 

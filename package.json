@@ -115,7 +115,8 @@
     "build-storybook": "storybook build",
     "prepublishOnly": "npm run build",
     "build:fonts": "node scripts/build-fonts.mjs",
-    "check:exports": "node scripts/check-exports.mjs"
+    "check:exports": "node scripts/check-exports.mjs",
+    "design-system": "node scripts/design-system.mjs"
   },
   "peerDependencies": {
     "@resvg/resvg-js": ">=2.6.0",

@@ -178,24 +178,28 @@ prop does not fail a build that spreads props.
 
 A claude.ai design canvas offers the design systems published there as "Design System"
 artifacts, installs the chosen one into the canvas and mounts its components by a global
-name. This package is not one, so a canvas made for a Viglet product starts on the
-organisation's default system, and the Shio Mobile artboard had to be re-skinned by hand
-once the right system was named.
+name. This package is not one yet, so a canvas made for a Viglet product starts on the
+organisation's default system, and the Shio Mobile artboard had to be re-skinned by
+hand.
 
-Publishing it needs four things, and three exist: `dist/tokens.json` (VDS238) for the
-canvas's pickers and text styles, `dist/viglet-ds.global.js` (VDS237) for it to mount,
-and the foundation cards, which are colour in `grounds.dc.html` and the generated
-`site.dc.html`, and type, radius and control height in the generated
-`foundations.dc.html` (`scripts/foundations-reference.mjs`, with a staleness test).
+Everything but the publish exists. `npm run build && npm run design-system` writes
+`design-system/project/` (git-ignored) in the layout the Design System type keeps: the
+index, `tokens.json` in the type's list grammar (it cannot read the DTCG map
+`dist/tokens.json` ships), a README assembled from `docs/BRAND.md` and the catalogue,
+`components/bundle.js` (the browser build under its `@ds-bundle` header), `bundle.css`,
+a guideline and a live preview per component, and the Latin faces.
+`scripts/design-system.test.ts` holds it to the type's grammar. The foundation cards are
+`docs/reference/foundations.dc.html`, beside `grounds.dc.html` and `site.dc.html`.
 
-What is left is a README for someone designing rather than installing (the surfaces, the
-accent re-key, the tones, the state colours, which component to reach for), assembled
-from `docs/BRAND.md` and `dist/catalogue.json` rather than written a second time, and a
-script that assembles the folder from `dist/` and `docs/reference`, the way
-`publish-ds.cmd` assembles the npm package.
+What is left is an operator step on a claude.ai account: create the system from the
+Design System type, add a cover (`components/Cover/preview.html`, which the type writes
+last), publish the folder's files with the index in the last call, and open a new canvas
+to check that it mounts `VigletDS.Button`. A revision reads the published index first
+and keeps its marker; the published copy is regenerated from here, never edited there.
 
-The publish itself is an operator step on a claude.ai account. The published copy is
-regenerated, never edited there: an edit made in the canvas is lost on the next publish.
+The previews follow the light and dark themes only; warm and navy list their values for
+the pickers, because the bundle's stylesheet keys tones on `data-tone`, not on a theme
+id.
 
 ### §VDS241 Phone-first patterns
 

@@ -10,7 +10,7 @@
 
 ## Block C — One look across products
 
-- ⏳ **VDS239** (deps: VDS237 ✅, VDS238 ✅, VDS240 ✅) **The package is not a Design System on claude.ai, so a design canvas for a Viglet product starts on another system** — Left: a designer README from BRAND.md and the catalogue, a script assembling the folder from dist, and the claude.ai publish. → §VDS239
+- 🛠 **VDS239** (deps: VDS237 ✅, VDS238 ✅, VDS240 ✅) **The package is not a Design System on claude.ai, so a design canvas for a Viglet product starts on another system** — Left: publishing the npm run design-system folder on claude.ai, with a cover, and checking a canvas mounts a Button. → §VDS239
 - 📋 **VDS241** (deps: —) **No reference shows a phone-first app, so a mobile product draws its tab bar, primary action and sheets alone** — The reference canvases and BENTO-AUTHORING stop at a shrinking console, and the first mobile consumer is about to draw these from scratch. → §VDS241
 - 📋 **VDS242** (deps: —) **A product claims its accent by retyping eight oklch values, and Shio's violet exists in the package only as a dot** — Three consumers already retype one amber, and a preset named by colour and selected by data-accent would let a product claim it as it claims a tone. → §VDS242
 - 📋 **VDS244** (deps: —) **Console-era strings in both locales use Title Case, three-dot ellipses and Copied! where the brand guide says otherwise** — The guide makes the strings the bug, and a product reading the shared keys shows two voices on one screen until they are rewritten. → §VDS244

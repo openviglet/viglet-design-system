@@ -100,6 +100,17 @@ describe("the browser build", () => {
     expect(moduleLoads(code)).toEqual([])
   })
 
+  it("publishes every component GLOBAL_BUILD names, which the canvas cards are made from", () => {
+    const ds = load(react19())
+    for (const name of GLOBAL_BUILD.components) expect(typeof ds[name], name).not.toBe("undefined")
+  })
+
+  it("carries nothing that would end an inline <script>", () => {
+    // A design canvas inlines the bundle; either sequence would cut it short.
+    expect(code).not.toContain("</script")
+    expect(code).not.toContain("<!--")
+  })
+
   for (const [name, globals] of [
     ["React 18", react18],
     ["React 19", react19],

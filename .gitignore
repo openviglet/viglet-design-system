@@ -25,6 +25,8 @@ node_modules/
 # Build output
 dist/
 storybook-static/
+# VDS239 — the folder scripts/design-system.mjs assembles for a claude.ai design canvas.
+/design-system/
 .sb-test/
 
 # IDE

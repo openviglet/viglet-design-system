@@ -20,6 +20,26 @@ export const GLOBAL_BUILD = {
   name: "VigletDS",
   /** The only modules the page supplies, and the globals it supplies them as. */
   globals: { react: "React", "react-dom": "ReactDOM" },
+  /**
+   * VDS239 — the components it publishes, by family (a family's parts, such as
+   * `CardHeader`, ride with it). A design canvas gets one card for each, and the
+   * test holds the bundle to this list.
+   */
+  components: [
+    "Button",
+    "GradientButton",
+    "Badge",
+    "BentoStatusMarker",
+    "Progress",
+    "Input",
+    "Textarea",
+    "Checkbox",
+    "Switch",
+    "Card",
+    "Tabs",
+    "Separator",
+    "Avatar",
+  ],
 }
 
 /**
