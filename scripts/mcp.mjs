@@ -93,6 +93,17 @@ export const RESOURCES = [
     mimeType: "text/markdown",
     file: "dist/preset.css",
   },
+  // VDS238 — the same tokens resolved, for a reader that cannot follow var()
+  // and oklch: hex per tone and ground, lengths in px.
+  {
+    uri: "viglet-ds://tokens.json",
+    name: "tokens.json",
+    title: "Design tokens, resolved",
+    description:
+      "Every token as a value: each colour per tone and ground with its OKLCH and a hex React Native accepts, lengths with their px, the font stacks.",
+    mimeType: "application/json",
+    file: "dist/tokens.json",
+  },
 ]
 
 // ---------------------------------------------------------------------------

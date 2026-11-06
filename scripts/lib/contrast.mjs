@@ -259,7 +259,27 @@ export function over(top, ground) {
  */
 export function hex(colour) {
   if (!colour || colour.alpha < 1) return null
-  return "#" + oklabToLinear(colour).map((v) => Math.round(linearToSrgb(v) * 255).toString(16).padStart(2, "0")).join("")
+  return hexa(colour)
+}
+
+const byte = (unit) => Math.round(unit * 255).toString(16).padStart(2, "0")
+
+/**
+ * VDS238 — any colour as hex, with an alpha byte where it is translucent:
+ * `#rrggbb` or `#rrggbbaa`, both of which a React Native StyleSheet reads. The
+ * channels are the colour's own, not laid over anything.
+ */
+export function hexa(colour) {
+  if (!colour) return null
+  const rgb = "#" + oklabToLinear(colour).map((v) => byte(linearToSrgb(v))).join("")
+  return colour.alpha >= 1 ? rgb : rgb + byte(colour.alpha)
+}
+
+/** VDS238 — a colour's OKLCH components: lightness 0–1, chroma, hue in degrees. */
+export function oklch(colour) {
+  const chroma = Math.hypot(colour.a, colour.b)
+  const hue = chroma < 1e-4 ? 0 : ((Math.atan2(colour.b, colour.a) * 180) / Math.PI + 360) % 360
+  return [colour.L, chroma, hue]
 }
 
 /** WCAG relative luminance of an opaque colour; a translucent one has no single answer. */

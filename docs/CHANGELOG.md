@@ -231,6 +231,9 @@
 - ✅ **VDS237** **A page with no bundler can render the package's tokens but none of its components** — A page with no bundler mounts Button, Badge and eleven more from window.VigletDS on React 18 or 19, in one 47 KB script with its own size budget (design recorded in `scripts/lib/global-build.mjs`).
   checked **A plain HTML page mounts Button and Badge from window.VigletDS** A browser test loads the global build with React 18 UMD and renders the subset, and its computed styles match the ESM render.
   checked **The global build has its own size budget** size-budget.json carries a row for it and check-dist refuses a bare specifier in it, as it does for the CSS.
+- ✅ **VDS238** **The tokens exist only as CSS custom properties, so a native app or a design tool cannot read them** — A native app or design tool reads ./tokens.json: each colour per tone and ground with OKLCH and a React Native hex, lengths in px, from the preset (design recorded in `scripts/lib/tokens-json.mjs`).
+  checked **tokens.json is generated from preset.css and never stale** A test regenerates it and fails when the built copy differs, the guard site.dc.html already has.
+  checked **Every colour carries a hex a React Native StyleSheet accepts** A test walks tokens.json and fails on any colour value that is not a six- or eight-digit hex beside its oklch.
 
 ## Block D — The package in a server-rendered framework
 

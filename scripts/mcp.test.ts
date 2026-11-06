@@ -76,6 +76,7 @@ beforeAll(() => {
     join(dir, "dist", "preset.css"),
     ":root {\n  /* the accent */\n  --vg-accent-from: oklch(62% 0.2 260);\n  --primary: var(--vg-primary);\n}\n\n.dark,\n[data-theme=\"dark\"] {\n  --vg-accent-from: oklch(70% 0.16 255);\n}\n",
   )
+  writeFileSync(join(dir, "dist", "tokens.json"), JSON.stringify({ color: { cool: { light: { background: {} } } } }))
 })
 
 afterAll(() => {
@@ -114,17 +115,22 @@ describe("viglet-ds-mcp over stdio", () => {
   })
 
   it("serves the contract and the tokens as resources", async () => {
-    const [list, authoring, tokens] = await session([
+    const [list, authoring, tokens, resolved] = await session([
       { jsonrpc: "2.0", id: 1, method: "resources/list" },
       { jsonrpc: "2.0", id: 2, method: "resources/read", params: { uri: "viglet-ds://authoring" } },
       { jsonrpc: "2.0", id: 3, method: "resources/read", params: { uri: "viglet-ds://tokens" } },
+      { jsonrpc: "2.0", id: 4, method: "resources/read", params: { uri: "viglet-ds://tokens.json" } },
     ])
 
     expect(list.result.resources.map((r: { uri: string }) => r.uri)).toEqual([
       "viglet-ds://authoring",
       "viglet-ds://boundary",
       "viglet-ds://tokens",
+      "viglet-ds://tokens.json",
     ])
+    // VDS238 — served as the file, not rendered: a reader parses it.
+    expect(resolved.result.contents[0].mimeType).toBe("application/json")
+    expect(JSON.parse(resolved.result.contents[0].text).color.cool.light).toHaveProperty("background")
     // Where the file lives is the server's business, not the client's.
     expect(list.result.resources[0]).not.toHaveProperty("file")
     expect(authoring.result.contents[0].text).toContain("Adopt the shell.")

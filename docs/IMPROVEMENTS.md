@@ -157,29 +157,6 @@ the README's BentoListPage paragraph that it is gone. Do not remove it while any
 consumer still passes it: its content would silently stop rendering, since an unknown
 prop does not fail a build that spreads props.
 
-### §VDS238 Tokens as JSON
-
-Every token is a CSS custom property, and most colours are `oklch()` or a `color-mix()`
-over another property. A browser resolves that; a React Native StyleSheet does not, and
-neither does a design tool's colour picker or an agent reading the MCP `tokens`
-resource, which serves raw `preset.css`. Shio Mobile is Expo, so its theme would
-otherwise copy hex values out of a browser and never hear about the next change.
-
-`scripts/build-tokens.mjs` also writes `dist/tokens.json` in the W3C design-tokens
-format: colours, radii, control heights, font families and the mono step, the bento
-state and status colours, each resolved for both grounds and every tone, with the
-default accent's derived values computed. Each colour carries its oklch value and a hex
-an RN StyleSheet accepts. The resolver is `scripts/lib/contrast.mjs` (`groundTokens`,
-`parseColour`, `hex`), which the contrast gate and `site-reference.mjs` already use, so
-no colour library joins and the JSON cannot disagree with the measured ratios.
-
-The translucent tokens (accent surface, line, ring, shadow are mixes with transparent)
-come out as 8-digit hex with alpha, and a test pins one. A `./tokens.json` export row
-ships the file, and the MCP `tokens` resource serves it beside the preset.
-
-The JSON is generated, never edited; a test regenerates it and fails when it is stale,
-the guard `site.dc.html` already has.
-
 ### §VDS239 Publishing to the design canvas
 
 A claude.ai design canvas offers the design systems published there as "Design System"

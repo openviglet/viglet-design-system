@@ -41,6 +41,7 @@
     "./preset": "./dist/preset.css",
     "./preset.css": "./dist/preset.css",
     "./tokens.css": "./dist/tokens.css",
+    "./tokens.json": "./dist/tokens.json",
     "./i18n": {
       "types": "./dist/i18n/index.d.ts",
       "import": "./dist/i18n.es.js",

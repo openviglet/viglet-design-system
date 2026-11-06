@@ -244,7 +244,8 @@ beside a Java build, is served too. It has two tools: `find_component` ranks the
 components that do a job, and `read_component` returns one component's purpose,
 props, the contract sections that govern it and an import to start from. The
 authoring contract, the boundary and the token reference are resources
-(`viglet-ds://authoring`, `viglet-ds://boundary`, `viglet-ds://tokens`). The data
+(`viglet-ds://authoring`, `viglet-ds://boundary`, `viglet-ds://tokens`, and
+`viglet-ds://tokens.json` for the [resolved values](#design-tokens)). The data
 is `dist/catalogue.json`, generated at build time from the declarations you
 compile against and also exported as `./catalogue.json`. A component's purpose is
 its own doc comment, and every exported component has one: the build refuses a
@@ -845,6 +846,23 @@ This is separate from a component's **colour palette**. `SectionCard` (`blue | v
 **Radii are a closed scale too.** `--vg-radius-control` (6 px — buttons, fields, menu items), `--vg-radius-panel` (10 px — cards, dialogs, popovers, every bento surface) and `--vg-radius-full` (pills, avatars, the state dot). The preset points every Tailwind radius key at the first two — `rounded-xs`, `-sm` and `-md` are control, `rounded-lg` through `-4xl` are panel — so existing class names keep compiling and land on the scale. Tailwind's bare `rounded` is a fixed 4 px the theme never sees; write `rounded-sm`. `--vg-radius` still resolves, as the panel value. The `radius` figure of `look:census` counts what a console draws off the scale.
 
 **One monospace family.** `--vg-font-mono` is the stack — `"JetBrains Mono", ui-monospace, …` — and the preset maps Tailwind's `font-mono` (and so `code`, `pre` and `kbd`) to it, with `text-mono` as the 12 px step for ids, paths, keys and diffs. The face is not bundled: load JetBrains Mono to get it, or every mono falls to the platform's `ui-monospace` together. Write `font-mono` rather than naming a family, and the `mono` figure of `look:census` stays at one.
+
+**The same tokens as values, for a reader that is not a browser.** A React Native
+StyleSheet, a design tool's colour picker or an agent cannot follow `var()` and
+`oklch()`. `./tokens.json` has every token resolved, in the W3C design-tokens
+format: `color.<tone>.<ground>.<name>` is `--vg-<name>` under that `data-tone`
+(`cool` is the default) on the light or dark ground, with its OKLCH components and
+`$extensions["com.viglet"].reactNative`, a `#rrggbb` string a StyleSheet takes
+(`#rrggbbaa` for the translucent accent tints). `dimension` holds the radii,
+control heights and the mono step, each with its px (the control heights also carry
+their touch-screen value as `coarse`), and `font` the three stacks. It is generated
+from the preset at build time, so it changes when the preset does:
+
+```ts
+import tokens from "@viglet/viglet-design-system/tokens.json" with { type: "json" }
+
+const primary = tokens.color.cool.light.primary.$extensions["com.viglet"].reactNative
+```
 
 ### i18n
 
