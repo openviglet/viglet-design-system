@@ -876,7 +876,9 @@ format: `color.<tone>.<ground>.<name>` is `--vg-<name>` under that `data-tone`
 `$extensions["com.viglet"].reactNative`, a `#rrggbb` string a StyleSheet takes
 (`#rrggbbaa` for the translucent accent tints). `dimension` holds the radii,
 control heights and the mono step, each with its px (the control heights also carry
-their touch-screen value as `coarse`), and `font` the three stacks. It is generated
+their touch-screen value as `coarse`), and `font` the three stacks. `accent.<preset>.<ground>`
+holds what each [accent preset](#design-tokens) changes, only those colours, so a native
+app claiming `violet` lays `accent.violet.light` over `color.cool.light`. It is generated
 from the preset at build time, so it changes when the preset does:
 
 ```ts

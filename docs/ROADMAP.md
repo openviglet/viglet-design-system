@@ -8,8 +8,6 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS248** (deps: —) **tokens.json resolves the default accent only, so a native app cannot read the accent preset it claims** — Shio Mobile reads tokens.json rather than the CSS, so the violet it would claim with data-accent on the web is missing from it. → §VDS248
-
 ## Block H — Product sites on the package
 
 ## Done when — VDS185
@@ -49,11 +47,6 @@
   on claude.ai after each publish, and the result recorded with the release.
 - **The published folder is assembled from dist and docs/reference by a script** The
   script is the only writer, and nothing in the published copy is edited in the canvas.
-
-## Done when — VDS248
-
-- **tokens.json has each preset's accent and primary per ground** A native app claims a
-  preset by reading its values, and today it finds none.
 
 ## Non-goals
 

@@ -23,6 +23,8 @@ export interface FontToken {
 export interface TokensJson {
   $description: string
   color: Record<string, { light: Record<string, ColourToken>; dark: Record<string, ColourToken> }>
+  /** VDS248 — per accent preset and ground, only the colours the preset changes. */
+  accent: Record<string, { light: Record<string, ColourToken>; dark: Record<string, ColourToken> }>
   dimension: Record<string, DimensionToken>
   font: Record<string, FontToken>
 }

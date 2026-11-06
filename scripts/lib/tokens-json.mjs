@@ -59,8 +59,8 @@ function colourToken(colour) {
 }
 
 /** One ground of one tone: every `--vg-*` that resolves to a colour, by name without the prefix. */
-function colours(preset, tone, ground) {
-  const { tokens } = groundTokens([{ name: "preset.css", css: preset }], ground, tone)
+function colours(preset, tone, ground, accent = null) {
+  const { tokens } = groundTokens([{ name: "preset.css", css: preset }], ground, tone, accent)
   const group = {}
   for (const [name, value] of tokens) {
     if (!name.startsWith(PREFIX) || PLUMBING.test(name)) continue
@@ -153,6 +153,27 @@ function fonts(preset, tones) {
   return group
 }
 
+/**
+ * VDS248 — what each `data-accent` preset changes, per ground, under the cool
+ * tone: only the colours whose value differs from the default, so a native app
+ * lays a preset over `color.cool.<ground>` the way the CSS lays it over :root.
+ */
+function accents(preset, color) {
+  const group = {}
+  for (const accent of accentsOf(preset)) {
+    group[accent] = {}
+    for (const ground of ["light", "dark"]) {
+      const base = color.cool[ground]
+      group[accent][ground] = Object.fromEntries(
+        Object.entries(colours(preset, "cool", ground, accent)).filter(
+          ([name, token]) => base[name]?.$extensions[EXTENSION].reactNative !== token.$extensions[EXTENSION].reactNative,
+        ),
+      )
+    }
+  }
+  return group
+}
+
 /** The whole file, as an object. `JSON.stringify(tokensJson(css), null, 2)` is what ships. */
 export function tokensJson(preset) {
   const tones = tonesOf(preset)
@@ -164,8 +185,10 @@ export function tokensJson(preset) {
     $description:
       "Viglet Design System tokens, resolved. Generated from preset.css by scripts/build-tokens.mjs; edit that. " +
       'color.<tone>.<ground>.<name> is the --vg-<name> property on that ground under [data-tone="<tone>"] ("cool" is the default). ' +
-      '$extensions["com.viglet"].reactNative is the value a React Native StyleSheet takes.',
+      '$extensions["com.viglet"].reactNative is the value a React Native StyleSheet takes. ' +
+      'accent.<preset>.<ground> holds what data-accent="<preset>" changes, to lay over color.cool.<ground>.',
     color,
+    accent: accents(preset, color),
     dimension: dimensions(preset),
     font: fonts(preset, tones),
   }

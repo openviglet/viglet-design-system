@@ -85,6 +85,27 @@ describe("tokens.json", () => {
     expect(json.dimension["text-mono"].$value).toEqual({ value: 0.75, unit: "rem" })
   })
 
+  it("carries each accent preset's accent and primary per ground, as what it changes", () => {
+    expect(Object.keys(json.accent)).toEqual(["blue", "violet", "teal", "amber"])
+    for (const [accent, grounds] of Object.entries(json.accent)) {
+      for (const ground of ["light", "dark"] as const) {
+        const moved = grounds[ground]
+        const { tokens } = groundTokens([{ name: "preset.css", css: preset }], ground, "cool", accent)
+        for (const name of ["accent-fg", "primary"]) {
+          const resolved = hex(parseColour(tokens.get(`--vg-${name}`)!, tokens))
+          // Either the preset moved it, and the JSON says to what, or it is the default.
+          expect(moved[name]?.$value.hex ?? json.color.cool[ground][name].$value.hex, `${accent} ${ground} ${name}`).toBe(resolved)
+        }
+        for (const [name, token] of Object.entries(moved)) {
+          expect(token.$extensions["com.viglet"].reactNative, name).not.toBe(json.color.cool[ground][name].$extensions["com.viglet"].reactNative)
+        }
+      }
+    }
+    // Violet, the colour a native app claims first, moves both on both grounds.
+    expect(Object.keys(json.accent.violet.light)).toEqual(expect.arrayContaining(["accent-fg", "primary", "accent-fill-from"]))
+    expect(Object.keys(json.accent.violet.dark)).toEqual(expect.arrayContaining(["accent-fg", "primary"]))
+  })
+
   it("lists the font stacks, with a tone's swapped face beside the default", () => {
     expect(json.font.sans.$value[0]).toBe("Inter Variable")
     expect(json.font.mono.$value[0]).toBe("JetBrains Mono")

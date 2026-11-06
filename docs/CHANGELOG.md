@@ -252,6 +252,8 @@
   checked **No locale string is a Title Case label or uses three dots** A test over both locales holds the guide's casing and ellipsis, so the strings cannot drift back.
 - ✅ **VDS247** **BENTO-AUTHORING's closing sentence prints [docs/reference/] with no link and splits in two** — BENTO-AUTHORING's closing sentence is one paragraph again and links the reference artboards' README.
   checked **The closing sentence links reference/README.md in one paragraph** A pointer that renders as a bare bracket sends no reader to the artboards.
+- ✅ **VDS248** **tokens.json resolves the default accent only, so a native app cannot read the accent preset it claims** — tokens.json carries each accent preset per ground as the colours it changes, so a native app can claim violet as the web does.
+  checked **tokens.json has each preset's accent and primary per ground** A native app claims a preset by reading its values, and today it finds none.
 
 ## Block D — The package in a server-rendered framework
 
