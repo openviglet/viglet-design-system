@@ -85,6 +85,16 @@ export const RESOURCES = [
     mimeType: "text/markdown",
     file: "docs/BENTO-BOUNDARY.md",
   },
+  // VDS240 — what a writer reads first: casing, errors, numbers, the state
+  // words, colour, icons, motion, and the Viglet family's voice and imagery.
+  {
+    uri: "viglet-ds://brand",
+    name: "brand",
+    title: "How a product writes and what it shows",
+    description: "Casing, punctuation, errors, numbers and dates, the record-state words, colour, icons, motion, and the Viglet voice and imagery.",
+    mimeType: "text/markdown",
+    file: "docs/BRAND.md",
+  },
   {
     uri: "viglet-ds://tokens",
     name: "tokens",

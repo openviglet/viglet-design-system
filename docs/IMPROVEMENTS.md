@@ -91,6 +91,23 @@ timestamped), and check whether `browser.connectTimeout`, a bound on the stories
 project's workers, or `teardownTimeout` turns the hang into a failure. The setting
 belongs in `vitest.config.ts` beside that project, with the measurement in its comment.
 
+### §VDS245 The README's consumer counts, checked
+
+The README's opening says "the sixteen applications that install it" twice and "four are
+Vite product sites", while `consumers.json` declares eighteen consumers and the list
+right after "four" names six. The names are guarded: the consumers test refuses prose
+that names a subset as though it were the whole set. The count words around them are not
+read by anything, so each new consumer leaves the number one further behind.
+
+Derive the check rather than the prose: a test reads the README's spelled-out counts
+next to the roster ("the <n> applications", "<n> are Vite product sites", and the other
+per-framework counts in that paragraph) and compares each with `consumers.json`, grouped
+the way the paragraph groups them (framework and chrome). Then correct the README to
+eighteen and six in the same commit, so the test lands green.
+
+Writing the numbers as digits does not avoid this; the check has to compare them either
+way.
+
 ## Block F — What a consuming CMS needs from the package next
 
 ### §VDS152 The deprecation ends
@@ -179,29 +196,6 @@ A script assembles that folder from `dist/` and `docs/reference`, the way
 on a claude.ai account. The published copy is regenerated, never edited there: an edit
 made in the canvas is lost on the next publish.
 
-### §VDS240 A brand and voice guide
-
-The documentation is a set of engineering contracts: what a component accepts, which
-token a product claims, what a gate measures. None of it says how a product on the
-package writes or what it shows, so the copy in each console, product site and now a
-mobile app is written from scratch by whoever is there, a person or an agent.
-
-A short `docs/BRAND.md` closes that, in two parts. The first holds for every consumer,
-because the package already decides it: casing for titles, labels and buttons, how
-numbers, units and dates are written, the words for the states it colours (published,
-draft, scheduled, changed, archived), where the gradient belongs and where a neutral
-does, the icon set and its stroke, and motion with its reduced-motion floor. The second
-is the Viglet family's own: voice and person in Portuguese and English, and imagery
-(product marks, the mascot, the formula background). Half of `consumers.json` is not a
-Viglet product, so the split says which half binds a Roadkeep or Winwright site. Each
-rule carries one example to follow and one to avoid.
-
-This task writes down what the products already do, read from the package's own i18n
-strings, and asks the owner where they disagree; it does not invent a voice. The README
-links it from its front door, `package.json` `files` ships it, and the MCP server serves
-it as `viglet-ds://brand` beside `authoring` and `boundary`, which is how a consumer's
-agent already reads the package.
-
 ### §VDS241 Phone-first patterns
 
 The reference canvases draw the shell, the list, the detail, the form, the split and the
@@ -247,6 +241,30 @@ reads the presets instead of its typed values.
 Which preset a product uses stays the product's decision, recorded in the `accent` field
 its `consumers.json` entry already carries; the three amber consumers move to the preset
 when they next upgrade.
+
+### §VDS244 Console-era strings brought to the brand guide
+
+`docs/BRAND.md` (VDS240) writes down what the bento and site layers already do: sentence
+case, the single-character ellipsis, no exclamation marks, and errors that say what
+happened and what to do without "please". Its last section names the console-era strings
+that still disagree, in both locales:
+
+- Title Case: `forms.common.saveChanges`, `forms.formActions.saveChanges` (`Save Changes`),
+  `forms.common.generalInfo`, `forms.common.advancedOptions`, `sidebar.toggle`, and the
+  Portuguese `Salvar Alterações`, `Informações Gerais`, `Opções Avançadas`.
+- Three dots: `common.loading`, `backendStatus.offline`, `backendStatus.checking`,
+  `forms.common.search`, `forms.common.selectVendor`, `forms.common.filterFields`,
+  `forms.iconPicker.searching`, `forms.iconPicker.orClickAi`.
+- `forms.common.copied` (`Copied!`) and `forms.common.formSubmitFailed` (`Failed to submit
+  the form. Please try again.`).
+
+Rewrite those values in `src/i18n/locales/{en,pt}` to the guide, keeping every key so no
+consumer's call breaks. A product that overrides one of these keys keeps its own value,
+because `initVigI18n` lets the product's leaf win. Then add a test over both locales
+that fails on a Title Case label or on `...`, so the strings cannot drift back, and
+delete the guide's "Where the package still disagrees with itself" section.
+
+Not a redesign of any component: only string values change.
 
 ## Block H — Product sites on the package
 

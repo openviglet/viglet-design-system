@@ -234,6 +234,9 @@
 - ✅ **VDS238** **The tokens exist only as CSS custom properties, so a native app or a design tool cannot read them** — A native app or design tool reads ./tokens.json: each colour per tone and ground with OKLCH and a React Native hex, lengths in px, from the preset (design recorded in `scripts/lib/tokens-json.mjs`).
   checked **tokens.json is generated from preset.css and never stale** A test regenerates it and fails when the built copy differs, the guard site.dc.html already has.
   checked **Every colour carries a hex a React Native StyleSheet accepts** A test walks tokens.json and fails on any colour value that is not a six- or eight-digit hex beside its oklch.
+- ✅ **VDS240** **Nothing says how a Viglet product writes or what it shows, so each product and each agent invents its voice** — docs/BRAND.md says how a product writes and what it shows, ships in the package and is served as viglet-ds://brand (design recorded in `docs/BRAND.md`).
+  checked **A consumer can read the guide from the installed package** The README links it from the front door and the npm tarball contains it.
+  checked **The guide covers voice, casing, numbers, states, colour, imagery, icons, motion** Each section has one example to follow and one to avoid, and the owner has signed off the voice.
 
 ## Block D — The package in a server-rendered framework
 

@@ -13,6 +13,11 @@ component, its variants and its props, rebuilt on each commit to `2026.3`. Look
 there before writing a component: the catalogue is the answer to "does this
 already exist".
 
+**[How a product writes, and what it shows](docs/BRAND.md)**: casing, errors,
+numbers and dates, the words for a record's state, colour, icons, motion, and the
+Viglet family's voice and imagery. Read it before writing the copy for a screen;
+it ships in the package as `docs/BRAND.md`.
+
 The sixteen applications that install this package are the consumers it holds
 itself to, declared in [`consumers.json`](consumers.json) rather than remembered:
 each entry names its framework, its chrome, the accent and tone it renders with,
@@ -243,8 +248,8 @@ repository root, so a package installed in a workspace, such as a web client
 beside a Java build, is served too. It has two tools: `find_component` ranks the
 components that do a job, and `read_component` returns one component's purpose,
 props, the contract sections that govern it and an import to start from. The
-authoring contract, the boundary and the token reference are resources
-(`viglet-ds://authoring`, `viglet-ds://boundary`, `viglet-ds://tokens`, and
+authoring contract, the boundary, the brand guide and the token reference are resources
+(`viglet-ds://authoring`, `viglet-ds://boundary`, `viglet-ds://brand`, `viglet-ds://tokens`, and
 `viglet-ds://tokens.json` for the [resolved values](#design-tokens)). The data
 is `dist/catalogue.json`, generated at build time from the declarations you
 compile against and also exported as `./catalogue.json`. A component's purpose is

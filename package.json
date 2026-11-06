@@ -93,6 +93,7 @@
     "scripts/page-reference.mjs",
     "docs/BENTO-AUTHORING.md",
     "docs/BENTO-BOUNDARY.md",
+    "docs/BRAND.md",
     "docs/reference"
   ],
   "sideEffects": [

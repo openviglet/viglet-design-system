@@ -14,9 +14,8 @@ package this repository has installed, so what it says matches that release.
 - **The contract**: read the resource `viglet-ds://authoring` before the first screen (the
   shell and who owns each region, the page shapes, colour, i18n, accessibility), and
   `viglet-ds://boundary` for what the shared layer holds and what stays in a product.
-- **Tokens**: `viglet-ds://tokens` for the properties a stylesheet claims, and
-  `viglet-ds://tokens.json` for their resolved values (a hex per tone and ground, lengths
-  in px) when the reader is not a browser.
+- **Copy**: `viglet-ds://brand` before writing a label, an error or an empty state.
+- **Tokens**: `viglet-ds://tokens`, or `viglet-ds://tokens.json` resolved to hex and px.
 
 ## Two rules that are easy to get wrong
 
