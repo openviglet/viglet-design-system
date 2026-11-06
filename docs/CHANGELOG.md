@@ -243,6 +243,9 @@
 - ✅ **VDS241** **No reference shows a phone-first app, so a mobile product draws its tab bar, primary action and sheets alone** — Phone boards drawn from the tokens show a tab bar, state rows, a bottom sheet and a dark full screen; BENTO-AUTHORING s8 has the rules (design recorded in `scripts/phone-reference.mjs`).
   checked **docs/reference holds phone artboards drawn from resolved tokens** The tab bar, bottom sheet, row list with state markers and a dark full-screen surface exist at 390 by 844 with role labels only.
   checked **The phone rules are written beside the artboards** BENTO-AUTHORING or a sibling file states each rule an artboard draws, and the two agree.
+- ✅ **VDS242** **A product claims its accent by retyping eight oklch values, and Shio's violet exists in the package only as a dot** — A product claims its colour with data-accent: blue, violet, teal or amber key the accent and primary on root or subtree, each passing the contrast gate.
+  checked **Each product preset passes the contrast gate on both grounds** The package contrast gate measures every data-accent preset the way it measures the tones.
+  checked **A preset works on a subtree as well as on the root** A parity story renders one preset inside a cool page and its chip, fill and button all follow it.
 
 ## Block D — The package in a server-rendered framework
 

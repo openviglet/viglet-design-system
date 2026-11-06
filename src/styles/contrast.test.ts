@@ -11,6 +11,7 @@ import {
   parseColour,
   ratio,
 } from "../../scripts/lib/contrast.mjs"
+import { accentsOf } from "../../scripts/lib/tokens-json.mjs"
 
 const srcDir = resolve(import.meta.dirname, "..")
 const presetPath = join(srcDir, "styles", "preset.css")
@@ -101,6 +102,53 @@ describe.each(
     const behind = luminance(tint.alpha < 1 ? over(tint, page) : tint)!
     const label = luminance(parseColour(tokens.get("--vg-brand")!, tokens))!
     expect(ratio(label, behind)).toBeGreaterThanOrEqual(AA_TEXT)
+  })
+})
+
+/**
+ * VDS242 — an accent preset is a product's colour claimed by name, so every one
+ * is held to the same pairs on both grounds, and under each tone it composes
+ * with. Read from the preset, so a fifth preset is measured without a line here.
+ */
+const ACCENTS = accentsOf(preset)
+describe.each(
+  ACCENTS.flatMap((accent) =>
+    (["cool", "warm", "navy"] as const).flatMap((tone) => (["light", "dark"] as const).map((ground) => [accent, tone, ground] as const)),
+  ),
+)("VDS242: the %s preset under %s, on the %s ground", (accent, tone, ground) => {
+  const measured = measurePairs(sheets, ground, tone, accent)
+
+  it.each(measured.map((p) => [`${p.foreground} on ${p.surface}`, p] as const))("keeps %s legible", (_, pair) => {
+    expect(pair.unread, `${pair.unread.join(" and ")} does not resolve to an opaque colour`).toEqual([])
+    expect(pair.ratio, `${pair.foreground} on ${pair.surface} is ${pair.ratio?.toFixed(2)}:1`).toBeGreaterThanOrEqual(AA_TEXT)
+  })
+})
+
+describe("VDS242: the accent presets", () => {
+  it("are the four colours, named by colour", () => {
+    expect(ACCENTS).toEqual(["blue", "violet", "teal", "amber"])
+  })
+
+  it("each key the accent and the primary, not the package's defaults", () => {
+    const fg = (accent: string | null, ground: "light" | "dark") => {
+      const { tokens } = groundTokens(sheets, ground, "cool", accent)
+      return { fg: parseColour(tokens.get("--vg-accent-fg")!, tokens), primary: parseColour(tokens.get("--vg-primary")!, tokens) }
+    }
+    for (const ground of ["light", "dark"] as const) {
+      const base = fg(null, ground)
+      for (const accent of ACCENTS.filter((a) => a !== "blue")) {
+        const keyed = fg(accent, ground)
+        expect(keyed.fg, `${accent} ${ground} accent`).not.toEqual(base.fg)
+        expect(keyed.primary, `${accent} ${ground} primary`).not.toEqual(base.primary)
+      }
+    }
+  })
+
+  it("leave a page with no data-accent exactly as it was", () => {
+    const before = preset.slice(0, preset.indexOf("/* ── Accent presets (VDS242)"))
+    for (const ground of ["light", "dark"] as const) {
+      expect(groundTokens(sheets, ground).tokens).toEqual(groundTokens([{ name: "preset.css", css: before }], ground).tokens)
+    }
   })
 })
 

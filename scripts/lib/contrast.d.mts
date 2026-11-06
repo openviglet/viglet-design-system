@@ -7,6 +7,9 @@ export type Ground = "light" | "dark"
 /** VDS213 — the `data-tone` a ground is measured under; `cool` when omitted. */
 export type Tone = string
 
+/** VDS242 — the `data-accent` preset a ground is measured under; none when null or omitted. */
+export type Accent = string | null
+
 /** A stylesheet, named the way a finding should name it. */
 export interface Sheet {
   name: string
@@ -43,6 +46,7 @@ export declare function groundTokens(
   sheets: readonly Sheet[],
   ground: Ground,
   tone?: Tone,
+  accent?: Accent,
 ): { tokens: Map<string, string>; origin: Map<string, string> }
 
 export declare function resolveToken(tokens: Map<string, string>, value: string, depth?: number): string
@@ -61,4 +65,10 @@ export declare function ratio(front: number, behind: number): number
 
 export declare function pairsOf(tokens: Map<string, string>): [surface: string, foreground: string][]
 
-export declare function measurePairs(sheets: readonly Sheet[], ground: Ground, tone?: Tone): MeasuredPair[]
+export declare function measurePairs(sheets: readonly Sheet[], ground: Ground, tone?: Tone, accent?: Accent): MeasuredPair[]
+
+/** VDS238 — any colour as `#rrggbb`, or `#rrggbbaa` where it is translucent. */
+export declare function hexa(colour: Colour | null): string | null
+
+/** VDS238 — a colour's OKLCH components: lightness 0–1, chroma, hue in degrees. */
+export declare function oklch(colour: Colour): [number, number, number]

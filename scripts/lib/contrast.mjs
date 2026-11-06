@@ -67,7 +67,18 @@ export function ruleBlocks(css) {
   return blocks
 }
 
-const TONE_ATTRIBUTE = /\[data-tone=["']?([\w-]+)["']?\]/
+/** `[data-tone="warm"]`, `[data-accent="amber"]`, or `[data-accent]` with no value. */
+const SCOPE_ATTRIBUTE = /\[data-(tone|accent)(?:=["']?([\w-]+)["']?)?\]/g
+const SCOPED = /\[data-(tone|accent)[\]=]/
+
+/** Whether every scope attribute in a selector is one the measured tone and accent satisfy. */
+function inScope(selector, tone, accent) {
+  return [...selector.matchAll(SCOPE_ATTRIBUTE)].every(([, kind, value]) => {
+    if (kind === "tone") return value === tone
+    // VDS242 — `[data-accent]` with no value holds for any preset.
+    return accent !== null && (value === undefined || value === accent)
+  })
+}
 
 /**
  * VDS213 — a tone is a `[data-tone="…"]` block over the grounds. `cool` is the
@@ -76,12 +87,15 @@ const TONE_ATTRIBUTE = /\[data-tone=["']?([\w-]+)["']?\]/
  * its dark block (the attribute beside or around a dark selector) on the dark.
  * A block for a tone other than the one measured is no ground at all: read as
  * one, a `.dark [data-tone="warm"]` would overwrite the cool dark values.
+ *
+ * VDS242 — an accent preset is the same shape, `[data-accent="…"]`, read only
+ * when that preset is measured; `accent` null measures none.
  */
-function groundOf(block, tone = "cool") {
+function groundOf(block, tone = "cool", accent = null) {
   if (block.atRules.some((rule) => /^@theme/.test(rule))) return null
-  const toned = block.selectors.filter((s) => TONE_ATTRIBUTE.test(s))
+  const toned = block.selectors.filter((s) => SCOPED.test(s))
   if (toned.length > 0) {
-    const ours = toned.filter((s) => TONE_ATTRIBUTE.exec(s)[1] === tone).map((s) => s.replace(TONE_ATTRIBUTE, " ").trim())
+    const ours = toned.filter((s) => inScope(s, tone, accent)).map((s) => s.replace(SCOPE_ATTRIBUTE, " ").trim())
     if (ours.length === 0) return null
     if (ours.some((s) => s === "" || ROOT_SELECTOR.test(s))) return "light"
     return ours.some((s) => DARK_SELECTOR.test(s)) ? "dark" : null
@@ -96,12 +110,12 @@ function groundOf(block, tone = "cool") {
  * One ground's tokens across the stylesheets, in cascade order, with where each
  * was last declared, so a finding can name the product's line and not the preset's.
  */
-export function groundTokens(sheets, ground, tone = "cool") {
+export function groundTokens(sheets, ground, tone = "cool", accent = null) {
   const tokens = new Map()
   const origin = new Map()
   for (const { name, css } of sheets) {
     for (const block of ruleBlocks(css)) {
-      const which = groundOf(block, tone)
+      const which = groundOf(block, tone, accent)
       if (which === "light" || (ground === "dark" && which === "dark")) {
         for (const [token, value] of block.declarations) {
           tokens.set(token, value)
@@ -335,8 +349,8 @@ export function pairsOf(tokens) {
  * Every pair on one ground, measured: `ratio` is null where either side does not
  * resolve to an opaque colour this reads, and `unread` names which.
  */
-export function measurePairs(sheets, ground, tone = "cool") {
-  const { tokens, origin } = groundTokens(sheets, ground, tone)
+export function measurePairs(sheets, ground, tone = "cool", accent = null) {
+  const { tokens, origin } = groundTokens(sheets, ground, tone, accent)
 
   /**
    * Every stylesheet a token's value passes through on its way to a colour.

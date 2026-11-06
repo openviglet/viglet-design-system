@@ -30,5 +30,8 @@ export interface TokensJson {
 /** The tones the preset declares, `cool` first. */
 export declare function tonesOf(preset: string): string[]
 
+/** The accent presets the preset declares, in source order. */
+export declare function accentsOf(preset: string): string[]
+
 /** `tokens.json` from the preset's source: every token resolved, per tone and ground. */
 export declare function tokensJson(preset: string): TokensJson

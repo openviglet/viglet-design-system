@@ -677,3 +677,116 @@
   --vg-brand-border: rgba(47, 139, 255, 0.3);
   --vg-gradient: linear-gradient(135deg, #2f8bff 0%, #7dd3fc 100%);
 }
+
+/* ── Accent presets (VDS242) ────────────────────────────────────────────
+   A product claims its colour by naming it: `data-accent="amber"` on any
+   ancestor sets the accent stops, the readable accent on both grounds and the
+   four primary inputs, where a product used to retype eight oklch values on its
+   :root. Named by colour, never by product, the rule the tones follow; the
+   `--vg-product-*` colours stay the dots they are.
+
+   An accent composes on top of a tone: it re-keys the highlight, the tone the
+   ground under it, and this section comes after the tones so the primary inputs
+   are the accent's on the same element. A product's own :root still wins over a
+   preset set on the root element, as it wins over a tone.
+
+   The derived tokens are restated once for every preset, in the two blocks
+   below, because a custom property substitutes its var() where it is declared:
+   declared only on :root they would keep the default accent inside a subtree. */
+[data-accent] {
+  --vg-accent-fg: var(--vg-accent-text);
+  --vg-accent-surface: color-mix(in oklab, var(--vg-accent-from) 10%, transparent);
+  --vg-accent-surface-strong: color-mix(in oklab, var(--vg-accent-from) 20%, transparent);
+  --vg-accent-line: color-mix(in oklab, var(--vg-accent-from) 35%, transparent);
+  --vg-accent-fill-from: color-mix(in oklab, var(--vg-accent-from) 88%, black);
+  --vg-accent-fill-to: color-mix(in oklab, var(--vg-accent-to) 88%, black);
+  --vg-accent-fill-from-hover: color-mix(in oklab, var(--vg-accent-from) 76%, black);
+  --vg-accent-fill-to-hover: color-mix(in oklab, var(--vg-accent-to) 76%, black);
+  --vg-accent-ring: color-mix(in oklab, var(--vg-accent-from) 50%, transparent);
+  --vg-accent-shadow: color-mix(in oklab, var(--vg-accent-from) 25%, transparent);
+  --vg-accent-shadow-hover: color-mix(in oklab, var(--vg-accent-from) 30%, transparent);
+  --vg-primary: var(--vg-primary-base);
+  --vg-primary-foreground: var(--vg-primary-foreground-base);
+  --primary: var(--vg-primary);
+  --primary-foreground: var(--vg-primary-foreground);
+}
+
+/* The dark ground under a preset, wherever the mode sits relative to it. Two
+   classes or attributes per selector, (0,2,0), as the tones' dark blocks. */
+.dark[data-accent],
+.dark [data-accent],
+[data-theme="dark"][data-accent],
+[data-theme="dark"] [data-accent],
+[data-accent] .dark,
+[data-accent] [data-theme="dark"] {
+  --vg-accent-fg: var(--vg-accent-text-dark);
+  --vg-accent-ring: color-mix(in oklab, var(--vg-accent-text-dark) 50%, transparent);
+  --vg-accent-shadow: color-mix(in oklab, var(--vg-accent-from) 20%, transparent);
+  --vg-accent-shadow-hover: color-mix(in oklab, var(--vg-accent-from) 25%, transparent);
+  --vg-primary: var(--vg-primary-base-dark);
+  --vg-primary-foreground: var(--vg-primary-foreground-base-dark);
+  --primary: var(--vg-primary);
+  --primary-foreground: var(--vg-primary-foreground);
+  --vg-ring: var(--vg-accent-text-dark);
+  --ring: var(--vg-ring);
+  --vg-sidebar-ring: var(--vg-accent-text-dark);
+  --sidebar-ring: var(--vg-sidebar-ring);
+}
+
+/* Each preset is its inputs: two gradient stops, the accent readable on each
+   ground, and the primary fill with what it carries, per ground. The primary
+   is the accent's readable step, so "you are here" is the product's colour. */
+[data-accent="blue"] {
+  --vg-accent-from: oklch(62.3% 0.214 259.815);
+  --vg-accent-to: oklch(58.5% 0.233 277.117);
+  --vg-accent-text: oklch(48.8% 0.243 264.376);
+  --vg-accent-text-dark: oklch(70.7% 0.165 254.624);
+  --vg-primary-base: oklch(48.8% 0.243 264.376);
+  --vg-primary-base-dark: oklch(70.7% 0.165 254.624);
+  --vg-primary-foreground-base: oklch(98.5% 0 0);
+  --vg-primary-foreground-base-dark: oklch(20.5% 0 0);
+}
+
+[data-accent="violet"] {
+  --vg-accent-from: oklch(60.6% 0.25 292.717);
+  --vg-accent-to: oklch(54.1% 0.281 293.009);
+  --vg-accent-text: oklch(49.1% 0.27 292.581);
+  --vg-accent-text-dark: oklch(70.2% 0.183 293.541);
+  --vg-primary-base: oklch(49.1% 0.27 292.581);
+  --vg-primary-base-dark: oklch(70.2% 0.183 293.541);
+  --vg-primary-foreground-base: oklch(98.5% 0 0);
+  --vg-primary-foreground-base-dark: oklch(20.5% 0 0);
+}
+
+/* Teal and amber are light colours: their stops carry no white label, so the
+   fill is drawn from the 700 and 800 steps instead of mixed from the stops, and
+   the readable accent is the 800 step, which holds on the strong tint too. */
+[data-accent="teal"] {
+  --vg-accent-from: oklch(70.4% 0.14 182.503);
+  --vg-accent-to: oklch(60% 0.118 184.704);
+  --vg-accent-text: oklch(43.7% 0.078 188.216);
+  --vg-accent-text-dark: oklch(77.7% 0.152 181.912);
+  --vg-primary-base: oklch(51.1% 0.096 186.391);
+  --vg-primary-base-dark: oklch(77.7% 0.152 181.912);
+  --vg-primary-foreground-base: oklch(98.5% 0 0);
+  --vg-primary-foreground-base-dark: oklch(20.5% 0 0);
+  --vg-accent-fill-from: oklch(51.1% 0.096 186.391);
+  --vg-accent-fill-to: oklch(43.7% 0.078 188.216);
+  --vg-accent-fill-from-hover: color-mix(in oklab, oklch(51.1% 0.096 186.391) 88%, black);
+  --vg-accent-fill-to-hover: color-mix(in oklab, oklch(43.7% 0.078 188.216) 88%, black);
+}
+
+[data-accent="amber"] {
+  --vg-accent-from: oklch(82.8% 0.189 84.429);
+  --vg-accent-to: oklch(76.9% 0.188 70.08);
+  --vg-accent-text: oklch(47.3% 0.137 46.201);
+  --vg-accent-text-dark: oklch(82.8% 0.189 84.429);
+  --vg-primary-base: oklch(55.5% 0.163 48.998);
+  --vg-primary-base-dark: oklch(82.8% 0.189 84.429);
+  --vg-primary-foreground-base: oklch(98.5% 0 0);
+  --vg-primary-foreground-base-dark: oklch(20.5% 0 0);
+  --vg-accent-fill-from: oklch(55.5% 0.163 48.998);
+  --vg-accent-fill-to: oklch(47.3% 0.137 46.201);
+  --vg-accent-fill-from-hover: color-mix(in oklab, oklch(55.5% 0.163 48.998) 88%, black);
+  --vg-accent-fill-to-hover: color-mix(in oklab, oklch(47.3% 0.137 46.201) 88%, black);
+}

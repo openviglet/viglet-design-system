@@ -846,6 +846,22 @@ This is separate from a component's **colour palette**. `SectionCard` (`blue | v
 
 `cool` is the default and changes nothing. `warm` is clay on a dark-brown ground, with an amber gradient, a warm footer, and Inter as the display face. `navy` is the same set in blue: a clear blue brand on a navy ground, with a blue-to-sky gradient and a navy footer. A tone composes with the mode, since each one has a light and a dark set, and it composes with the accent too: your `:root` re-key still lands on top. Unlike the accent, a tone also works on a subtree, because the preset restates the derived tokens inside the tone block. `viglet-ds-page-lint --contrast` and the package's own contrast gate measure the cool tone. The Storybook toolbar has a Tone switch beside the mode switch.
 
+**Claim the accent by name.** Instead of retyping the eight values above, a product sets
+`data-accent` on any ancestor, the way it sets a tone:
+
+```html
+<html data-accent="amber" data-tone="warm" class="dark">
+```
+
+`blue`, `violet`, `teal` and `amber` each set the gradient stops, the readable accent on
+both grounds and the four `--vg-primary-*-base` inputs, so the "you are here" mark and the
+default button take the product's colour too. Every preset holds 4.5:1 on both grounds
+under every tone, which the contrast gate measures; teal and amber, being light colours,
+draw their button fill from a deeper step than their gradient. A preset works on a subtree
+as on the root, composes on top of a tone, and a product's own `:root` values still win
+over it. The presets are named by colour, never by product: which one a product uses is
+the `accent` field of its `consumers.json` entry.
+
 **Control heights are a closed scale.** `Button`, `GradientButton`, `Toggle`, `Input`, `SelectTrigger`, `NavigationMenuTrigger` and the sidebar's menu buttons take their height from two tokens: `--vg-control-dense` (32 px — tables, filter bars, toolbars, the `sm` and `icon-sm` sizes) and `--vg-control-form` (36 px — fields and their actions, the `default`, `lg`, `icon` and `icon-lg` sizes). `lg` keeps its wider padding and is no longer a third height. Under `pointer: coarse` both rise to `--vg-control-touch` (44 px). A control of your own reads the same tokens — `h-(--vg-control-form)` — rather than a fixed `h-*`, and the `button-height` and `input-height` figures of `look:census` count what a console still draws off the scale. Two kinds of button are not counted as controls: one taller than the touch step is read as a card (a file tile, a row with a description), and one drawn as text a reader clicks (an inline edit's value, a sort header) says so with `data-look="text"`.
 
 **Radii are a closed scale too.** `--vg-radius-control` (6 px — buttons, fields, menu items), `--vg-radius-panel` (10 px — cards, dialogs, popovers, every bento surface) and `--vg-radius-full` (pills, avatars, the state dot). The preset points every Tailwind radius key at the first two — `rounded-xs`, `-sm` and `-md` are control, `rounded-lg` through `-4xl` are panel — so existing class names keep compiling and land on the scale. Tailwind's bare `rounded` is a fixed 4 px the theme never sees; write `rounded-sm`. `--vg-radius` still resolves, as the panel value. The `radius` figure of `look:census` counts what a console draws off the scale.
@@ -1258,7 +1274,7 @@ the tones, with the faces in `:root`), and `./site.css`. Pin the version:
 
 The markup is the components' output, class for class: render it once, or copy
 it from the Storybook story. `tokens.css` is generated from `preset.css` at
-build time, so the two cannot disagree. The pair is about 5 KB gzipped, which
+build time, so the two cannot disagree. The pair is about 6 KB gzipped, which
 `size-budget.json` records as `site`. Put `class="vg-site"` on `<body>` for
 the face, ground and glow. For the clay family, set `data-tone="warm"` on
 `<html>`, and `data-tone="navy"` for a blue one ([tones](#design-tokens)). The mode is `data-theme`:

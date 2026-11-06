@@ -25,13 +25,15 @@ export const HEIGHT = 1360
 export const TONES = ["cool", "warm", "navy"]
 
 /**
- * Three accents a product card might carry: the package's own, and two a product
- * re-keys to. Each has its readable pair per ground, as a re-key states it.
+ * Three accents a product card might carry: the package's own, and two of the
+ * presets a product claims with `data-accent` (VDS242). They were typed values
+ * here, a green and an amber; the presets are read from the preset instead, so
+ * the ratio printed is the one a product selecting them gets.
  */
 const ACCENTS = [
-  { name: "Package accent", light: "var(--vg-accent-text)", dark: "var(--vg-accent-text-dark)" },
-  { name: "Green re-key", light: "oklch(50.8% 0.118 165.612)", dark: "oklch(76.5% 0.177 163.223)" },
-  { name: "Amber re-key", light: "oklch(55.5% 0.163 48.998)", dark: "oklch(82.8% 0.189 84.429)" },
+  { name: "Package accent", accent: null },
+  { name: "Teal preset", accent: "teal" },
+  { name: "Amber preset", accent: "amber" },
 ]
 
 const escape = (text) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
@@ -54,7 +56,8 @@ export function measureCell(preset, tone, ground) {
   }
 
   const accents = ACCENTS.map((accent) => {
-    const text = colour(ground === "dark" ? accent.dark : accent.light)
+    const keyed = groundTokens([{ name: "preset.css", css: preset }], ground, tone, accent.accent).tokens
+    const text = parseColour(keyed.get("--vg-accent-fg") ?? "", keyed)
     return { name: accent.name, colour: hex(opaque(text)), ratio: measure(`${accent.name} on a card`, text, token("--vg-card"), true) }
   })
   const gradient = (tokens.get("--vg-gradient") ?? "").match(/#[0-9a-f]{6}/gi) ?? []

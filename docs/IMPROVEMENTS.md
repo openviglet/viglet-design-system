@@ -201,28 +201,6 @@ The previews follow the light and dark themes only; warm and navy list their val
 the pickers, because the bundle's stylesheet keys tones on `data-tone`, not on a theme
 id.
 
-### §VDS242 Product accent presets
-
-A product claims its colour by writing four accent stops and four primary inputs on
-`:root`, values it works out and retypes. Three consumers have done it, all with the
-same amber (the Roadkeep GUI, the Roadkeep Site and the Roadkeep GUI Site in
-`consumers.json`), and `site-reference.mjs` types that amber and a green by hand for its
-artboard. The package names a colour per product in `--vg-product-turing`,
-`--vg-product-shio` and `--vg-product-dumont` and uses it only for a dot, and the Shio
-Mobile artboard re-keyed to Shio's violet by hand.
-
-An accent preset selected by `data-accent`, the way a tone is selected by `data-tone`,
-would set the accent stops, the readable foreground on both grounds and the primary
-inputs, restating the derived tokens inside the block so it also works on a subtree.
-Presets are named by colour (`amber`, `violet`, `teal`, `blue`), never by product, the
-rule the tones already follow; `--vg-product-*` stays the dot. The contrast gate
-measures each preset on both grounds, as it measures the tones, and `site-reference.mjs`
-reads the presets instead of its typed values.
-
-Which preset a product uses stays the product's decision, recorded in the `accent` field
-its `consumers.json` entry already carries; the three amber consumers move to the preset
-when they next upgrade.
-
 ### §VDS244 Console-era strings brought to the brand guide
 
 `docs/BRAND.md` (VDS240) writes down what the bento and site layers already do: sentence
@@ -258,6 +236,22 @@ The document ships in the package and is served as the MCP `authoring` resource,
 agent reads the broken sentence too. Restore it as one paragraph linking
 `reference/README.md`, without a count (the reference README states the count, and a
 second copy here would drift the way the README's consumer counts did, VDS245).
+
+### §VDS248 Accent presets in tokens.json
+
+`dist/tokens.json` (VDS238) resolves every colour per tone and ground, and VDS242 added
+the accent presets (`data-accent="blue|violet|teal|amber"`) after it, so the JSON
+carries the package's default accent only. A React Native app such as Shio Mobile reads
+`tokens.json`, not the CSS, and so still cannot take the violet preset it would claim on
+the web.
+
+`tokensJson` should add an `accent` group: per preset (from `accentsOf`), per ground,
+the tokens the preset moves (`accent-from`, `-to`, `-fg`, the surfaces, the fills,
+`primary`, `primary-foreground`), resolved with `groundTokens(…, tone, accent)` exactly
+as the colours are. Under the cool tone is enough for a first cut; a preset's values do
+not change with the tone except where the tone restates the primary inputs. Extend the
+canvas tokens in `scripts/design-system.mjs` only if the Design System type can show
+them, which it cannot as themes today (eight at most, and six are taken).
 
 ## Block H — Product sites on the package
 

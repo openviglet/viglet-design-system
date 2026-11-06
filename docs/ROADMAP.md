@@ -10,9 +10,9 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS242** (deps: —) **A product claims its accent by retyping eight oklch values, and Shio's violet exists in the package only as a dot** — Three consumers already retype one amber, and a preset named by colour and selected by data-accent would let a product claim it as it claims a tone. → §VDS242
 - 📋 **VDS244** (deps: —) **Console-era strings in both locales use Title Case, three-dot ellipses and Copied! where the brand guide says otherwise** — The guide makes the strings the bug, and a product reading the shared keys shows two voices on one screen until they are rewritten. → §VDS244
 - 📋 **VDS247** (deps: —) **BENTO-AUTHORING's closing sentence prints [docs/reference/] with no link and splits in two** — The document ships and is served over MCP, so every reader and agent meets the broken pointer to the artboards. → §VDS247
+- 📋 **VDS248** (deps: —) **tokens.json resolves the default accent only, so a native app cannot read the accent preset it claims** — Shio Mobile reads tokens.json rather than the CSS, so the violet it would claim with data-accent on the web is missing from it. → §VDS248
 
 ## Block H — Product sites on the package
 
@@ -54,13 +54,6 @@
 - **The published folder is assembled from dist and docs/reference by a script** The
   script is the only writer, and nothing in the published copy is edited in the canvas.
 
-## Done when — VDS242
-
-- **Each product preset passes the contrast gate on both grounds** The package contrast
-  gate measures every data-accent preset the way it measures the tones.
-- **A preset works on a subtree as well as on the root** A parity story renders one
-  preset inside a cool page and its chip, fill and button all follow it.
-
 ## Done when — VDS244
 
 - **No locale string is a Title Case label or uses three dots** A test over both locales
@@ -75,6 +68,11 @@
 
 - **The closing sentence links reference/README.md in one paragraph** A pointer that
   renders as a bare bracket sends no reader to the artboards.
+
+## Done when — VDS248
+
+- **tokens.json has each preset's accent and primary per ground** A native app claims a
+  preset by reading its values, and today it finds none.
 
 ## Non-goals
 

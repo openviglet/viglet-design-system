@@ -38,6 +38,11 @@ export function tonesOf(preset) {
   return [...found]
 }
 
+/** VDS242 — the accent presets the preset declares, by `[data-accent="…"]`, in source order. */
+export function accentsOf(preset) {
+  return [...new Set([...preset.matchAll(/\[data-accent=["']?([\w-]+)["']?\]/g)].map((m) => m[1]))]
+}
+
 function colourToken(colour) {
   const [L, C, H] = oklch(colour)
   const opaque = hexa({ ...colour, alpha: 1 })
