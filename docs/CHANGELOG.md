@@ -237,6 +237,7 @@
 - ✅ **VDS240** **Nothing says how a Viglet product writes or what it shows, so each product and each agent invents its voice** — docs/BRAND.md says how a product writes and what it shows, ships in the package and is served as viglet-ds://brand (design recorded in `docs/BRAND.md`).
   checked **A consumer can read the guide from the installed package** The README links it from the front door and the npm tarball contains it.
   checked **The guide covers voice, casing, numbers, states, colour, imagery, icons, motion** Each section has one example to follow and one to avoid, and the owner has signed off the voice.
+- ✅ **VDS239 (the foundation cards)** **The package is not a Design System on claude.ai, so a design canvas for a Viglet product starts on another system** — A canvas reads type, radius and control height from a generated foundations card.
 
 ## Block D — The package in a server-rendered framework
 

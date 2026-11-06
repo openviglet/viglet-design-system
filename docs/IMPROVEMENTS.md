@@ -182,19 +182,20 @@ name. This package is not one, so a canvas made for a Viglet product starts on t
 organisation's default system, and the Shio Mobile artboard had to be re-skinned by hand
 once the right system was named.
 
-Publishing it needs four things: a README for someone designing rather than installing
-(the surfaces, the accent re-key, the tones, the state colours, which component to reach
-for), assembled from `docs/BRAND.md` and `catalogue.json` rather than written a second
-time; the `tokens.json` the canvas's pickers and text styles read; the global build a
-canvas mounts; and foundation cards. Colour on each ground already exists in
-`grounds.dc.html` and the generated `site.dc.html`; the new cards are the type scale,
-the radius scale and the control heights, generated from the preset the way
-`site-reference.mjs` generates `site.dc.html`, with the same staleness check.
+Publishing it needs four things, and three exist: `dist/tokens.json` (VDS238) for the
+canvas's pickers and text styles, `dist/viglet-ds.global.js` (VDS237) for it to mount,
+and the foundation cards, which are colour in `grounds.dc.html` and the generated
+`site.dc.html`, and type, radius and control height in the generated
+`foundations.dc.html` (`scripts/foundations-reference.mjs`, with a staleness test).
 
-A script assembles that folder from `dist/` and `docs/reference`, the way
-`publish-ds.cmd` assembles the npm package, and the publish itself is an operator step
-on a claude.ai account. The published copy is regenerated, never edited there: an edit
-made in the canvas is lost on the next publish.
+What is left is a README for someone designing rather than installing (the surfaces, the
+accent re-key, the tones, the state colours, which component to reach for), assembled
+from `docs/BRAND.md` and `dist/catalogue.json` rather than written a second time, and a
+script that assembles the folder from `dist/` and `docs/reference`, the way
+`publish-ds.cmd` assembles the npm package.
+
+The publish itself is an operator step on a claude.ai account. The published copy is
+regenerated, never edited there: an edit made in the canvas is lost on the next publish.
 
 ### §VDS241 Phone-first patterns
 

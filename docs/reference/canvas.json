@@ -1,7 +1,8 @@
 {
   "pages": [
     { "id": "vds-shell", "name": "The shell" },
-    { "id": "vds-shapes", "name": "The shapes" }
+    { "id": "vds-shapes", "name": "The shapes" },
+    { "id": "vds-foundations", "name": "The foundations" }
   ],
   "artboards": [
     {
@@ -102,6 +103,15 @@
       "h": 1360,
       "title": "A product site, every tone",
       "page": "vds-shapes"
+    },
+    {
+      "file": "foundations.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1280,
+      "h": 620,
+      "title": "Type, radius and control height",
+      "page": "vds-foundations"
     }
   ],
   "annotations": [

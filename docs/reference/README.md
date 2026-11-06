@@ -1,6 +1,6 @@
 # The page reference
 
-Eleven artboards, one per decision that makes two products built from this package stop
+Twelve artboards, one per decision that makes two products built from this package stop
 looking like one. They are the composition half of the catalogue: a story proves a component
 in isolation, and these prove the arrangement.
 
@@ -22,8 +22,9 @@ prose. Where the two disagree, the contract is right and an artboard is stale.
 | The shapes | `grounds.dc.html`       | the same components on both grounds, with the ratios                      |
 | The shapes | `split.dc.html`         | a two-pane screen: who scrolls, who owns the ratio, and phone width       |
 | The shapes | `site.dc.html`          | a product site on every tone and both grounds, every ratio measured       |
+| The foundations | `foundations.dc.html` | the type steps, the radius scale and the control heights, as numbers |
 
-`canvas.json` places them and names the two pages.
+`canvas.json` places them and names the three pages.
 
 **The shapes draw the quieter surface, and the components now follow it.** Panels are
 solid cards, not frosted glass; frost stays on the save bar, which content scrolls under.
@@ -41,7 +42,8 @@ the package's non-goals forbid it for the same reason they forbid a nav array.
 the rail's width and the header's height come from `src/styles/preset.css`, so an artboard
 is checkable against the preset. `site.dc.html` goes one step further: it is generated
 from the preset by `node scripts/site-reference.mjs`, ratios included, and a test fails when
-the committed page is stale. The accent shown is the one this package ships, because a
+the committed page is stale. `foundations.dc.html` is generated the same way, by
+`node scripts/foundations-reference.mjs`, from the preset and Tailwind's type scale. The accent shown is the one this package ships, because a
 product's own is a re-key and `primary.dc.html` is where that is drawn.
 
 ## Editing them
