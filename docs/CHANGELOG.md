@@ -240,6 +240,9 @@
 - ✅ **VDS239 (the foundation cards)** **The package is not a Design System on claude.ai, so a design canvas for a Viglet product starts on another system** — A canvas reads type, radius and control height from a generated foundations card.
 - ✅ **VDS246** **Nothing assembles the folder a claude.ai design canvas installs, so the VDS239 publish has nothing to send** — npm run design-system assembles the canvas folder: list-grammar tokens, the bundle, a README from BRAND.md and live previews (design recorded in `scripts/design-system.mjs`).
   checked **The assembled folder passes the canvas grammar test** A value the canvas cannot read is dropped there silently, so the test is where it fails.
+- ✅ **VDS241** **No reference shows a phone-first app, so a mobile product draws its tab bar, primary action and sheets alone** — Phone boards drawn from the tokens show a tab bar, state rows, a bottom sheet and a dark full screen; BENTO-AUTHORING s8 has the rules (design recorded in `scripts/phone-reference.mjs`).
+  checked **docs/reference holds phone artboards drawn from resolved tokens** The tab bar, bottom sheet, row list with state markers and a dark full-screen surface exist at 390 by 844 with role labels only.
+  checked **The phone rules are written beside the artboards** BENTO-AUTHORING or a sibling file states each rule an artboard draws, and the two agree.
 
 ## Block D — The package in a server-rendered framework
 

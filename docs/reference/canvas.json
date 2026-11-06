@@ -2,7 +2,8 @@
   "pages": [
     { "id": "vds-shell", "name": "The shell" },
     { "id": "vds-shapes", "name": "The shapes" },
-    { "id": "vds-foundations", "name": "The foundations" }
+    { "id": "vds-foundations", "name": "The foundations" },
+    { "id": "vds-phone", "name": "The phone" }
   ],
   "artboards": [
     {
@@ -112,7 +113,11 @@
       "h": 620,
       "title": "Type, radius and control height",
       "page": "vds-foundations"
-    }
+    },
+    { "file": "phone-tabs.dc.html", "x": 0, "y": 0, "w": 390, "h": 844, "title": "A tab bar and the primary action", "page": "vds-phone" },
+    { "file": "phone-list.dc.html", "x": 470, "y": 0, "w": 390, "h": 844, "title": "Records in rows, each with its state", "page": "vds-phone" },
+    { "file": "phone-sheet.dc.html", "x": 940, "y": 0, "w": 390, "h": 844, "title": "A confirmation as a bottom sheet", "page": "vds-phone" },
+    { "file": "phone-fullscreen.dc.html", "x": 1410, "y": 0, "w": 390, "h": 844, "title": "A full-screen surface, dark ground", "page": "vds-phone" }
   ],
   "annotations": [
     {

@@ -308,7 +308,39 @@ push, and a violation fails the build.
   content; the rail is fixed, one width, and hidden below `md`. That is about the
   shell — a page's own aside is §1, and it needs no provider either.
 
-## 8. Tests
+## 8. Phone-first
+
+§7 is a console that shrinks. An app that is phone-first has a different skeleton,
+and the four `phone-*` artboards in [docs/reference/](reference/README.md) draw it
+at 390 × 844, from the tokens.
+
+- **The tab bar is the navigation.** Three to five destinations along the bottom,
+  each an icon with its label always shown, never an icon alone. The active one
+  takes `--primary`, the rest the muted foreground, the same "you are here" the
+  rail draws. It sits above the home indicator, never under it, and does not
+  scroll with the page. Here it replaces the header's command trigger as the way
+  around, so §7's "no second always-visible nav" still holds: there is one.
+- **One primary action, in a thumb's reach.** The screen's main action floats
+  above the tab bar on the right, in the accent gradient (`GradientButton`'s
+  fill), at the touch height. One per screen; every other action goes in the
+  page or behind it.
+- **Every target is the touch height.** `--vg-control-touch` (44 px) is the
+  smallest thing a finger presses: buttons, fields, a row's whole height, the
+  close button of a full-screen surface. A record row is two lines at 64 px,
+  and the whole row is the target.
+- **A row carries its state as a dot and a word**, exactly as on a console
+  (§4), with the relative time on the right. No colour of its own per area.
+- **A confirmation is a bottom sheet**, not a centred dialog: the page dims,
+  the sheet rises with a grabber, the body states the consequence in the words
+  BRAND.md gives a destructive confirmation, and the actions stack full width at
+  the touch height, the deciding one first.
+- **A full-screen surface is on the dark ground** whatever the app's mode (a
+  camera, a viewer): the content owns the screen, the controls sit on its edges
+  at the touch height, and nothing is drawn under them.
+- Respect the insets: nothing the reader taps sits in the status bar's or the
+  home indicator's area.
+
+## 9. Tests
 
 - Every shared component here carries vitest and Testing Library coverage, so a
   regression surfaces once rather than in each console.

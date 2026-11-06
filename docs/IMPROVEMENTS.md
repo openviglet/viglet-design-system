@@ -201,30 +201,6 @@ The previews follow the light and dark themes only; warm and navy list their val
 the pickers, because the bundle's stylesheet keys tones on `data-tone`, not on a theme
 id.
 
-### §VDS241 Phone-first patterns
-
-The reference canvases draw the shell, the list, the detail, the form, the split and the
-product site, all from a desktop width down. BENTO-AUTHORING mentions a phone only to
-say that a page must not add a second always-visible navigation. That rule is right for
-a console that shrinks; it says nothing to an app that is phone-first, where a bottom
-tab bar is the navigation and the primary action is a thumb's reach away.
-
-Shio Mobile is the first such consumer: a tab bar, bottom sheets for confirmations, a
-full-screen camera, list rows that carry a state marker, all at the touch height. Drawn
-without a reference, they will be drawn differently by the next mobile product.
-
-Reference artboards at 390 by 844, with role labels only (no product data, per the
-non-goals): a tab bar of N destinations with one primary action, the bottom sheet with
-its confirm, a row list with state markers, a full-screen surface on the dark ground,
-and the touch-height control scale. They are generated from the preset through
-`scripts/lib/contrast.mjs`, the way `site.dc.html` is, with its staleness check, so they
-need no `tokens.json`.
-
-The rules go in a phone section of BENTO-AUTHORING rather than a sibling file, because
-that document already ships in the package and is served as the MCP `authoring`
-resource. Whether web components follow is a later line: the first mobile consumer is
-React Native and reads `tokens.json`, not the React primitives.
-
 ### §VDS242 Product accent presets
 
 A product claims its colour by writing four accent stops and four primary inputs on
@@ -270,6 +246,18 @@ that fails on a Title Case label or on `...`, so the strings cannot drift back, 
 delete the guide's "Where the package still disagrees with itself" section.
 
 Not a redesign of any component: only string values change.
+
+### §VDS247 The reference link in BENTO-AUTHORING
+
+The last paragraph of `docs/BENTO-AUTHORING.md`, under "What this does not cover", reads
+"Every rule above, drawn rather than stated, is [docs/reference/]" followed by a blank
+line and "artboards, one per decision". The link target and the count were lost, so the
+sentence renders as a bracketed path with no link and breaks into two paragraphs.
+
+The document ships in the package and is served as the MCP `authoring` resource, so an
+agent reads the broken sentence too. Restore it as one paragraph linking
+`reference/README.md`, without a count (the reference README states the count, and a
+second copy here would drift the way the README's consumer counts did, VDS245).
 
 ## Block H — Product sites on the package
 

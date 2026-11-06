@@ -10,9 +10,9 @@
 
 ## Block C — One look across products
 
-- 📋 **VDS241** (deps: —) **No reference shows a phone-first app, so a mobile product draws its tab bar, primary action and sheets alone** — The reference canvases and BENTO-AUTHORING stop at a shrinking console, and the first mobile consumer is about to draw these from scratch. → §VDS241
 - 📋 **VDS242** (deps: —) **A product claims its accent by retyping eight oklch values, and Shio's violet exists in the package only as a dot** — Three consumers already retype one amber, and a preset named by colour and selected by data-accent would let a product claim it as it claims a tone. → §VDS242
 - 📋 **VDS244** (deps: —) **Console-era strings in both locales use Title Case, three-dot ellipses and Copied! where the brand guide says otherwise** — The guide makes the strings the bug, and a product reading the shared keys shows two voices on one screen until they are rewritten. → §VDS244
+- 📋 **VDS247** (deps: —) **BENTO-AUTHORING's closing sentence prints [docs/reference/] with no link and splits in two** — The document ships and is served over MCP, so every reader and agent meets the broken pointer to the artboards. → §VDS247
 
 ## Block H — Product sites on the package
 
@@ -54,14 +54,6 @@
 - **The published folder is assembled from dist and docs/reference by a script** The
   script is the only writer, and nothing in the published copy is edited in the canvas.
 
-## Done when — VDS241
-
-- **docs/reference holds phone artboards drawn from resolved tokens** The tab bar,
-  bottom sheet, row list with state markers and a dark full-screen surface exist at 390
-  by 844 with role labels only.
-- **The phone rules are written beside the artboards** BENTO-AUTHORING or a sibling file
-  states each rule an artboard draws, and the two agree.
-
 ## Done when — VDS242
 
 - **Each product preset passes the contrast gate on both grounds** The package contrast
@@ -78,6 +70,11 @@
 
 - **A test fails when a README count disagrees with consumers.json** The counts are the
   prose nobody reads when adding a consumer, so only a check keeps them true.
+
+## Done when — VDS247
+
+- **The closing sentence links reference/README.md in one paragraph** A pointer that
+  renders as a bare bracket sends no reader to the artboards.
 
 ## Non-goals
 
