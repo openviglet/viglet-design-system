@@ -36,6 +36,12 @@ export interface PrerenderSiteOptions {
   outputDir: (path: string) => string
   /** The absolute URL of the social card. Without it, no og:image tags are written. */
   ogImage?: string
+  /**
+   * Extra head tags for one route, written right after the canonical link, in the order
+   * given and escaped by the caller (VDS243) — e.g. a `rel="alternate"` link to the route's
+   * Markdown twin. Absent, the head is exactly the canonical, Open Graph and card tags.
+   */
+  headTags?: (route: PrerenderRoute, canonical: string) => readonly string[]
   /** The route's Markdown twin, written beside it as `index.md`. */
   twin?: (path: string) => string
   /** `manifest.json`: the routes, their twins and their sizes. */
@@ -83,7 +89,12 @@ export function lastAuthoredChange(cwd: string, paths: readonly string[] = ["src
 }
 
 /** The tags the template's `</head>` gains: canonical, Open Graph and, with a card, Twitter's. */
-function headFor(route: PrerenderRoute, canonical: string, ogImage: string | undefined): string {
+function headFor(
+  route: PrerenderRoute,
+  canonical: string,
+  ogImage: string | undefined,
+  extra: readonly string[] = [],
+): string {
   const card = ogImage
     ? [
         `<meta property="og:image" content="${escapeHtml(ogImage)}" />`,
@@ -95,6 +106,7 @@ function headFor(route: PrerenderRoute, canonical: string, ogImage: string | und
     : []
   return [
     `<link rel="canonical" href="${escapeHtml(canonical)}" />`,
+    ...extra,
     `<meta property="og:type" content="website" />`,
     `<meta property="og:title" content="${escapeHtml(route.ogTitle ?? route.title)}" />`,
     `<meta property="og:description" content="${escapeHtml(route.ogDescription ?? route.description)}" />`,
@@ -104,7 +116,14 @@ function headFor(route: PrerenderRoute, canonical: string, ogImage: string | und
 }
 
 /** The template filled for one route. */
-function pageFor(template: string, route: PrerenderRoute, canonical: string, body: string, ogImage: string | undefined): string {
+function pageFor(
+  template: string,
+  route: PrerenderRoute,
+  canonical: string,
+  body: string,
+  ogImage: string | undefined,
+  extra: readonly string[] = [],
+): string {
   let html = replaceOrThrow(template, /<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(route.title)}</title>`, "a <title>")
   html = replaceOrThrow(
     html,
@@ -112,7 +131,7 @@ function pageFor(template: string, route: PrerenderRoute, canonical: string, bod
     `<meta name="description" content="${escapeHtml(route.description)}" />`,
     'a <meta name="description">',
   )
-  html = replaceOrThrow(html, "</head>", `  ${headFor(route, canonical, ogImage)}\n  </head>`, "a </head>")
+  html = replaceOrThrow(html, "</head>", `  ${headFor(route, canonical, ogImage, extra)}\n  </head>`, "a </head>")
   return replaceOrThrow(html, '<div id="root"></div>', `<div id="root">${body}</div>`, 'the <div id="root"> mount point')
 }
 
@@ -162,7 +181,7 @@ export function prerenderSite(options: PrerenderSiteOptions): PrerenderedRoute[]
 
   for (const route of routes) {
     const canonical = canonicalUrl(route.path)
-    const html = pageFor(template, route, canonical, render(route.path), ogImage)
+    const html = pageFor(template, route, canonical, render(route.path), ogImage, options.headTags?.(route, canonical))
 
     const rel = outputDir(route.path)
     const dir = join(distDir, rel)

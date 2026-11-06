@@ -79,6 +79,22 @@ describe("prerenderSite", () => {
     expect(read("index.html")).toMatch(/twitter:image" content="[^"]+" \/>\n {2}<\/head>/)
   })
 
+  it("writes a site's own head tags right after the canonical link, and counts them (VDS243)", () => {
+    const written = prerenderSite(
+      options({
+        headTags: (_route, canonical) => [`<link rel="alternate" type="text/markdown" href="${canonical}index.md" />`],
+        manifest: { name: "tool", base: "/tool/" },
+      }),
+    )
+    const page = read("features/a/index.html")
+    expect(page).toContain(
+      '    <link rel="canonical" href="https://example.org/tool/features/a/" />\n' +
+        '    <link rel="alternate" type="text/markdown" href="https://example.org/tool/features/a/index.md" />\n' +
+        '    <meta property="og:type" content="website" />',
+    )
+    expect(written[1].htmlBytes).toBe(Buffer.byteLength(page, "utf8"))
+  })
+
   it("writes no card tags when there is no card", () => {
     prerenderSite(options({ ogImage: undefined }))
     expect(read("index.html")).not.toContain("og:image")
