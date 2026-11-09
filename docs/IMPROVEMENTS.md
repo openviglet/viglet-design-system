@@ -219,3 +219,26 @@ What is left is in the hub, and it needs a release that carries navy, since the 
   to `ogCardSvg` instead.
 - Compare the built pages before and after: the tokens are the same values, so
   nothing should move.
+
+### §VDS249 The FreeHarbor site in the census
+
+The FreeHarbor site (`D:\Git\alegauss\freeharbor\site`, repository alegauss/freeharbor)
+renders from the package's site layer: `Chrome.tsx` draws the nav and footer through
+`./site`, the landing is `SiteHero` and `SiteFeatureIndex`, every section head is
+`SiteSectionHead`, and the build calls `prerenderSite` and `renderOgCard`. It is on the
+`navy` tone (VDS221), brand re-keyed to the azure pair, and pins the package at
+2026.3.23.
+
+It is not in `consumers.json`, so the census measures it nowhere: no parity digest for
+its tone, no README count, no consumers test. FreeHarbor's DD285 is waiting on exactly
+this entry, and records it as this repository's change, the way VDS222 registered the
+three alegauss sites and VDS224 the Claude Code First site.
+
+Add the entry the way VDS222 did: name `FreeHarbor Site`, its repository and site path,
+the entry points it imports (`./site`, `./site.css`, `./tokens.css`, `./vite`), and tone
+`navy`. Then let the census tests, the README counts (VDS245 checks them) and any prose
+listing every consumer (VDS236) follow, in the same commit.
+
+Done when:
+
+- `consumers.json` lists the FreeHarbor site with tone navy, and the consumers test and the README count check pass with it.

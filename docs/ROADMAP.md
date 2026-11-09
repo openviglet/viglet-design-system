@@ -10,6 +10,8 @@
 
 ## Block H — Product sites on the package
 
+- 📋 **VDS249** (deps: —) **The FreeHarbor site takes the package's site layer and is not in consumers.json, so the census does not measure it** — FreeHarbor's DD285 waits on this entry, which rewords this repository's README and census tests. → §VDS249
+
 ## Done when — VDS185
 
 - **The dock rests at the rail's foot and opens as an anchored popover** A reserved slot
