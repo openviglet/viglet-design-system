@@ -10,8 +10,6 @@
 
 ## Block H — Product sites on the package
 
-- 📋 **VDS251** (deps: —) **The register and the README still call the Aduzi site the Quickshell Site** — The product was renamed Aduzi, so every sentence that lists the consumers names a product that no longer exists. → §VDS251
-
 ## Done when — VDS185
 
 - **The dock rests at the rail's foot and opens as an anchored popover** A reserved slot

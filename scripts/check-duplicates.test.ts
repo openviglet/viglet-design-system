@@ -8,7 +8,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest"
 // This CLI ships to every consumer — Turing, Shio, Dumont, the Cloud Console,
 // the Cloud Home, Schools, the Roadkeep GUI, the Openviglet Website, Viglet Docs,
 // the Alegauss Hub, the Claude Tray Site, the Winwright Site, the Polyweave Site,
-// the Quickshell Site, the Roadkeep Site, the Roadkeep GUI Site, the FreeHarbor Site,
+// the Aduzi Site, the Roadkeep Site, the Roadkeep GUI Site, the FreeHarbor Site,
 // Winwright Docs and
 // the Claude Code First Site — and runs in the CI of the ones
 // that have adopted

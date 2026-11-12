@@ -305,8 +305,8 @@
       "entries": ["./site", "./site.css", "./tokens.css", "./vite"]
     },
     {
-      "id": "quickshell-site",
-      "name": "Quickshell Site",
+      "id": "aduzi-site",
+      "name": "Aduzi Site",
       "package": "quickshell-site",
       "checkout": "../../../alegauss/aduzi/site",
       "framework": "vite",

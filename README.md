@@ -4,7 +4,7 @@ Shared component library, design tokens, hooks, utilities, and i18n for the
 nineteen applications that install it: the Turing, Dumont and Shio consoles,
 the Cloud Console, the Cloud Home, Schools, the Roadkeep GUI,
 the Openviglet Website, Viglet Docs, the Alegauss Hub, the Claude Tray Site,
-the Winwright Site, the Polyweave Site, the Quickshell Site, the Roadkeep Site, the Roadkeep GUI Site,
+the Winwright Site, the Polyweave Site, the Aduzi Site, the Roadkeep Site, the Roadkeep GUI Site,
 the FreeHarbor Site, Winwright Docs and
 the Claude Code First Site.
 `consumers.json` is the list, and it is what the guards read.
@@ -31,7 +31,7 @@ Three are Vite consoles (Turing, Shio, Dumont), one is a Vite platform home
 (the Cloud Home), one is a Vite desktop shell (the Roadkeep GUI), two are Vite
 marketing sites (the Openviglet Website and the Alegauss Hub), seven are Vite
 product sites on `./site`
-(the Claude Tray Site, the Winwright Site, the Polyweave Site, the Quickshell Site, the Roadkeep Site, the Roadkeep GUI Site and the FreeHarbor Site),
+(the Claude Tray Site, the Winwright Site, the Polyweave Site, the Aduzi Site, the Roadkeep Site, the Roadkeep GUI Site and the FreeHarbor Site),
 two are Next applications
 (the Cloud Console and Schools), one is Docusaurus (Viglet Docs), one is Astro
 (Winwright Docs) and one is a static page with no build
@@ -75,7 +75,7 @@ keeps anything else from bringing 0.18.5 back.
 A change here is a change to shared chrome, so the question is always what it
 does to Shio, Turing, Dumont, the Cloud Console, the Cloud Home, Schools,
 the Roadkeep GUI, the Openviglet Website, Viglet Docs, the Alegauss Hub, the
-Claude Tray Site, the Winwright Site, the Polyweave Site, the Quickshell Site, the Roadkeep Site, the Roadkeep GUI Site,
+Claude Tray Site, the Winwright Site, the Polyweave Site, the Aduzi Site, the Roadkeep Site, the Roadkeep GUI Site,
 the FreeHarbor Site, Winwright Docs and the Claude Code First Site — and the answer should not require
 a publish.
 The Openviglet Website and Viglet Docs take the package by caret range rather
@@ -1373,7 +1373,7 @@ is for mockups: an application with a build keeps importing the ESM entries.
 The package manager here is pnpm, matching the Shio, Turing, Dumont, Cloud Home
 and Schools workspaces. The Cloud Console, the Roadkeep GUI,
 the Openviglet Website, Viglet Docs, the Alegauss Hub, the Claude Tray Site,
-the Winwright Site, the Polyweave Site, the Quickshell Site, the Roadkeep Site, the Roadkeep GUI Site,
+the Winwright Site, the Polyweave Site, the Aduzi Site, the Roadkeep Site, the Roadkeep GUI Site,
 the FreeHarbor Site and Winwright Docs install with npm,
 and the Claude Code First Site
 installs nothing, which is a fact about those repositories and not about this one.
