@@ -10,7 +10,6 @@
 
 ## Block H — Product sites on the package
 
-- 🛠 **VDS249** (deps: —) **The FreeHarbor site takes the package's site layer and is not in consumers.json, so the census does not measure it** — FreeHarbor's DD285 waits on this entry, which rewords this repository's README and census tests. → §VDS249
 - 📋 **VDS251** (deps: —) **The register and the README still call the Aduzi site the Quickshell Site** — The product was renamed Aduzi, so every sentence that lists the consumers names a product that no longer exists. → §VDS251
 
 ## Done when — VDS185

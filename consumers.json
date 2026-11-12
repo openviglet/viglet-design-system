@@ -315,6 +315,18 @@
       "tone": "cool",
       "sourceRoots": ["src", "scripts", "vite.config.ts"],
       "entries": ["./site", "./site.css", "./tokens.css", "./vite"]
+    },
+    {
+      "id": "freeharbor-site",
+      "name": "FreeHarbor Site",
+      "package": "freeharbor-site",
+      "checkout": "../../../alegauss/freeharbor/site",
+      "framework": "vite",
+      "chrome": "product-site",
+      "accent": "cool",
+      "tone": "navy",
+      "sourceRoots": ["src", "scripts", "vite.config.ts"],
+      "entries": ["./site", "./site.css", "./tokens.css", "./vite"]
     }
   ]
 }

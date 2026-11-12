@@ -1,10 +1,11 @@
 # Viglet Design System
 
 Shared component library, design tokens, hooks, utilities, and i18n for the
-eighteen applications that install it: the Turing, Dumont and Shio consoles,
+nineteen applications that install it: the Turing, Dumont and Shio consoles,
 the Cloud Console, the Cloud Home, Schools, the Roadkeep GUI,
 the Openviglet Website, Viglet Docs, the Alegauss Hub, the Claude Tray Site,
-the Winwright Site, the Polyweave Site, the Quickshell Site, the Roadkeep Site, the Roadkeep GUI Site, Winwright Docs and
+the Winwright Site, the Polyweave Site, the Quickshell Site, the Roadkeep Site, the Roadkeep GUI Site,
+the FreeHarbor Site, Winwright Docs and
 the Claude Code First Site.
 `consumers.json` is the list, and it is what the guards read.
 
@@ -18,19 +19,19 @@ numbers and dates, the words for a record's state, colour, icons, motion, and th
 Viglet family's voice and imagery. Read it before writing the copy for a screen;
 it ships in the package as `docs/BRAND.md`.
 
-The eighteen applications that install this package are the consumers it holds
+The nineteen applications that install this package are the consumers it holds
 itself to, declared in [`consumers.json`](consumers.json) rather than remembered:
 each entry names its framework, its chrome, the accent and tone it renders with,
 where its source is and the subpaths it takes, and CI refuses prose that names a
-subset as though it were the whole set. A nineteenth is one entry there, and the
+subset as though it were the whole set. A twentieth is one entry there, and the
 checks widen with it. The file ships in the package, and a consumer holds its own entry to its
 source with [`viglet-ds-consumer-entries`](#keeping-your-entry-in-the-register-true).
 
 Three are Vite consoles (Turing, Shio, Dumont), one is a Vite platform home
 (the Cloud Home), one is a Vite desktop shell (the Roadkeep GUI), two are Vite
-marketing sites (the Openviglet Website and the Alegauss Hub), six are Vite
+marketing sites (the Openviglet Website and the Alegauss Hub), seven are Vite
 product sites on `./site`
-(the Claude Tray Site, the Winwright Site, the Polyweave Site, the Quickshell Site, the Roadkeep Site and the Roadkeep GUI Site),
+(the Claude Tray Site, the Winwright Site, the Polyweave Site, the Quickshell Site, the Roadkeep Site, the Roadkeep GUI Site and the FreeHarbor Site),
 two are Next applications
 (the Cloud Console and Schools), one is Docusaurus (Viglet Docs), one is Astro
 (Winwright Docs) and one is a static page with no build
@@ -75,7 +76,7 @@ A change here is a change to shared chrome, so the question is always what it
 does to Shio, Turing, Dumont, the Cloud Console, the Cloud Home, Schools,
 the Roadkeep GUI, the Openviglet Website, Viglet Docs, the Alegauss Hub, the
 Claude Tray Site, the Winwright Site, the Polyweave Site, the Quickshell Site, the Roadkeep Site, the Roadkeep GUI Site,
-Winwright Docs and the Claude Code First Site — and the answer should not require
+the FreeHarbor Site, Winwright Docs and the Claude Code First Site — and the answer should not require
 a publish.
 The Openviglet Website and Viglet Docs take the package by caret range rather
 than pinning it, so they also receive each release the moment they install one.
@@ -1372,7 +1373,8 @@ is for mockups: an application with a build keeps importing the ESM entries.
 The package manager here is pnpm, matching the Shio, Turing, Dumont, Cloud Home
 and Schools workspaces. The Cloud Console, the Roadkeep GUI,
 the Openviglet Website, Viglet Docs, the Alegauss Hub, the Claude Tray Site,
-the Winwright Site, the Polyweave Site, the Quickshell Site, the Roadkeep Site, the Roadkeep GUI Site and Winwright Docs install with npm,
+the Winwright Site, the Polyweave Site, the Quickshell Site, the Roadkeep Site, the Roadkeep GUI Site,
+the FreeHarbor Site and Winwright Docs install with npm,
 and the Claude Code First Site
 installs nothing, which is a fact about those repositories and not about this one.
 

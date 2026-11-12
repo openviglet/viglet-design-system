@@ -96,7 +96,7 @@ export interface VigletBootLoaderOptions {
  * build/dev time, so the loader visuals stay identical across the ecosystem and
  * there is a single place to evolve the design.
  *
- * Four of the sixteen consumers take it: Turing, Shio, Dumont and the Cloud Home.
+ * Four of the nineteen consumers take it: Turing, Shio, Dumont and the Cloud Home.
  * The Cloud Console and Schools are Next applications and have no Vite build to
  * plug into — they render their own first paint, which is what a server-rendered
  * page does instead of a boot loader. The Roadkeep GUI has a Vite build and
@@ -104,7 +104,7 @@ export interface VigletBootLoaderOptions {
  * disk and nothing is waiting on a fetch to paint. The Openviglet Website has
  * one too and is a marketing site, where a boot loader is a spinner in front of
  * copy, and so is the Alegauss Hub; the Claude Tray Site, the Winwright Site, the
- * Polyweave Site, the Quickshell Site, the Roadkeep Site and the Roadkeep GUI Site are product sites prerendered to static
+ * Polyweave Site, the Quickshell Site, the Roadkeep Site, the Roadkeep GUI Site and the FreeHarbor Site are product sites prerendered to static
  * HTML for the same reason. Viglet Docs is Docusaurus,
  * Winwright Docs is Astro and the Claude Code First Site has no build at all, so none of the
  * three has a Vite build to plug into.
