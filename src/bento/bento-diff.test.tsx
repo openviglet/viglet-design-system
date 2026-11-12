@@ -127,7 +127,10 @@ describe("BentoDiff lines", () => {
   const rows = (op: string) => [...document.querySelectorAll(`tr[data-op="${op}"]`)] as HTMLTableRowElement[]
   const numbers = (row: HTMLTableRowElement) => [...row.cells].slice(0, 2).map((cell) => cell.textContent)
 
-  it("draws one edit in a long file as one numbered hunk, not a rewrite", async () => {
+  // Renders 5000 lines and then expands 2496 rows in jsdom: about a second alone, and past
+  // the 5s default once in a loaded full suite, so it carries its own ceiling like the
+  // other heavy cases (VDS148, VDS210).
+  it("draws one edit in a long file as one numbered hunk, not a rewrite", { timeout: 30_000 }, async () => {
     const user = userEvent.setup()
     draw(<BentoDiff before={{ file: file(5000) }} after={{ file: file(5000, [2499, "const line2500 = 0"]) }} fields={SOURCE} />)
 

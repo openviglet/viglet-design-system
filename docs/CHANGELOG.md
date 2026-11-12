@@ -152,6 +152,7 @@
   checked **The vite.config import case declares a timeout sized for the loaded suite** Read the case's options, then run npm test and see it pass
 - ✅ **VDS245** **The README counts sixteen consumers and four product sites while consumers.json has eighteen and six** — The README's consumer counts read eighteen and six, and a test compares every spelled-out count with consumers.json.
   checked **A test fails when a README count disagrees with consumers.json** The counts are the prose nobody reads when adding a consumer, so only a check keeps them true.
+- ✅ **VDS252** **BentoDiff's long-file case runs under the 5s default and timed out once in a loaded full suite** — BentoDiff's long-file case carries a 30s ceiling, so a loaded full suite no longer fails on it.
 
 ## Block B — Bento becomes a design-system layer
 
