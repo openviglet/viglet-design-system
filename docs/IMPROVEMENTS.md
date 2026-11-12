@@ -242,3 +242,22 @@ listing every consumer (VDS236) follow, in the same commit.
 Done when:
 
 - `consumers.json` lists the FreeHarbor site with tone navy, and the consumers test and the README count check pass with it.
+
+### §VDS251 The Aduzi site under its own name
+
+Quickshell is now Aduzi (repository alegauss/aduzi). Its site describes itself as "The
+public site for Aduzi", but the register still says `id: quickshell-site` and `name:
+Quickshell Site`, and every sentence that lists the consumers repeats that name: the
+README's opening, its census clauses, the use:local and Contributing paragraphs, the
+comment in `scripts/check-duplicates.test.ts` and the boot-loader note in
+`src/vite/boot-loader.ts`.
+
+Rename the entry to `Aduzi Site`, and change the `id` to `aduzi-site` only if nothing
+outside this repository passes `--consumer quickshell-site`: the Aduzi site's own suite
+may run `viglet-ds-consumer-entries` with that id. Check that first, in
+`D:\Git\alegauss\aduzi\site`. The `package` field follows the site's package.json, which
+still says `quickshell-site`, so it stays until the site renames its package.
+
+Then let the prose follow in the same commit. `consumers.test.ts` and
+`readme-counts.test.ts` read the names from the register, so the README has to change in
+that commit or they fail.

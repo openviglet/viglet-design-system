@@ -308,7 +308,7 @@
       "id": "quickshell-site",
       "name": "Quickshell Site",
       "package": "quickshell-site",
-      "checkout": "../../../alegauss/quickshell/site",
+      "checkout": "../../../alegauss/aduzi/site",
       "framework": "vite",
       "chrome": "product-site",
       "accent": "cool",
