@@ -11,6 +11,14 @@ export interface PrerenderRoute {
   ogTitle?: string
   /** Defaults to `description`. */
   ogDescription?: string
+  /** The route's name in the breadcrumb trail (VDS253). Defaults to `title`. */
+  breadcrumb?: string
+}
+
+/** One item of a breadcrumb trail. */
+export interface BreadcrumbItem {
+  name: string
+  url: string
 }
 
 /** One written route, as `manifest.json` lists it. */
@@ -42,6 +50,13 @@ export interface PrerenderSiteOptions {
    * Markdown twin. Absent, the head is exactly the canonical, Open Graph and card tags.
    */
   headTags?: (route: PrerenderRoute, canonical: string) => readonly string[]
+  /**
+   * A `BreadcrumbList` JSON-LD script per route (VDS253): the items `above` the product (e.g.
+   * the hub it is published under), the product as `name` at `canonicalUrl("/")`, and, for any
+   * route but the root, the route itself under `breadcrumb ?? title`. Without it Google builds
+   * the trail from the URL and may drop the middle. Absent, no script is written.
+   */
+  breadcrumbs?: { name: string; above?: readonly BreadcrumbItem[] }
   /** The route's Markdown twin, written beside it as `index.md`. */
   twin?: (path: string) => string
   /** `manifest.json`: the routes, their twins and their sizes. */
@@ -70,6 +85,28 @@ function escapeHtml(text: string): string {
 }
 
 const byteLength = (text: string) => Buffer.byteLength(text, "utf8")
+
+/** The route's BreadcrumbList as a head tag; `<` is escaped so no title can close the script. */
+function breadcrumbTag(
+  route: PrerenderRoute,
+  canonical: string,
+  root: string,
+  breadcrumbs: { name: string; above?: readonly BreadcrumbItem[] },
+): string {
+  const items: BreadcrumbItem[] = [...(breadcrumbs.above ?? []), { name: breadcrumbs.name, url: root }]
+  if (route.path !== "/") items.push({ name: route.breadcrumb ?? route.title, url: canonical })
+  const json = JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  }).replace(/</g, "\\u003c")
+  return `<script type="application/ld+json">${json}</script>`
+}
 
 /**
  * When the authored site last changed, as YYYY-MM-DD from git, or null.
@@ -181,7 +218,9 @@ export function prerenderSite(options: PrerenderSiteOptions): PrerenderedRoute[]
 
   for (const route of routes) {
     const canonical = canonicalUrl(route.path)
-    const html = pageFor(template, route, canonical, render(route.path), ogImage, options.headTags?.(route, canonical))
+    const extra = [...(options.headTags?.(route, canonical) ?? [])]
+    if (options.breadcrumbs) extra.push(breadcrumbTag(route, canonical, canonicalUrl("/"), options.breadcrumbs))
+    const html = pageFor(template, route, canonical, render(route.path), ogImage, extra)
 
     const rel = outputDir(route.path)
     const dir = join(distDir, rel)

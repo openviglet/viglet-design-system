@@ -95,6 +95,43 @@ describe("prerenderSite", () => {
     expect(written[1].htmlBytes).toBe(Buffer.byteLength(page, "utf8"))
   })
 
+  it("writes a BreadcrumbList per route from the route table (VDS253)", () => {
+    const ld = (rel: string) => {
+      const found = /<script type="application\/ld\+json">(.*?)<\/script>/.exec(read(rel))
+      expect(found).not.toBeNull()
+      return JSON.parse(found![1]) as { "@type": string; itemListElement: { position: number; name: string; item: string }[] }
+    }
+    prerenderSite(
+      options({
+        routes: [
+          { path: "/", title: "Tool — home", description: "Home." },
+          { path: "/features/a/", title: "Pillar A | tool", description: "A.", breadcrumb: "Pillar A" },
+          { path: "/b/", title: "B </script><x>", description: "B." },
+        ],
+        breadcrumbs: { name: "tool", above: [{ name: "example.org", url: "https://example.org/" }] },
+      }),
+    )
+    const home = ld("index.html")
+    expect(home["@type"]).toBe("BreadcrumbList")
+    expect(home.itemListElement).toEqual([
+      { "@type": "ListItem", position: 1, name: "example.org", item: "https://example.org/" },
+      { "@type": "ListItem", position: 2, name: "tool", item: "https://example.org/tool/" },
+    ])
+    expect(ld("features/a/index.html").itemListElement[2]).toEqual({
+      "@type": "ListItem",
+      position: 3,
+      name: "Pillar A",
+      item: "https://example.org/tool/features/a/",
+    })
+    expect(read("b/index.html")).not.toContain("</script><x>")
+    expect(ld("b/index.html").itemListElement[2].name).toBe("B </script><x>")
+  })
+
+  it("writes no BreadcrumbList without the option (VDS253)", () => {
+    prerenderSite(options())
+    expect(read("features/a/index.html")).not.toContain("application/ld+json")
+  })
+
   it("writes no card tags when there is no card", () => {
     prerenderSite(options({ ogImage: undefined }))
     expect(read("index.html")).not.toContain("og:image")

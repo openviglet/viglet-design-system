@@ -1325,6 +1325,13 @@ the template no longer has one, so a drifted template fails the build. Beside
 each page it writes the Markdown twin, plus `manifest.json`, `sitemap.xml`
 (`lastmod` from the last git commit under `src`, `public` and `index.html`)
 and `robots.txt`. The same input builds the same bytes.
+
+A site published under a hub passes `breadcrumbs: { name: "Tool", above: [{ name: "example.org", url: "https://example.org/" }] }`
+and each page gains a `BreadcrumbList` JSON-LD script: the hub, the product at
+`canonicalUrl("/")`, and the route under its `breadcrumb` (or its `title`).
+Without it Google builds the result's trail from the URL and can drop the
+middle, showing a product page as if it were the hub's.
+
 `ogCardSvg({ title, titleAccent, line, eyebrow, mark, tone, accent })` draws a
 1200 × 630 card on a tone's dark ground, and `renderOgCard({ svg, out })`
 rasterises it. That one needs `@resvg/resvg-js`, an optional peer, so add it to

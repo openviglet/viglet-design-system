@@ -384,3 +384,6 @@
 - ✅ **VDS250** **The Quickshell Site's checkout in consumers.json names a folder that no longer exists, so the consumers test fails** — consumers.json points the Quickshell Site at alegauss/aduzi/site, so the consumers test and use:local find it again.
 - ✅ **VDS249** **The FreeHarbor site takes the package's site layer and is not in consumers.json, so the census does not measure it** — consumers.json registers the FreeHarbor Site on ./site with tone navy, and the README and the census tests count nineteen consumers.
 - ✅ **VDS251** **The register and the README still call the Aduzi site the Quickshell Site** — The register calls the site the Aduzi Site (id aduzi-site), and every sentence listing the consumers names it so.
+- ✅ **VDS253** **Product sites declare no BreadcrumbList, so Google trims the hub-to-page trail of their routes** — prerenderSite writes a BreadcrumbList per route when a site passes breadcrumbs, so a product route reads as the product's page in a search result.
+  checked **Every route carries a BreadcrumbList when breadcrumbs is passed** prerender.test.ts: the root ends at the product, a sub-route ends at its breadcrumb or title, and a title with </script> cannot close the tag.
+  checked **Without breadcrumbs the output is unchanged** prerender.test.ts: a route table rendered without the option carries no ld+json script.
